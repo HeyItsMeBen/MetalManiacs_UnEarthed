@@ -20,11 +20,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "Straight Line Test", group = "Linear OpMode")
 public class AutoTesting extends LinearOpMode {
     //defining variables
-    public conveyerBelt belt;
+    conveyerBelt belt = new conveyerBelt(hardwareMap);
     @Override
     //This runs when the program is activated
     public void runOpMode() {
-        belt=hardwareMap.get(conveyerBelt.class, "conveyerBelt");
         while (opModeIsActive()){
 
         }
