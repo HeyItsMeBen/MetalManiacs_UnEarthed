@@ -195,11 +195,11 @@ public class ColorSensorTesting extends LinearOpMode {
             Color.colorToHSV(colors.toColor(), hsvValues);
 
             float hueRange=40;
-            if (hsvValues[1]>.4) {
-                if (inRange(hsvValues[0], 0, hueRange)) {
-                    telemetry.addLine("red");
-                } else if (inRange(hsvValues[0], 240, hueRange)) {
-                    telemetry.addLine("blue");
+            if (hsvValues[1]>.55) {
+                if (inRange(hsvValues[0], 168, hueRange)) {
+                    telemetry.addLine("green");
+                } else if (inRange(hsvValues[0], 230, hueRange)) {
+                    telemetry.addLine("porple");
                 } else {
                     telemetry.addLine("No wanted colors found");
                 }
@@ -239,7 +239,7 @@ public class ColorSensorTesting extends LinearOpMode {
         if (inputHue+range>=360){
             inputHue=(360-inputHue)*-1;
         }
-        if (inputHue>expectedHue-range && inputHue<expectedHue+range){
+        if (inputHue>=expectedHue-range && inputHue<=expectedHue+range){
             return true;
         }
         else{

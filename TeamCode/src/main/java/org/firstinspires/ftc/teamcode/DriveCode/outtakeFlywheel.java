@@ -24,7 +24,7 @@ public class outtakeFlywheel{
     double ticksPerSecond=tickPerRevolution*(rpm/60);   //turns rotation per minute (rpm), into ticks per second. This allows it to by used by the "PIDControl" method, which only intakes ticks per second
     ElapsedTime timer = new ElapsedTime();  //keeps track of time. Used for PID calculations
     public outtakeFlywheel(HardwareMap hMap){
-        flywheel = hMap.get(DcMotorEx.class, "outtakeFlywheel");    //connects the flywheel variable with the actual motor in the control hub
+        flywheel = hMap.get(DcMotorEx.class, "flywheelLeft");    //connects the flywheel variable with the actual motor in the control hub
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);      //The video told me to type it...
     }
 
