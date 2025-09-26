@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class MeepMeepTest {
+public class Auto_Path_Simulation {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 

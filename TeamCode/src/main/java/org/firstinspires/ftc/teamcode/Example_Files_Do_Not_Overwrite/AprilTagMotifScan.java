@@ -27,9 +27,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.AutoCode;
+package org.firstinspires.ftc.teamcode.Example_Files_Do_Not_Overwrite;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -64,9 +65,9 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  **/
-@Autonomous(name = "Obelisk Motif AprilTags September 2025", group = "Concept")
-//@Disabled
-public class DecodeAprilTagMockupSept2025 extends LinearOpMode {
+@Autonomous(name = "Obelisk April Tag Motif Scan", group = "Concept")
+@Disabled
+public class AprilTagMotifScan extends LinearOpMode {
 
     int randomization = 0;
     String motif = " ";
