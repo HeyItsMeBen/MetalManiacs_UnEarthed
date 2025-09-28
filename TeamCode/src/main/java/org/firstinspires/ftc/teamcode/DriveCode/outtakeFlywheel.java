@@ -31,16 +31,20 @@ public class outtakeFlywheel{
     }
 
     public double [] calculateAngleAndVelocity(double basketX){
-        double basketY=40;  //change this to actual value. Actual value should equal basketHeight-heightOfFlywheelFromGround+ballRadius
-        double H = 60; //max height that launched ball will reach
+        double basketY=40;  //measured in meters. Change this to actual value. Actual value should equal basketHeight-heightOfFlywheelFromGround+ballRadius
+        double H = 60; //measured in meters. Max height that launched ball will reach. Change as desired.
         double gravity=9.8; //i think this is the right value
         double theta1=atan((2*H/basketX)*(1+Math.sqrt(1-basketY/H)));
         double theta2=atan((2*H/basketX)*(1-Math.sqrt(1-basketY/H)));
         double theta1Distance=2*H*(1/Math.tan(theta1));
         double theta2Distance=2*H*(1/Math.tan(theta2));
-        double theta=0;
+        double theta=0; //radians
         double [] values={0, 0};
         boolean err=false;
+
+        //Stuff for ballVelocity-->wheelVelocity
+        double flywheelWeight=3; //kilograms (kg)
+        double ballWeight=2;
 
         if (theta1Distance<basketX){
             theta=theta1;
@@ -52,11 +56,13 @@ public class outtakeFlywheel{
             err=true;
         }
 
-        double velocity=Math.sqrt(2*gravity*H)/Math.abs(Math.sin(theta));
+        double ballVelocity=Math.sqrt(2*gravity*H)/Math.abs(Math.sin(theta));
+        double neededEnergy = Math.pow(ballVelocity, 2)*(2*flywheelWeight+ballWeight);
+        double wheelVelocity=Math.sqrt(neededEnergy/(2*flywheelWeight)); //measured in meters per second (m/s)
 
         if (!err && theta!=0) {
-            values[0]=velocity;
-            values[1]=theta;
+            values[0]=wheelVelocity;    //the velocity that wheels will need to be spinning at
+            values[1]=theta;            //the angle that the ball will need to be launched at
         }
         return values;
     }
