@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.DriveCode;
 
+import static java.lang.Math.atan;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -28,6 +30,36 @@ public class outtakeFlywheel{
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);      //The video told me to type it...
     }
 
+    public double [] calculateAngleAndVelocity(double basketX){
+        double basketY=40;  //change this to actual value. Actual value should equal basketHeight-heightOfFlywheelFromGround+ballRadius
+        double H = 60; //max height that launched ball will reach
+        double gravity=9.8; //i think this is the right value
+        double theta1=atan((2*H/basketX)*(1+Math.sqrt(1-basketY/H)));
+        double theta2=atan((2*H/basketX)*(1-Math.sqrt(1-basketY/H)));
+        double theta1Distance=2*H*(1/Math.tan(theta1));
+        double theta2Distance=2*H*(1/Math.tan(theta2));
+        double theta=0;
+        double [] values={0, 0};
+        boolean err=false;
+
+        if (theta1Distance<basketX){
+            theta=theta1;
+        }
+        else if (theta2Distance<basketX){
+            theta=theta2;
+        }
+        else {
+            err=true;
+        }
+
+        double velocity=Math.sqrt(2*gravity*H)/Math.abs(Math.sin(theta));
+
+        if (!err && theta!=0) {
+            values[0]=velocity;
+            values[1]=theta;
+        }
+        return values;
+    }
     public double getPIDPower(){
         return PIDControl(ticksPerSecond, flywheel.getVelocity());  //calculates and return the needed power with PID
     }
