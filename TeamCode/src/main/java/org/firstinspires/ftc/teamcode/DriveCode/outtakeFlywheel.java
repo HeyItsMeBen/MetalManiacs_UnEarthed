@@ -69,6 +69,18 @@ public class outtakeFlywheel{
     public double getPIDPower(){
         return PIDControl(ticksPerSecond, flywheel.getVelocity());  //calculates and return the needed power with PID
     }
+
+    //returns true when at full velocity
+    public void flyWheelFullPower(float targetVelo, float targetTime) {
+        ElapsedTime timer;
+        timer = new ElapsedTime();
+        while(true){
+            flywheel.setPower(PIDControl(ticksPerSecond, flywheel.getVelocity()));  //calculates and return the needed power with PID
+            if(flywheel.getVelocity() >= targetVelo && timer.seconds() >= targetTime){
+                break;
+            }
+        }
+    }
     private double PIDControl(double reference, double state){  //This is where the magic happens. It does some weird math
         double error=reference-state;
         integralSum+=error*timer.seconds();
