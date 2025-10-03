@@ -13,37 +13,28 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Auto_Path_Simulation {
+public class Auto_Path_Simulation_Motif_GPP {
     public static void main(String[] args) {
+
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setDimensions(17,17)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-//                        .strafeTo(new Vector2d(0, 50))
-//                        .turn(Math.toRadians(90))
-                        .splineTo(new Vector2d(0, 30), 3)
-                        .splineTo(new Vector2d(0, 60), 0)
-
-//                        .strafeTo(new Vector2d(50,50))
-////                        .turn(Math.toRadians(90))
-//                        .strafeTo(new Vector2d(50,0))
-////                        .turn(Math.toRadians(90))
-//                        .strafeTo(new Vector2d(0,0))
-
-
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(56, 37, Math.PI / 2)) //Direction the robot faces is based on radians
+                        .strafeTo(new Vector2d(0, 19))
+                        .waitSeconds(1)
                         .build());
 
         //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds
         Image img = null;
         try {
-            img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Black.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Dark.png"));
+            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Black.png"));
+            img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Dark.png"));
             //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Light.png"));
             //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Paper.png"));
-        }
-        catch(IOException e) {}
+        } catch(IOException e) {}
 
         meepMeep.setBackground(img)
                 .setDarkMode(true)
