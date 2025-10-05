@@ -165,16 +165,3 @@ public class Autonomous_Pathing extends LinearOpMode {
 
 }  // end class
 
-//
-//   public void runOpMode() throws InterruptedException {
-//        Pose2d beginPose = new Pose2d(0, 0, 0);
-//        MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
-//
-//        waitForStart();
-//        Actions.runBlocking(
-//                drive.actionBuilder(beginPose)
-//                        .splineTo(new Vector2d(0, 30), Math.PI)
-//                        .splineTo(new Vector2d(0, 60), 0)
-//                        .build());
-//    }
-//}
