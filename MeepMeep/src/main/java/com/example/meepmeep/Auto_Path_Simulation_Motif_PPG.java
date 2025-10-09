@@ -22,18 +22,26 @@ public class Auto_Path_Simulation_Motif_PPG {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setDimensions(17,17)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(56, 37, Math.PI / 2)) //Direction the robot faces is based on radians
-                        .strafeTo(new Vector2d(0, 19))
-                        .waitSeconds(1)
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI / 2)) //Direction the robot faces is based on radians
+//                        .strafeTo(new Vector2d(0, 13))
+//                        .turn(Math.toRadians(90))
+                        .splineTo(new Vector2d(52, 13), 0)
+                        .setTangent(Math.toRadians(100))
+                        .waitSeconds(0.5f)
+                        .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(45)), Math.toRadians(45))
                         .build());
 
         //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds
         Image img = null;
         try {
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Black.png"));
-            img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Dark.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Light.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Paper.png"));
+
+            //You can choose a theme by commenting and uncommenting any of the field backgrounds
+            //IF YOU GET ANY MEEP MEEP ERRORS TRYING TO RUN THIS CHANGE THE FILE PATH!!!! (=
+//            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Black.png"));
+            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Dark.png"));
+//            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Light.png"));
+//            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Paper.png"));
+
         } catch(IOException e) {}
 
         meepMeep.setBackground(img)

@@ -31,10 +31,14 @@ public class Auto_Path_Simulation_Motif_PGP {
         //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds
         Image img = null;
         try {
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Black.png"));
-            img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Dark.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Light.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Paper.png"));
+
+            //You can choose a theme by commenting and uncommenting any of the field backgrounds
+            //IF YOU GET ANY MEEP MEEP ERRORS TRYING TO RUN THIS CHANGE THE FILE PATH!!!! (=
+//            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Black.png"));
+            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Dark.png"));
+//            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Light.png"));
+//            img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Paper.png"));
+
         } catch(IOException e) {}
 
         meepMeep.setBackground(img)
