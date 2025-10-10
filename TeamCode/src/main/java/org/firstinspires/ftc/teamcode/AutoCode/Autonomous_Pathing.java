@@ -58,8 +58,10 @@ public class Autonomous_Pathing extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(0, 30), Math.PI)
-                                    .splineTo(new Vector2d(0, 60), 0)
+                                    .splineTo(new Vector2d(46, -11-24), 0)
+                                    .waitSeconds(0.5f)
+                                    .setTangent(Math.toRadians(180))
+                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                                     .build());
 
                 } else if (motif.equals("PGP")) {
@@ -68,10 +70,11 @@ public class Autonomous_Pathing extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(48, -11), 0)
+                                    .splineTo(new Vector2d(46, -11), 0)
                                     .waitSeconds(0.5f)
-                                    .splineTo(new Vector2d(15, 20), Math.toRadians(45))
-                                    .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(45)), Math.toRadians(0))
+                                    .setTangent(Math.toRadians(180))
+                                    .splineTo(new Vector2d(18, 7), Math.toRadians(90))
+                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                                     .build());
 
 
@@ -84,9 +87,8 @@ public class Autonomous_Pathing extends LinearOpMode {
                                     .splineTo(new Vector2d(48, 13), 0)
                                     .waitSeconds(0.5f)
                                     .setTangent(Math.toRadians(180))
-                                    .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(45)), Math.toRadians(45))
+                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                                     .build());
-
 
                 }
 
@@ -132,21 +134,24 @@ public class Autonomous_Pathing extends LinearOpMode {
 
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
-            tagScanned = true;
             if (randomization > 0) {
                 telemetry.addLine("wow this code is amazing");
                 //does nothing
             } else if (detection.id == 21) {
                 telemetry.addLine("Motif 1: GPP ");
                 randomization = 1;
+                tagScanned=true;
                 motif = "GPP";
+                //break; ?
             } else if (detection.id == 22) {
                 telemetry.addLine("Motif 2: PGP ");
                 randomization = 2;
+                tagScanned=true;
                 motif = "PGP";
             } else if (detection.id == 23) {
                 telemetry.addLine("Motif 3: PPG ");
                 randomization = 3;
+                tagScanned=true;
                 motif = "PPG";
             } else {
                 telemetry.addLine("No motif found: unknown");
@@ -170,7 +175,7 @@ public class Autonomous_Pathing extends LinearOpMode {
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
-
+        telemetry.update();
 
     }   // end method telemetryAprilTag()
 
