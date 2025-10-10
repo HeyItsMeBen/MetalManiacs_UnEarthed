@@ -52,6 +52,7 @@ public class AutoTesting extends LinearOpMode {
         while (opModeIsActive()){
             double givenX=telemetryAprilTag();
             if (givenX!=0){
+                givenX=telemetryAprilTag();
                 values=flywheel.getValues(givenX);
                 telemetry.addLine(String.format("values: " + values[0] + ", " + values[1] + ", " + values[2]));
                 telemetry.update();
