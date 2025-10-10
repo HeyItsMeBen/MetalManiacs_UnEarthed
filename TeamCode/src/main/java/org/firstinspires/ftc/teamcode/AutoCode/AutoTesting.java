@@ -31,7 +31,6 @@ public class AutoTesting extends LinearOpMode {
     //defining variables
     //conveyerBelt belt = new conveyerBelt(hardwareMap);
     outtakeFlywheel flywheel;
-    double [] values={0,0,0};
 
 
     int randomization = 0;
@@ -42,6 +41,11 @@ public class AutoTesting extends LinearOpMode {
     private AprilTagProcessor aprilTag;
     public boolean tagScanned = false;
 
+    double xCameraOffset=0; //sideways distance from webcam to robotCenter
+    double yCameraOffset=0; // back/forth distance from webcam to robotCenter
+    double yDistance=0;
+    double tagTilt=0;
+
     private VisionPortal visionPortal;
     @Override
     //This runs when the program is activated
@@ -50,11 +54,25 @@ public class AutoTesting extends LinearOpMode {
         initAprilTag();
         waitForStart();
         while (opModeIsActive()){
-            double givenX=telemetryAprilTag();
-            if (givenX!=0){
-                givenX=telemetryAprilTag();
-                values=flywheel.getValues(givenX);
-                telemetry.addLine(String.format("values: " + values[0] + ", " + values[1] + ", " + values[2]));
+            telemetryAprilTag();
+            double givenY=yDistance; //the x-y coordinates directly from camera will need to be adjusted and set to robotCenter. GivenY is distance from camera to basket.
+            if (givenY!=0){
+                //flywheel.getValues(givenY-yCameraOffset);
+                flywheel.calculateEverything(givenY-yCameraOffset, tagTilt);    //NOTE: before calculateEverything() you will NEED to rotate the robot so the aprilTag is directly in front of it (centered).
+
+                //theses 4 values (wheelVelocity, launchAngle, and moveBackValue) will be the values we will use directly to control the robot.
+                telemetry.addLine(String.format("velocity: " + flywheel.outtakeFlywheelValues.wheelVelocity));
+                telemetry.addLine(String.format("launchAngle: " + flywheel.outtakeFlywheelValues.launchAngle));
+                telemetry.addLine(String.format("moveBack: " + flywheel.outtakeFlywheelValues.moveBackValue));
+                telemetry.addLine(String.format("moveBack: " + flywheel.outtakeFlywheelValues.moveBackValue));
+
+                //other telemetry
+                telemetry.addLine(String.format("\n\nballVelocity original: " + flywheel.outtakeFlywheelValues.ballVelocityOg));
+                telemetry.addLine(String.format("\n\nballVelocity new: " + flywheel.outtakeFlywheelValues.ballVelocity));
+                telemetry.addLine(String.format("distance to basket (X): " + flywheel.outtakeFlywheelValues.basketXTelemetryOg));
+                telemetry.addLine(String.format("height of basket (Y): " + flywheel.outtakeFlywheelValues.basketYTelemetryOg));
+                telemetry.addLine(String.format("height of vertex (Y): " + flywheel.outtakeFlywheelValues.vertexHeightTelemetryOg));
+
                 telemetry.update();
                 sleep(1000);
             }
@@ -97,8 +115,7 @@ public class AutoTesting extends LinearOpMode {
         visionPortal = builder.build();
 
     }   // end method initAprilTag()
-    private double telemetryAprilTag() {
-        double xDistance=0;
+    private void telemetryAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
 
@@ -130,7 +147,8 @@ public class AutoTesting extends LinearOpMode {
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
             }
             if (tagScanned){
-                xDistance = detection.ftcPose.y;
+                yDistance = detection.ftcPose.y;
+                tagTilt = detection.ftcPose.yaw; //Is it rly Yaw? I can get them mixed up sometimes...
             }
         }   // end for() loop
 
@@ -139,11 +157,5 @@ public class AutoTesting extends LinearOpMode {
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
         telemetry.update();
-        if (xDistance!=0){
-            return xDistance;
-        }
-        else {
-            return 0;
-        }
     }
 }
