@@ -24,10 +24,14 @@ public class Outtake{
 
     public DcMotor rightFlyWheel = null;
     public DcMotor leftFlyWheel = null;
+    public Servo hinge = null;
     //Outtake subsystem
     public Outtake() {
         rightFlyWheel = hardwareMap.get(DcMotor.class, "rightFlyWheel");
         leftFlyWheel = hardwareMap.get(DcMotor.class, "leftFlyWheel");
+
+        //add hinge mapping when done
+//        hinge = hardwareMap.get(Servo.class, "hinge");
 
         rightFlyWheel.setDirection(DcMotor.Direction.FORWARD);
         leftFlyWheel.setDirection(DcMotor.Direction.FORWARD);
@@ -35,6 +39,9 @@ public class Outtake{
 
     public void fire(float power) {
 
+        //eventually we need to detect if the flywheel is fully accelerated then fire
+        rightFlyWheel.setPower(power);
+        leftFlyWheel.setPower(power);
 
     }
 }
