@@ -25,7 +25,9 @@ public class Auto_Path_Simulation_Motif_PGP {
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI / 2)) //Direction the robot faces is based on radians
                         .splineTo(new Vector2d(46, -11), 0)
                         .waitSeconds(0.5f)
-                        .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(45)), Math.toRadians(45))
+                        .setTangent(Math.toRadians(180))
+                        .splineTo(new Vector2d(18, 7), Math.toRadians(90))
+                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                         .build());
 
         //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds
