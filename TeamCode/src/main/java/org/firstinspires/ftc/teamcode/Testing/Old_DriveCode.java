@@ -8,9 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Testing.Intake;
-import org.firstinspires.ftc.teamcode.Testing.Outtake;
-
 @Config
 @TeleOp(name = "QT3 Drive Code", group = "Linear OpMode")
 

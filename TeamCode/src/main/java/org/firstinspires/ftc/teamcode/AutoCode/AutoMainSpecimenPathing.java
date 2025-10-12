@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.tuning.TuningOpModes;
+import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Roadrunner.tuning.TuningOpModes;
 //import org.firstinspires.ftc.teamcode.Hardware.Slides_PID;
 //import org.firstinspires.ftc.teamcode.Hardware.outtakeArm;
 
