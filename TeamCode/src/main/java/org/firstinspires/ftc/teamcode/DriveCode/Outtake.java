@@ -26,14 +26,14 @@ public class Outtake{
     public DcMotor leftFlyWheel = null;
     public Servo hinge = null;
     //Outtake subsystem
-    public Outtake() {
-        rightFlyWheel = hardwareMap.get(DcMotor.class, "rightFlyWheel");
-        leftFlyWheel = hardwareMap.get(DcMotor.class, "leftFlyWheel");
+    public Outtake(HardwareMap hMap) {
+        rightFlyWheel = hMap.get(DcMotor.class, "rightFlyWheel");
+        leftFlyWheel = hMap.get(DcMotor.class, "leftFlyWheel");
 
         //add hinge mapping when done
 //        hinge = hardwareMap.get(Servo.class, "hinge");
 
-        rightFlyWheel.setDirection(DcMotor.Direction.FORWARD);
+        rightFlyWheel.setDirection(DcMotor.Direction.REVERSE);
         leftFlyWheel.setDirection(DcMotor.Direction.FORWARD);
     }
 

@@ -64,7 +64,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  *
  */
 @TeleOp(name = "Competition DriveCode", group = "Robot")
-@Disabled
 public class DriveCode extends OpMode {
     // This declares the four motors needed
 
@@ -78,7 +77,7 @@ public class DriveCode extends OpMode {
     DcMotor backLeftDrive;
     DcMotor backRightDrive;
 
-    Intake intake;
+    ActiveIntake intake;
     Outtake outtake;
 
     // This declares the IMU needed to get the current direction the robot is facing
@@ -92,8 +91,8 @@ public class DriveCode extends OpMode {
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
 
         //change to match actual servo names v
-        intake = new Intake();
-        outtake = new Outtake();
+        intake = new ActiveIntake(hardwareMap);
+        outtake = new Outtake(hardwareMap);
 
         // We set the left motors in reverse which is needed for drive trains where the left
         // motors are opposite to the right ones.
@@ -136,6 +135,21 @@ public class DriveCode extends OpMode {
         } else {
             driveFieldRelative(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         }
+
+        if (gamepad1.dpad_left){
+            intake.setMotorPower(1);
+        }
+        if (gamepad1.dpad_right){
+            intake.setMotorPower(0);
+        }
+        if (gamepad1.dpad_up){
+            outtake.fire(0.2f);
+        }
+        if (gamepad1.dpad_down){
+            outtake.fire(0);
+        }
+
+
 
         //intake always spinning to take in artifacts
 
