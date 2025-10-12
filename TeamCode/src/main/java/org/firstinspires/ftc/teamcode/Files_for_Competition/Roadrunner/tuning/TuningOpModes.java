@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Competition_Files.Roadrunner.tuning;
+package org.firstinspires.ftc.teamcode.Files_for_Competition.Roadrunner.tuning;
 
 import androidx.annotation.NonNull;
 
@@ -40,12 +40,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
-import org.firstinspires.ftc.teamcode.Competition_Files.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Competition_Files.Roadrunner.OTOSLocalizer;
-import org.firstinspires.ftc.teamcode.Competition_Files.Roadrunner.PinpointLocalizer;
-import org.firstinspires.ftc.teamcode.Competition_Files.Roadrunner.TankDrive;
-import org.firstinspires.ftc.teamcode.Competition_Files.Roadrunner.ThreeDeadWheelLocalizer;
-import org.firstinspires.ftc.teamcode.Competition_Files.Roadrunner.TwoDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.Files_for_Competition.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Files_for_Competition.Roadrunner.OTOSLocalizer;
+import org.firstinspires.ftc.teamcode.Files_for_Competition.Roadrunner.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.Files_for_Competition.Roadrunner.TankDrive;
+import org.firstinspires.ftc.teamcode.Files_for_Competition.Roadrunner.ThreeDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.Files_for_Competition.Roadrunner.TwoDeadWheelLocalizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
