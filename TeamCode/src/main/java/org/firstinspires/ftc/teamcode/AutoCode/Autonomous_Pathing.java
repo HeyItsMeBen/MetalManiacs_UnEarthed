@@ -1,16 +1,24 @@
 package org.firstinspires.ftc.teamcode.AutoCode;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 import org.firstinspires.ftc.robotcore. external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.tuning.TuningOpModes;
+import org.firstinspires.ftc.teamcode.DriveCode.ActiveIntake;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -31,11 +39,17 @@ public class Autonomous_Pathing extends LinearOpMode {
 
     private VisionPortal visionPortal;
 
+    AutoIntake Intake;
+    aimerArm Aim;
+
     @Override
     public void runOpMode() {
 
         Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+
+        Intake = new AutoIntake(hardwareMap);
+        Aim = new aimerArm(hardwareMap);
 
         initAprilTag();
 
@@ -178,5 +192,24 @@ public class Autonomous_Pathing extends LinearOpMode {
         telemetry.update();
 
     }   // end method telemetryAprilTag()
+
+    public class runIntake implements Action {
+        public runIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+            Intake.setMotorPower(0.5);
+            sleep(3);
+            Intake.setMotorPower(0);
+            return false;
+        }
+    }
+
+    public class AimArm implements Action {
+        public AimArm(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+            Aim.setArmTarget(1);
+            Aim.stopMotor();
+            return false;
+        }
+    }
 
 }  // end class
