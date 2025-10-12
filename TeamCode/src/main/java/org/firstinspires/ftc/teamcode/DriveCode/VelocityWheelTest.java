@@ -34,24 +34,27 @@ public class VelocityWheelTest extends LinearOpMode {
     public double lastError=0;
 
 
-    final double tickPerRevolution=1120;
+    final double tickPerRevolution=28;//1120-->28
     double ticksPerSecond=tickPerRevolution*(rpm/60);   //turns rotation per minute (rpm), into ticks per second. This allows it to by used by the "PIDControl" method, which only intakes ticks per second
     ElapsedTime timer = new ElapsedTime();  //keeps track of time. Used for PID calculations
 
     @Override
     public void runOpMode() throws InterruptedException{
-        flywheelLeft = hardwareMap.get(DcMotorEx.class, "flywheelLeft"); //connects the flywheel variable with the actual motor in the control hub
-        flywheelRight = hardwareMap.get(DcMotorEx.class, "flywheelRight");
+        flywheelLeft = hardwareMap.get(DcMotorEx.class, "leftFlyWheel"); //connects the flywheel variable with the actual motor in the control hub
+        flywheelRight = hardwareMap.get(DcMotorEx.class, "rightFlyWheel");
+        flywheelLeft.setDirection(DcMotor.Direction.FORWARD);
+        flywheelRight.setDirection(DcMotor.Direction.REVERSE);
+
         flywheelLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  //The video told me to type it...
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart(); //waits until you start the program from the driver station
         while (opModeIsActive()){   //infinite loop
             double power = PIDControl(ticksPerSecond, flywheelLeft.getVelocity());    //calculates the needed power with PID
-            flywheelLeft.setPower(1);
-            flywheelRight.setPower(1);
-            telemetry.addData("Target RPM", ticksPerSecond);
-            telemetry.addData("Current RPM", flywheelLeft.getVelocity());
+            flywheelLeft.setPower(power);
+            flywheelRight.setPower(power);
+            telemetry.addData("Target RPM", rpm);
+            telemetry.addData("Current RPM", flywheelLeft.getVelocity()*60/tickPerRevolution);
             telemetry.update();
 
         }

@@ -8,8 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore. external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.tuning.TuningOpModes;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -26,13 +27,14 @@ public class Autonomous_Pathing extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     private AprilTagProcessor aprilTag;
+    public boolean tagScanned = false;
 
     private VisionPortal visionPortal;
 
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(0, 0, 0);
+        Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         initAprilTag();
@@ -44,9 +46,11 @@ public class Autonomous_Pathing extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
+            while (opModeIsActive() && tagScanned == false) {
 
                 telemetryAprilTag();
+
+
 
                 if (motif.equals("GPP")) {
                     telemetry.addData(">", "Running PPG Pathing");
@@ -54,8 +58,10 @@ public class Autonomous_Pathing extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(0, 30), Math.PI)
-                                    .splineTo(new Vector2d(0, 60), 0)
+                                    .splineTo(new Vector2d(46, -11-24), 0)
+                                    .waitSeconds(0.5f)
+                                    .setTangent(Math.toRadians(180))
+                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                                     .build());
 
                 } else if (motif.equals("PGP")) {
@@ -64,20 +70,25 @@ public class Autonomous_Pathing extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(0, 30), Math.PI)
-                                    .splineTo(new Vector2d(0, 60), 0)
+                                    .splineTo(new Vector2d(46, -11), 0)
+                                    .waitSeconds(0.5f)
+                                    .setTangent(Math.toRadians(180))
+                                    .splineTo(new Vector2d(18, 7), Math.toRadians(90))
+                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                                     .build());
 
-                } else if (motif.equals("PPG")) {
+
+                } else if (motif.equals("PPG")){
                     telemetry.addData(">", "Running PPG Pathing");
 
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(0, 30), Math.PI)
-                                    .splineTo(new Vector2d(0, 60), 0)
+                                    .splineTo(new Vector2d(48, 13), 0)
+                                    .waitSeconds(0.5f)
+                                    .setTangent(Math.toRadians(180))
+                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                                     .build());
-                    //
 
                 }
 
@@ -86,7 +97,7 @@ public class Autonomous_Pathing extends LinearOpMode {
             }
         }
 
-        // Save more CPU resources when camera is no longer needed.
+//         Save more CPU resources when camera is no longer needed.
         visionPortal.close();
 
     }   // end method runOpMode()
@@ -129,14 +140,18 @@ public class Autonomous_Pathing extends LinearOpMode {
             } else if (detection.id == 21) {
                 telemetry.addLine("Motif 1: GPP ");
                 randomization = 1;
+                tagScanned=true;
                 motif = "GPP";
+                //break; ?
             } else if (detection.id == 22) {
                 telemetry.addLine("Motif 2: PGP ");
                 randomization = 2;
+                tagScanned=true;
                 motif = "PGP";
             } else if (detection.id == 23) {
                 telemetry.addLine("Motif 3: PPG ");
                 randomization = 3;
+                tagScanned=true;
                 motif = "PPG";
             } else {
                 telemetry.addLine("No motif found: unknown");
@@ -160,22 +175,8 @@ public class Autonomous_Pathing extends LinearOpMode {
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
-
+        telemetry.update();
 
     }   // end method telemetryAprilTag()
 
 }  // end class
-
-//
-//   public void runOpMode() throws InterruptedException {
-//        Pose2d beginPose = new Pose2d(0, 0, 0);
-//        MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
-//
-//        waitForStart();
-//        Actions.runBlocking(
-//                drive.actionBuilder(beginPose)
-//                        .splineTo(new Vector2d(0, 30), Math.PI)
-//                        .splineTo(new Vector2d(0, 60), 0)
-//                        .build());
-//    }
-//}
