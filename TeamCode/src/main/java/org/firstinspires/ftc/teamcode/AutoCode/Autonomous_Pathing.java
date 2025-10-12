@@ -39,8 +39,8 @@ public class Autonomous_Pathing extends LinearOpMode {
 
     private VisionPortal visionPortal;
 
-    AutoIntake Intake;
-    aimerArm Aim;
+    //AutoIntake Intake;
+    //aimerArm Aim;
 
     @Override
     public void runOpMode() {
@@ -48,8 +48,8 @@ public class Autonomous_Pathing extends LinearOpMode {
         Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Intake = new AutoIntake(hardwareMap);
-        Aim = new aimerArm(hardwareMap);
+        //Intake = new AutoIntake(hardwareMap);
+        //Aim = new aimerArm(hardwareMap);
 
         initAprilTag();
 
@@ -193,23 +193,23 @@ public class Autonomous_Pathing extends LinearOpMode {
 
     }   // end method telemetryAprilTag()
 
-    public class runIntake implements Action {
-        public runIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Intake.setMotorPower(0.5);
-            sleep(3);
-            Intake.setMotorPower(0);
-            return false;
-        }
-    }
-
-    public class AimArm implements Action {
-        public AimArm(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Aim.setArmTarget(1);
-            Aim.stopMotor();
-            return false;
-        }
-    }
+//    public class runIntake implements Action {
+//        public runIntake(HardwareMap hMap) {}
+//        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+//            Intake.setMotorPower(0.5);
+//            sleep(3);
+//            Intake.setMotorPower(0);
+//            return false;
+//        }
+//    }
+//
+//    public class AimArm implements Action {
+//        public AimArm(HardwareMap hMap) {}
+//        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+//            Aim.setArmTarget(1);
+//            Aim.stopMotor();
+//            return false;
+//        }
+//    }
 
 }  // end class
