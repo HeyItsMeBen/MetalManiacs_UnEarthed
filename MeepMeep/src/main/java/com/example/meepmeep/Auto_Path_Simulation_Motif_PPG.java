@@ -24,7 +24,7 @@ public class Auto_Path_Simulation_Motif_PPG {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI / 2)) //Direction the robot faces is based on radians
                         .splineTo(new Vector2d(48, -11), 0)
-                        .waitSeconds(0.5f)
+                        .waitSeconds(0.5)
 //                        .setTangent(Math.toRadians(200))
 //                        .splineTo(new Vector2d(37, 37), Math.toRadians(25))
                         .splineTo(new Vector2d(15, 20), Math.toRadians(45))

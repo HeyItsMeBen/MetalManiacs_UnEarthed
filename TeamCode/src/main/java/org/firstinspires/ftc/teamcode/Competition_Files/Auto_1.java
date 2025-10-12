@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode;
+package org.firstinspires.ftc.teamcode.Competition_Files;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -6,10 +6,9 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -18,7 +17,7 @@ import java.util.List;
 
 @Autonomous(name = "Auto Pathing", group = "Concept")
 //@Disabled
-public class Autonomous_Pathing extends LinearOpMode {
+public class Auto_1 extends LinearOpMode {
 
     int randomization = 0;
     String motif = " ";
