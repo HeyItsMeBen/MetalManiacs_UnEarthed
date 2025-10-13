@@ -30,7 +30,7 @@ public class VelocityWheelTest extends LinearOpMode {
     public static double Kp=0;
     public static double Ki=0;
     public static double Kd=0;
-    public static double Kf=0;
+    public static double Kf=0.05;
     public double lastError=0;
 
 
@@ -45,16 +45,17 @@ public class VelocityWheelTest extends LinearOpMode {
         flywheelLeft.setDirection(DcMotor.Direction.FORWARD);
         flywheelRight.setDirection(DcMotor.Direction.REVERSE);
 
-        flywheelLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  //The video told me to type it...
+        flywheelLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flywheelRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  //The video told me to type it...
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart(); //waits until you start the program from the driver station
         while (opModeIsActive()){   //infinite loop
-            double power = PIDControl(ticksPerSecond, flywheelLeft.getVelocity());    //calculates the needed power with PID
+            double power = PIDControl(ticksPerSecond, flywheelRight.getVelocity());    //calculates the needed power with PID
             flywheelLeft.setPower(power);
             flywheelRight.setPower(power);
             telemetry.addData("Target RPM", rpm);
-            telemetry.addData("Current RPM", flywheelLeft.getVelocity()*60/tickPerRevolution);
+            telemetry.addData("Current RPM", flywheelRight.getVelocity()*60/tickPerRevolution);
             telemetry.update();
 
         }
