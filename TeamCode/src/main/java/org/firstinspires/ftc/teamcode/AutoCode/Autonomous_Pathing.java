@@ -25,7 +25,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@Autonomous(name = "Auto Pathing", group = "Concept")
+@Autonomous(name = "Auto Pathing Motif", group = "Concept")
 //@Disabled
 public class Autonomous_Pathing extends LinearOpMode {
 

@@ -55,7 +55,7 @@ public final class TuningOpModes {
     public static final Class<?> DRIVE_CLASS = MecanumDrive.class;
 
     public static final String GROUP = "quickstart";
-    public static final boolean DISABLED = false; // This hides the tuners from popping up on the TeleOP. Switch back to false if you want to tune.
+    public static final boolean DISABLED = true; // This hides the tuners from popping up on the TeleOP. Switch back to false if you want to tune.
 
     private TuningOpModes() {}
 
