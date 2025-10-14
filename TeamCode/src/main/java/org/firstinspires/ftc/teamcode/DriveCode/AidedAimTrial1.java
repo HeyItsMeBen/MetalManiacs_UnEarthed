@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.AutoCode;
+package org.firstinspires.ftc.teamcode.DriveCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -87,7 +87,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Auto Aim, Version 1", group = "Concept")
 //@Disabled
-public class AutoAimTrial1 extends LinearOpMode
+public class AidedAimTrial1 extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
     final double DESIRED_DISTANCE = 36; //  this is how close the camera should get to the target (inches)
