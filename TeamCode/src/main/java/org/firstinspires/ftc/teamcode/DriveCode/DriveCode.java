@@ -85,6 +85,10 @@ public class DriveCode extends OpMode {
 
     @Override
     public void init() {
+
+        driver = new GamepadEx(gamepad1);
+        operator = new GamepadEx(gamepad2);
+
         frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
@@ -125,17 +129,33 @@ public class DriveCode extends OpMode {
 
         // If you press the A button, then you reset the Yaw to be zero from the way
         // the robot is currently pointing
-        if (gamepad1.a) { //reset Yaw or direction robot is pointing/facing
+        if (driver.getButton(GamepadKeys.Button.A)){
             imu.resetYaw();
         }
 
         // If you press the left bumper, you get a drive from the point of view of the robot
         // (much like driving an RC vehicle)
-        if (gamepad1.left_bumper) { //regular drive
-            drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        } else { //relative drive
-            driveFieldRelative(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        //with operator gamepads:
+        if(driver.getButton(GamepadKeys.Button.LEFT_BUMPER)){
+            //normal drive
+            drive(-driver.getLeftY(), driver.getLeftX(),driver.getRightX());
+        }else{
+            //field centric
+            driveFieldRelative(-driver.getLeftY(), driver.getLeftX(),driver.getRightX());
         }
+
+
+        //manual inttake control
+        //up dpad should spin in
+        //down dpad should spin out
+        //otherwise it won't spin
+//        if(driver.getButton((GamepadKeys.Button.DPAD_UP))){
+//            inttake.setPower(1);
+//        }else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)){
+//            inttake.setPower(-1);
+//        }else{
+//            inttake.setPower(0);
+//        }
 
         //operator
         if (gamepad1.dpad_left){
@@ -151,9 +171,12 @@ public class DriveCode extends OpMode {
             outtake.fire(0);
         }
 
-
-
-        //intake always spinning to take in artifacts
+        //operators use left stick to aim the outtake up and down
+//        outtake.arm(operator.getLeftY());
+        //Press B to launch ball
+//        if(operator.getButton(GamepadKeys.Button.B)){
+//            outtake.fire(0.2f);
+//        }
 
         //sort stuff
         //sort()
