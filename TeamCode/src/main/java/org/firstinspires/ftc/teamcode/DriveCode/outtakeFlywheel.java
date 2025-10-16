@@ -20,18 +20,17 @@ public class outtakeFlywheel {
     public double lastError=0;
 
 
-    final double tickPerRevolution=28;
+    final double tickPerRevolution=1120;
 
 
     //calculation setup
-    final double basketY_Og=toMeters(38.75+5.75); //basketY_Og should be equal to basketHeight + distanceFromArmBaseToGround
+    final double basketY_Og=toMeters(39+5.75); //basketY_Og should be equal to basketHeight + distanceFromArmBaseToGround
     double basketY=basketY_Og;
-    //double basketLocationX=toMeters(60);
+    double basketLocationX=toMeters(60);
     double H = basketY+toMeters(7.5); //measured in meters. Max height that launched ball will reach. Change as desired.
     double gravity=9.8; //i think this is the right value
     double tagToGoalCenter_Distance=toMeters(5);
     double robotCenterToArmBase_Distance=toMeters(0.25);
-    double cameraToRobotCenter_Distance=toMeters(8);
 
     double [] values= {0, 0};
     double[] armPositions={0, 0, 0};
@@ -43,7 +42,7 @@ public class outtakeFlywheel {
 
     ElapsedTime timer = new ElapsedTime();  //keeps track of time. Used for PID calculations
     public outtakeFlywheel(HardwareMap hMap){
-        flywheel = hMap.get(DcMotorEx.class, "leftFlyWheel");    //connects the flywheel variable with the actual motor in the control hub
+        flywheel = hMap.get(DcMotorEx.class, "flywheelLeft");    //connects the flywheel variable with the actual motor in the control hub
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);      //The video told me to type it...
         outtakeFlywheelValues = new flywheelValues();
     }
@@ -72,22 +71,21 @@ public class outtakeFlywheel {
         double output = (error*Kp)+(derivitive*Kd)+(integralSum*Ki)+(reference*Kf);
         return output;
     }*/
-    public void setOuttakeVelocity(float givenRpm){
-        flywheel.setVelocity(tickPerRevolution*(givenRpm/60));
+    public void setOuttakeVelocity(float givenVelocity){
+        flywheel.setVelocity(givenVelocity);
     }
     private double toMeters(double inches){
         return inches/39.3700787;
     }
 
 
-    public void calculateEverything(double givenX, double tagTilt, double tagElevation, double cameraPitch){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates robotCenter into armBase so the rest of this file can calculate properly.
-        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch);
+    public void calculateEverything(double robotBaseX, double tagTilt){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates robotCenter into armBase so the rest of this file can calculate properly.
         double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-tagTilt));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
         outtakeFlywheelValues.angleDeviation=Math.asin(tagToGoalCenter_Distance*Math.sin(Math.PI-tagTilt)/newX);    //law of sines
-        getValues(newX-robotCenterToArmBase_Distance+cameraToRobotCenter_Distance);  //this input is equal to the distance from the armBase to goalCenter
+        getValues(newX-robotCenterToArmBase_Distance);  //this input is equal to the distance from the armBase to goalCenter
     }
     public void getValues(double givenX){
-        values=calculateValues(givenX);
+        values=calculateValues(basketLocationX);
         armPositions=findArmPosition(values);
 
         outtakeFlywheelValues.basketXTelemetryOg=givenX;
@@ -97,7 +95,7 @@ public class outtakeFlywheel {
         outtakeFlywheelValues.launchAngleOg=values[1];
 
         basketY=basketY_Og-armPositions[1];
-        values=calculateValues(givenX-armPositions[0]);
+        values=calculateValues(basketLocationX-armPositions[0]);
 
         double ballWeight=2;
         double wheelInertia=1;
@@ -110,7 +108,7 @@ public class outtakeFlywheel {
         outtakeFlywheelValues.launchAngle=values[1];
         outtakeFlywheelValues.moveBackValue=armPositions[2];
 
-        outtakeFlywheelValues.basketXTelemetry=givenX-armPositions[0];
+        outtakeFlywheelValues.basketXTelemetry=basketLocationX-armPositions[0];
         outtakeFlywheelValues.basketYTelemetry=basketY;
         outtakeFlywheelValues.vertexHeightTelemetry=Math.pow(values[0], 2)*Math.pow(Math.sin(values[1]), 2)/(2*gravity);
         outtakeFlywheelValues.ballVelocity=values[0];
