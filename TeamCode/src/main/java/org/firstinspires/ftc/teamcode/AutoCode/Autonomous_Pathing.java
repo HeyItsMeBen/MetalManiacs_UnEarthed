@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveCode.Outtake;
@@ -81,11 +82,13 @@ public class Autonomous_Pathing extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-//                                    .stopAndAdd(new intakeOn(hardwareMap))
+                                    .stopAndAdd(new intakeOn(hardwareMap))
                                     .splineTo(new Vector2d(46, -11-24), 0)
                                     .waitSeconds(0.5f)
+                                    .stopAndAdd(new intakeOff(hardwareMap))
                                     .setTangent(Math.toRadians(180))
                                     .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                                    .stopAndAdd(new outtakeFire(hardwareMap))
                                     .build());
 
                 } else if (motif.equals("PGP")) {
@@ -134,7 +137,7 @@ public class Autonomous_Pathing extends LinearOpMode {
 
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
-            intake.setMotorPower(.75);
+            intake.setMotorPower(1);
             return false;
         }
     }
@@ -156,23 +159,20 @@ public class Autonomous_Pathing extends LinearOpMode {
 
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
-            outtake.setOuttakeVelocity(.75f);
+            outtake.setOuttakeVelocity(2900);
             return false;
         }
     }
     public class adjustOuttakeArm implements Action {
+        ElapsedTime timer;
         public adjustOuttakeArm(HardwareMap hMap) {
-
+            timer=new ElapsedTime();
         }
 
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
-            //needs to constantly update the arm target position so that it wil stay in place
-            //change as needed
-//            while (true){
-//                arm.setArmTarget(100);
-//                // if the ball is fired then exit loop
-//            }
+            while (timer.seconds()<2 && opModeIsActive()){
+                arm.setArmTarget(100);
+            }
             return false;
         }
     }
