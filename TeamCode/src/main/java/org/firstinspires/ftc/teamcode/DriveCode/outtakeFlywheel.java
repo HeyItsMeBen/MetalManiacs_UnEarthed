@@ -24,13 +24,13 @@ public class outtakeFlywheel {
 
 
     //calculation setup
-    final double basketY_Og=toMeters(39); //basketY_Og should be equal to basketHeight + distanceFromArmBaseToGround
+    final double basketY_Og=toMeters(39+5.75); //basketY_Og should be equal to basketHeight + distanceFromArmBaseToGround
     double basketY=basketY_Og;
     double basketLocationX=toMeters(60);
     double H = basketY+toMeters(7.5); //measured in meters. Max height that launched ball will reach. Change as desired.
     double gravity=9.8; //i think this is the right value
-    double tagToGoalCenter_Distance=toMeters(6);
-    double robotCenterToArmBase_Distance=toMeters(4);
+    double tagToGoalCenter_Distance=toMeters(5);
+    double robotCenterToArmBase_Distance=toMeters(0.25);
 
     double [] values= {0, 0};
     double[] armPositions={0, 0, 0};
@@ -47,7 +47,7 @@ public class outtakeFlywheel {
         outtakeFlywheelValues = new flywheelValues();
     }
     //returns true when at full velocity
-    public void flyWheelFullPower(float targetRPM, float targetTime) {
+    /*public void flyWheelFullPower(float targetRPM, float targetTime) {
         ElapsedTime timer;
         timer = new ElapsedTime();
         while(true){
@@ -70,6 +70,9 @@ public class outtakeFlywheel {
 
         double output = (error*Kp)+(derivitive*Kd)+(integralSum*Ki)+(reference*Kf);
         return output;
+    }*/
+    public void setOuttakeVelocity(float givenVelocity){
+        flywheel.setVelocity(givenVelocity);
     }
     private double toMeters(double inches){
         return inches/39.3700787;
