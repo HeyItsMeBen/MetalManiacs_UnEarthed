@@ -45,6 +45,8 @@ public class AutoTesting extends LinearOpMode {
     double yCameraOffset=0; // back/forth distance from webcam to robotCenter
     double yDistance=0;
     double tagTilt=0;
+    double tagElevation=0;  //rotational elevation
+    double cameraPitch=0;
 
     private VisionPortal visionPortal;
     @Override
@@ -58,7 +60,10 @@ public class AutoTesting extends LinearOpMode {
             double givenY=yDistance; //the x-y coordinates directly from camera will need to be adjusted and set to robotCenter. GivenY is distance from camera to basket.
             if (givenY!=0){
                 //flywheel.getValues(givenY-yCameraOffset);
-                flywheel.calculateEverything(givenY-yCameraOffset, tagTilt);    //NOTE: before calculateEverything() you will NEED to rotate the robot so the aprilTag is directly in front of it (centered).
+                cameraPitch=45;
+                tagElevation=0;
+                tagTilt=0;
+                flywheel.calculateEverything(givenY, Math.toRadians(tagTilt), Math.toRadians(tagElevation), Math.toRadians(cameraPitch));    //NOTE: before calculateEverything() you will NEED to rotate the robot so the aprilTag is directly in front of it (centered).
 
                 //theses 4 values (wheelVelocity, launchAngle, and moveBackValue) will be the values we will use directly to control the robot.
                 telemetry.addLine(String.format("velocity: " + flywheel.outtakeFlywheelValues.wheelVelocity));
@@ -75,6 +80,8 @@ public class AutoTesting extends LinearOpMode {
 
                 telemetry.update();
                 sleep(1000);
+                //flywheel.setOuttakeVelocity(2900);
+                sleep(30000);
             }
         }
     }
@@ -147,8 +154,9 @@ public class AutoTesting extends LinearOpMode {
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
             }
             if (tagScanned){
-                yDistance = detection.ftcPose.y;
+                yDistance = detection.ftcPose.range;
                 tagTilt = detection.ftcPose.yaw; //Is it rly Yaw? I can get them mixed up sometimes...
+                tagElevation = detection.ftcPose.elevation;
             }
         }   // end for() loop
 

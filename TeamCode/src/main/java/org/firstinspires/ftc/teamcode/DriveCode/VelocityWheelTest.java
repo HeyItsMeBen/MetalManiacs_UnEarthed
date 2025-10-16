@@ -51,9 +51,10 @@ public class VelocityWheelTest extends LinearOpMode {
 
         waitForStart(); //waits until you start the program from the driver station
         while (opModeIsActive()){   //infinite loop
-            double power = PIDControl(ticksPerSecond, flywheelRight.getVelocity());    //calculates the needed power with PID
-            flywheelLeft.setPower(power);
-            flywheelRight.setPower(power);
+            //double power = PIDControl(ticksPerSecond, flywheelRight.getVelocity());    //calculates the needed power with PID
+            ticksPerSecond=tickPerRevolution*(rpm/60);
+            flywheelLeft.setVelocity(ticksPerSecond);
+            flywheelRight.setVelocity(ticksPerSecond);
             telemetry.addData("Target RPM", rpm);
             telemetry.addData("Current RPM", flywheelRight.getVelocity()*60/tickPerRevolution);
             telemetry.update();
