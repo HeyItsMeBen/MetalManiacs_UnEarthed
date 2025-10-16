@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.DriveCode.Outtake;
+import org.firstinspires.ftc.teamcode.DriveCode.outtakeFlywheel;
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
 import org.firstinspires.ftc.robotcore. external.hardware.camera.BuiltinCameraDirection;
@@ -39,9 +41,11 @@ public class Autonomous_Pathing extends LinearOpMode {
 
     private VisionPortal visionPortal;
 
-    //AutoIntake Intake;
-    //aimerArm Aim;
+    AutoIntake intake;
+    outtakeFlywheel outtake;
 
+    aimerArm arm;
+    //aimerArm Aim;
     @Override
     public void runOpMode() {
 
@@ -52,6 +56,11 @@ public class Autonomous_Pathing extends LinearOpMode {
         //Aim = new aimerArm(hardwareMap);
 
         initAprilTag();
+
+        //Adjust as necessary
+        intake = new AutoIntake(hardwareMap);
+        outtake = new outtakeFlywheel(hardwareMap);
+        arm = new aimerArm((hardwareMap));
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -72,6 +81,7 @@ public class Autonomous_Pathing extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
+//                                    .stopAndAdd(new intakeOn(hardwareMap))
                                     .splineTo(new Vector2d(46, -11-24), 0)
                                     .waitSeconds(0.5f)
                                     .setTangent(Math.toRadians(180))
@@ -115,6 +125,58 @@ public class Autonomous_Pathing extends LinearOpMode {
         visionPortal.close();
 
     }   // end method runOpMode()
+
+
+    public class intakeOn implements Action {
+        public intakeOn(HardwareMap hMap) {
+
+        }
+
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
+            intake.setMotorPower(.75);
+            return false;
+        }
+    }
+    public class intakeOff implements Action {
+        public intakeOff(HardwareMap hMap) {
+
+        }
+
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
+            intake.setMotorPower(0);
+            return false;
+        }
+    }
+    public class outtakeFire implements Action {
+        public outtakeFire(HardwareMap hMap) {
+
+        }
+
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
+            outtake.setOuttakeVelocity(.75f);
+            return false;
+        }
+    }
+    public class adjustOuttakeArm implements Action {
+        public adjustOuttakeArm(HardwareMap hMap) {
+
+        }
+
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
+            //needs to constantly update the arm target position so that it wil stay in place
+            //change as needed
+//            while (true){
+//                arm.setArmTarget(100);
+//                // if the ball is fired then exit loop
+//            }
+            return false;
+        }
+    }
+
 
 
     private void initAprilTag() {
