@@ -8,12 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 @Config
 @Autonomous(name = "aimerArm_Tuner", group = "Autonomous")
-public class aimerArm_Tuner extends LinearOpMode {
+public class Arm_Tuner extends LinearOpMode {
     private PIDController controller;
     public static double p = 0.01, i = 0.05, d = 0.001;
     public static double f = 0;

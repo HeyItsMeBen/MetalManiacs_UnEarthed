@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.AutoCode;
+package org.firstinspires.ftc.teamcode.Systems;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-
-public class aimerArm {
+public class Arm {
     private PIDController controller;
     public static double p = 0.01, i = 0.05, d = 0.001;
     public static double f = 0;
     private final double ticks_in_degree = 1120 / 360;
     private DcMotorEx arm_motor;
 
-    public aimerArm(HardwareMap hMap) {
+    public Arm(HardwareMap hMap) {
         controller = new PIDController(p, i, d);
 
 

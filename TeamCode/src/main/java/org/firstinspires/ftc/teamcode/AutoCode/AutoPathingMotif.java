@@ -9,27 +9,23 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.DriveCode.Outtake;
-import org.firstinspires.ftc.teamcode.DriveCode.outtakeFlywheel;
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
 import org.firstinspires.ftc.robotcore. external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Roadrunner.tuning.TuningOpModes;
-import org.firstinspires.ftc.teamcode.DriveCode.ActiveIntake;
+import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
+import org.firstinspires.ftc.teamcode.Systems.Intake;
+import org.firstinspires.ftc.teamcode.Systems.Outtake;
 import java.util.List;
 
 @Autonomous(name = "Auto Pathing Motif", group = "Concept")
 //@Disabled
-public class Autonomous_Pathing extends LinearOpMode {
+public class AutoPathingMotif extends LinearOpMode {
 
     int randomization = 0;
     String motif = " ";
@@ -41,26 +37,21 @@ public class Autonomous_Pathing extends LinearOpMode {
 
     private VisionPortal visionPortal;
 
-    AutoIntake intake;
-    outtakeFlywheel outtake;
+    Intake Intake;
+    Arm Aim;
+    Outtake Flywheel;
 
-    aimerArm arm;
-    //aimerArm Aim;
     @Override
     public void runOpMode() {
 
         Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        //Intake = new AutoIntake(hardwareMap);
-        //Aim = new aimerArm(hardwareMap);
+        Intake = new Intake(hardwareMap);
+        Aim = new Arm(hardwareMap);
+        Flywheel = new Outtake(hardwareMap);
 
         initAprilTag();
-
-        //Adjust as necessary
-        intake = new AutoIntake(hardwareMap);
-        outtake = new outtakeFlywheel(hardwareMap);
-        arm = new aimerArm((hardwareMap));
 
         // Wait for the DS start button to be touched.
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -73,16 +64,14 @@ public class Autonomous_Pathing extends LinearOpMode {
 
                 telemetryAprilTag();
 
-
-
                 if (motif.equals("GPP")) {
                     telemetry.addData(">", "Running PPG Pathing");
 
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-//                                    .stopAndAdd(new intakeOn(hardwareMap))
                                     .splineTo(new Vector2d(46, -11-24), 0)
+
                                     .waitSeconds(0.5f)
                                     .setTangent(Math.toRadians(180))
                                     .splineTo(new Vector2d(37, 37), Math.toRadians(45))
@@ -125,58 +114,6 @@ public class Autonomous_Pathing extends LinearOpMode {
         visionPortal.close();
 
     }   // end method runOpMode()
-
-
-    public class intakeOn implements Action {
-        public intakeOn(HardwareMap hMap) {
-
-        }
-
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
-            intake.setMotorPower(.75);
-            return false;
-        }
-    }
-    public class intakeOff implements Action {
-        public intakeOff(HardwareMap hMap) {
-
-        }
-
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
-            intake.setMotorPower(0);
-            return false;
-        }
-    }
-    public class outtakeFire implements Action {
-        public outtakeFire(HardwareMap hMap) {
-
-        }
-
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
-            outtake.setOuttakeVelocity(.75f);
-            return false;
-        }
-    }
-    public class adjustOuttakeArm implements Action {
-        public adjustOuttakeArm(HardwareMap hMap) {
-
-        }
-
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //setOuttakeArmPosition(outtakeArmServos.prepSpecimen);
-            //needs to constantly update the arm target position so that it wil stay in place
-            //change as needed
-//            while (true){
-//                arm.setArmTarget(100);
-//                // if the ball is fired then exit loop
-//            }
-            return false;
-        }
-    }
-
 
 
     private void initAprilTag() {
@@ -255,23 +192,32 @@ public class Autonomous_Pathing extends LinearOpMode {
 
     }   // end method telemetryAprilTag()
 
-//    public class runIntake implements Action {
-//        public runIntake(HardwareMap hMap) {}
-//        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-//            Intake.setMotorPower(0.5);
-//            sleep(3);
-//            Intake.setMotorPower(0);
-//            return false;
-//        }
-//    }
-//
-//    public class AimArm implements Action {
-//        public AimArm(HardwareMap hMap) {}
-//        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-//            Aim.setArmTarget(1);
-//            Aim.stopMotor();
-//            return false;
-//        }
-//    }
+    public class runIntake implements Action {
+        public runIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+            Intake.setMotorPower(0.5);
+            sleep(3);
+            Intake.setMotorPower(0);
+            return false;
+        }
+    }
+
+    public class aimArm implements Action {
+        public aimArm(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+            Aim.setArmTarget(1);
+            Aim.stopMotor();
+            return false;
+        }
+    }
+
+    public class launchBall implements Action {
+        public launchBall(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            Flywheel.fire(1);
+            Flywheel.fire(0);
+            return false;
+        }
+    }
 
 }  // end class
