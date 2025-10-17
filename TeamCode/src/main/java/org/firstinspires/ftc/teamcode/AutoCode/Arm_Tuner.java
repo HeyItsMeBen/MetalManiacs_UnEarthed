@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @Autonomous(name = "aimerArm_Tuner", group = "Autonomous")
 public class Arm_Tuner extends LinearOpMode {
     private PIDController controller;
-    public static double p = 0.01, i = 0.05, d = 0.001;
+    public static double p = 0.001, i = 0, d = 0;
     public static double f = 0;
     public static double inputTarget=0;
     private final double ticks_in_degree = 1120 / 360;
