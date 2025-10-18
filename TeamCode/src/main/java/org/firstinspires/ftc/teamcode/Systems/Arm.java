@@ -15,7 +15,6 @@ public class Arm {
     public Arm(HardwareMap hMap) {
         controller = new PIDController(p, i, d);
 
-
         arm_motor = hMap.get(DcMotorEx.class, "arm");   //real name?
         arm_motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -23,6 +22,9 @@ public class Arm {
         arm_motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
+    public void raiseArmManual(double power) {
+        arm_motor.setPower(power);
+    }
 
     public void setArmTarget(double givenTarget) {
         double target=givenTarget*-325;

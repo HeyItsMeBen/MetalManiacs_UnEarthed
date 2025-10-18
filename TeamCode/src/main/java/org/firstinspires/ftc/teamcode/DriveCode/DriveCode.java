@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
 import org.firstinspires.ftc.teamcode.Systems.Arm;
@@ -58,12 +59,10 @@ import org.firstinspires.ftc.teamcode.Systems.Arm;
  */
 @TeleOp(name = "Competition DriveCode", group = "Robot")
 public class DriveCode extends OpMode {
-    // This declares the four motors needed
 
     // Driver Code
     public GamepadEx driver;
     public GamepadEx operator;
-
 
     DcMotor frontLeftDrive;
     DcMotor frontRightDrive;
@@ -73,6 +72,7 @@ public class DriveCode extends OpMode {
     Intake intake;
     Outtake outtake;
     Arm arm;
+    Hinge hinge;
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
@@ -88,10 +88,10 @@ public class DriveCode extends OpMode {
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
 
-        //change to match actual servo names v
         intake = new Intake(hardwareMap);
-        outtake = new Outtake(hardwareMap);
         arm = new Arm(hardwareMap);
+        outtake = new Outtake(hardwareMap);
+        hinge = new Hinge(hardwareMap);
 
         // We set the left motors in reverse which is needed for drive trains where the left
         // motors are opposite to the right ones.
@@ -104,14 +104,12 @@ public class DriveCode extends OpMode {
 
         imu = hardwareMap.get(IMU.class, "imu");
         // This needs to be changed to match the orientation on your robot
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection usbDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
-        RevHubOrientationOnRobot orientationOnRobot = new
-                RevHubOrientationOnRobot(logoDirection, usbDirection);
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
+
     }
 
     @Override
@@ -143,23 +141,26 @@ public class DriveCode extends OpMode {
         //up dpad should spin in
         //down dpad should spin out
         //otherwise it won't spin
-
         if (driver.getButton((GamepadKeys.Button.DPAD_UP))){
-            intake.setMotorPower(1);
+            runIntake(1);
         } else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            intake.setMotorPower(-1);
+            runIntake(-1);
         } else {
-            intake.setMotorPower(0);
+            runIntake(0);
         }
 
+        //arm
         if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            arm.setArmTarget(325); //change later
+            raiseArm(325);
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            arm.setArmTarget(0); //change later
-        } else if (operator.getButton(GamepadKeys.Button.X)) {
-            outtake.fire(0.2f);
+            raiseArm(0); //change later
+        } //add manual lift later
+
+        //flywheels
+        if (operator.getButton(GamepadKeys.Button.X)) {
+            runFlywheels(0.2f);
         } else {
-            outtake.fire(0);
+            runFlywheels(0);
         }
 
         //operators use left stick to aim the outtake up and down
@@ -191,6 +192,7 @@ public class DriveCode extends OpMode {
         drive(newForward, newRight, rotate);
     }
 
+    // This routine drives the robot regularly
     public void drive(double forward, double right, double rotate) {
 
         double frontLeftPower = forward + right + rotate;
@@ -211,4 +213,24 @@ public class DriveCode extends OpMode {
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
     }
+
+    public void runIntake(double power) {
+        intake.setMotorPower(power);
+    }
+
+    public void raiseArm(double Target) {
+        arm.setArmTarget(Target);
+    }
+
+    public void runFlywheels(float power) {
+        outtake.fire(power);
+    }
+
+    public void raiseHinge() {
+        hinge.liftHinge(1); //change position later
+    }
+    public void dropHinge() {
+        hinge.liftHinge(0); //change position later
+    }
+
 }
