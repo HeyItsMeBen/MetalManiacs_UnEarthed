@@ -15,12 +15,15 @@ import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
 import org.firstinspires.ftc.robotcore. external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Hinge;
+
 import java.util.List;
 
 @Autonomous(name = "Auto Pathing Motif", group = "Concept")
@@ -40,7 +43,7 @@ public class AutoPathingMotif extends LinearOpMode {
     Intake Intake;
     Arm Aim;
     Outtake Flywheel;
-    Outtake hinge;
+    Hinge hinge;
 
     @Override
     public void runOpMode() {
@@ -51,7 +54,7 @@ public class AutoPathingMotif extends LinearOpMode {
         Intake = new Intake(hardwareMap);
         Aim = new Arm(hardwareMap);
         Flywheel = new Outtake(hardwareMap);
-        hinge = new Outtake(hardwareMap);
+        hinge = new Hinge(hardwareMap);
 
         initAprilTag();
 
@@ -72,6 +75,7 @@ public class AutoPathingMotif extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
+
                                     .splineTo(new Vector2d(46, -11-24), 0)
 
                                     //run intake to pick up balls
@@ -90,13 +94,13 @@ public class AutoPathingMotif extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
+
                                     .splineTo(new Vector2d(46, -11), 0)
 
                                     //run intake to pick up balls
 
                                     .waitSeconds(0.5f)
                                     .setTangent(Math.toRadians(180))
-                                    .splineTo(new Vector2d(18, 7), Math.toRadians(90))
                                     .splineTo(new Vector2d(37, 37), Math.toRadians(45))
 
                                     //lift and launch all three balls
@@ -110,6 +114,7 @@ public class AutoPathingMotif extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
+
                                     .splineTo(new Vector2d(48, 13), 0)
 
                                     //run intake to pick up balls

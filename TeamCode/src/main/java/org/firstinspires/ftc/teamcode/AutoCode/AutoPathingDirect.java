@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Hinge;
 @Autonomous(name = "Auto Pathing Direct", group = "Concept")
 //@Disabled
 public class AutoPathingDirect extends LinearOpMode {
@@ -24,8 +25,7 @@ public class AutoPathingDirect extends LinearOpMode {
     Intake Intake;
     Arm Aim;
     Outtake Flywheel;
-
-    Outtake hinge;
+    Hinge hinge;
 
     @Override
     public void runOpMode() {
@@ -36,7 +36,7 @@ public class AutoPathingDirect extends LinearOpMode {
         Intake = new Intake(hardwareMap);
         Aim = new Arm(hardwareMap);
         Flywheel = new Outtake(hardwareMap);
-        hinge = new Outtake(hardwareMap);
+        hinge = new Hinge(hardwareMap);
 
         waitForStart();
 
@@ -80,7 +80,6 @@ public class AutoPathingDirect extends LinearOpMode {
         public launchBall(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             Flywheel.fire(1);
-            Flywheel.fire(0);
             return false;
         }
     }
