@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode;
+package org.firstinspires.ftc.teamcode.PID_Tuners;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -8,11 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 @Config
 @Autonomous(name = "aimerArm_Tuner", group = "Autonomous")
-public class Arm_Tuner extends LinearOpMode {
+public class aimerArm_Tuner extends LinearOpMode {
     private PIDController controller;
     public static double p = 0.001, i = 0, d = 0;
     public static double f = 0;
