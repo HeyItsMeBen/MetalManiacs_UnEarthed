@@ -13,30 +13,23 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Auto_Path_Simulation {
+public class Auto_Path_Simulation_Direct {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                        .splineTo(new Vector2d(48, 13), 0)
-
-
-
-                        .waitSeconds(0.5f)
-                        .setTangent(Math.toRadians(180))
-                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
-
-
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI/2))
+                        .strafeTo(new Vector2d(12, -40))
+                        .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(225)), Math.toRadians(45))
                         .build());
 
         //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds
         Image img = null;
         try {
-            img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Black.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Dark.png"));
+            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Black.png"));
+            img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Dark.png"));
             //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Light.png"));
             //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Paper.png"));
         }
