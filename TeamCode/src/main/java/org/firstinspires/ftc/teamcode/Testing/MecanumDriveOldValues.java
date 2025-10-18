@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Roadrunner;
+package org.firstinspires.ftc.teamcode.Testing;
 
 import androidx.annotation.NonNull;
 
@@ -51,6 +51,9 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Roadrunner.Drawing;
+import org.firstinspires.ftc.teamcode.Roadrunner.Localizer;
+import org.firstinspires.ftc.teamcode.Roadrunner.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.Roadrunner.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.Roadrunner.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.Roadrunner.messages.MecanumLocalizerInputsMessage;
@@ -61,7 +64,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Config
-public final class MecanumDrive {
+public final class MecanumDriveOldValues {
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -72,61 +75,32 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
             // old robot values
-        // public double inPerTick = 0.00200571629;
-        // public double lateralInPerTick = 0.0013950784619418967;
-        // public double trackWidthTicks = 7856.259516468335;
-        //
-        // public double kS = 0.9067734501662041;
-        // public double kV = 0.0003747184859941724;
-        // public double kA = 0.0001;
-        //
-        //  // path profile parameters (in inches)
-        // public double maxWheelVel = 30;
-        // public double minProfileAccel = -10;
-        // public double maxProfileAccel = 30;
-        //
-        //  // turn profile parameters (in radians)
-        // public double maxAngVel = Math.PI; // shared with path
-        // public double maxAngAccel = Math.PI;
-        //
-        //  // path controller gains
-        // public double axialGain = 3.0;
-        // public double lateralGain = 2.0;
-        // public double headingGain = 4.0; // shared with turn
-        //
-        // public double axialVelGain = 0.0;
-        // public double lateralVelGain = 0.0;
-        // public double headingVelGain = 0.0; // shared with turn
+         public double inPerTick = 0.00200571629;
+         public double lateralInPerTick = 0.0013950784619418967;
+         public double trackWidthTicks = 7856.259516468335;
 
-        public double inPerTick = 0.00198715669;
-        public double lateralInPerTick = 0.001607950362391222;
-        public double trackWidthTicks = 7435.545320124028;
+         public double kS = 0.9067734501662041;
+         public double kV = 0.0003747184859941724;
+         public double kA = 0.0001;
 
+          // path profile parameters (in inches)
+         public double maxWheelVel = 30;
+         public double minProfileAccel = -10;
+         public double maxProfileAccel = 30;
 
-        public double kS = 1.1621482348639423;
-        public double kV = 0.00036029669135249963;
-        public double kA = 0.0001;
+          // turn profile parameters (in radians)
+         public double maxAngVel = Math.PI; // shared with path
+         public double maxAngAccel = Math.PI;
 
+          // path controller gains
+         public double axialGain = 3.0;
+         public double lateralGain = 2.0;
+         public double headingGain = 4.0; // shared with turn
 
-        // path profile parameters (in inches)
-        public double maxWheelVel = 30;
-        public double minProfileAccel = -10;
-        public double maxProfileAccel = 30;
+         public double axialVelGain = 0.0;
+         public double lateralVelGain = 0.0;
+         public double headingVelGain = 0.0; // shared with turn
 
-
-        // turn profile parameters (in radians)
-        public double maxAngVel = Math.PI; // shared with path
-        public double maxAngAccel = Math.PI;
-
-
-        // path controller gains
-        public double axialGain = 4;
-        public double lateralGain = 4;
-        public double headingGain = 4;// shared with turn
-
-        public double axialVelGain = 0.0;
-        public double lateralVelGain = 0.0;
-        public double headingVelGain = 0.0; // shared with turn
     }
 
     public static Params PARAMS = new Params();
@@ -168,10 +142,10 @@ public final class MecanumDrive {
         private Pose2d pose;
 
         public DriveLocalizer(Pose2d pose) {
-            leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
-            leftBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftBack));
-            rightBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
-            rightFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightFront));
+            leftFront = new OverflowEncoder(new RawEncoder(MecanumDriveOldValues.this.leftFront));
+            leftBack = new OverflowEncoder(new RawEncoder(MecanumDriveOldValues.this.leftBack));
+            rightBack = new OverflowEncoder(new RawEncoder(MecanumDriveOldValues.this.rightBack));
+            rightFront = new OverflowEncoder(new RawEncoder(MecanumDriveOldValues.this.rightFront));
 
             imu = lazyImu.get();
 
@@ -254,7 +228,7 @@ public final class MecanumDrive {
         }
     }
 
-    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
+    public MecanumDriveOldValues(HardwareMap hardwareMap, Pose2d pose) {
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {

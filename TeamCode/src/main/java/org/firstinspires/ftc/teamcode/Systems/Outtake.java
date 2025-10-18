@@ -16,19 +16,19 @@ public class Outtake {
     public Outtake(HardwareMap hMap) {
         rightFlyWheel = hMap.get(DcMotor.class, "rightFlyWheel");
         leftFlyWheel = hMap.get(DcMotor.class, "leftFlyWheel");
-
-        //add hinge mapping when done
-//        hinge = hardwareMap.get(Servo.class, "hinge");
+        hinge = hMap.get(Servo.class, "hinge");
 
         rightFlyWheel.setDirection(DcMotor.Direction.REVERSE);
         leftFlyWheel.setDirection(DcMotor.Direction.FORWARD);
     }
 
     public void fire(float power) {
-
         //eventually we need to detect if the flywheel is fully accelerated then fire
         rightFlyWheel.setPower(power);
         leftFlyWheel.setPower(power);
+    }
 
+    public void liftHinge(float position) {
+        hinge.setPosition(position);
     }
 }

@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Arm;
 
 /*
  * This OpMode illustrates how to program your robot to drive field relative.  This means
@@ -71,6 +72,7 @@ public class DriveCode extends OpMode {
 
     Intake intake;
     Outtake outtake;
+    Arm arm;
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
@@ -89,6 +91,7 @@ public class DriveCode extends OpMode {
         //change to match actual servo names v
         intake = new Intake(hardwareMap);
         outtake = new Outtake(hardwareMap);
+        arm = new Arm(hardwareMap);
 
         // We set the left motors in reverse which is needed for drive trains where the left
         // motors are opposite to the right ones.
@@ -98,7 +101,6 @@ public class DriveCode extends OpMode {
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         // This uses RUN_USING_ENCODER to be more accurate.   If you don't have the encoder
         // wires, you should remove these
-
 
         imu = hardwareMap.get(IMU.class, "imu");
         // This needs to be changed to match the orientation on your robot
@@ -141,25 +143,22 @@ public class DriveCode extends OpMode {
         //up dpad should spin in
         //down dpad should spin out
         //otherwise it won't spin
-//        if(driver.getButton((GamepadKeys.Button.DPAD_UP))){
-//            inttake.setPower(1);
-//        }else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)){
-//            inttake.setPower(-1);
-//        }else{
-//            inttake.setPower(0);
-//        }
 
-        //operator
-        if (gamepad1.dpad_left){
+        if (driver.getButton((GamepadKeys.Button.DPAD_UP))){
             intake.setMotorPower(1);
-        }
-        if (gamepad1.dpad_right){
+        } else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
+            intake.setMotorPower(-1);
+        } else {
             intake.setMotorPower(0);
         }
-        if (gamepad1.dpad_up){
+
+        if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
+            arm.setArmTarget(325); //change later
+        } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
+            arm.setArmTarget(0); //change later
+        } else if (operator.getButton(GamepadKeys.Button.X)) {
             outtake.fire(0.2f);
-        }
-        if (gamepad1.dpad_down){
+        } else {
             outtake.fire(0);
         }
 

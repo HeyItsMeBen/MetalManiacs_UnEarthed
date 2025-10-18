@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
@@ -23,6 +25,8 @@ public class AutoPathingDirect extends LinearOpMode {
     Arm Aim;
     Outtake Flywheel;
 
+    Outtake hinge;
+
     @Override
     public void runOpMode() {
 
@@ -32,20 +36,24 @@ public class AutoPathingDirect extends LinearOpMode {
         Intake = new Intake(hardwareMap);
         Aim = new Arm(hardwareMap);
         Flywheel = new Outtake(hardwareMap);
+        hinge = new Outtake(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        //.splineTo(new Vector2d(48, 13), 0)
 
-                        .stopAndAdd(new runIntake(hardwareMap))
+                        .strafeTo(new Vector2d(12, -40))
+                        .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(225)), Math.toRadians(45))
 
+                        .stopAndAdd(new raiseArm(hardwareMap))
 
+                        .stopAndAdd(new liftHinge(hardwareMap))
 
-                        //.waitSeconds(0.5f)
-                        //.setTangent(Math.toRadians(180))
-                        //.splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                        .stopAndAdd(new lowerHinge(hardwareMap))
+
+                        .stopAndAdd(new launchBall(hardwareMap))
+
                         .build());
     }
 
@@ -59,8 +67,8 @@ public class AutoPathingDirect extends LinearOpMode {
         }
     }
 
-    public class aimArm implements Action {
-        public aimArm(HardwareMap hMap) {}
+    public class raiseArm implements Action {
+        public raiseArm(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
             Aim.setArmTarget(1);
             Aim.stopMotor();
@@ -73,6 +81,21 @@ public class AutoPathingDirect extends LinearOpMode {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             Flywheel.fire(1);
             Flywheel.fire(0);
+            return false;
+        }
+    }
+
+    public class liftHinge implements Action {
+        public liftHinge(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hinge.liftHinge(10);
+            return false;
+        }
+    }
+    public class lowerHinge implements Action {
+        public lowerHinge(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hinge.liftHinge(0);
             return false;
         }
     }
