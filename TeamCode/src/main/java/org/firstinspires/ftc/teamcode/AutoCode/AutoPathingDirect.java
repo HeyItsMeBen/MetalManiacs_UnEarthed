@@ -101,12 +101,13 @@ public class AutoPathingDirect extends LinearOpMode {
     public class scoreBall implements Action {
         public scoreBall(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //raise arm. Comment these arm lines if you don't want the arm to move
-            Aim.moveArmTo(400, 1); //400 is the position, measured in encoder counts. This line sets the arm to a position, and then waits a second for the arm to get there.
-            Aim.stopMotor();
+            //raise arm. Uncomment these arm lines if you want the arm to move
+            //Aim.moveArmTo(400, 1); //400 is the position, measured in encoder counts. This line sets the arm to a position, and then waits a second for the arm to get there.
+            //Aim.stopMotor();
 
             Flywheel.setFlywheelVelocity(2900, 1);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
 
+            //fires the ball, and brings the hinge back to waiting position
             hinge.liftHinge(0.6f);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
             sleep(1000);
             hinge.liftHinge(0.3f);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
