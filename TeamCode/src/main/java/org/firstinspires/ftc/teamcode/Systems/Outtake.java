@@ -2,28 +2,27 @@ package org.firstinspires.ftc.teamcode.Systems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Config
-
 public class Outtake {
 
-    public DcMotor rightFlyWheel = null;
-    public DcMotor leftFlyWheel = null;
+    public DcMotorEx rightFlyWheel = null;
+    public DcMotorEx leftFlyWheel = null;
+    final double tickPerRevolution=28;
 
     //Outtake subsystem
     public Outtake(HardwareMap hMap) {
-        rightFlyWheel = hMap.get(DcMotor.class, "rightFlyWheel");
-        leftFlyWheel = hMap.get(DcMotor.class, "leftFlyWheel");
+        rightFlyWheel = hMap.get(DcMotorEx.class, "rightFlyWheel");
+        leftFlyWheel = hMap.get(DcMotorEx.class, "leftFlyWheel");
 
-        rightFlyWheel.setDirection(DcMotor.Direction.REVERSE);
-        leftFlyWheel.setDirection(DcMotor.Direction.FORWARD);
+        rightFlyWheel.setDirection(DcMotorEx.Direction.REVERSE);
+        leftFlyWheel.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
-    public void fire(float power) {
-        //eventually we need to detect if the flywheel is fully accelerated then fire
-        rightFlyWheel.setPower(power);
-        leftFlyWheel.setPower(power);
+    public void fire(float givenRPM) {  //givenRPM should be around 2900 or 3000.
+        rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
+        leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
     }
 }
