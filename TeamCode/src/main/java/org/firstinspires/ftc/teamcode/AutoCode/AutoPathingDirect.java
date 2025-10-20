@@ -46,13 +46,13 @@ public class AutoPathingDirect extends LinearOpMode {
                         .strafeTo(new Vector2d(12, -40))
                         .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(225)), Math.toRadians(45))
 
-                        .stopAndAdd(new raiseArm(hardwareMap))
+                        //.stopAndAdd(new raiseArm(hardwareMap))
 
                         .stopAndAdd(new liftHinge(hardwareMap))
 
                         .stopAndAdd(new lowerHinge(hardwareMap))
 
-                        .stopAndAdd(new launchBall(hardwareMap))
+                        //.stopAndAdd(new launchBall(hardwareMap))
 
                         .build());
     }
@@ -67,7 +67,7 @@ public class AutoPathingDirect extends LinearOpMode {
         }
     }
 
-    public class raiseArm implements Action {
+    /*public class raiseArm implements Action {
         public raiseArm(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
             Aim.setArmTarget(1);
@@ -82,7 +82,7 @@ public class AutoPathingDirect extends LinearOpMode {
             Flywheel.fire(1);
             return false;
         }
-    }
+    }*/
 
     public class liftHinge implements Action {
         public liftHinge(HardwareMap hMap) {}
@@ -95,6 +95,21 @@ public class AutoPathingDirect extends LinearOpMode {
         public lowerHinge(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             hinge.liftHinge(0);
+            return false;
+        }
+    }
+    public class scoreBall implements Action {
+        public scoreBall(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            //raise arm. Comment these arm lines if you don't want the arm to move
+            Aim.moveArmTo(400, 1); //400 is the position, measured in encoder counts. This line sets the arm to a position, and then waits a second for the arm to get there.
+            Aim.stopMotor();
+
+            Flywheel.setFlywheelVelocity(2900, 1);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+
+            hinge.liftHinge(0.6f);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
+            sleep(1000);
+            hinge.liftHinge(0.3f);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
             return false;
         }
     }
