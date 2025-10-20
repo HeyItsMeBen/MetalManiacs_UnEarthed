@@ -33,7 +33,7 @@ public class Arm {
         double pid = controller.calculate(armPos, givenTarget);
         double ff = Math.cos(Math.toRadians(givenTarget / ticks_in_degree)) * f;
 
-        double power = pid + ff;
+        double power = (pid + ff) *4;
 
         arm_motor.setPower(power);
     }

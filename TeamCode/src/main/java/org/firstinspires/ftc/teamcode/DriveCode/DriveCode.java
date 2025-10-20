@@ -74,6 +74,9 @@ public class DriveCode extends OpMode {
     Arm arm;
     Hinge hinge;
 
+    private int intakePower = 0;
+    private boolean flyWheelOn = false;
+
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
 
@@ -128,50 +131,63 @@ public class DriveCode extends OpMode {
         // If you press the left bumper, you get a drive from the point of view of the robot
         // (much like driving an RC vehicle)
         //with operator gamepads:
-        if(driver.getButton(GamepadKeys.Button.LEFT_BUMPER)){
+        if(driver.getButton(GamepadKeys.Button.LEFT_STICK_BUTTON)){
             //normal drive
-            drive(-driver.getLeftY(), driver.getLeftX(),driver.getRightX());
+            drive(-driver.getLeftY(), -driver.getLeftX(),-driver.getRightX());
         }else{
             //field centric
-            driveFieldRelative(-driver.getLeftY(), driver.getLeftX(),driver.getRightX());
+            driveFieldRelative(-driver.getLeftY(), -driver.getLeftX(),-driver.getRightX());
         }
 
 
         //manual inttake control
-        //up dpad should spin in
-        //down dpad should spin out
-        //otherwise it won't spin
-        if (driver.getButton((GamepadKeys.Button.DPAD_UP))){
-            runIntake(1);
-        } else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            runIntake(-1);
-        } else {
-            runIntake(0);
+        //right bumper in
+        //left bumper out
+        //clicking any bumper again will close
+        if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))){
+            if(Math.abs(intakePower) == 1){
+                intakePower = 0;
+            }else{
+                intakePower = 1;
+            }
+        } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            if(Math.abs(intakePower) == 1){
+                intakePower = 0;
+            }else{
+                intakePower = -1;
+            }
         }
-
+        intake.setMotorPower(intakePower);
         //arm
-        if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            raiseArm(325);
+        // ARM CANNOT LIFT SO DONT OVERSTRAIN THE MOTOR WHEN TESTING
+        if (operator.getButton(GamepadKeys.Button.DPAD_UP)) {
+            //arm.setArmTarget(-325);
+            arm.raiseArmManual(2);
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            raiseArm(0); //change later
+            //arm.setArmTarget(0); //change later
+            arm.raiseArmManual(0);
         } //add manual lift later
 
-        //flywheels
-        if (operator.getButton(GamepadKeys.Button.X)) {
-            runFlywheels(0.2f);
-        } else {
-            runFlywheels(0);
+        //flywheels launched with gamepad B
+        if (operator.wasJustPressed(GamepadKeys.Button.B)){
+            flyWheelOn = !flyWheelOn; // toggle
         }
+        if (flyWheelOn) {
+            telemetry.addData("Fly Wheel:", "On");
+            outtake.fire(1);
+        } else {
+            telemetry.addData("Fly Wheel:", "Off");
+            outtake.fire(0);
+        }
+        telemetry.update();
 
-        //operators use left stick to aim the outtake up and down
-//        outtake.arm(operator.getLeftY());
-        //Press B to launch ball
-//        if(operator.getButton(GamepadKeys.Button.B)){
-//            outtake.fire(0.2f);
-//        }
+//        operators use left stick to aim the outtake up and down
+        arm.setArmTarget(operator.getLeftY());
 
         //sort stuff
         //sort()
+        driver.readButtons();
+        operator.readButtons();
     }
 
     // This routine drives the robot field relative
@@ -213,24 +229,4 @@ public class DriveCode extends OpMode {
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
     }
-
-    public void runIntake(double power) {
-        intake.setMotorPower(power);
-    }
-
-    public void raiseArm(double Target) {
-        arm.setArmTarget(Target);
-    }
-
-    public void runFlywheels(float power) {
-        outtake.fire(power);
-    }
-
-    public void raiseHinge() {
-        hinge.liftHinge(1); //change position later
-    }
-    public void dropHinge() {
-        hinge.liftHinge(0); //change position later
-    }
-
 }
