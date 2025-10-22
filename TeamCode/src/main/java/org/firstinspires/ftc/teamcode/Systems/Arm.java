@@ -34,7 +34,7 @@ public class Arm {
             arm_motor.setPower(setArmTarget(givenTarget));
         }
     }
-    private double setArmTarget(double givenTarget) {
+    public double setArmTarget(double givenTarget) {
         double target=givenTarget*-325;
         controller.setPID(p, i, d);
         int armPos = arm_motor.getCurrentPosition();

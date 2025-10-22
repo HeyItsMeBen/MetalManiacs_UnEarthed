@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
 
-public class Outtake{
+public class Old_Outtake {
 
     private DcMotor leftSlide = null;
     private DcMotor rightSlide = null;
@@ -41,7 +41,7 @@ public class Outtake{
     double[] STATE_5 = {0.5, 0.5};
 
     //Outtake subsystem
-    public Outtake(HardwareMap hwMap) {
+    public Old_Outtake(HardwareMap hwMap) {
         leftSlide = hwMap.get(DcMotor.class, "leftSlide");
         rightSlide = hwMap.get(DcMotor.class, "rightSlide");
         leftOuttakeArm = hwMap.get(Servo.class, "leftOuttake");

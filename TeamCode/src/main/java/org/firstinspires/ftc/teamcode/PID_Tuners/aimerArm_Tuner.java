@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
@@ -22,6 +23,7 @@ public class aimerArm_Tuner extends LinearOpMode {
     private DcMotorEx arm_motor;
 
     public void runOpMode() {
+        waitForStart();
         controller = new PIDController(p, i, d);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -42,11 +44,11 @@ public class aimerArm_Tuner extends LinearOpMode {
 
 
     public void setArmTarget(double givenTarget) {
-        double target=givenTarget*-325;
+        double target=givenTarget*1;
         controller.setPID(p, i, d);
         int armPos = arm_motor.getCurrentPosition();
-        double pid = controller.calculate(armPos, givenTarget);
-        double ff = Math.cos(Math.toRadians(givenTarget / ticks_in_degree)) * f;
+        double pid = controller.calculate(armPos, target);
+        double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
 
         double power = pid + ff;
 

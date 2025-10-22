@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 
 @Config
-@Autonomous(name = "aimerArm_Tuner", group = "Autonomous")
+@Autonomous(name = "aimerArm_Tuner1", group = "Autonomous")
 public class Arm_Tuner extends LinearOpMode {
     private PIDController controller;
     public static double p = 0.001, i = 0, d = 0;

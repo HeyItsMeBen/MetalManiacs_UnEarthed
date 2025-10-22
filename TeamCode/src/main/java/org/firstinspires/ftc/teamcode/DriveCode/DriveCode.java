@@ -57,6 +57,7 @@ import org.firstinspires.ftc.teamcode.Systems.Arm;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  *
  */
+//0.29//0.44
 @TeleOp(name = "Competition DriveCode", group = "Robot")
 public class DriveCode extends OpMode {
 
@@ -168,21 +169,27 @@ public class DriveCode extends OpMode {
             arm.raiseArmManual(0);
         } //add manual lift later
 
+        if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+            hinge.liftHinge(hinge.firePosition);
+        } else if (operator.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+            hinge.liftHinge(hinge.holdPosition);
+        }
+
         //flywheels launched with gamepad B
         if (operator.wasJustPressed(GamepadKeys.Button.B)){
             flyWheelOn = !flyWheelOn; // toggle
         }
         if (flyWheelOn) {
             telemetry.addData("Fly Wheel:", "On");
-            outtake.fire(1);
+            outtake.setFlywheelVelocity(2900, 0);
         } else {
             telemetry.addData("Fly Wheel:", "Off");
-            outtake.fire(0);
+            outtake.setFlywheelVelocity(0, 0);
         }
         telemetry.update();
 
 //        operators use left stick to aim the outtake up and down
-        arm.setArmTarget(operator.getLeftY());
+        arm.setArmTarget(operator.getLeftY()*400);
 
         //sort stuff
         //sort()
