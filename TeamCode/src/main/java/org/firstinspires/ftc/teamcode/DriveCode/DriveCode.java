@@ -181,7 +181,7 @@ public class DriveCode extends OpMode {
         }
         if (flyWheelOn) {
             telemetry.addData("Fly Wheel:", "On");
-            outtake.setFlywheelVelocity(2900, 0);
+            outtake.setFlywheelVelocity(3000, 0);
         } else {
             telemetry.addData("Fly Wheel:", "Off");
             outtake.setFlywheelVelocity(0, 0);
