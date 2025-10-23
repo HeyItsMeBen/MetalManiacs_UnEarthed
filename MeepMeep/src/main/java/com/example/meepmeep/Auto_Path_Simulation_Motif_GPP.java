@@ -22,8 +22,15 @@ public class Auto_Path_Simulation_Motif_GPP {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setDimensions(17,17)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI / 2)) //Direction the robot faces is based on radians
-                        .splineTo(new Vector2d(46, -11-24), 0)
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(-90))) //Direction the robot faces is based on radians
+
+//                        .setTangent(Math.toRadians(90))
+                        .lineToLinearHeading(new Pose2d(12, -50, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(12, -45, Math.toRadians(90)))
+                        .splineTo(new Vector2d(46, -35), 0)
+//
+//                        //run intake to pick up balls
+
                         .waitSeconds(0.5f)
                         .setTangent(Math.toRadians(180))
                         .splineTo(new Vector2d(37, 37), Math.toRadians(45))

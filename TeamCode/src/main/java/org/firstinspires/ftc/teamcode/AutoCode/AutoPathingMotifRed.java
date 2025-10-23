@@ -48,7 +48,7 @@ public class AutoPathingMotifRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
+        Pose2d beginPose = new Pose2d(12, -60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         Intake = new Intake(hardwareMap);
@@ -75,6 +75,8 @@ public class AutoPathingMotifRed extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
+                                    .strafeToLinearHeading(new Vector2d(12, -50), Math.toRadians(-90))
+                                    .strafeToLinearHeading(new Vector2d(12, -45), Math.toRadians(90))
 
                                     .splineTo(new Vector2d(46, -11-24), 0)
 
@@ -94,6 +96,8 @@ public class AutoPathingMotifRed extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
+                                    .strafeToLinearHeading(new Vector2d(12, -50), Math.toRadians(-90))
+                                    .strafeToLinearHeading(new Vector2d(12, -45), Math.toRadians(90))
 
                                     .splineTo(new Vector2d(46, -11), 0)
 
@@ -114,6 +118,9 @@ public class AutoPathingMotifRed extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
+                                    .strafeToLinearHeading(new Vector2d(12, -50), Math.toRadians(-90))
+                                    .strafeToLinearHeading(new Vector2d(12, -45), Math.toRadians(90))
+
 
                                     .splineTo(new Vector2d(48, 13), 0)
 
