@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Systems.Outtake;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
 @Autonomous(name = "Auto Pathing Direct", group = "Concept")
 //@Disabled
-public class AutoPathingDirect extends LinearOpMode {
+public class AutoPathingDirectRed extends LinearOpMode {
 
     Intake Intake;
     Arm Aim;
@@ -43,14 +42,14 @@ public class AutoPathingDirect extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
 
-                        .strafeTo(new Vector2d(12, -40))
+                        .strafeTo(new Vector2d(20, -40))
                         .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(225)), Math.toRadians(45))
 
                         //.stopAndAdd(new raiseArm(hardwareMap))
-
-                        .stopAndAdd(new liftHinge(hardwareMap))
-
-                        .stopAndAdd(new lowerHinge(hardwareMap))
+//
+//                        .stopAndAdd(new liftHinge(hardwareMap))
+//
+//                        .stopAndAdd(new lowerHinge(hardwareMap))
 
                         //.stopAndAdd(new launchBall(hardwareMap))
 

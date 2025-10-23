@@ -28,7 +28,7 @@ import java.util.List;
 
 @Autonomous(name = "Auto Pathing Motif", group = "Concept")
 //@Disabled
-public class AutoPathingMotif extends LinearOpMode {
+public class AutoPathingMotifRed extends LinearOpMode {
 
     int randomization = 0;
     String motif = " ";
