@@ -3,23 +3,23 @@ package org.firstinspires.ftc.teamcode.AutoCode;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
-
 import org.firstinspires.ftc.teamcode.Systems.Arm;
+import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
-import org.firstinspires.ftc.teamcode.Systems.Hinge;
-@Autonomous(name = "Auto Pathing Direct Red", group = "Concept")
+
+@Autonomous(name = "Auto Pathing Direct Blue", group = "Concept")
 //@Disabled
-public class AutoPathingDirectRed extends LinearOpMode {
+public class AutoPathingDirectBlue extends LinearOpMode {
 
     Intake Intake;
     Arm Aim;
@@ -29,7 +29,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
+        Pose2d beginPose = new Pose2d(-12, -60, Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         Intake = new Intake(hardwareMap);
@@ -42,8 +42,8 @@ public class AutoPathingDirectRed extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
 
-                        .strafeTo(new Vector2d(20, -40))
-                        .splineToLinearHeading(new Pose2d(40, 40, Math.toRadians(225)), Math.toRadians(45))
+                        .strafeTo(new Vector2d(-20, -40))
+                        .splineToLinearHeading(new Pose2d(-40, 40, Math.toRadians(315)), Math.toRadians(135))
 
                         //.stopAndAdd(new raiseArm(hardwareMap))
 //
