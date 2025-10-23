@@ -175,7 +175,7 @@ public class DriveCode extends OpMode {
             hinge.liftHinge(hinge.holdPosition);
         }
 
-        //flywheels launched with gamepad B
+        //flywheels launched with gamepad B 
         if (operator.wasJustPressed(GamepadKeys.Button.B)){
             flyWheelOn = !flyWheelOn; // toggle
         }
