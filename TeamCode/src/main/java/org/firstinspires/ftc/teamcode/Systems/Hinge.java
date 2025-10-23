@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Hinge {
 
-    public Servo hinge = null;
+    private Servo hinge = null;
+    public float firePosition=0.44f;
+    public float holdPosition=0.29f;
     //Outtake subsystem
     public Hinge(HardwareMap hMap) {
         hinge = hMap.get(Servo.class, "hinge");

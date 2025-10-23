@@ -5,13 +5,15 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+@Disabled
 
 @Config
-@Autonomous(name = "aimerArm_Tuner", group = "Autonomous")
+@Autonomous(name = "aimerArm_Tuner1", group = "Autonomous")
 public class Arm_Tuner extends LinearOpMode {
     private PIDController controller;
     public static double p = 0.001, i = 0, d = 0;

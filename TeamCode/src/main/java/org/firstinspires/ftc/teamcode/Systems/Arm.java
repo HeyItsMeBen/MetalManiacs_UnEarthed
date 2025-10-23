@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Arm {
     private PIDController controller;
@@ -26,7 +27,14 @@ public class Arm {
         arm_motor.setPower(power);
     }
 
-    public void setArmTarget(double givenTarget) {
+    public void moveArmTo(double givenTarget, double expectedWaitTime) {
+        ElapsedTime timer;
+        timer = new ElapsedTime();
+        while (timer.milliseconds()*1000<expectedWaitTime){
+            arm_motor.setPower(setArmTarget(givenTarget));
+        }
+    }
+    public double setArmTarget(double givenTarget) {
         double target=givenTarget*-325;
         controller.setPID(p, i, d);
         int armPos = arm_motor.getCurrentPosition();
@@ -35,7 +43,7 @@ public class Arm {
 
         double power = (pid + ff) *4;
 
-        arm_motor.setPower(power);
+        return power;
     }
     public void stopMotor(){
         arm_motor.setPower(0);

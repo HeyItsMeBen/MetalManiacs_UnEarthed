@@ -14,13 +14,13 @@ public class GetServoPositions extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Servo servo = hardwareMap.get(Servo.class, "hinge");
+        Servo hingeServo = hardwareMap.get(Servo.class, "hinge");
 
         gamepad = new GamepadEx(gamepad1);
 
         double position = 0;
 
-        double interval = 0.5;
+        double interval = 0.01;
 
         telemetry.addData("Starting Position: ", "0");
         telemetry.addData("Intervals: ", interval);
@@ -33,26 +33,25 @@ public class GetServoPositions extends LinearOpMode {
 
         //executing
         while (opModeIsActive()) {
-            if (gamepad.isDown(GamepadKeys.Button.DPAD_UP)) {
+            if (gamepad.getButton(GamepadKeys.Button.DPAD_UP)) {
                 position += interval;
                 telemetry.addData("Current Servo Position: ", position);
                 telemetry.update();
-                servo.setPosition(position);
+                hingeServo.setPosition(position);
             }
-            else if (gamepad.isDown(GamepadKeys.Button.DPAD_DOWN)) {
+            else if (gamepad.getButton(GamepadKeys.Button.DPAD_DOWN)) {
                 position -= interval;
                 telemetry.addData("Current Servo Position: ", position);
                 telemetry.update();
-                servo.setPosition(position);
+                hingeServo.setPosition(position);
             }
-            else if (gamepad.isDown(GamepadKeys.Button.Y)) {
+            else if (gamepad.getButton(GamepadKeys.Button.Y)) {
                 position = 0;
                 telemetry.addData("Current Servo Position: ", position);
                 telemetry.update();
-                servo.setPosition(position);
+                hingeServo.setPosition(position);
             }
-
-            idle();
+            sleep(100);
         }
     }
 }

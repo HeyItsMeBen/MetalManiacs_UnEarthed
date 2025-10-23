@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-public class Intake {
+public class Old_Intake {
 
     public DcMotor arm = null;
     private Servo armServo = null;
@@ -25,7 +25,7 @@ public class Intake {
 
 
 
-    public Intake(HardwareMap hwMap){
+    public Old_Intake(HardwareMap hwMap){
         arm = hwMap.get(DcMotor.class, "arm");
         armServo = hwMap.get(Servo.class, "intakeClawServo");
         armPivotServo = hwMap.get(Servo.class, "intakePivotServo");

@@ -21,7 +21,7 @@ public class Auto_Path_Simulation_Direct {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI/2))
-                        .strafeTo(new Vector2d(12, -40))
+                        .strafeTo(new Vector2d(20, -40))
                         .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(225)), Math.toRadians(45))
                         .build());
 
