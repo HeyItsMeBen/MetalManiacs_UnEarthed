@@ -59,47 +59,6 @@ public class AutoPathingDirectBlue extends LinearOpMode {
                         .build());
     }
 
-    public class runIntake implements Action {
-        public runIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            intake.setMotorPower(0.5);
-            sleep(3);
-            intake.setMotorPower(0);
-            return false;
-        }
-    }
-
-    /*public class raiseArm implements Action {
-        public raiseArm(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Aim.setArmTarget(1);
-            Aim.stopMotor();
-            return false;
-        }
-    }
-
-    public class launchBall implements Action {
-        public launchBall(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            Flywheel.fire(1);
-            return false;
-        }
-    }
-
-    public class liftHinge implements Action {
-        public liftHinge(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(10);
-            return false;
-        }
-    }
-    public class lowerHinge implements Action {
-        public lowerHinge(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(0);
-            return false;
-        }
-    }*/
     public class raiseArm implements Action {
         public raiseArm(double givenTarget) {armTarget=givenTarget;}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {

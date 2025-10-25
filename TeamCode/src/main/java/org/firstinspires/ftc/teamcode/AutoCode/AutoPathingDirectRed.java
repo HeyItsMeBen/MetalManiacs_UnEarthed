@@ -53,9 +53,9 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
                         .waitSeconds(1)
 
-                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(700))
-                        .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
+//                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(700))
+//                        .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
+//                        .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
 
                         .splineTo(new Vector2d(20, -40), Math.toRadians(270))
 
