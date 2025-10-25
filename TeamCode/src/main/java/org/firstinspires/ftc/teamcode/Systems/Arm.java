@@ -30,13 +30,13 @@ public class Arm {
         arm_motor.setPower(power);
     }
 
-    public void moveArmTo(double givenTarget, double expectedWaitTime) {
-        ElapsedTime timer2;
-        timer2 = new ElapsedTime();
-        while (timer2.milliseconds()/1000<expectedWaitTime){
-            arm_motor.setPower(setArmTarget(givenTarget));
-        }
-    }
+//    public void moveArmTo(double givenTarget, double expectedWaitTime) {  //Mostly works. But it can cause loops to run after opMode has stopped. So, it's best not to use
+//        ElapsedTime timer2;
+//        timer2 = new ElapsedTime();
+//        while (timer2.milliseconds()/1000<expectedWaitTime){
+//            arm_motor.setPower(setArmTarget(givenTarget));
+//        }
+//    }
     public double setArmTarget(double givenTarget) {
         double target=givenTarget*-325;
         controller.setPID(p, i, d);

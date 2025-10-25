@@ -273,7 +273,8 @@ public class AutoPathingMotifRed extends LinearOpMode {
             //Aim.moveArmTo(400, 1); //400 is the position, measured in encoder counts. This line sets the arm to a position, and then waits a second for the arm to get there.
             //Aim.stopMotor();
 
-            Flywheel.setFlywheelVelocity(2900, 1);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+            Flywheel.setFlywheelVelocity(2900);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+            sleep(1000);
 
             //fires the ball, and brings the hinge back to waiting position
             hinge.liftHinge(0.6f);  //pushes the ball into the flywheel. Idk what value it's supposed to be.

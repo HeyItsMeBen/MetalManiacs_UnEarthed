@@ -15,6 +15,7 @@ public class Outtake {
     final double tickPerRevolution=28;
 
     public boolean done=true;
+    public boolean isOpModeActive=true;
 
     //Outtake subsystem
     public Outtake(HardwareMap hMap) {
@@ -26,21 +27,9 @@ public class Outtake {
         arm = new Arm(hMap);
     }
 
-    public void setFlywheelVelocity(float givenRPM, double expectedWaitTime, double armTarget) {
+    public void setFlywheelVelocity(float givenRPM) {
         rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
         leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
-        ElapsedTime timer;
-        timer = new ElapsedTime();
-        while (timer.milliseconds()/1000<expectedWaitTime){
-            arm.raiseArmManual(arm.setArmTarget(armTarget));    //allows arm to hold it's position
-        }
-    }
-    public void setFlywheelVelocity(float givenRPM, double expectedWaitTime) {  //givenRPM should be around 2900 or 3000.
-        rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
-        leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
-        ElapsedTime timer;
-        timer = new ElapsedTime();
-        while (timer.milliseconds()/1000<expectedWaitTime){}
     }
     public double getCurrentWheelRPM(){
         return rightFlyWheel.getVelocity()*60/tickPerRevolution;

@@ -21,18 +21,4 @@ public class Hinge {
     }
 
     public void liftHinge(float position) {hinge.setPosition(position);}
-    public void liftHingeAndWait(float position, double expectedWaitTime) {
-        hinge.setPosition(position);
-        ElapsedTime timer;
-        timer = new ElapsedTime();
-        while (timer.milliseconds()/1000<expectedWaitTime){}
-    }
-    public void liftHingeAndWait(float position, double expectedWaitTime, double armTarget) {
-        hinge.setPosition(position);
-        ElapsedTime timer;
-        timer = new ElapsedTime();
-        while (timer.milliseconds()/1000<expectedWaitTime){
-            arm.raiseArmManual(arm.setArmTarget(armTarget));
-        }
-    }
 }

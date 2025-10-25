@@ -86,6 +86,7 @@ public class DriveCode extends OpMode {
     boolean holdPosition_Arm=false;
     boolean armIsMoving=false;
     double armTarget=0;
+    boolean opModeIsActive=true;
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
@@ -170,8 +171,8 @@ public class DriveCode extends OpMode {
             }
         }
         intake.setMotorPower(intakePower);
+
         //arm
-        // ARM CANNOT LIFT SO DONT OVERSTRAIN THE MOTOR WHEN TESTING
         if (operator.getButton(GamepadKeys.Button.DPAD_UP)) {
             //arm.moveArmTo(700, 2);
             armTarget=700;
@@ -193,42 +194,44 @@ public class DriveCode extends OpMode {
         }
 
         if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-            outtake.setFlywheelVelocity(3000, 1, 700);
-            hinge.liftHingeAndWait(hinge.firePosition, 1, 700);
-            velocityPeak=outtake.getCurrentWheelRPM();
-            outtake.setFlywheelVelocity(0, 0);
-            hinge.liftHingeAndWait(hinge.holdPosition, 0);
-        }
-        else if (operator.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            hinge.liftHingeAndWait(hinge.firePosition, 1, 700);
+            outtake.setFlywheelVelocity(3000);  //turns on the flywheels to 3000 rpm
+            sleepWhileRunningArmPID(1000);  //sleeps while running arm PID, to hold the arm in place
+            hinge.liftHinge(hinge.firePosition);    //pushes the ball into the flywheels
+            sleepWhileRunningArmPID(1000);
+            velocityPeak=outtake.getCurrentWheelRPM();  //this is just something for telemetry. It's the velocity that the wheels get to before launching and shutting off. If you plan to use it, remember to run it WITHOUT the ball, or else value will be off
+            outtake.setFlywheelVelocity(0); //turns flywheels off
+            hinge.liftHinge(hinge.holdPosition);    //put the hinge back down, so it can hold another ball.
         }
 
         //flywheels launched with gamepad B
-        if (operator.wasJustPressed(GamepadKeys.Button.B)){
+        /*if (operator.wasJustPressed(GamepadKeys.Button.B)){
             flyWheelOn = !flyWheelOn; // toggle
         }
         if (flyWheelOn) {
             telemetry.addData("Fly Wheel:", "On");
-            outtake.setFlywheelVelocity(3000, 0);
+            outtake.setFlywheelVelocity(3000);
         } else {
             telemetry.addData("Fly Wheel:", "Off");
-            outtake.setFlywheelVelocity(0, 0);
+            outtake.setFlywheelVelocity(0);
         }
         telemetry.addData("VELOCITY: ", velocityPeak);
-        telemetry.update();
+        telemetry.update();*/
 
 //        operators use left stick to aim the outtake up and down
         //arm.setArmTarget(operator.getLeftY()*400);
 
-        //Constant PID control. Allows mechanisms to hold their position. Right now, just the arm uses PID, but there may be more later.
-        if (timer.milliseconds()/1000<2){armIsMoving=true;}
-        if (holdPosition_Arm || armIsMoving){arm.raiseArmManual(arm.setArmTarget(armTarget));}
-
+        //continuous PID control. Allows mechanisms to hold their position. Right now, just the arm uses PID, but there may be more later.
+        //if (timer.milliseconds()/1000<2){armIsMoving=true;}
+        if (holdPosition_Arm || timer.milliseconds()/1000<2){arm.raiseArmManual(arm.setArmTarget(armTarget));}
+        else {arm.raiseArmManual(0);}
 
         //sort stuff
         //sort()
         driver.readButtons();
         operator.readButtons();
+    }
+    public void stop(){
+        opModeIsActive=false;
     }
 
     // This routine drives the robot field relative
@@ -269,5 +272,12 @@ public class DriveCode extends OpMode {
         frontRightDrive.setPower(maxSpeed * (frontRightPower / maxPower));
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
+    }
+    public void sleepWhileRunningArmPID(double milliseconds){  //acts as a sleep function, while also running the arm PID. This keeps the arm at it's target position.
+        ElapsedTime sleepTimer;
+        sleepTimer = new ElapsedTime();
+        while (sleepTimer.milliseconds()<milliseconds && opModeIsActive){
+            arm.raiseArmManual(arm.setArmTarget(armTarget));
+        }
     }
 }
