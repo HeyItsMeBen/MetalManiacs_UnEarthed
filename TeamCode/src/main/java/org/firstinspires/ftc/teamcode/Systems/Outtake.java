@@ -9,9 +9,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Outtake {
 
-    public DcMotorEx rightFlyWheel = null;
-    public DcMotorEx leftFlyWheel = null;
+    private DcMotorEx rightFlyWheel = null;
+    private DcMotorEx leftFlyWheel = null;
     final double tickPerRevolution=28;
+
+    public boolean done=true;
 
     //Outtake subsystem
     public Outtake(HardwareMap hMap) {
@@ -27,6 +29,9 @@ public class Outtake {
         leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
         ElapsedTime timer;
         timer = new ElapsedTime();
-        while (timer.milliseconds()*1000<expectedWaitTime){}
+        while (timer.milliseconds()/1000<expectedWaitTime){}
+    }
+    public double getCurrentWheelRPM(){
+        return rightFlyWheel.getVelocity()*60/tickPerRevolution;
     }
 }

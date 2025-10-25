@@ -17,12 +17,14 @@ Configurations:
 3: backRight
  */
 @Config
-@Autonomous(name = "VelocityWheelTest", group = "Linear OpMode")
+@Autonomous(name = "outtakeVelocityTuner", group = "Linear OpMode")
 public class outtakeWheelVelocity_Tuner extends LinearOpMode {
     DcMotorEx flywheelLeft; //creates "flywheel" variable, and sets as a "DcMotorEx"-type variable.
     DcMotorEx flywheelRight;
 
     public static double rpm=40;  //rotations per minute. Change the value to whatever u want
+    public static int onSeconds=2;
+    public static int offSeconds=5;
 
     //setting PID variables for later calculations
     double integralSum=0;
@@ -54,10 +56,13 @@ public class outtakeWheelVelocity_Tuner extends LinearOpMode {
             ticksPerSecond=tickPerRevolution*(rpm/60);
             flywheelLeft.setVelocity(ticksPerSecond);
             flywheelRight.setVelocity(ticksPerSecond);
+            sleep(onSeconds*1000);
             telemetry.addData("Target RPM", rpm);
             telemetry.addData("Current RPM", flywheelRight.getVelocity()*60/tickPerRevolution);
             telemetry.update();
-
+            flywheelLeft.setVelocity(0);
+            flywheelRight.setVelocity(0);
+            sleep(offSeconds*1000);
         }
     }
     public double PIDControl(double reference, double state){   //This is where the magic happens. It does some weird math

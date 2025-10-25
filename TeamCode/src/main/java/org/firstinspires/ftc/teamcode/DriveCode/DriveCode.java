@@ -28,6 +28,8 @@
  */
 package org.firstinspires.ftc.teamcode.DriveCode;
 
+import static java.lang.Thread.sleep;
+
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
@@ -36,6 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
@@ -76,7 +79,8 @@ public class DriveCode extends OpMode {
     Hinge hinge;
 
     private int intakePower = 0;
-    private boolean flyWheelOn = false; //by default the flywheels should be off
+    private boolean flyWheelOn = false;
+    double velocityPeak=0;
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
@@ -92,8 +96,6 @@ public class DriveCode extends OpMode {
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
 
-        imu = hardwareMap.get(IMU.class, "imu");
-
         intake = new Intake(hardwareMap);
         arm = new Arm(hardwareMap);
         outtake = new Outtake(hardwareMap);
@@ -108,6 +110,7 @@ public class DriveCode extends OpMode {
         // This uses RUN_USING_ENCODER to be more accurate.   If you don't have the encoder
         // wires, you should remove these
 
+        imu = hardwareMap.get(IMU.class, "imu");
         // This needs to be changed to match the orientation on your robot
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
@@ -163,21 +166,33 @@ public class DriveCode extends OpMode {
         //arm
         // ARM CANNOT LIFT SO DONT OVERSTRAIN THE MOTOR WHEN TESTING
         if (operator.getButton(GamepadKeys.Button.DPAD_UP)) {
-            //arm.setArmTarget(-325);
-            arm.raiseArmManual(0.5);
+            arm.moveArmTo(600, 2);
+            //arm.raiseArmManual(0.25);
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            //arm.setArmTarget(0); //change later
-            arm.raiseArmManual(-0.5);
+            arm.moveArmTo(100, 2); //change later
+            //arm.raiseArmManual(-0.25);
         } //add manual lift later
-        arm.raiseArmManual(0);
-
-        if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-            hinge.liftHinge(hinge.firePosition);
-        } else if (operator.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            hinge.liftHinge(hinge.holdPosition);
+        else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
+            //arm.setArmTarget(0); //change later
+            //arm.raiseArmManual(0);
+            ElapsedTime timer1;
+            timer1 = new ElapsedTime();
+            while (timer1.milliseconds()/1000<2){}
+            arm.resetArmEncoders();
         }
 
-        //flywheels launched with gamepad B 
+        if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+            outtake.setFlywheelVelocity(3000, 1);
+            hinge.liftHingeAndWait(hinge.firePosition, 1);
+            velocityPeak=outtake.getCurrentWheelRPM();
+            outtake.setFlywheelVelocity(0, 0);
+            hinge.liftHingeAndWait(hinge.holdPosition, 0);
+        }
+        else if (operator.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+            hinge.liftHingeAndWait(hinge.firePosition, 1);
+        }
+
+        //flywheels launched with gamepad B
         if (operator.wasJustPressed(GamepadKeys.Button.B)){
             flyWheelOn = !flyWheelOn; // toggle
         }
@@ -188,10 +203,11 @@ public class DriveCode extends OpMode {
             telemetry.addData("Fly Wheel:", "Off");
             outtake.setFlywheelVelocity(0, 0);
         }
+        telemetry.addData("VELOCITY: ", velocityPeak);
         telemetry.update();
 
 //        operators use left stick to aim the outtake up and down
-        //arm.setArmTarget(operator.getLeftY()*400);
+        arm.setArmTarget(operator.getLeftY()*400);
 
         //sort stuff
         //sort()

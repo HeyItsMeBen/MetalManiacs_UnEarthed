@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @Autonomous(name = "aimerArm_Tuner", group = "Autonomous")
 public class aimerArm_Tuner extends LinearOpMode {
     private PIDController controller;
-    public static double p = 0.001, i = 0, d = 0;
+    public static double p = 0.0015, i = 0.1, d = 0.000001;
     public static double f = 0;
     public static double inputTarget=0;
     private final double ticks_in_degree = 1120 / 360;
@@ -33,7 +33,7 @@ public class aimerArm_Tuner extends LinearOpMode {
         arm_motor = hardwareMap.get(DcMotorEx.class, "arm");   //real name?
         arm_motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm_motor.setDirection(DcMotor.Direction.REVERSE);
+        arm_motor.setDirection(DcMotor.Direction.FORWARD);
         arm_motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         while (opModeIsActive()){
@@ -49,12 +49,12 @@ public class aimerArm_Tuner extends LinearOpMode {
         double target=givenTarget*1;
         controller.setPID(p, i, d);
         int armPos = arm_motor.getCurrentPosition();
-        double pid = controller.calculate(armPos, target);
-        double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
+        double pid = controller.calculate(armPos, givenTarget);
+        double ff = Math.cos(Math.toRadians(givenTarget / ticks_in_degree)) * f;
 
         double power = pid + ff;
 
-        arm_motor.setPower(power);
+        arm_motor.setPower(-power);
     }
     public void stopMotor(){
         arm_motor.setPower(0);

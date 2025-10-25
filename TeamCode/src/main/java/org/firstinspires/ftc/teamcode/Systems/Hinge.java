@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
 
@@ -17,7 +18,11 @@ public class Hinge {
         hinge = hMap.get(Servo.class, "hinge");
     }
 
-    public void liftHinge(float position) {
+    public void liftHinge(float position) {hinge.setPosition(position);}
+    public void liftHingeAndWait(float position, double expectedWaitTime) {
         hinge.setPosition(position);
+        ElapsedTime timer;
+        timer = new ElapsedTime();
+        while (timer.milliseconds()/1000<expectedWaitTime){}
     }
 }
