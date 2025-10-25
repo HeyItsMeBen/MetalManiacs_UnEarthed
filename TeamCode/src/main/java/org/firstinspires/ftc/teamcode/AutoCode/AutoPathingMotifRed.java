@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -26,6 +27,7 @@ import org.firstinspires.ftc.teamcode.Systems.Hinge;
 
 import java.util.List;
 
+@Disabled
 @Autonomous(name = "Auto Pathing Motif Red", group = "Concept")
 //@Disabled
 public class AutoPathingMotifRed extends LinearOpMode {
