@@ -53,13 +53,20 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
                         .waitSeconds(1)
 
-//                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(700))
-//                        .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
-//                        .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
+                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(500))
+                        .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
 
                         .splineTo(new Vector2d(20, -40), Math.toRadians(270))
 
                         .build());
+    }
+
+    public class setHingePosition implements Action {
+        public setHingePosition() {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            return false;
+        }
     }
 
     public class raiseArm implements Action {
@@ -72,11 +79,21 @@ public class AutoPathingDirectRed extends LinearOpMode {
     public class scoreBallSequence implements Action {
         public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            hinge.liftHinge(hinge.holdPosition);
+
+            sleep(500);
+
             outtake.setFlywheelVelocity(3000);
+
             sleepWhileRunningArmPID(1000);
+
             hinge.liftHinge(hinge.firePosition);
+
             sleepWhileRunningArmPID(1000);
+
             outtake.setFlywheelVelocity(0);
+
             hinge.liftHinge(hinge.holdPosition);
 
             return false;
@@ -86,11 +103,11 @@ public class AutoPathingDirectRed extends LinearOpMode {
         public lowerArmFully() {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             armTarget=300;
-            sleepWhileRunningArmPID(2000); //change later
-            armTarget=100;
             sleepWhileRunningArmPID(1000); //change later
-            armTarget=0;
+            armTarget=100;
             sleepWhileRunningArmPID(500); //change later
+            armTarget=0;
+            sleepWhileRunningArmPID(100); //change later
             return false;
         }
     }

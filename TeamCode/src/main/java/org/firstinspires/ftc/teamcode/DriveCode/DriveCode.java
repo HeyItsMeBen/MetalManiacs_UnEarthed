@@ -175,17 +175,22 @@ public class DriveCode extends OpMode {
         //arm
         if (operator.getButton(GamepadKeys.Button.DPAD_UP)) {
             //arm.moveArmTo(700, 2);
-            armTarget=700;
+            armTarget = 500; //700 originally, but toppled over
             timer.reset();
-            holdPosition_Arm=true;
+            holdPosition_Arm = true;
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
             //arm.moveArmTo(100, 2);
+            armTarget=300;
+            sleepWhileRunningArmPID(1000); //change later
             armTarget=100;
+            sleepWhileRunningArmPID(500); //change later
+            armTarget=0;
+            sleepWhileRunningArmPID(100); //change later
             timer.reset();
-            holdPosition_Arm=false;
+            holdPosition_Arm = false;
         } //add manual lift later
         else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
-            armTarget=0;
+            armTarget = 0;
             arm.raiseArmManual(0.25);
             ElapsedTime timer1;
             timer1 = new ElapsedTime();
@@ -194,12 +199,19 @@ public class DriveCode extends OpMode {
         }
 
         if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+
             outtake.setFlywheelVelocity(3000);  //turns on the flywheels to 3000 rpm
+
             sleepWhileRunningArmPID(1000);  //sleeps while running arm PID, to hold the arm in place. The sleeping part allows the flywheels to speed up to it's target velocity.
+
             hinge.liftHinge(hinge.firePosition);    //pushes the ball into the flywheels
+
             sleepWhileRunningArmPID(1000);
+
             velocityPeak=outtake.getCurrentWheelRPM();  //this is just something for telemetry. It's the velocity that the wheels get to before launching and shutting off. If you plan to use it, remember to run it WITHOUT the ball, or else value will be off
+
             outtake.setFlywheelVelocity(0); //turns flywheels off
+
             hinge.liftHinge(hinge.holdPosition);    //put the hinge back down, so it can hold another ball.
         }
 
