@@ -195,7 +195,7 @@ public class DriveCode extends OpMode {
 
         if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             outtake.setFlywheelVelocity(3000);  //turns on the flywheels to 3000 rpm
-            sleepWhileRunningArmPID(1000);  //sleeps while running arm PID, to hold the arm in place
+            sleepWhileRunningArmPID(1000);  //sleeps while running arm PID, to hold the arm in place. The sleeping part allows the flywheels to speed up to it's target velocity.
             hinge.liftHinge(hinge.firePosition);    //pushes the ball into the flywheels
             sleepWhileRunningArmPID(1000);
             velocityPeak=outtake.getCurrentWheelRPM();  //this is just something for telemetry. It's the velocity that the wheels get to before launching and shutting off. If you plan to use it, remember to run it WITHOUT the ball, or else value will be off
