@@ -24,7 +24,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
     Intake intake;
     Arm arm;
-    Outtake flywheel;
+    Outtake outtake;
     Hinge hinge;
 
     @Override
@@ -35,7 +35,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
         intake = new Intake(hardwareMap);
         arm = new Arm(hardwareMap);
-        flywheel = new Outtake(hardwareMap);
+        outtake = new Outtake(hardwareMap);
         hinge = new Hinge(hardwareMap);
         //to do: add another hinge servo transfer servo
 
@@ -48,65 +48,47 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
                         .splineToLinearHeading(new Pose2d(35, 55, Math.toRadians(225)), Math.toRadians(45))
 
-                        .stopAndAdd(new scoreBall(hardwareMap))
+                        .waitSeconds(1)
+
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
 
                         .splineTo(new Vector2d(20, -40), Math.toRadians(270))
 
                         .build());
     }
 
-    public class runIntake implements Action {
-        public runIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            intake.setMotorPower(0.5);
-            sleep(3);
-            intake.setMotorPower(0);
-            return false;
-        }
-    }
-
-    /*public class raiseArm implements Action {
-        public raiseArm(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            arm.setArmTarget(1);
-            arm.stopMotor();
-            return false;
-        }
-    }
-
-    public class launchBall implements Action {
-        public launchBall(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheel.fire(1);
-            return false;
-        }
-    }*/
-
-    public class liftHinge implements Action {
-        public liftHinge(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(10);
-            return false;
-        }
-    }
-    public class lowerHinge implements Action {
-        public lowerHinge(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(0);
-            return false;
-        }
-    }
-    public class scoreBall implements Action {
-        public scoreBall(HardwareMap hMap) {}
+    public class scoreBallSequence implements Action {
+        public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            flywheel.setFlywheelVelocity(3000, 3);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+            arm.moveArmTo(600, 2);
+
+            sleep(1000);
+
+            outtake.setFlywheelVelocity(3000, 3);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
 
             sleep(1000);
             //fires the ball, and brings the hinge back to waiting position
-            hinge.liftHinge(hinge.firePosition);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
-            sleep(1000);
+
+            hinge.liftHingeAndWait(hinge.firePosition, 1);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
+
             hinge.liftHinge(hinge.holdPosition);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
+
+            outtake.setFlywheelVelocity(0, 3);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+
+            sleep(500);
+
+            arm.moveArmTo(300, 2); //change later
+
+            sleep(250);
+
+            arm.moveArmTo(100, 1); //change later
+
+            sleep(250);
+
+            arm.moveArmTo(0, 0.5); //change later
+
+            sleep(250);
 
             return false;
         }

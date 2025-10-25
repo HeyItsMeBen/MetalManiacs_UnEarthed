@@ -24,7 +24,7 @@ public class AutoPathingDirectBlue extends LinearOpMode {
 
     Intake intake;
     Arm arm;
-    Outtake flywheel;
+    Outtake outtake;
     Hinge hinge;
 
     @Override
@@ -35,7 +35,7 @@ public class AutoPathingDirectBlue extends LinearOpMode {
 
         intake = new Intake(hardwareMap);
         arm = new Arm(hardwareMap);
-        flywheel = new Outtake(hardwareMap);
+        outtake = new Outtake(hardwareMap);
         hinge = new Hinge(hardwareMap);
 
         waitForStart();
@@ -44,9 +44,10 @@ public class AutoPathingDirectBlue extends LinearOpMode {
                 drive.actionBuilder(beginPose)
 
                         .strafeTo(new Vector2d(-20, -40))
+
                         .splineToLinearHeading(new Pose2d(-35, 55, Math.toRadians(315)), Math.toRadians(135))
 
-                        .stopAndAdd(new scoreBall(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
 
                         .splineTo(new Vector2d(-20, -40), Math.toRadians(270))
 
@@ -94,16 +95,38 @@ public class AutoPathingDirectBlue extends LinearOpMode {
             return false;
         }
     }
-    public class scoreBall implements Action {
-        public scoreBall(HardwareMap hMap) {}
+    public class scoreBallSequence implements Action {
+        public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            flywheel.setFlywheelVelocity(2900, 1);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+            arm.moveArmTo(600, 2);
 
-            //fires the ball, and brings the hinge back to waiting position
-            hinge.liftHinge(0.6f);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
             sleep(1000);
-            hinge.liftHinge(0.3f);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
+
+            outtake.setFlywheelVelocity(3000, 3);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+
+            sleep(1000);
+            //fires the ball, and brings the hinge back to waiting position
+
+            hinge.liftHingeAndWait(hinge.firePosition, 1);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
+
+            hinge.liftHinge(hinge.holdPosition);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
+
+            outtake.setFlywheelVelocity(0, 3);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+
+            sleep(500);
+
+            arm.moveArmTo(300, 2); //change later
+
+            sleep(250);
+
+            arm.moveArmTo(100, 1); //change later
+
+            sleep(250);
+
+            arm.moveArmTo(0, 0.5); //change later
+
+            sleep(250);
 
             return false;
         }
