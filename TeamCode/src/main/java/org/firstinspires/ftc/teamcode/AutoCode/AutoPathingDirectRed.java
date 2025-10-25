@@ -17,13 +17,14 @@ import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
+
 @Autonomous(name = "Auto Pathing Direct Red", group = "Concept")
 //@Disabled
 public class AutoPathingDirectRed extends LinearOpMode {
 
-    Intake Intake;
-    Arm Aim;
-    Outtake Flywheel;
+    Intake intake;
+    Arm arm;
+    Outtake flywheel;
     Hinge hinge;
 
     @Override
@@ -32,10 +33,11 @@ public class AutoPathingDirectRed extends LinearOpMode {
         Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Intake = new Intake(hardwareMap);
-        Aim = new Arm(hardwareMap);
-        Flywheel = new Outtake(hardwareMap);
+        intake = new Intake(hardwareMap);
+        arm = new Arm(hardwareMap);
+        flywheel = new Outtake(hardwareMap);
         hinge = new Hinge(hardwareMap);
+        //to do: add another hinge servo transfer servo
 
         waitForStart();
 
@@ -43,15 +45,12 @@ public class AutoPathingDirectRed extends LinearOpMode {
                 drive.actionBuilder(beginPose)
 
                         .strafeTo(new Vector2d(20, -40))
-                        .splineToLinearHeading(new Pose2d(40, 40, Math.toRadians(225)), Math.toRadians(45))
 
-                        //.stopAndAdd(new raiseArm(hardwareMap))
-//
-//                        .stopAndAdd(new liftHinge(hardwareMap))
-//
-//                        .stopAndAdd(new lowerHinge(hardwareMap))
+                        .splineToLinearHeading(new Pose2d(35, 55, Math.toRadians(225)), Math.toRadians(45))
 
-                        //.stopAndAdd(new launchBall(hardwareMap))
+                        .stopAndAdd(new scoreBall(hardwareMap))
+
+                        .splineTo(new Vector2d(20, -40), Math.toRadians(270))
 
                         .build());
     }
@@ -59,9 +58,9 @@ public class AutoPathingDirectRed extends LinearOpMode {
     public class runIntake implements Action {
         public runIntake(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Intake.setMotorPower(0.5);
+            intake.setMotorPower(0.5);
             sleep(3);
-            Intake.setMotorPower(0);
+            intake.setMotorPower(0);
             return false;
         }
     }
@@ -69,8 +68,8 @@ public class AutoPathingDirectRed extends LinearOpMode {
     /*public class raiseArm implements Action {
         public raiseArm(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Aim.setArmTarget(1);
-            Aim.stopMotor();
+            arm.setArmTarget(1);
+            arm.stopMotor();
             return false;
         }
     }
@@ -78,7 +77,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
     public class launchBall implements Action {
         public launchBall(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            Flywheel.fire(1);
+            flywheel.fire(1);
             return false;
         }
     }*/
@@ -100,16 +99,15 @@ public class AutoPathingDirectRed extends LinearOpMode {
     public class scoreBall implements Action {
         public scoreBall(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //raise arm. Uncomment these arm lines if you want the arm to move
-            //Aim.moveArmTo(400, 1); //400 is the position, measured in encoder counts. This line sets the arm to a position, and then waits a second for the arm to get there.
-            //Aim.stopMotor();
 
-            Flywheel.setFlywheelVelocity(2900, 1);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
+            flywheel.setFlywheelVelocity(3000, 3);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
 
-            //fires the ball, and brings the hinge back to waiting position
-            hinge.liftHinge(0.6f);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
             sleep(1000);
-            hinge.liftHinge(0.3f);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
+            //fires the ball, and brings the hinge back to waiting position
+            hinge.liftHinge(hinge.firePosition);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
+            sleep(1000);
+            hinge.liftHinge(hinge.holdPosition);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
+
             return false;
         }
     }

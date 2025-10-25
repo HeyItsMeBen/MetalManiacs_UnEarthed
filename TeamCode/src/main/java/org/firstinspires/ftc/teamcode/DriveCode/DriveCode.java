@@ -76,7 +76,7 @@ public class DriveCode extends OpMode {
     Hinge hinge;
 
     private int intakePower = 0;
-    private boolean flyWheelOn = false;
+    private boolean flyWheelOn = false; //by default the flywheels should be off
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
@@ -92,6 +92,8 @@ public class DriveCode extends OpMode {
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
 
+        imu = hardwareMap.get(IMU.class, "imu");
+
         intake = new Intake(hardwareMap);
         arm = new Arm(hardwareMap);
         outtake = new Outtake(hardwareMap);
@@ -106,7 +108,6 @@ public class DriveCode extends OpMode {
         // This uses RUN_USING_ENCODER to be more accurate.   If you don't have the encoder
         // wires, you should remove these
 
-        imu = hardwareMap.get(IMU.class, "imu");
         // This needs to be changed to match the orientation on your robot
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
@@ -163,11 +164,12 @@ public class DriveCode extends OpMode {
         // ARM CANNOT LIFT SO DONT OVERSTRAIN THE MOTOR WHEN TESTING
         if (operator.getButton(GamepadKeys.Button.DPAD_UP)) {
             //arm.setArmTarget(-325);
-            arm.raiseArmManual(2);
+            arm.raiseArmManual(0.5);
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
             //arm.setArmTarget(0); //change later
-            arm.raiseArmManual(0);
+            arm.raiseArmManual(-0.5);
         } //add manual lift later
+        arm.raiseArmManual(0);
 
         if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             hinge.liftHinge(hinge.firePosition);
@@ -189,7 +191,7 @@ public class DriveCode extends OpMode {
         telemetry.update();
 
 //        operators use left stick to aim the outtake up and down
-        arm.setArmTarget(operator.getLeftY()*400);
+        //arm.setArmTarget(operator.getLeftY()*400);
 
         //sort stuff
         //sort()
