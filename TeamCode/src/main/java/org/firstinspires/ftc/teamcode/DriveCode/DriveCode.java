@@ -78,9 +78,14 @@ public class DriveCode extends OpMode {
     Arm arm;
     Hinge hinge;
 
+    ElapsedTime timer;
+
     private int intakePower = 0;
     private boolean flyWheelOn = false;
     double velocityPeak=0;
+    boolean holdPosition_Arm=false;
+    boolean armIsMoving=false;
+    double armTarget=0;
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
@@ -101,6 +106,8 @@ public class DriveCode extends OpMode {
         outtake = new Outtake(hardwareMap);
         hinge = new Hinge(hardwareMap);
 
+        arm.resetArmEncoders();
+
         // We set the left motors in reverse which is needed for drive trains where the left
         // motors are opposite to the right ones.
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -117,7 +124,7 @@ public class DriveCode extends OpMode {
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
-
+        timer = new ElapsedTime();
     }
 
     @Override
@@ -166,15 +173,19 @@ public class DriveCode extends OpMode {
         //arm
         // ARM CANNOT LIFT SO DONT OVERSTRAIN THE MOTOR WHEN TESTING
         if (operator.getButton(GamepadKeys.Button.DPAD_UP)) {
-            arm.moveArmTo(600, 2);
-            //arm.raiseArmManual(0.25);
+            //arm.moveArmTo(700, 2);
+            armTarget=700;
+            timer.reset();
+            holdPosition_Arm=true;
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            arm.moveArmTo(100, 2); //change later
-            //arm.raiseArmManual(-0.25);
+            //arm.moveArmTo(100, 2);
+            armTarget=100;
+            timer.reset();
+            holdPosition_Arm=false;
         } //add manual lift later
         else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
-            //arm.setArmTarget(0); //change later
-            //arm.raiseArmManual(0);
+            armTarget=0;
+            arm.raiseArmManual(0.25);
             ElapsedTime timer1;
             timer1 = new ElapsedTime();
             while (timer1.milliseconds()/1000<2){}
@@ -182,14 +193,14 @@ public class DriveCode extends OpMode {
         }
 
         if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-            outtake.setFlywheelVelocity(3000, 1);
-            hinge.liftHingeAndWait(hinge.firePosition, 1);
+            outtake.setFlywheelVelocity(3000, 1, 700);
+            hinge.liftHingeAndWait(hinge.firePosition, 1, 700);
             velocityPeak=outtake.getCurrentWheelRPM();
             outtake.setFlywheelVelocity(0, 0);
             hinge.liftHingeAndWait(hinge.holdPosition, 0);
         }
         else if (operator.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            hinge.liftHingeAndWait(hinge.firePosition, 1);
+            hinge.liftHingeAndWait(hinge.firePosition, 1, 700);
         }
 
         //flywheels launched with gamepad B
@@ -207,7 +218,12 @@ public class DriveCode extends OpMode {
         telemetry.update();
 
 //        operators use left stick to aim the outtake up and down
-        arm.setArmTarget(operator.getLeftY()*400);
+        //arm.setArmTarget(operator.getLeftY()*400);
+
+        //Constant PID control. Allows mechanisms to hold their position. Right now, just the arm uses PID, but there may be more later.
+        if (timer.milliseconds()/1000<2){armIsMoving=true;}
+        if (holdPosition_Arm || armIsMoving){arm.raiseArmManual(arm.setArmTarget(armTarget));}
+
 
         //sort stuff
         //sort()

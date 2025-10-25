@@ -10,6 +10,7 @@ public class Arm {
     private PIDController controller;
     //public static double p = 0.001, i = 0, d = 0;
     public static double p = 0.0015, i = 0.1, d = 0.000001;
+    //public double chosenArmTarget=0;
 
     public static double f = 0;
     private final double ticks_in_degree = 1120 / 360;
@@ -19,10 +20,10 @@ public class Arm {
         controller = new PIDController(p, i, d);
 
         arm_motor = hMap.get(DcMotorEx.class, "arm");   //real name?
-        arm_motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        /*arm_motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         arm_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm_motor.setDirection(DcMotor.Direction.FORWARD);
-        arm_motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        arm_motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);*/
     }
 
     public void raiseArmManual(double power) {
@@ -52,5 +53,11 @@ public class Arm {
     }
     public void resetArmEncoders(){
         arm_motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        arm_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm_motor.setDirection(DcMotor.Direction.FORWARD);
+        arm_motor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+    }
+    public double getArmPosition(){
+        return arm_motor.getCurrentPosition();
     }
 }

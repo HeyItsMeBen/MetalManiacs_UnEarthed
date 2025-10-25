@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@Disabled
+import org.firstinspires.ftc.teamcode.Systems.Outtake;
 
 @Config
 @Autonomous(name = "aimerArm_Tuner", group = "Autonomous")
@@ -23,12 +23,16 @@ public class aimerArm_Tuner extends LinearOpMode {
     public static double inputTarget=0;
     private final double ticks_in_degree = 1120 / 360;
     private DcMotorEx arm_motor;
+    Outtake outtake;
+
+    public static float rpm=0;
 
     public void runOpMode() {
         waitForStart();
         controller = new PIDController(p, i, d);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        outtake = new Outtake(hardwareMap);
 
         arm_motor = hardwareMap.get(DcMotorEx.class, "arm");   //real name?
         arm_motor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -41,6 +45,7 @@ public class aimerArm_Tuner extends LinearOpMode {
             telemetry.addData("Target: ", inputTarget);
             telemetry.addData("Position: ", arm_motor.getCurrentPosition());
             telemetry.update();
+            outtake.setFlywheelVelocity(rpm, 0);
         }
     }
 
