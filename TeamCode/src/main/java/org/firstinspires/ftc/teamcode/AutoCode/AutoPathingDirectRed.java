@@ -46,20 +46,24 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
+                        .stopAndAdd(new AutoPathingDirectRed.setHingePosition())
 
                         .strafeTo(new Vector2d(20, -40))
-
+//original was 20 in auto it was 55,
+                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(600))
+//                        .splineToLinearHeading(new Pose2d(35, 55, Math.toRadians(225)), Math.toRadians(45))
                         .splineToLinearHeading(new Pose2d(25, 40, Math.toRadians(227)), Math.toRadians(45))
 
                         .waitSeconds(1)
 
-                        .stopAndAdd(new raiseArm(600))
+                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(550))
 
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
 
-                        .stopAndAdd(new lowerArmFully())
+                        .splineTo(new Vector2d(20, -35), Math.toRadians(270))
+//                        .splineToLinearHeading(beginPose, Math.toRadians(270))
 
-                        .splineTo(new Vector2d(20, -40), Math.toRadians(270))
 
                         .build());
     }
@@ -67,6 +71,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
     public class setHingePosition implements Action {
         public setHingePosition() {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hinge.liftHinge(hinge.holdPosition);
             return false;
         }
     }
