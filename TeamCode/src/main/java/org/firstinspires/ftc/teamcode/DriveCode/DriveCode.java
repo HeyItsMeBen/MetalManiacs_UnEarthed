@@ -213,11 +213,9 @@ public class DriveCode extends OpMode {
             holdPosition_Arm = true;
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
             armTarget=300;
-            sleepWhileRunningArmPID(1000);
+            sleepWhileRunningArmPID(500);
             armTarget=100;
             sleepWhileRunningArmPID(500);
-            armTarget=0;
-            sleepWhileRunningArmPID(100);
             timer.reset();
             holdPosition_Arm = false;
         } else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
