@@ -22,7 +22,7 @@ public class Auto_Path_Simulation_Direct {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI/2))
                         .strafeTo(new Vector2d(20, -40))
-                        .splineToLinearHeading(new Pose2d(40, 40, Math.toRadians(225)), Math.toRadians(45))
+                        .splineToLinearHeading(new Pose2d(25, 25, Math.toRadians(235)), Math.toRadians(45))
                         .splineTo(new Vector2d(20, -40), Math.toRadians(270))
 
                         .build());

@@ -48,16 +48,21 @@ public class AutoPathingDirectRed extends LinearOpMode {
                 drive.actionBuilder(beginPose)
 
                         .strafeTo(new Vector2d(20, -40))
-
-                        .splineToLinearHeading(new Pose2d(35, 55, Math.toRadians(225)), Math.toRadians(45))
+//original was 20 in auto it was 55,
+//                        .splineToLinearHeading(new Pose2d(35, 55, Math.toRadians(225)), Math.toRadians(45))
+                        .splineToLinearHeading(new Pose2d(25, 40, Math.toRadians(227)), Math.toRadians(45))
 
                         .waitSeconds(1)
 
-                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(500))
+//                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(500))
+                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(600))
+
                         .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
                         .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
 
                         .splineTo(new Vector2d(20, -40), Math.toRadians(270))
+//                        .splineToLinearHeading(beginPose, Math.toRadians(270))
+
 
                         .build());
     }
@@ -84,7 +89,8 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
             sleep(500);
 
-            outtake.setFlywheelVelocity(3000);
+//            outtake.setFlywheelVelocity(3000);
+            outtake.setFlywheelVelocity(2350);
 
             sleepWhileRunningArmPID(1000);
 

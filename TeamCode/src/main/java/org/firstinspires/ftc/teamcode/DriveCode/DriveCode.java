@@ -1,31 +1,3 @@
-/* Copyright (c) 2025 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package org.firstinspires.ftc.teamcode.DriveCode;
 
 import static java.lang.Thread.sleep;
@@ -46,21 +18,6 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
 import org.firstinspires.ftc.teamcode.Systems.Arm;
 
-/*
- * This OpMode illustrates how to program your robot to drive field relative.  This means
- * that the robot drives the direction you push the joystick regardless of the current orientation
- * of the robot.
- *
- * This OpMode assumes that you have four mecanum wheels each on its own motor named:
- *   front_left_motor, front_right_motor, back_left_motor, back_right_motor
- *
- *   and that the left motors are flipped such that when they turn clockwise the wheel moves backwards
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
- *
- */
-//0.29//0.44
 @TeleOp(name = "Competition DriveCode", group = "Robot")
 public class DriveCode extends OpMode {
 
@@ -88,8 +45,19 @@ public class DriveCode extends OpMode {
     double armTarget=0;
     boolean opModeIsActive=true;
 
-    // This declares the IMU needed to get the current direction the robot is facing
+    // IMU for getting robot heading
     IMU imu;
+
+    // NEW: Variables for field-centric rotation control
+    private double targetHeading = 0;  // The direction we want to face (in radians)
+    private boolean useSnapRotation = true;  // Toggle between snap-to-heading and normal rotation
+    private boolean useFieldCentricDrive = true;  // Toggle between field-centric and robot-relative drive
+    private double rotationDeadzone = 0.1;  // Ignore small stick movements
+
+    // Simple P controller for rotation (you can upgrade to PID later)
+    private double rotationKp = 4.0;  // Higher = faster snap! Try 3.0-6.0 for instant
+    private double rotationMaxSpeed = 1.0;  // Maximum rotation speed (set to 1.0 for full power)
+    private double speedMultiplier = 1;
 
     @Override
     public void init() {
@@ -109,54 +77,120 @@ public class DriveCode extends OpMode {
 
         arm.resetArmEncoders();
 
-        // We set the left motors in reverse which is needed for drive trains where the left
-        // motors are opposite to the right ones.
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        // This uses RUN_USING_ENCODER to be more accurate.   If you don't have the encoder
-        // wires, you should remove these
 
         imu = hardwareMap.get(IMU.class, "imu");
-        // This needs to be changed to match the orientation on your robot
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         timer = new ElapsedTime();
+
+        // Initialize target heading to current heading
+        targetHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
     @Override
     public void loop() {
         telemetry.addLine("Press A to reset Yaw");
-        telemetry.addLine("Hold left bumper to drive in robot relative");
-        telemetry.addLine("The left joystick sets the robot direction");
-        telemetry.addLine("Moving the right joystick left and right turns the robot");
+        telemetry.addLine("Press RIGHT STICK to toggle rotation mode");
+        telemetry.addLine("Hold left bumper for robot-relative drive");
+        telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
 
-        // If you press the A button, then you reset the Yaw to be zero from the way
-        // the robot is currently pointing
+        // Reset yaw with A button
         if (driver.getButton(GamepadKeys.Button.A)){
             imu.resetYaw();
+            targetHeading = 0;  // Reset target heading too
         }
 
-        // If you press the left bumper, you get a drive from the point of view of the robot
-        // (much like driving an RC vehicle)
-        //with operator gamepads:
-        if(driver.getButton(GamepadKeys.Button.LEFT_STICK_BUTTON)){
-            //normal drive
-            drive(-driver.getLeftY(), -driver.getLeftX(),-driver.getRightX());
-        }else{
-            //field centric
-            driveFieldRelative(-driver.getLeftY(), -driver.getLeftX(),-driver.getRightX());
+        // Toggle rotation mode with right stick click
+        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
+            useSnapRotation = !useSnapRotation;
+        }
+
+        // Toggle drive mode with left stick click
+        if (driver.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
+            useFieldCentricDrive = !useFieldCentricDrive;
         }
 
 
-        //manual inttake control
-        //right bumper in
-        //left bumper out
-        //clicking any bumper again will close
+        // Speed multiplier adjustable via right and left triggers
+        // Can be reset by pressing B
+        speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)*0.2;
+        speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.2;
+        if(driver.getButton(GamepadKeys.Button.B)){
+            speedMultiplier=0.5;
+        }
+        // Max speed is 1
+        if(speedMultiplier>1){
+            speedMultiplier=1;
+        }
+        // Min speed is 0.25
+        if(speedMultiplier<0.25){
+            speedMultiplier=0.25;
+        }
+        telemetry.addData("Speed Multiplier", speedMultiplier);
+
+        // Get stick inputs
+        double forward = -driver.getLeftY();
+        double right = -driver.getLeftX();
+        double rightStickX = -driver.getRightX();
+        double rightStickY = -driver.getRightY();
+
+        // Calculate rotation control
+        double rotate;
+
+        if (useSnapRotation) {
+            // SNAP-TO-HEADING MODE
+            // Check if right stick is being pushed (outside deadzone)
+            double rightStickMagnitude = Math.hypot(rightStickX, rightStickY);
+
+            if (rightStickMagnitude > rotationDeadzone) {
+                // RIGHT STICK IS ACTIVE - Use field-centric rotation (snap to angle)
+
+                // Calculate the target heading from right stick position
+                // atan2 gives us the angle the stick is pointing
+                // Negate entire result to flip rotation direction
+                targetHeading = -(Math.atan2(rightStickY, rightStickX) - Math.PI/2);
+
+                // Calculate rotation power to reach target heading
+                rotate = snapToHeading(targetHeading);
+
+                telemetry.addLine("MODE: Snap-to-Heading");
+                telemetry.addData("Target Heading", Math.toDegrees(targetHeading));
+            } else {
+                // RIGHT STICK IS NEUTRAL - No rotation command
+                rotate = 0;
+                telemetry.addLine("MODE: Snap-to-Heading (Idle)");
+            }
+        } else {
+            // NORMAL ROTATION MODE - Just use right stick X for rotation
+            rotate = rightStickX;
+            telemetry.addLine("MODE: Normal Rotation");
+        }
+
+        // Choose drive mode based on toggle
+        if(useFieldCentricDrive){
+            // Field-centric drive
+            driveFieldRelative(forward, right, rotate, speedMultiplier);
+            telemetry.addLine("DRIVE: Field-Centric");
+        } else {
+            // Robot-relative drive
+            drive(forward, right, rotate, speedMultiplier);
+            telemetry.addLine("DRIVE: Robot-Relative");
+        }
+
+        // Display current heading
+        double currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        telemetry.addData("Current Heading", Math.toDegrees(currentHeading));
+
+        // [Rest of your original code for intake, arm, outtake, etc.]
+
+        // Manual intake control
         if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))){
             if(Math.abs(intakePower) == 1){
                 intakePower = 0;
@@ -172,24 +206,21 @@ public class DriveCode extends OpMode {
         }
         intake.setMotorPower(intakePower);
 
-        //arm
+        // Arm control
         if (operator.getButton(GamepadKeys.Button.DPAD_UP)) {
-            //arm.moveArmTo(700, 2);
-            armTarget = 500; //700 originally, but toppled over
+            armTarget = 500;
             timer.reset();
             holdPosition_Arm = true;
         } else if (operator.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            //arm.moveArmTo(100, 2);
             armTarget=300;
-            sleepWhileRunningArmPID(1000); //change later
+            sleepWhileRunningArmPID(1000);
             armTarget=100;
-            sleepWhileRunningArmPID(500); //change later
+            sleepWhileRunningArmPID(500);
             armTarget=0;
-            sleepWhileRunningArmPID(100); //change later
+            sleepWhileRunningArmPID(100);
             timer.reset();
             holdPosition_Arm = false;
-        } //add manual lift later
-        else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
+        } else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
             armTarget = 0;
             arm.raiseArmManual(0.25);
             ElapsedTime timer1;
@@ -198,84 +229,84 @@ public class DriveCode extends OpMode {
             arm.resetArmEncoders();
         }
 
+        // Outtake sequence
         if (operator.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-
-            hinge.liftHinge(hinge.holdPosition);    //pushes the ball into the flywheels
-            
-            outtake.setFlywheelVelocity(3000);  //turns on the flywheels to 3000 rpm
-
-            sleepWhileRunningArmPID(1000);  //sleeps while running arm PID, to hold the arm in place. The sleeping part allows the flywheels to speed up to it's target velocity.
-
-            hinge.liftHinge(hinge.firePosition);    //pushes the ball into the flywheels
-
-            sleepWhileRunningArmPID(1000);
-
-            velocityPeak=outtake.getCurrentWheelRPM();  //this is just something for telemetry. It's the velocity that the wheels get to before launching and shutting off. If you plan to use it, remember to run it WITHOUT the ball, or else value will be off
-
-            outtake.setFlywheelVelocity(0); //turns flywheels off
-
-            hinge.liftHinge(hinge.holdPosition);    //put the hinge back down, so it can hold another ball.
-        }
-
-        //flywheels launched with gamepad B
-        /*if (operator.wasJustPressed(GamepadKeys.Button.B)){
-            flyWheelOn = !flyWheelOn; // toggle
-        }
-        if (flyWheelOn) {
-            telemetry.addData("Fly Wheel:", "On");
+            hinge.liftHinge(hinge.holdPosition);
             outtake.setFlywheelVelocity(3000);
-        } else {
-            telemetry.addData("Fly Wheel:", "Off");
+            sleepWhileRunningArmPID(1000);
+            hinge.liftHinge(hinge.firePosition);
+            sleepWhileRunningArmPID(1000);
+            velocityPeak=outtake.getCurrentWheelRPM();
             outtake.setFlywheelVelocity(0);
+            hinge.liftHinge(hinge.holdPosition);
         }
-        telemetry.addData("VELOCITY: ", velocityPeak);
-        telemetry.update();*/
 
-//        operators use left stick to aim the outtake up and down
-        //arm.setArmTarget(operator.getLeftY()*400);
+        // Continuous PID control for arm
+        if (holdPosition_Arm || timer.milliseconds()/1000<2){
+            arm.raiseArmManual(arm.setArmTarget(armTarget));
+        } else {
+            arm.raiseArmManual(0);
+        }
 
-        //continuous PID control. Allows mechanisms to hold their position. Right now, just the arm uses PID, but there may be more later.
-        //if (timer.milliseconds()/1000<2){armIsMoving=true;}
-        if (holdPosition_Arm || timer.milliseconds()/1000<2){arm.raiseArmManual(arm.setArmTarget(armTarget));}
-        else {arm.raiseArmManual(0);}
-
-        //sort stuff
-        //sort()
         driver.readButtons();
         operator.readButtons();
+        telemetry.update();
     }
+
+    // Calculates rotation angle based on the initial set yaw angle
+    // Will instantly snap to the direction of the joy stick
+    // Example: Moving the joystick up will rotate the robot until its facing forward.
+    private double snapToHeading(double targetHeading) {
+        // Get current robot heading
+        double currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        // Calculate error (how far we are from target)
+        double error = targetHeading - currentHeading;
+
+        // IMPORTANT: Normalize error to shortest path
+        // This ensures we rotate the shorter direction
+        // Example: If we need to go from 170° to -170°, we should rotate 20°, not 340°
+        error = AngleUnit.normalizeRadians(error);
+
+        // Calculate rotation power using proportional control
+        // Larger error = faster rotation
+        double rotatePower = error * rotationKp;
+
+        // Clamp the rotation power to maximum speed
+        rotatePower = Math.max(-rotationMaxSpeed, Math.min(rotationMaxSpeed, rotatePower));
+
+        // Add a small deadband to stop oscillation when close to target
+        if (Math.abs(error) < 0.02) {  // About 1 degree
+            rotatePower = 0;
+        }
+
+        return rotatePower;
+    }
+
     public void stop(){
         opModeIsActive=false;
     }
 
-    // This routine drives the robot field relative
-    private void driveFieldRelative(double forward, double right, double rotate) {
-        // First, convert direction being asked to drive to polar coordinates
+    // Field-relative drive method
+    private void driveFieldRelative(double forward, double right, double rotate, double speedMultiplier) {
         double theta = Math.atan2(forward, right);
         double r = Math.hypot(right, forward);
-
-        // Second, rotate angle by the angle the robot is pointing
         theta = AngleUnit.normalizeRadians(theta -
                 imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
-
-        // Third, convert back to cartesian
         double newForward = r * Math.sin(theta);
         double newRight = r * Math.cos(theta);
-
-        // Finally, call the drive method with robot relative forward and right amounts
-        drive(newForward, newRight, rotate);
+        drive(newForward, newRight, rotate, speedMultiplier);
     }
 
-    // This routine drives the robot regularly
-    public void drive(double forward, double right, double rotate) {
-
+    // Robot-relative drive method
+    public void drive(double forward, double right, double rotate, double speedMultiplier) {
         double frontLeftPower = forward + right + rotate;
         double frontRightPower = forward - right - rotate;
         double backRightPower = forward + right - rotate;
         double backLeftPower = forward - right + rotate;
 
         double maxPower = 1.0;
-        double maxSpeed = .75;  // make this slower for outreaches
+        double maxSpeed = .75 * speedMultiplier;
 
         maxPower = Math.max(maxPower, Math.abs(frontLeftPower));
         maxPower = Math.max(maxPower, Math.abs(frontRightPower));
@@ -287,7 +318,8 @@ public class DriveCode extends OpMode {
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
     }
-    public void sleepWhileRunningArmPID(double milliseconds){  //acts as a sleep function, while also running the arm PID. This keeps the arm at it's target position.
+
+    public void sleepWhileRunningArmPID(double milliseconds){
         ElapsedTime sleepTimer;
         sleepTimer = new ElapsedTime();
         while (sleepTimer.milliseconds()<milliseconds && opModeIsActive){
