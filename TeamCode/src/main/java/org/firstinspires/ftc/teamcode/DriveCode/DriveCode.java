@@ -268,7 +268,7 @@ public class DriveCode extends OpMode {
             case IDLE:
                 // Check for sequence triggers
                 if (operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                    armTarget = 500;
+                    armTarget = 600;
                     timer.reset();
                     holdPosition_Arm = true;
                 }

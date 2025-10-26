@@ -47,11 +47,9 @@ public class AutoPathingPeripheryBlue extends LinearOpMode {
                 drive.actionBuilder(beginPose)
                         .stopAndAdd(new AutoPathingPeripheryBlue.setHingePosition())
 
-                        .strafeTo(new Vector2d(-27, 27))
+                        .strafeTo(new Vector2d(-26, 26))
 
                         .stopAndAdd(new AutoPathingPeripheryBlue.raiseArm(600))
-
-                        .stopAndAdd(new AutoPathingPeripheryBlue.raiseArm(550))
 
                         .stopAndAdd(new AutoPathingPeripheryBlue.scoreBallSequence(hardwareMap))
 
@@ -86,9 +84,9 @@ public class AutoPathingPeripheryBlue extends LinearOpMode {
             sleep(500);
 
 //            outtake.setFlywheelVelocity(3000);
-            outtake.setFlywheelVelocity(2350);
+            outtake.setFlywheelVelocity(3000);
 
-            sleepWhileRunningArmPID(1000);
+            sleepWhileRunningArmPID(2000);
 
             hinge.liftHinge(hinge.firePosition);
 

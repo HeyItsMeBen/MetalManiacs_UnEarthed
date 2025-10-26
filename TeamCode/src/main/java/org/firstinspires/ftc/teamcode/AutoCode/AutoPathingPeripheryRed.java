@@ -47,11 +47,9 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
                 drive.actionBuilder(beginPose)
                         .stopAndAdd(new AutoPathingPeripheryRed.setHingePosition())
 
-                        .strafeTo(new Vector2d(27, 27))
+                        .strafeTo(new Vector2d(26, 26))
 
                         .stopAndAdd(new AutoPathingPeripheryRed.raiseArm(600))
-
-                        .stopAndAdd(new AutoPathingPeripheryRed.raiseArm(550))
 
                         .stopAndAdd(new AutoPathingPeripheryRed.scoreBallSequence(hardwareMap))
 
