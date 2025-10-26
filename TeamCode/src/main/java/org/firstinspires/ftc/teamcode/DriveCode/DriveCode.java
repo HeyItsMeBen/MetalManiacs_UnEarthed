@@ -216,6 +216,7 @@ public class DriveCode extends OpMode {
             sleepWhileRunningArmPID(500);
             armTarget=100;
             sleepWhileRunningArmPID(500);
+            //don't let it go to 0 here or it will hit the control hub
             timer.reset();
             holdPosition_Arm = false;
         } else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
