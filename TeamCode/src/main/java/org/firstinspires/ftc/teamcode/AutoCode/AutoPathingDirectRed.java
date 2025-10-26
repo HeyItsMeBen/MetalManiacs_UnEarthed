@@ -48,21 +48,18 @@ public class AutoPathingDirectRed extends LinearOpMode {
                 drive.actionBuilder(beginPose)
 
                         .strafeTo(new Vector2d(20, -40))
-//original was 20 in auto it was 55,
-//                        .splineToLinearHeading(new Pose2d(35, 55, Math.toRadians(225)), Math.toRadians(45))
+
                         .splineToLinearHeading(new Pose2d(25, 40, Math.toRadians(227)), Math.toRadians(45))
 
                         .waitSeconds(1)
 
-//                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(500))
-                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(600))
+                        .stopAndAdd(new raiseArm(600))
 
-                        .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                        .stopAndAdd(new lowerArmFully())
 
                         .splineTo(new Vector2d(20, -40), Math.toRadians(270))
-//                        .splineToLinearHeading(beginPose, Math.toRadians(270))
-
 
                         .build());
     }
