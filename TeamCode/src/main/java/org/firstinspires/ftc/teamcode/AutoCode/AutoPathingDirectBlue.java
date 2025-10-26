@@ -45,18 +45,21 @@ public class AutoPathingDirectBlue extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
+                        .stopAndAdd(new AutoPathingDirectBlue.setHingePosition())
 
                         .strafeTo(new Vector2d(-20, -40))
 
                         .splineToLinearHeading(new Pose2d(-25, 40, Math.toRadians(317)), Math.toRadians(135))
 
-                        .stopAndAdd(new raiseArm(600))
+                        .waitSeconds(1)
+
+                        .stopAndAdd(new AutoPathingDirectBlue.raiseArm(550))
 
                         .stopAndAdd(new scoreBallSequence(hardwareMap))
 
                         .stopAndAdd(new lowerArmFully())
 
-                        .splineTo(new Vector2d(-20, -40), Math.toRadians(270))
+                        .splineTo(new Vector2d(-20, -35), Math.toRadians(360))
 
                         .build());
     }
@@ -65,6 +68,13 @@ public class AutoPathingDirectBlue extends LinearOpMode {
         public raiseArm(double givenTarget) {armTarget=givenTarget;}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             sleepWhileRunningArmPID(2000);
+            return false;
+        }
+    }
+    public class setHingePosition implements Action {
+        public setHingePosition() {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hinge.liftHinge(hinge.holdPosition);
             return false;
         }
     }

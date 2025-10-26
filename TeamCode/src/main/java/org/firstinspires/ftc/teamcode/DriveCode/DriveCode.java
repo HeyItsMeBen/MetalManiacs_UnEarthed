@@ -73,7 +73,7 @@ public class DriveCode extends OpMode {
 
     private ArmState armState = ArmState.IDLE;
     private ElapsedTime stateTimer = new ElapsedTime();
-    private double outtakeSpeed = 2000;
+    private double outtakeSpeed = 3000;
 
     @Override
     public void init() {
