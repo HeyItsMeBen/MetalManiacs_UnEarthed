@@ -64,7 +64,7 @@ public class AutoTesting extends LinearOpMode {
                 cameraPitch=45;
                 tagElevation=0;
                 tagTilt=0;
-                flywheel.calculateEverything(givenY, Math.toRadians(tagTilt), Math.toRadians(tagElevation), Math.toRadians(cameraPitch));    //NOTE: before calculateEverything() you will NEED to rotate the robot so the aprilTag is directly in front of it (centered).
+                flywheel.calculateEverything(toMeters(givenY), Math.toRadians(tagTilt), Math.toRadians(tagElevation), Math.toRadians(cameraPitch));    //NOTE: before calculateEverything() you will NEED to rotate the robot so the aprilTag is directly in front of it (centered).
 
                 //theses 4 values (wheelVelocity, launchAngle, and moveBackValue) will be the values we will use directly to control the robot.
                 telemetry.addLine(String.format("velocity: " + flywheel.outtakeFlywheelValues.wheelVelocity));
@@ -156,7 +156,7 @@ public class AutoTesting extends LinearOpMode {
             }
             if (tagScanned){
                 yDistance = detection.ftcPose.range;
-                tagTilt = detection.ftcPose.yaw; //Is it rly Yaw? I can get them mixed up sometimes...
+                tagTilt = detection.ftcPose.yaw; //When robot rotates, it changes yaw. Js so u know which one yaw is.
                 tagElevation = detection.ftcPose.elevation;
             }
         }   // end for() loop
@@ -166,5 +166,8 @@ public class AutoTesting extends LinearOpMode {
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
         telemetry.update();
+    }
+    private double toMeters(double inches){
+        return inches/39.3700787;
     }
 }

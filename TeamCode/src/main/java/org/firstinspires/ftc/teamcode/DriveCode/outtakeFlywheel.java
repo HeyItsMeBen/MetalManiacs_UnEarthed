@@ -29,7 +29,7 @@ public class outtakeFlywheel {
     //double basketLocationX=toMeters(60);
     double basketYToH=toMeters(7.5);
     double H = basketY+basketYToH; //measured in meters. Max height that launched ball will reach. Change as desired.
-    double gravity=9.8; //i think this is the right value
+    double gravity=9.8; //Change to 9.81 later
     double tagToGoalCenter_Distance=toMeters(5);
     double robotCenterToArmBase_Distance=toMeters(0.25);
     double cameraToRobotCenter_Distance=toMeters(8);
@@ -81,11 +81,11 @@ public class outtakeFlywheel {
     }
 
 
-    public void calculateEverything(double givenX, double tagTilt, double tagElevation, double cameraPitch){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates robotCenter into armBase so the rest of this file can calculate properly.
-        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch);
-        double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-tagTilt));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
-        outtakeFlywheelValues.angleDeviation=Math.asin(tagToGoalCenter_Distance*Math.sin(Math.PI-tagTilt)/newX);    //law of sines
-        getValues(newX-robotCenterToArmBase_Distance+cameraToRobotCenter_Distance);  //this input is equal to the distance from the armBase to goalCenter
+    public void calculateEverything(double givenX, double tagYaw, double tagElevation, double cameraPitch){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates robotCenter into armBase so the rest of this file can calculate properly.
+        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;
+        double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-tagYaw));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
+        outtakeFlywheelValues.angleDeviation=Math.asin(tagToGoalCenter_Distance*Math.sin(Math.PI-tagYaw)/newX);    //law of sines
+        getValues(newX-robotCenterToArmBase_Distance);  //this input is equal to the distance from the armBase to goalCenter
     }
     public void getValues(double givenX){
         values=calculateValues(givenX);
