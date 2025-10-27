@@ -27,7 +27,8 @@ public class outtakeFlywheel {
     final double basketY_Og=toMeters(38.75+5.75); //basketY_Og should be equal to basketHeight + distanceFromArmBaseToGround
     double basketY=basketY_Og;
     //double basketLocationX=toMeters(60);
-    double H = basketY+toMeters(7.5); //measured in meters. Max height that launched ball will reach. Change as desired.
+    double basketYToH=toMeters(7.5);
+    double H = basketY+basketYToH; //measured in meters. Max height that launched ball will reach. Change as desired.
     double gravity=9.8; //i think this is the right value
     double tagToGoalCenter_Distance=toMeters(5);
     double robotCenterToArmBase_Distance=toMeters(0.25);
@@ -97,6 +98,7 @@ public class outtakeFlywheel {
         outtakeFlywheelValues.launchAngleOg=values[1];
 
         basketY=basketY_Og-armPositions[1];
+        H = basketY+basketYToH;
         values=calculateValues(givenX-armPositions[0]);
 
         double ballWeight=2;
