@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.Blue;
 
 import androidx.annotation.NonNull;
 
@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
 
-@Autonomous(name = "Auto Pathing Periphery Red", group = "Concept")
+@Autonomous(name = "Auto Pathing Periphery Blue", group = "Concept")
 //@Disabled
-public class AutoPathingPeripheryRed extends LinearOpMode {
+public class AutoPathingPeripheryBlue extends LinearOpMode {
 
     Intake intake;
     Arm arm;
@@ -32,7 +32,7 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(50, 50, Math.toRadians(225));
+        Pose2d beginPose = new Pose2d(-50, 50, Math.toRadians(315));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
@@ -45,17 +45,17 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .stopAndAdd(new AutoPathingPeripheryRed.setHingePosition())
+                        .stopAndAdd(new AutoPathingPeripheryBlue.setHingePosition())
 
-                        .strafeTo(new Vector2d(26, 26))
+                        .strafeTo(new Vector2d(-26, 26))
 
-                        .stopAndAdd(new AutoPathingPeripheryRed.raiseArm(600))
+                        .stopAndAdd(new AutoPathingPeripheryBlue.raiseArm(600))
 
-                        .stopAndAdd(new AutoPathingPeripheryRed.scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new AutoPathingPeripheryBlue.scoreBallSequence(hardwareMap))
 
-                        .stopAndAdd(new AutoPathingPeripheryRed.lowerArmFully())
+                        .stopAndAdd(new AutoPathingPeripheryBlue.lowerArmFully())
 
-                        .splineTo(new Vector2d(25, -35), Math.toRadians(270))
+                        .splineTo(new Vector2d(-25, -35), Math.toRadians(270))
 
                         .build());
     }
@@ -84,9 +84,9 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
             sleep(500);
 
 //            outtake.setFlywheelVelocity(3000);
-            outtake.setFlywheelVelocity(2350);
+            outtake.setFlywheelVelocity(3000);
 
-            sleepWhileRunningArmPID(1000);
+            sleepWhileRunningArmPID(2000);
 
             hinge.liftHinge(hinge.firePosition);
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.Blue;
 
 import androidx.annotation.NonNull;
 
