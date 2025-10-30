@@ -75,6 +75,8 @@ public class DriveCode extends OpMode {
     private ElapsedTime stateTimer = new ElapsedTime();
     private double outtakeSpeed = 3000;
 
+    public boolean outtakeForward = false;
+
     @Override
     public void init() {
 
@@ -114,8 +116,15 @@ public class DriveCode extends OpMode {
     public void loop() {
         telemetry.addLine("Press A to reset Yaw");
         telemetry.addLine("Press RIGHT STICK to toggle rotation mode");
+        telemetry.addLine("Press Y to toggle outtake forward");
         telemetry.addLine("Hold left bumper for robot-relative drive");
         telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
+
+        // Toggles if outtake is forward
+        if (driver.wasJustPressed(GamepadKeys.Button.Y)){
+            outtakeForward = !outtakeForward;
+        }
+        telemetry.addData("Outtake Forward", outtakeForward);
 
         // Reset yaw with A button
         if (driver.getButton(GamepadKeys.Button.A)){
@@ -171,7 +180,10 @@ public class DriveCode extends OpMode {
                 // Calculate the target heading from right stick position
                 // atan2 gives us the angle the stick is pointing
                 // Negate entire result to flip rotation direction
-                targetHeading = -(Math.atan2(rightStickY, rightStickX) - Math.PI/2);
+                double baseHeading = -(Math.atan2(rightStickY, rightStickX) - Math.PI/2);
+
+                // Add 180 degrees if outtake is forward
+                targetHeading = outtakeForward ? AngleUnit.normalizeRadians(baseHeading + Math.PI) : baseHeading;
 
                 // Calculate rotation power to reach target heading
                 rotate = snapToHeading(targetHeading);
@@ -253,8 +265,8 @@ public class DriveCode extends OpMode {
             }
 
             // Clamp to bounds
-            if(armTarget > 700){
-                armTarget = 700;
+            if(armTarget > 650){
+                armTarget = 650;
             }
             if (armTarget < 100){
                 armTarget = 100;
