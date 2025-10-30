@@ -58,21 +58,7 @@ public class DriveCode extends OpMode {
     private double rotationKp = 4.0;  // Higher = faster snap! Try 3.0-6.0 for instant
     private double rotationMaxSpeed = 1.0;  // Maximum rotation speed (set to 1.0 for full power)
     private double speedMultiplier = 1;
-    private enum ArmState {
-        IDLE,
-        OUTTAKE_LIFT,
-        OUTTAKE_WAIT_FLYWHEEL,
-        OUTTAKE_FIRE,
-        OUTTAKE_WAIT_FIRE,
-        OUTTAKE_FINISH,
-        ARM_DOWN_STEP1,
-        ARM_DOWN_STEP2,
-        ARM_DOWN_STEP3,
-        ARM_DOWN_FINISH
-    }
 
-    private ArmState armState = ArmState.IDLE;
-    private ElapsedTime stateTimer = new ElapsedTime();
     private double outtakeSpeed = 3000;
 
     public boolean outtakeForward = false;
@@ -254,7 +240,6 @@ public class DriveCode extends OpMode {
         telemetry.addData("Outtake Speed", outtakeSpeed);
 
         // Manual arm control (only when in IDLE state)
-        if (armState == ArmState.IDLE) {
             double joystickInput = operator.getLeftY();
 
             // Only update target if joystick is being moved
@@ -271,13 +256,11 @@ public class DriveCode extends OpMode {
             if (armTarget < 100){
                 armTarget = 100;
             }
-        }
+        
         telemetry.addData("Arm target", armTarget);
-        telemetry.addData("Arm state", armState);
 
         // State machine for automated sequences
-        switch (armState) {
-            case IDLE:
+
                 // Check for sequence triggers
                 if (operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
                     armTarget = 600;
@@ -285,15 +268,26 @@ public class DriveCode extends OpMode {
                     holdPosition_Arm = true;
                 }
                 else if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                    armState = ArmState.ARM_DOWN_STEP1;
-                    armTarget = 300;
-                    stateTimer.reset();
+
+                    armTarget=300;
+                    sleepWhileRunningArmPID(1000);
+                    armTarget=100;
+                    sleepWhileRunningArmPID(500);
+                    armTarget=0;
+                    sleepWhileRunningArmPID(100);
+                    timer.reset();
+                    holdPosition_Arm = false;
                 }
                 else if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                    armState = ArmState.OUTTAKE_LIFT;
+
                     hinge.liftHinge(hinge.holdPosition);
-                    outtake.setFlywheelVelocity((float) outtakeSpeed);
-                    stateTimer.reset();
+                    outtake.setFlywheelVelocity(3000);
+                    sleepWhileRunningArmPID(1000);
+                    hinge.liftHinge(hinge.firePosition);
+                    sleepWhileRunningArmPID(1000);
+                    velocityPeak=outtake.getCurrentWheelRPM();
+                    outtake.setFlywheelVelocity(0);
+                    hinge.liftHinge(hinge.holdPosition);
                 }
                 else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
                     armTarget = 0;
@@ -305,59 +299,6 @@ public class DriveCode extends OpMode {
                     }
                     arm.resetArmEncoders();
                 }
-                break;
-
-            case ARM_DOWN_STEP1:
-                if (stateTimer.milliseconds() >= 1000) {
-                    armState = ArmState.ARM_DOWN_STEP2;
-                    armTarget = 100;
-                    stateTimer.reset();
-                }
-                break;
-
-            case ARM_DOWN_STEP2:
-                if (stateTimer.milliseconds() >= 500) {
-                    armState = ArmState.ARM_DOWN_STEP3;
-                    armTarget = 0;
-                    stateTimer.reset();
-                }
-                break;
-
-            case ARM_DOWN_STEP3:
-                if (stateTimer.milliseconds() >= 100) {
-                    armState = ArmState.ARM_DOWN_FINISH;
-                    timer.reset();
-                    holdPosition_Arm = false;
-                    stateTimer.reset();
-                }
-                break;
-
-            case ARM_DOWN_FINISH:
-                armState = ArmState.IDLE;
-                break;
-
-            case OUTTAKE_LIFT:
-                if (stateTimer.milliseconds() >= 1000) {
-                    armState = ArmState.OUTTAKE_FIRE;
-                    hinge.liftHinge(hinge.firePosition);
-                    stateTimer.reset();
-                }
-                break;
-
-            case OUTTAKE_FIRE:
-                if (stateTimer.milliseconds() >= 1000) {
-                    armState = ArmState.OUTTAKE_FINISH;
-                    velocityPeak = outtake.getCurrentWheelRPM();
-                    outtake.setFlywheelVelocity(0);
-                    hinge.liftHinge(hinge.holdPosition);
-                    stateTimer.reset();
-                }
-                break;
-
-            case OUTTAKE_FINISH:
-                armState = ArmState.IDLE;
-                break;
-        }
 
         // Continuous PID control for arm (runs every loop)
         if (holdPosition_Arm || timer.milliseconds() < 2000){
