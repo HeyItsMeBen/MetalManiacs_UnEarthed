@@ -16,7 +16,6 @@ public class Lights {
 
     public void Light_Green(){
         blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-        blinkinLedDriver.close();
     }
 
     public void Light_Blue(){
