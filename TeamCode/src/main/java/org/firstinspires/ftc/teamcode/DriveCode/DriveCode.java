@@ -300,7 +300,7 @@ public class DriveCode extends OpMode {
             sleepWhileRunningArmPID(1000);  //lets the flywheels speed up
             hinge.liftHinge(hinge.firePosition);    //pushes the ball into the flywheels (launches the ball)
             sleepWhileRunningArmPID(1000);  //gives the hinge time to get into position
-            velocityPeak=outtake.getCurrentWheelRPM();  //the velocity that the flywheels get to. For telemetry purposes. If you plan to use it, run the launch sequence without the ball to get accurate results.
+            velocityPeak=outtake.getCurrentWheelVelocity("left");  //the velocity that the flywheels get to. For telemetry purposes. If you plan to use it, run the launch sequence without the ball to get accurate results.
             outtake.setFlywheelVelocity(0);     //turns off the flywheels. We don't need it running because we just launched the ball
             hinge.liftHinge(hinge.holdPosition);    //Sets the hinge to the position that holds the ball. So we can drive up to observation zone thing, and load another ball.
         }

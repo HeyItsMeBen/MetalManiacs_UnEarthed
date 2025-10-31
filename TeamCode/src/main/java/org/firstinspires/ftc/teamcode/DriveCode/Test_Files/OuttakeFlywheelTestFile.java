@@ -57,7 +57,7 @@ public class OuttakeFlywheelTestFile extends LinearOpMode {
                 //logHistory.clear();
             }
 
-            logHistory.add("Velocities: " + (int) Math.round(outtake.getCurrentWheelRPM("left")) + " , " + (int) Math.round(outtake.getCurrentWheelRPM("right")));
+            logHistory.add("Velocities: " + (int) Math.round(outtake.getCurrentWheelVelocity("left")) + " , " + (int) Math.round(outtake.getCurrentWheelVelocity("right")));
 
             // Display the last few entries (so it doesn’t overflow)
             int maxLines = 8;

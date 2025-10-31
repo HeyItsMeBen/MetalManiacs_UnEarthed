@@ -38,7 +38,7 @@ public class Outtake {
         leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
         rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
     }
-    public double getCurrentWheelRPM(String motor){
+    public double getCurrentWheelVelocity(String motor){
         if (motor.contains("left") || motor.contains("Left")) {
             return leftFlyWheel.getVelocity()*60/tickPerRevolution;
         } else if (motor.contains("right") || motor.contains("Right")) {
