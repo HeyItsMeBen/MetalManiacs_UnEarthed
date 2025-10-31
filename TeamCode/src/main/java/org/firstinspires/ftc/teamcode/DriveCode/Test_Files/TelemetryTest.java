@@ -1,48 +1,37 @@
-package org.firstinspires.ftc.teamcode.DriveCode;
+package org.firstinspires.ftc.teamcode.DriveCode.Test_Files;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Lights;
 
-@TeleOp (name="Test LED Lights", group="test")
-public class LED_Manual_Test extends LinearOpMode {
+//The purpose of this file is to determine how the telemetry functions. This will be important for logging the flywheel velocities
+@TeleOp (name="Telemetry Test", group="test")
+public class TelemetryTest extends LinearOpMode {
 
     public GamepadEx gamepad;
-    Lights lights;
 
     @Override
     public void runOpMode() {
 
-
         gamepad = new GamepadEx(gamepad1);
-        lights = new Lights(hardwareMap);
-
-        telemetry.addData("Red Light: ", "A");
-        telemetry.addData("Green Light: ", "B");
-        telemetry.addData("Blue Light: ", "X");
-        telemetry.addData("Off: ", "Y");
-        telemetry.update();
-
         waitForStart();
 
         //executing
         while (opModeIsActive()) {
             if (gamepad.getButton(GamepadKeys.Button.A)) {
-                lights.Light_Red();
+                telemetry.log().add("Button A Pressed");
             }
             else if (gamepad.getButton(GamepadKeys.Button.B)) {
-                lights.Light_Green();
+                telemetry.addData("Button B Pressed", "");
             }
             else if (gamepad.getButton(GamepadKeys.Button.X)) {
-                lights.Light_Blue();
+                telemetry.addData("Button X Pressed", "");
+                telemetry.update();
             }
             else if (gamepad.getButton(GamepadKeys.Button.Y)) {
-                lights.Light_Off();
+                telemetry.update();
             }
         }
     }

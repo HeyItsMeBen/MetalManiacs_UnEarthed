@@ -9,29 +9,42 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Outtake {
 
-    Arm arm;
-    private DcMotorEx rightFlyWheel = null;
     private DcMotorEx leftFlyWheel = null;
+    private DcMotorEx rightFlyWheel = null;
     final double tickPerRevolution=28;
+
 
     public boolean done=true;
     public boolean isOpModeActive=true;
 
     //Outtake subsystem
     public Outtake(HardwareMap hMap) {
-        rightFlyWheel = hMap.get(DcMotorEx.class, "rightFlyWheel");
-        leftFlyWheel = hMap.get(DcMotorEx.class, "leftFlyWheel");
 
-        rightFlyWheel.setDirection(DcMotorEx.Direction.REVERSE);
+        leftFlyWheel = hMap.get(DcMotorEx.class, "leftFlyWheel");
+        rightFlyWheel = hMap.get(DcMotorEx.class, "rightFlyWheel");
+
         leftFlyWheel.setDirection(DcMotorEx.Direction.FORWARD);
-        arm = new Arm(hMap);
+        rightFlyWheel.setDirection(DcMotorEx.Direction.REVERSE);
+
+        leftFlyWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFlyWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFlyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFlyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     public void setFlywheelVelocity(float givenRPM) {
-        rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
         leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
+        rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
     }
-    public double getCurrentWheelRPM(){
-        return rightFlyWheel.getVelocity()*60/tickPerRevolution;
+    public double getCurrentWheelRPM(String motor){
+        if (motor.contains("left") || motor.contains("Left")) {
+            return leftFlyWheel.getVelocity()*60/tickPerRevolution;
+        } else if (motor.contains("right") || motor.contains("Right")) {
+            return rightFlyWheel.getVelocity()*60/tickPerRevolution;
+        }
+        return 0;
+
     }
 }

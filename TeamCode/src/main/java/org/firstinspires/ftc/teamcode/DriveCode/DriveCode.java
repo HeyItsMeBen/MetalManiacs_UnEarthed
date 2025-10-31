@@ -335,7 +335,7 @@ public class DriveCode extends OpMode {
             case OUTTAKE_FIRE:
                 if (stateTimer.milliseconds() >= 1000) {
                     armState = ArmState.OUTTAKE_FINISH;
-                    velocityPeak = outtake.getCurrentWheelRPM();
+                    velocityPeak = outtake.getCurrentWheelRPM("right");
                     outtake.setFlywheelVelocity(0);
                     hinge.liftHinge(hinge.holdPosition);
                     stateTimer.reset();
