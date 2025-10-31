@@ -25,11 +25,13 @@ public class DriveCode extends OpMode {
     public GamepadEx driver;
     public GamepadEx operator;
 
+    //create motor variables
     DcMotor frontLeftDrive;
     DcMotor frontRightDrive;
     DcMotor backLeftDrive;
     DcMotor backRightDrive;
 
+    //create mechanism variables
     Intake intake;
     Outtake outtake;
     Arm arm;
@@ -37,10 +39,11 @@ public class DriveCode extends OpMode {
 
     ElapsedTime timer;
 
+    //set up variables
     private int intakePower = 0;
     private boolean flyWheelOn = false;
-    double velocityPeak=0;
-    boolean holdPosition_Arm=false;
+    private double outtakeSpeed = 3000;
+    boolean holdPosition_Arm=false; //does the arm need to hold it's position (using PID)?
     boolean armIsMoving=false;
     double armTarget=0;
     boolean opModeIsActive=true;
@@ -58,27 +61,31 @@ public class DriveCode extends OpMode {
     private double rotationKp = 4.0;  // Higher = faster snap! Try 3.0-6.0 for instant
     private double rotationMaxSpeed = 1.0;  // Maximum rotation speed (set to 1.0 for full power)
     private double speedMultiplier = 1;
+    public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
 
-    private double outtakeSpeed = 3000;
-
-    public boolean outtakeForward = false;
+    //variables for telemetry
+    double velocityPeak=0;
 
     @Override
     public void init() {
 
+        //create driver objects
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
 
+        //create and set the motor objects
         frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
 
+        //create the mechanism objects
         intake = new Intake(hardwareMap);
         arm = new Arm(hardwareMap);
         outtake = new Outtake(hardwareMap);
         hinge = new Hinge(hardwareMap);
 
+        //setup
         arm.resetArmEncoders();
 
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -92,7 +99,7 @@ public class DriveCode extends OpMode {
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
-        timer = new ElapsedTime();
+        timer = new ElapsedTime();  //creates timer object. Used for measuring time
 
         // Initialize target heading to current heading
         targetHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
@@ -240,76 +247,82 @@ public class DriveCode extends OpMode {
         telemetry.addData("Outtake Speed", outtakeSpeed);
 
         // Manual arm control (only when in IDLE state)
-            double joystickInput = operator.getLeftY();
+        double joystickInput = operator.getLeftY();
 
-            // Only update target if joystick is being moved
-            if (Math.abs(joystickInput) > 0.05) {
-                armTarget += joystickInput * 20; // Reduced from 50 for smoother control
-                holdPosition_Arm = true; // Enable PID when manually controlling
-                timer.reset(); // Reset timer to keep PID active
-            }
+        // Only update target if joystick is being moved
+        if (Math.abs(joystickInput) > 0.05) {
+            armTarget += joystickInput * 20; // Reduced from 50 for smoother control
+            holdPosition_Arm = true; // Enable PID when manually controlling
+            timer.reset(); // Reset timer to keep PID active
+        }
 
-            // Clamp to bounds
-            if(armTarget > 650){
-                armTarget = 650;
-            }
-            if (armTarget < 100){
-                armTarget = 100;
-            }
-        
+        // Clamp to bounds
+        if(armTarget > 650){
+            armTarget = 650;
+        }
+        if (armTarget < 100){
+            armTarget = 100;
+        }
         telemetry.addData("Arm target", armTarget);
 
         // State machine for automated sequences
 
-                // Check for sequence triggers
-                if (operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                    armTarget = 600;
-                    timer.reset();
-                    holdPosition_Arm = true;
-                }
-                else if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-
-                    armTarget=300;
-                    sleepWhileRunningArmPID(1000);
-                    armTarget=100;
-                    sleepWhileRunningArmPID(500);
-                    armTarget=0;
-                    sleepWhileRunningArmPID(100);
-                    timer.reset();
-                    holdPosition_Arm = false;
-                }
-                else if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-
-                    hinge.liftHinge(hinge.holdPosition);
-                    outtake.setFlywheelVelocity(3000);
-                    sleepWhileRunningArmPID(1000);
-                    hinge.liftHinge(hinge.firePosition);
-                    sleepWhileRunningArmPID(1000);
-                    velocityPeak=outtake.getCurrentWheelRPM();
-                    outtake.setFlywheelVelocity(0);
-                    hinge.liftHinge(hinge.holdPosition);
-                }
-                else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
-                    armTarget = 0;
-                    arm.raiseArmManual(0.25);
-                    ElapsedTime timer1 = new ElapsedTime();
-                    while (timer1.milliseconds() < 2000){
-                        // This is still blocking, but only for calibration
-                        // Consider making this non-blocking too if it causes issues
-                    }
-                    arm.resetArmEncoders();
-                }
+        // Check for sequence triggers
+        //arm up
+        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            armTarget = 600;
+            timer.reset();
+            holdPosition_Arm = true;
+        }
+        //arm down. (Doesn't go all the way down for safety reasons)
+        else if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {//goes down one step at a time. This is to slow it down, and keep it from hitting the bot.
+            armTarget=300;  //sets the target position for the arm
+            sleepWhileRunningArmPID(1000);  //waits 1 second. While waiting, it runs the arm PID so the arm can get to it's target position
+            armTarget=100;
+            sleepWhileRunningArmPID(500);
+            armTarget=0;
+            sleepWhileRunningArmPID(100);
+            timer.reset();
+            holdPosition_Arm = false;
+        }
+        //reset/fix encoder counts (safety feature)
+        else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {   //Brings the arm all the way down gently, and reset the encoder counts to 0.
+            armTarget = 0;  //don't move after the encoder counts reset
+            arm.raiseArmManual(0.25);   //moves the arm all the way down, gently
+            ElapsedTime timer1 = new ElapsedTime();
+            while (timer1.milliseconds() < 2000 && opModeIsActive){}    //gives the arm time to move all the way down.
+            arm.resetArmEncoders(); //once the arm is fully lowered, reset the encoder count to 0
+        }
+        //Launch the ball.
+        else if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            hinge.liftHinge(hinge.holdPosition);    //Sets the hinge to the position that holds the ball
+            outtake.setFlywheelVelocity(3000);      //turns on the flywheels
+            sleepWhileRunningArmPID(1000);  //lets the flywheels speed up
+            hinge.liftHinge(hinge.firePosition);    //pushes the ball into the flywheels (launches the ball)
+            sleepWhileRunningArmPID(1000);  //gives the hinge time to get into position
+            velocityPeak=outtake.getCurrentWheelRPM();  //the velocity that the flywheels get to. For telemetry purposes. If you plan to use it, run the launch sequence without the ball to get accurate results.
+            outtake.setFlywheelVelocity(0);     //turns off the flywheels. We don't need it running because we just launched the ball
+            hinge.liftHinge(hinge.holdPosition);    //Sets the hinge to the position that holds the ball. So we can drive up to observation zone thing, and load another ball.
+        }
 
         // Continuous PID control for arm (runs every loop)
-        if (holdPosition_Arm || timer.milliseconds() < 2000){
+        if (timer.milliseconds() < 2000 || holdPosition_Arm){   //Runs arm PID if either: the arm is still moving to it's position, or we want the arm to hold it's position
+            //this is how we currently set the PID power. It's a bit messy, but here's what each part is doing:
+            //  1. armTarget it the target position. The position that we are tryna get the arm to
+            //  2. setArmTarget() inputs the target position, and outputs the updated power that we need, to move the arm towards the target.
+            //  3. raiseArmManual() sets the arm motor to the power from setArmTarget
+            //ultimately, PID allows us to get to a target position, and hold that position if needed.
             arm.raiseArmManual(arm.setArmTarget(armTarget));
         } else {
-            arm.raiseArmManual(0);
+            arm.raiseArmManual(0);  //if we don't want the PID to run, turn it off.
         }
 
         driver.readButtons();
         operator.readButtons();
         telemetry.update();
+    }
+    public void stop(){ //when we stop the program with the driver station, this method runs. It's a built-in method, similar to and init() and loop()
+        opModeIsActive=false;   //tells the rest of the code that the program has been stopped. We use it as a conditional in while() loops, to make sure these loops stop running immediately when the we end the program. We don't want the arm to keep moving after we press stop, for example.
     }
 
     // Calculates rotation angle based on the initial set yaw angle
@@ -340,10 +353,6 @@ public class DriveCode extends OpMode {
         }
 
         return rotatePower;
-    }
-
-    public void stop(){
-        opModeIsActive=false;
     }
 
     // Field-relative drive method
@@ -378,11 +387,11 @@ public class DriveCode extends OpMode {
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
     }
 
-    public void sleepWhileRunningArmPID(double milliseconds){
+    public void sleepWhileRunningArmPID(double milliseconds){   //This acts as a sleep() function, while also running arm PID
         ElapsedTime sleepTimer;
         sleepTimer = new ElapsedTime();
-        while (sleepTimer.milliseconds()<milliseconds && opModeIsActive){
-            arm.raiseArmManual(arm.setArmTarget(armTarget));
+        while (sleepTimer.milliseconds()<milliseconds && opModeIsActive){   //loop until our "stopwatch" reaches the input time
+            arm.raiseArmManual(arm.setArmTarget(armTarget));    //sets updated PID power
         }
     }
 }
