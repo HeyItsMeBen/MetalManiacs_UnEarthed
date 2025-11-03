@@ -33,7 +33,7 @@ public class ArmAngleTuner extends LinearOpMode {
             sleepWhileRunningArmPID(1000);
             hinge.liftHinge(hinge.firePosition);
             sleepWhileRunningArmPID(1000);
-            velocityPeak=outtake.getCurrentWheelRPM("right");  //this is just something for telemetry. It's the velocity that the wheels get to before launching and shutting off. If you plan to use it, remember to run it WITHOUT the ball, or else value will be off
+            velocityPeak=outtake.getCurrentWheelVelocity("right");  //this is just something for telemetry. It's the velocity that the wheels get to before launching and shutting off. If you plan to use it, remember to run it WITHOUT the ball, or else value will be off
             outtake.setFlywheelVelocity(0);
             hinge.liftHinge(hinge.holdPosition);
             telemetry.addData("VELOCITY: ", velocityPeak);
