@@ -13,24 +13,30 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-// In this pathing, the robot goes directly to the goal and launches pre-stored balls, before going to park
+// In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
 
-public class Auto_Path_Simulation_Direct {
+public class Auto_Path_Simulation_Cycle {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI/2))
-
-                        // Getting into position
-
-                            .splineTo(new Vector2d(15, -20), Math.toRadians(90))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(225)))
 
                         // Travel to scoring
 
-                            .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(235)), Math.toRadians(45))
+                            .strafeTo(new Vector2d(37, 37))
+
+                        // Grabs closest set of balls
+
+                            .splineTo(new Vector2d(46, -35), 0) //For GPP
+
+                        // Travel to scoring
+
+                            .splineTo(new Vector2d(37, 37), 45) //For GPP
+
+//                        .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(225)), Math.toRadians(225))
 
                         // Park outside scoring zone
 

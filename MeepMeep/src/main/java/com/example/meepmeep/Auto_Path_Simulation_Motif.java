@@ -13,6 +13,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+// In this pathing, the robot drives
+
 public class Auto_Path_Simulation_Motif {
     public static void main(String[] args) {
 
@@ -21,7 +23,7 @@ public class Auto_Path_Simulation_Motif {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setDimensions(17,17)
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(-90))) //Direction the robot faces is based on radians
 
                         // Getting into position
@@ -31,11 +33,11 @@ public class Auto_Path_Simulation_Motif {
 
                         // Pathing to motif
 
-                            //.splineTo(new Vector2d(46, -35), 0) //For GPP
+                            .splineTo(new Vector2d(48, 13), 0) // For PPG
 
                             //.splineTo(new Vector2d(46, -11), 0) // For PGP
 
-                            .splineTo(new Vector2d(48, 13), 0) // For PPG
+                            //.splineTo(new Vector2d(46, -35), 0) //For GPP
 
                         // Travel to scoring
 

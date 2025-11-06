@@ -13,17 +13,24 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+// In this pathing, the robot goes from the goal to launch pre-stored balls, before going to park
+
 public class Auto_Path_Simulation_Periphery {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-50, 50, Math.toRadians(315)))
+                .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(225)))
 
-                        .strafeTo(new Vector2d(-25, 25))
-                        .splineTo(new Vector2d(-20, -35), Math.toRadians(270))
+                        // Travel to scoring
+
+                            .strafeTo(new Vector2d(37, 37))
+
+                        // Park outside scoring zone
+
+                            .splineToLinearHeading(new Pose2d(15, -40, Math.toRadians(270)), Math.toRadians(270))
 
                         .build());
 
