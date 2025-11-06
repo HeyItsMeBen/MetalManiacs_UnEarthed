@@ -1,4 +1,4 @@
-package com.example.meepmeep.PathingBlue;
+package com.example.meepmeep;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -24,16 +24,29 @@ public class Auto_Path_Simulation_Motif {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(-90))) //Direction the robot faces is based on radians
 
-//                        .setTangent(Math.toRadians(90))
+                        // Getting into position
+
                         .lineToLinearHeading(new Pose2d(12, -50, Math.toRadians(-90)))
                         .lineToLinearHeading(new Pose2d(12, -45, Math.toRadians(90)))
-                        .splineTo(new Vector2d(46, -35), 0)
-//
-//                        //run intake to pick up balls
+
+                        // Pathing to motif
+
+                        //.splineTo(new Vector2d(46, -35), 0) //For GPP
+
+                        //.splineTo(new Vector2d(46, -11), 0) // For PGP
+
+                        .splineTo(new Vector2d(48, 13), 0) // For PPG
+
+                        // Travel to scoring
 
                         .waitSeconds(0.5f)
                         .setTangent(Math.toRadians(180))
                         .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+
+                        // Park outside scoring zone
+
+                            // Write path here
+
                         .build());
 
         //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds
