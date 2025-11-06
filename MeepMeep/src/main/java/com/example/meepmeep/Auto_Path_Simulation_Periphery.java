@@ -21,6 +21,7 @@ public class Auto_Path_Simulation_Periphery {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-50, 50, Math.toRadians(315)))
+
                         .strafeTo(new Vector2d(-25, 25))
                         .splineTo(new Vector2d(-20, -35), Math.toRadians(270))
 

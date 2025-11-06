@@ -26,26 +26,26 @@ public class Auto_Path_Simulation_Motif {
 
                         // Getting into position
 
-                        .lineToLinearHeading(new Pose2d(12, -50, Math.toRadians(-90)))
-                        .lineToLinearHeading(new Pose2d(12, -45, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(12, -50, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(12, -45, Math.toRadians(90)))
 
                         // Pathing to motif
 
-                        //.splineTo(new Vector2d(46, -35), 0) //For GPP
+                            //.splineTo(new Vector2d(46, -35), 0) //For GPP
 
-                        //.splineTo(new Vector2d(46, -11), 0) // For PGP
+                            //.splineTo(new Vector2d(46, -11), 0) // For PGP
 
-                        .splineTo(new Vector2d(48, 13), 0) // For PPG
+                            .splineTo(new Vector2d(48, 13), 0) // For PPG
 
                         // Travel to scoring
 
-                        .waitSeconds(0.5f)
-                        .setTangent(Math.toRadians(180))
-                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                            .waitSeconds(0.5f)
+                            .setTangent(Math.toRadians(180))
+                            .splineTo(new Vector2d(37, 37), Math.toRadians(45))
 
                         // Park outside scoring zone
 
-                            // Write path here
+                            .splineToLinearHeading(new Pose2d(15, -40, Math.toRadians(270)), Math.toRadians(270))
 
                         .build());
 
