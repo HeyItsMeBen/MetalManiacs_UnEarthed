@@ -1,4 +1,4 @@
-package com.example.meepmeep;
+package com.example.meepmeep.PathingRed;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Auto_Path_Simulation_Motif_PGP {
+public class Auto_Path_Simulation_Motif {
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(800);
@@ -23,11 +23,13 @@ public class Auto_Path_Simulation_Motif_PGP {
                 .setDimensions(17,17)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(-90))) //Direction the robot faces is based on radians
-                        .lineTo(new Vector2d(12, -50))
-                        .lineToLinearHeading(new Pose2d(12, -45, Math.toRadians(90)))
-                        .splineTo(new Vector2d(46, -11), 0)
 
-                        //run intake to pick up balls
+//                        .setTangent(Math.toRadians(90))
+                        .lineToLinearHeading(new Pose2d(12, -50, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(12, -45, Math.toRadians(90)))
+                        .splineTo(new Vector2d(46, -35), 0)
+//
+//                        //run intake to pick up balls
 
                         .waitSeconds(0.5f)
                         .setTangent(Math.toRadians(180))

@@ -1,4 +1,4 @@
-package com.example.meepmeep;
+package com.example.meepmeep.PathingBlue;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -13,17 +13,16 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Auto_Path_Simulation_Direct {
+public class Auto_Path_Simulation_Periphery {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI/2))
-                        .strafeTo(new Vector2d(20, -40))
-                        .splineToLinearHeading(new Pose2d(25, 25, Math.toRadians(235)), Math.toRadians(45))
-                        .splineTo(new Vector2d(20, -40), Math.toRadians(270))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-50, 50, Math.toRadians(315)))
+                        .strafeTo(new Vector2d(-25, 25))
+                        .splineTo(new Vector2d(-20, -35), Math.toRadians(270))
 
                         .build());
 

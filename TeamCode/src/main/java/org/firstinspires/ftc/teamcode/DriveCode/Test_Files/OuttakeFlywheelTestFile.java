@@ -15,8 +15,8 @@ import java.util.List;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
-// One of the biggest issue with our flywheels is that they drop in velocity when launching each time. As a result,
-// this file will determine the time it takes for the velocities to return
+// One of the biggest issue with our flywheels is that they drop in velocity when launching each time.
+// As a result, this file will determine the time it takes for the velocities to return
 
 @TeleOp (name="Outtake Flywheel Test", group="test")
 public class OuttakeFlywheelTestFile extends LinearOpMode {
