@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Deprecated
 public class Arm {
     private PIDController controller;
     //public static double p = 0.001, i = 0, d = 0;

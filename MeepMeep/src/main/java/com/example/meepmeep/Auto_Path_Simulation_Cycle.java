@@ -21,25 +21,45 @@ public class Auto_Path_Simulation_Cycle {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(100, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(225)))
 
                         // Travel to scoring
 
                             .strafeTo(new Vector2d(37, 37))
 
-                        // Grabs closest set of balls
+                        // Grabs first set of balls
 
+                            .splineTo(new Vector2d(46, 13), 0) // For PPG
+
+                        // Travel to scoring
+
+                            .setReversed(true)
+                            .splineTo(new Vector2d(37, 37), 45)
+
+                        // Grabs second set of balls
+
+                            .setReversed(false)
+                            .splineTo(new Vector2d(46, -11), 0) // For PGP
+
+                        // Travel to scoring
+
+                            .setReversed(true)
+                            .splineTo(new Vector2d(37, 37), 45)
+
+                        // Grabs third set of balls
+
+                            .setReversed(false)
                             .splineTo(new Vector2d(46, -35), 0) //For GPP
 
                         // Travel to scoring
 
-                            .splineTo(new Vector2d(37, 37), 45) //For GPP
-
-//                        .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(225)), Math.toRadians(225))
+                            .setReversed(true)
+                            .splineTo(new Vector2d(37, 37), 45)
 
                         // Park outside scoring zone
 
+                            .setReversed(false)
                             .splineToLinearHeading(new Pose2d(15, -40, Math.toRadians(270)), Math.toRadians(270))
 
                         .build());
