@@ -24,24 +24,22 @@ public class Auto_Path_Simulation_Motif {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setDimensions(17,17)
                 .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(-90))) //Direction the robot faces is based on radians
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(90))) //Direction the robot faces is based on radians
 
                         // Getting into position
 
-                            .lineToLinearHeading(new Pose2d(12, -50, Math.toRadians(-90)))
-                            .lineToLinearHeading(new Pose2d(12, -45, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(15, -50, Math.toRadians(90)))
 
                         // Pathing to motif
 
-                            .splineTo(new Vector2d(48, 13), 0) // For PPG
+                            //.splineTo(new Vector2d(48, 13), 0) // For PPG
 
                             //.splineTo(new Vector2d(46, -11), 0) // For PGP
 
-                            //.splineTo(new Vector2d(46, -35), 0) //For GPP
+                            .splineTo(new Vector2d(46, -35), 0) //For GPP
 
                         // Travel to scoring
 
-                            .waitSeconds(0.5f)
                             .setTangent(Math.toRadians(180))
                             .splineTo(new Vector2d(37, 37), Math.toRadians(45))
 

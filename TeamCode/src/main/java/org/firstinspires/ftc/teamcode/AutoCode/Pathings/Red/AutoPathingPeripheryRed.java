@@ -23,7 +23,6 @@ import org.firstinspires.ftc.teamcode.Systems.Outtake;
 public class AutoPathingPeripheryRed extends LinearOpMode {
 
     Intake intake;
-    Arm arm;
     Outtake outtake;
     Hinge hinge;
 
@@ -36,7 +35,6 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
-        arm = new Arm(hardwareMap);
         outtake = new Outtake(hardwareMap);
         hinge = new Hinge(hardwareMap);
         //to do: add another hinge servo transfer servo
@@ -49,11 +47,7 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
 
                         .strafeTo(new Vector2d(26, 26))
 
-                        .stopAndAdd(new AutoPathingPeripheryRed.raiseArm(600))
-
                         .stopAndAdd(new AutoPathingPeripheryRed.scoreBallSequence(hardwareMap))
-
-                        .stopAndAdd(new AutoPathingPeripheryRed.lowerArmFully())
 
                         .splineTo(new Vector2d(25, -35), Math.toRadians(270))
 
@@ -68,13 +62,6 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
         }
     }
 
-    public class raiseArm implements Action {
-        public raiseArm(double givenTarget) {armTarget=givenTarget;}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            sleepWhileRunningArmPID(2000);
-            return false;
-        }
-    }
     public class scoreBallSequence implements Action {
         public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -86,36 +73,13 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
 //            outtake.setFlywheelVelocity(3000);
             outtake.setFlywheelVelocity(2350);
 
-            sleepWhileRunningArmPID(1000);
-
             hinge.liftHinge(hinge.firePosition);
-
-            sleepWhileRunningArmPID(1000);
 
             outtake.setFlywheelVelocity(0);
 
             hinge.liftHinge(hinge.holdPosition);
 
             return false;
-        }
-    }
-    public class lowerArmFully implements Action {    //lowers the arm to 0, to prepare for teleOp
-        public lowerArmFully() {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            armTarget=300;
-            sleepWhileRunningArmPID(1000); //change later
-            armTarget=100;
-            sleepWhileRunningArmPID(500); //change later
-            armTarget=0;
-            sleepWhileRunningArmPID(100); //change later
-            return false;
-        }
-    }
-    public void sleepWhileRunningArmPID(double milliseconds){  //acts as a sleep function, while also running the arm PID. This keeps the arm at it's target position.
-        ElapsedTime sleepTimer;
-        sleepTimer = new ElapsedTime();
-        while (sleepTimer.milliseconds()<milliseconds && opModeIsActive()){
-            arm.raiseArmManual(arm.setArmTarget(armTarget));
         }
     }
 

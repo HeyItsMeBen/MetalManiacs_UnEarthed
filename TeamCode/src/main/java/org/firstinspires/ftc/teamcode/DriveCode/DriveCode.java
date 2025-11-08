@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
 import org.firstinspires.ftc.teamcode.Systems.Arm;
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
 @TeleOp(name = "Competition DriveCode", group = "Robot")
 public class DriveCode extends OpMode {
@@ -34,8 +35,8 @@ public class DriveCode extends OpMode {
     //create mechanism variables
     Intake intake;
     Outtake outtake;
-    Arm arm;
-    Hinge hinge;
+    Transfer intakeHinge;
+    Transfer outtakeHinge;
 
     ElapsedTime timer;
 
@@ -43,10 +44,8 @@ public class DriveCode extends OpMode {
     private int intakePower = 0;
     private boolean flyWheelOn = false;
     private double outtakeSpeed = 3000;
-    boolean holdPosition_Arm=false; //does the arm need to hold it's position (using PID)?
-    boolean armIsMoving=false;
-    double armTarget=0;
-    boolean opModeIsActive=true;
+
+    boolean opModeIsActive = true;
 
     // IMU for getting robot heading
     IMU imu;
@@ -63,9 +62,6 @@ public class DriveCode extends OpMode {
     private double speedMultiplier = 1;
     public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
 
-    //variables for telemetry
-    double velocityPeak=0;
-
     @Override
     public void init() {
 
@@ -81,12 +77,11 @@ public class DriveCode extends OpMode {
 
         //create the mechanism objects
         intake = new Intake(hardwareMap);
-        arm = new Arm(hardwareMap);
         outtake = new Outtake(hardwareMap);
-        hinge = new Hinge(hardwareMap);
+        intakeHinge = new Transfer(hardwareMap);
+        outtakeHinge = new Transfer(hardwareMap);
 
         //setup
-        arm.resetArmEncoders();
 
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -103,6 +98,9 @@ public class DriveCode extends OpMode {
 
         // Initialize target heading to current heading
         targetHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        intakeHinge.intakeHingeStandby();
+        outtakeHinge.outtakeHingeRelax();
     }
 
     @Override
@@ -114,13 +112,13 @@ public class DriveCode extends OpMode {
         telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
 
         // Toggles if outtake is forward
-        if (driver.wasJustPressed(GamepadKeys.Button.Y)){
+        if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
             outtakeForward = !outtakeForward;
         }
         telemetry.addData("Outtake Forward", outtakeForward);
 
         // Reset yaw with A button
-        if (driver.getButton(GamepadKeys.Button.A)){
+        if (driver.getButton(GamepadKeys.Button.A)) {
             imu.resetYaw();
             targetHeading = 0;  // Reset target heading too
         }
@@ -138,18 +136,18 @@ public class DriveCode extends OpMode {
 
         // Speed multiplier adjustable via right and left triggers
         // Can be reset by pressing B
-        speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)*0.2;
-        speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)*0.2;
-        if(driver.getButton(GamepadKeys.Button.B)){
-            speedMultiplier=0.5;
+        speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.2;
+        speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) * 0.2;
+        if (driver.getButton(GamepadKeys.Button.B)) {
+            speedMultiplier = 0.5;
         }
         // Max speed is 1
-        if(speedMultiplier>1){
-            speedMultiplier=1;
+        if (speedMultiplier > 1) {
+            speedMultiplier = 1;
         }
         // Min speed is 0.25
-        if(speedMultiplier<0.25){
-            speedMultiplier=0.25;
+        if (speedMultiplier < 0.25) {
+            speedMultiplier = 0.25;
         }
         telemetry.addData("Speed Multiplier", speedMultiplier);
 
@@ -173,7 +171,7 @@ public class DriveCode extends OpMode {
                 // Calculate the target heading from right stick position
                 // atan2 gives us the angle the stick is pointing
                 // Negate entire result to flip rotation direction
-                double baseHeading = -(Math.atan2(rightStickY, rightStickX) - Math.PI/2);
+                double baseHeading = -(Math.atan2(rightStickY, rightStickX) - Math.PI / 2);
 
                 // Add 180 degrees if outtake is forward
                 targetHeading = outtakeForward ? AngleUnit.normalizeRadians(baseHeading + Math.PI) : baseHeading;
@@ -195,7 +193,7 @@ public class DriveCode extends OpMode {
         }
 
         // Choose drive mode based on toggle
-        if(useFieldCentricDrive){
+        if (useFieldCentricDrive) {
             // Field-centric drive
             driveFieldRelative(forward, right, rotate, speedMultiplier);
             telemetry.addLine("DRIVE: Field-Centric");
@@ -212,16 +210,16 @@ public class DriveCode extends OpMode {
         // [Rest of your original code for intake, arm, outtake, etc.]
 
         // Manual intake control
-        if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))){
-            if(Math.abs(intakePower) == 1){
+        if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
+            if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
-            }else{
+            } else {
                 intakePower = 1;
             }
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-            if(Math.abs(intakePower) == 1){
+            if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
-            }else{
+            } else {
                 intakePower = -1;
             }
         }
@@ -230,99 +228,69 @@ public class DriveCode extends OpMode {
         double operatorLeftTrigger = operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
         double operatorRightTrigger = operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
 
-        if(operatorLeftTrigger>0.1){
-            outtakeSpeed += operatorLeftTrigger*500;
+        if (operatorLeftTrigger > 0.1) {
+            outtakeSpeed += operatorLeftTrigger * 500;
         }
-        if(operatorRightTrigger > 0.1){
-            outtakeSpeed -= operatorRightTrigger*500;
+        if (operatorRightTrigger > 0.1) {
+            outtakeSpeed -= operatorRightTrigger * 500;
         }
 
-        if(outtakeSpeed > 3000){
+        if (outtakeSpeed > 3000) {
             outtakeSpeed = 3000;
         }
-        if(outtakeSpeed<500){
+        if (outtakeSpeed < 500) {
             outtakeSpeed = 500;
         }
 
         telemetry.addData("Outtake Speed", outtakeSpeed);
 
-        // Manual arm control (only when in IDLE state)
-        double joystickInput = operator.getLeftY();
+        //cycles the ball into positions for launch
+        if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
 
-        // Only update target if joystick is being moved
-        if (Math.abs(joystickInput) > 0.05) {
-            armTarget += joystickInput * 20; // Reduced from 50 for smoother control
-            holdPosition_Arm = true; // Enable PID when manually controlling
-            timer.reset(); // Reset timer to keep PID active
+            outtakeHinge.outtakeHingeRelax();
+
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            intakeHinge.intakeHingeLift();
+
         }
 
-        // Clamp to bounds
-        if(armTarget > 650){
-            armTarget = 650;
-        }
-        if (armTarget < 100){
-            armTarget = 100;
-        }
-        telemetry.addData("Arm target", armTarget);
+        //Launches the ball
+        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
-        // State machine for automated sequences
+            outtakeHinge.outtakeHingeHold();
 
-        // Check for sequence triggers
-        //arm up
-        if (operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-            armTarget = 600;
-            timer.reset();
-            holdPosition_Arm = true;
-        }
-        //arm down. (Doesn't go all the way down for safety reasons)
-        else if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {//goes down one step at a time. This is to slow it down, and keep it from hitting the bot.
-            armTarget=300;  //sets the target position for the arm
-            sleepWhileRunningArmPID(1000);  //waits 1 second. While waiting, it runs the arm PID so the arm can get to it's target position
-            armTarget=100;
-            sleepWhileRunningArmPID(500);
-            armTarget=0;
-            sleepWhileRunningArmPID(100);
-            timer.reset();
-            holdPosition_Arm = false;
-        }
-        //reset/fix encoder counts (safety feature)
-        else if (operator.getButton(GamepadKeys.Button.DPAD_RIGHT)) {   //Brings the arm all the way down gently, and reset the encoder counts to 0.
-            armTarget = 0;  //don't move after the encoder counts reset
-            arm.raiseArmManual(0.25);   //moves the arm all the way down, gently
-            ElapsedTime timer1 = new ElapsedTime();
-            while (timer1.milliseconds() < 2000 && opModeIsActive){}    //gives the arm time to move all the way down.
-            arm.resetArmEncoders(); //once the arm is fully lowered, reset the encoder count to 0
-        }
-        //Launch the ball.
-        else if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            hinge.liftHinge(hinge.holdPosition);    //Sets the hinge to the position that holds the ball
-            outtake.setFlywheelVelocity(3000);      //turns on the flywheels
-            sleepWhileRunningArmPID(1000);  //lets the flywheels speed up
-            hinge.liftHinge(hinge.firePosition);    //pushes the ball into the flywheels (launches the ball)
-            sleepWhileRunningArmPID(1000);  //gives the hinge time to get into position
-            velocityPeak=outtake.getCurrentWheelVelocity("left");  //the velocity that the flywheels get to. For telemetry purposes. If you plan to use it, run the launch sequence without the ball to get accurate results.
+            outtake.setFlywheelVelocity(2350);      //turns on the flywheels
+
+            while (outtake.getCurrentWheelVelocity("left") < 2000 && outtake.getCurrentWheelVelocity("right") < 2000) {
+                telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
+                telemetry.update();
+            }
+
+            outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball
+
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             outtake.setFlywheelVelocity(0);     //turns off the flywheels. We don't need it running because we just launched the ball
-            hinge.liftHinge(hinge.holdPosition);    //Sets the hinge to the position that holds the ball. So we can drive up to observation zone thing, and load another ball.
-        }
 
-        // Continuous PID control for arm (runs every loop)
-        if (timer.milliseconds() < 2000 || holdPosition_Arm){   //Runs arm PID if either: the arm is still moving to it's position, or we want the arm to hold it's position
-            //this is how we currently set the PID power. It's a bit messy, but here's what each part is doing:
-            //  1. armTarget it the target position. The position that we are tryna get the arm to
-            //  2. setArmTarget() inputs the target position, and outputs the updated power that we need, to move the arm towards the target.
-            //  3. raiseArmManual() sets the arm motor to the power from setArmTarget
-            //ultimately, PID allows us to get to a target position, and hold that position if needed.
-            arm.raiseArmManual(arm.setArmTarget(armTarget));
-        } else {
-            arm.raiseArmManual(0);  //if we don't want the PID to run, turn it off.
+            outtakeHinge.outtakeHingeRelax();
         }
 
         driver.readButtons();
         operator.readButtons();
         telemetry.update();
     }
-    public void stop(){ //when we stop the program with the driver station, this method runs. It's a built-in method, similar to and init() and loop()
-        opModeIsActive=false;   //tells the rest of the code that the program has been stopped. We use it as a conditional in while() loops, to make sure these loops stop running immediately when the we end the program. We don't want the arm to keep moving after we press stop, for example.
+
+    public void stop() { //when we stop the program with the driver station, this method runs. It's a built-in method, similar to and init() and loop()
+        opModeIsActive = false;   //tells the rest of the code that the program has been stopped. We use it as a conditional in while() loops, to make sure these loops stop running immediately when the we end the program. We don't want the arm to keep moving after we press stop, for example.
     }
 
     // Calculates rotation angle based on the initial set yaw angle
@@ -385,13 +353,5 @@ public class DriveCode extends OpMode {
         frontRightDrive.setPower(maxSpeed * (frontRightPower / maxPower));
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
-    }
-
-    public void sleepWhileRunningArmPID(double milliseconds){   //This acts as a sleep() function, while also running arm PID
-        ElapsedTime sleepTimer;
-        sleepTimer = new ElapsedTime();
-        while (sleepTimer.milliseconds()<milliseconds && opModeIsActive){   //loop until our "stopwatch" reaches the input time
-            arm.raiseArmManual(arm.setArmTarget(armTarget));    //sets updated PID power
-        }
     }
 }

@@ -40,7 +40,7 @@ public class OuttakeFlywheelTestFile extends LinearOpMode {
         //executing
         while (opModeIsActive()) {
             if (gamepad.getButton(GamepadKeys.Button.A)) {
-                outtake.setFlywheelVelocity(2500);
+                outtake.setFlywheelVelocity(2350);
             }
             else if (gamepad.getButton(GamepadKeys.Button.B)) {
                 outtake.setFlywheelVelocity(0);

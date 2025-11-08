@@ -18,112 +18,100 @@ import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Outtake;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
 @Autonomous(name = "Auto Pathing Direct Red", group = "Concept")
 //@Disabled
 public class AutoPathingDirectRed extends LinearOpMode {
 
     Intake intake;
-    Arm arm;
     Outtake outtake;
-    Hinge hinge;
+    Transfer intakeHinge;
+    Transfer outtakeHinge;
 
     double armTarget=0;
 
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(12, -60, Math.PI / 2);
+        Pose2d beginPose = new Pose2d(12, -60, 3*Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
-        arm = new Arm(hardwareMap);
         outtake = new Outtake(hardwareMap);
-        hinge = new Hinge(hardwareMap);
+        intakeHinge = new Transfer(hardwareMap);
+        outtakeHinge = new Transfer(hardwareMap);
         //to do: add another hinge servo transfer servo
 
         waitForStart();
 
-        Actions.runBlocking(
+                Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .stopAndAdd(new AutoPathingDirectRed.setHingePosition())
 
-                        .strafeTo(new Vector2d(20, -40))
-//original was 20 in auto it was 55,
-                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(600))
-//                        .splineToLinearHeading(new Pose2d(35, 55, Math.toRadians(225)), Math.toRadians(45))
-                        .splineToLinearHeading(new Pose2d(25, 40, Math.toRadians(227)), Math.toRadians(45))
+                        .setReversed(true)
+
+                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+
+                        .strafeTo(new Vector2d(16,16))
 
                         .waitSeconds(1)
 
-                        .stopAndAdd(new AutoPathingDirectRed.raiseArm(550))
-
                         .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new AutoPathingDirectRed.lowerArmFully())
 
-                        .splineTo(new Vector2d(20, -35), Math.toRadians(270))
-//                        .splineToLinearHeading(beginPose, Math.toRadians(270))
+                        .setReversed(false)
 
+                        .strafeTo(new Vector2d(30, -30))
 
                         .build());
     }
 
-    public class setHingePosition implements Action {
-        public setHingePosition() {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(hinge.holdPosition);
-            return false;
-        }
-    }
 
-    public class raiseArm implements Action {
-        public raiseArm(double givenTarget) {armTarget=givenTarget;}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            sleepWhileRunningArmPID(2000);
-            return false;
-        }
-    }
     public class scoreBallSequence implements Action {
         public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            hinge.liftHinge(hinge.holdPosition);
+            outtakeHinge.outtakeHingeHold();
+
+            outtake.setFlywheelVelocity(2350);
+
+            sleep(1000);
+
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
 
             sleep(500);
 
-//            outtake.setFlywheelVelocity(3000);
-            outtake.setFlywheelVelocity(2350);
+            outtakeHinge.outtakeHingeRelax();
 
-            sleepWhileRunningArmPID(1000);
+            sleep(500);
 
-            hinge.liftHinge(hinge.firePosition);
+            intakeHinge.intakeHingeLift();
 
-            sleepWhileRunningArmPID(1000);
+            sleep(500);
+
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
+
+            sleep(500);
+
+            outtakeHinge.outtakeHingeRelax();
+
+            sleep(500);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(500);
+
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
+
+            sleep(500);
 
             outtake.setFlywheelVelocity(0);
 
-            hinge.liftHinge(hinge.holdPosition);
+            outtakeHinge.outtakeHingeRelax();
 
             return false;
-        }
-    }
-    public class lowerArmFully implements Action {    //lowers the arm to 0, to prepare for teleOp
-        public lowerArmFully() {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            armTarget=300;
-            sleepWhileRunningArmPID(1000); //change later
-            armTarget=100;
-            sleepWhileRunningArmPID(500); //change later
-            armTarget=0;
-            sleepWhileRunningArmPID(100); //change later
-            return false;
-        }
-    }
-    public void sleepWhileRunningArmPID(double milliseconds){  //acts as a sleep function, while also running the arm PID. This keeps the arm at it's target position.
-        ElapsedTime sleepTimer;
-        sleepTimer = new ElapsedTime();
-        while (sleepTimer.milliseconds()<milliseconds && opModeIsActive()){
-            arm.raiseArmManual(arm.setArmTarget(armTarget));
         }
     }
 

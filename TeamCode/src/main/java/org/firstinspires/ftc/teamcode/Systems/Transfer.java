@@ -9,17 +9,45 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Transfer {
 
-    public DcMotor rightFlyWheel = null;
-    public DcMotor leftFlyWheel = null;
+    private Servo intakeHinge = null;
+    private Servo outtakeHinge = null;
 
-    //Transfer subsystem
-    //also for sorting if we eventually add it.
+    public float intakeHingeLiftPosition = 1.00f;
+
+    public float intakeHingeStandbyPosition = 0.56f;
+
+    public float outtakeHingeFirePosition = 0.67f;
+
+    public float outtakeHingeHoldPosition = 0.30f;
+
+    public float outtakeHingeRelaxPosition = 0.23f;
+
     public Transfer(HardwareMap hMap) {
-
+        intakeHinge = hMap.get(Servo.class, "intakeHinge");
+        outtakeHinge = hMap.get(Servo.class, "outtakeHinge");
     }
 
-    public void fire(float power) {
-        //eventually we need to detect if the flywheel is fully accelerated then fire
+    public void intakeHingeLift() {
+        intakeHinge.setPosition(intakeHingeLiftPosition);
+    }
 
+    public void intakeHingeStandby() {
+        intakeHinge.setPosition(intakeHingeStandbyPosition);
+    }
+
+    public void outtakeHingeFire() {
+        outtakeHinge.setPosition(outtakeHingeFirePosition);
+    }
+
+    public void outtakeHingeHold() {
+        outtakeHinge.setPosition(outtakeHingeHoldPosition);
+    }
+
+    public void outtakeHingeRelax() {
+        outtakeHinge.setPosition(outtakeHingeRelaxPosition);
+    }
+
+    public double getCurrentHingePosition (Servo hinge) {
+        return hinge.getPosition();
     }
 }

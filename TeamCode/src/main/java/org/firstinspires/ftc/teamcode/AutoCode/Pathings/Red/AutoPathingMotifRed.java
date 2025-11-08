@@ -43,7 +43,6 @@ public class AutoPathingMotifRed extends LinearOpMode {
     private VisionPortal visionPortal;
 
     Intake Intake;
-    Arm Aim;
     Outtake Flywheel;
     Hinge hinge;
 
@@ -54,7 +53,6 @@ public class AutoPathingMotifRed extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         Intake = new Intake(hardwareMap);
-        Aim = new Arm(hardwareMap);
         Flywheel = new Outtake(hardwareMap);
         hinge = new Hinge(hardwareMap);
 

@@ -22,19 +22,22 @@ public class Auto_Path_Simulation_Direct {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI/2))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, 3*Math.PI/2))
 
                         // Getting into position
 
-                            .splineTo(new Vector2d(15, -20), Math.toRadians(90))
+                        .setReversed(true)
+
 
                         // Travel to scoring
 
-                            .splineToLinearHeading(new Pose2d(37, 37, Math.toRadians(235)), Math.toRadians(45))
+                            .splineTo(new Vector2d(20, 37), Math.toRadians(45))
 
                         // Park outside scoring zone
 
-                            .splineToLinearHeading(new Pose2d(15, -40, Math.toRadians(270)), Math.toRadians(270))
+                        .setReversed(false)
+
+                        .splineToLinearHeading(new Pose2d(15, -40, Math.toRadians(270)), Math.toRadians(270))
 
                         .build());
 
