@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.PID_Tuners;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Systems.Hinge;
 
 /*
 Configurations:
@@ -15,14 +19,15 @@ Configurations:
 3: backRight
  */
 @Config
-@Autonomous(name = "outtakeVelocityTuner", group = "Linear OpMode")
+@Autonomous(name = "InertiaCalculator", group = "Linear OpMode")
 public class InertiaCalculator extends LinearOpMode {
     DcMotorEx flywheelLeft; //creates "flywheel" variable, and sets as a "DcMotorEx"-type variable.
     DcMotorEx flywheelRight;
+    Hinge hinge;
 
-    public static float rpm=40;  //rotations per minute. Change the value to whatever u want
-    public static int prepSeconds=3;
-    public static int calculateSeconds=3;
+    public static float rpm=2500;  //rotations per minute. Change the value to whatever u want
+    public static int prepSeconds=2;
+    public static int calculateSeconds=2;
 
 
     final float tickPerRevolution=28;//1120-->28
@@ -31,7 +36,7 @@ public class InertiaCalculator extends LinearOpMode {
 
     //Inertia calculation
     //Constants. SET THESE TO THE ACTUAL VALUES
-    float ballMass=1;   //measured in kg
+    float ballMass=70.5f/1000;   //measured in kg
     float wheelCircumference=0.3989823f; //measured in meters
     //variables setup
     float maxWheelVelocity=0;
@@ -45,11 +50,14 @@ public class InertiaCalculator extends LinearOpMode {
         flywheelLeft.setDirection(DcMotor.Direction.FORWARD);
         flywheelRight.setDirection(DcMotor.Direction.REVERSE);
 
+        hinge=new Hinge(hardwareMap);
+
         flywheelLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flywheelRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  //The video told me to type it...
-        //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart(); //waits until you start the program from the driver station
+        /*hinge.liftHinge(hinge.holdPosition);
         ticksPerSecond=tickPerRevolution*(rpm/60f);
         flywheelLeft.setVelocity(ticksPerSecond);
         flywheelRight.setVelocity(ticksPerSecond);
@@ -76,8 +84,20 @@ public class InertiaCalculator extends LinearOpMode {
         telemetry.addData("Velocity max: ", maxWheelVelocity);
         telemetry.addData("Velocity min: ", minimumWheelVelocity);
         telemetry.addData("Inertia: ", inertia);
+        telemetry.update();
         flywheelLeft.setVelocity(0);
         flywheelRight.setVelocity(0);
+        sleep(5*1000);
+
+         */
+        maxWheelVelocity=rpmToMeterPerSecond(2500);
+        minimumWheelVelocity=rpmToMeterPerSecond((1000+1071.42857f+1119.04762f+1160.71429f+1107.14286f+1050)/6);
+        telemetry.addData("Inertia (2500): ", (ballMass*Math.pow(minimumWheelVelocity, 2))/(2*(Math.pow(maxWheelVelocity, 2)-Math.pow(minimumWheelVelocity, 2))));
+
+        maxWheelVelocity=rpmToMeterPerSecond(1500);
+        minimumWheelVelocity=rpmToMeterPerSecond(500);
+        telemetry.addData("Inertia (1500): ", (ballMass*Math.pow(minimumWheelVelocity, 2))/(2*(Math.pow(maxWheelVelocity, 2)-Math.pow(minimumWheelVelocity, 2))));
+        telemetry.update();
         sleep(5*1000);
     }
     float rpmToMeterPerSecond(float givenRpm){
