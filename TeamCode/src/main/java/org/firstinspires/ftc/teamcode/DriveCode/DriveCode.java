@@ -262,7 +262,7 @@ public class DriveCode extends OpMode {
         //Launches the ball
         if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
-            outtakeHinge.outtakeHingeHold();
+            outtakeHinge.outtakeHingeRelax();
 
             outtake.setFlywheelVelocity(2350);      //turns on the flywheels
 

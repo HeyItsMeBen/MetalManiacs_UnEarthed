@@ -52,7 +52,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
                         .splineTo(new Vector2d(37, 37), Math.toRadians(45))
 
-                        .strafeTo(new Vector2d(16,16))
+                        .strafeTo(new Vector2d(20,20))
 
                         .waitSeconds(1)
 
@@ -70,7 +70,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
         public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            outtakeHinge.outtakeHingeHold();
+            outtakeHinge.outtakeHingeRelax();
 
             outtake.setFlywheelVelocity(2350);
 

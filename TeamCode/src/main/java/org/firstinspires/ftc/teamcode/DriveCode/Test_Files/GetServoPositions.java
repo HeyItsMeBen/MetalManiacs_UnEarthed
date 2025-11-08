@@ -48,7 +48,7 @@ public class GetServoPositions extends LinearOpMode {
                 Servo.setPosition(position);
             }
             else if (gamepad.getButton(GamepadKeys.Button.X)) {
-                telemetry.addData("Current Servo Position: ", position);
+                telemetry.addData("Current Servo Position: ", Servo.getPosition());
                 telemetry.update();
             }
             else if (gamepad.getButton(GamepadKeys.Button.Y)) {

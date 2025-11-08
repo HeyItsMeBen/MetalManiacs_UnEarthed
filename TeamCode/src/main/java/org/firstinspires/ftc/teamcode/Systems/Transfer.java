@@ -12,15 +12,13 @@ public class Transfer {
     private Servo intakeHinge = null;
     private Servo outtakeHinge = null;
 
-    public float intakeHingeLiftPosition = 1.00f;
+    public float intakeHingeLiftPosition = 1.00f; //Pushes ball into flywheel holder
 
-    public float intakeHingeStandbyPosition = 0.56f;
+    public float intakeHingeStandbyPosition = 0.56f; //Tucks hinge into wheels
 
-    public float outtakeHingeFirePosition = 0.67f;
+    public float outtakeHingeFirePosition = 0.67f; //Pushes ball into flywheels
 
-    public float outtakeHingeHoldPosition = 0.30f;
-
-    public float outtakeHingeRelaxPosition = 0.23f;
+    public float outtakeHingeRelaxPosition = 0.2f; //Brings hinge down below ramp
 
     public Transfer(HardwareMap hMap) {
         intakeHinge = hMap.get(Servo.class, "intakeHinge");
@@ -37,10 +35,6 @@ public class Transfer {
 
     public void outtakeHingeFire() {
         outtakeHinge.setPosition(outtakeHingeFirePosition);
-    }
-
-    public void outtakeHingeHold() {
-        outtakeHinge.setPosition(outtakeHingeHoldPosition);
     }
 
     public void outtakeHingeRelax() {
