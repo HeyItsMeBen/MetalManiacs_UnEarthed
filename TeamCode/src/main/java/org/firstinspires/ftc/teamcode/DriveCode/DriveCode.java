@@ -99,8 +99,6 @@ public class DriveCode extends OpMode {
         // Initialize target heading to current heading
         targetHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        intakeHinge.intakeHingeStandby();
-        outtakeHinge.outtakeHingeRelax();
     }
 
     @Override
@@ -257,18 +255,33 @@ public class DriveCode extends OpMode {
 
             intakeHinge.intakeHingeLift();
 
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            intakeHinge.intakeHingeStandby();
+
         }
 
         //Launches the ball
         if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
+            intakeHinge.intakeHingeStandby();
+
             outtakeHinge.outtakeHingeRelax();
 
             outtake.setFlywheelVelocity(2350);      //turns on the flywheels
 
-            while (outtake.getCurrentWheelVelocity("left") < 2000 && outtake.getCurrentWheelVelocity("right") < 2000) {
+            while (outtake.getCurrentWheelVelocity("left") < 2300 && outtake.getCurrentWheelVelocity("right") < 2300) {
                 telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
                 telemetry.update();
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball

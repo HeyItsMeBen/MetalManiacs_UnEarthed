@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
 import org.firstinspires.ftc.robotcore. external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -44,7 +45,8 @@ public class AutoPathingMotifRed extends LinearOpMode {
 
     Intake Intake;
     Outtake Flywheel;
-    Hinge hinge;
+    Transfer intakeHinge;
+    Transfer outtakeHinge;
 
     @Override
     public void runOpMode() {
@@ -54,7 +56,8 @@ public class AutoPathingMotifRed extends LinearOpMode {
 
         Intake = new Intake(hardwareMap);
         Flywheel = new Outtake(hardwareMap);
-        hinge = new Hinge(hardwareMap);
+        intakeHinge = new Transfer(hardwareMap);
+        outtakeHinge = new Transfer(hardwareMap);
 
         initAprilTag();
 
@@ -227,59 +230,64 @@ public class AutoPathingMotifRed extends LinearOpMode {
         public runIntake(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
             Intake.setMotorPower(0.5);
-            sleep(3);
+            return false;
+        }
+    }
+
+    public class stopIntake implements Action {
+        public stopIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
             Intake.setMotorPower(0);
             return false;
         }
     }
 
-    /*public class aimArm implements Action {
-        public aimArm(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Aim.setArmTarget(1);
-            Aim.stopMotor();
-            return false;
-        }
-    }
-
-    public class launchBall implements Action {
-        public launchBall(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            Flywheel.fire(1);
-            Flywheel.fire(0);
-            return false;
-        }
-    }*/
-
-    public class liftHinge implements Action {
-        public liftHinge(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(10);
-            return false;
-        }
-    }
-
-    public class lowerHinge implements Action {
-        public lowerHinge(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(0);
-            return false;
-        }
-    }
     public class scoreBall implements Action {
         public scoreBall(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            //raise arm. Uncomment these arm lines if you want the arm to move
-            //Aim.moveArmTo(400, 1); //400 is the position, measured in encoder counts. This line sets the arm to a position, and then waits a second for the arm to get there.
-            //Aim.stopMotor();
+            outtakeHinge.outtakeHingeRelax();
 
-            Flywheel.setFlywheelVelocity(2900);  //sets flywheel Velocity to 2900 rpm, and gives it 1 second to speed up.
-            sleep(1000);
+            Flywheel.setFlywheelVelocity(2350);
 
-            //fires the ball, and brings the hinge back to waiting position
-            hinge.liftHinge(0.6f);  //pushes the ball into the flywheel. Idk what value it's supposed to be.
-            sleep(1000);
-            hinge.liftHinge(0.3f);  //puts the hinge back, so it can hold another ball. Idk what value it's supposed to be.
+            while (Flywheel.getCurrentWheelVelocity("left") < 2300) {
+                sleep(500);
+            }
+
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
+
+            sleep(500);
+
+            outtakeHinge.outtakeHingeRelax();
+
+            sleep(500);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(500);
+
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
+
+            sleep(500);
+
+            outtakeHinge.outtakeHingeRelax();
+
+            sleep(500);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(500);
+
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
+
+            sleep(500);
+
+            Flywheel.setFlywheelVelocity(0);
+
+            outtakeHinge.outtakeHingeRelax();
+
             return false;
         }
     }

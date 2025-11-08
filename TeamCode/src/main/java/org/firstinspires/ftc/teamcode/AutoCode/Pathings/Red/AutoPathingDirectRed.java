@@ -29,8 +29,6 @@ public class AutoPathingDirectRed extends LinearOpMode {
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
-    double armTarget=0;
-
     @Override
     public void runOpMode() {
 
@@ -74,7 +72,9 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
             outtake.setFlywheelVelocity(2350);
 
-            sleep(1000);
+            while (outtake.getCurrentWheelVelocity("left") < 2300) {
+                sleep(500);
+            }
 
             outtakeHinge.outtakeHingeFire();
             intakeHinge.intakeHingeStandby();

@@ -28,10 +28,9 @@ public class Auto_Path_Simulation_Direct {
 
                         .setReversed(true)
 
-
                         // Travel to scoring
 
-                            .splineTo(new Vector2d(20, 37), Math.toRadians(45))
+                        .splineTo(new Vector2d(20, 37), Math.toRadians(45))
 
                         // Park outside scoring zone
 
