@@ -21,10 +21,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Outtake;
-import org.firstinspires.ftc.teamcode.Systems.Hinge;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 import java.util.List;
 
@@ -44,7 +42,7 @@ public class AutoPathingMotifRed extends LinearOpMode {
     private VisionPortal visionPortal;
 
     Intake Intake;
-    Outtake Flywheel;
+    Flywheels Flywheel;
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
@@ -55,7 +53,7 @@ public class AutoPathingMotifRed extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         Intake = new Intake(hardwareMap);
-        Flywheel = new Outtake(hardwareMap);
+        Flywheel = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 

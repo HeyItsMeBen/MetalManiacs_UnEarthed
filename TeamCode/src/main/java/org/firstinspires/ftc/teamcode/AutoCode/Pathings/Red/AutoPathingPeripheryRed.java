@@ -10,20 +10,18 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 @Autonomous(name = "Auto Pathing Periphery Red", group = "Concept")
 //@Disabled
 public class AutoPathingPeripheryRed extends LinearOpMode {
 
     Intake intake;
-    Outtake outtake;
+    Flywheels outtake;
     Hinge hinge;
 
     double armTarget=0;
@@ -35,7 +33,7 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
-        outtake = new Outtake(hardwareMap);
+        outtake = new Flywheels(hardwareMap);
         hinge = new Hinge(hardwareMap);
         //to do: add another hinge servo transfer servo
 

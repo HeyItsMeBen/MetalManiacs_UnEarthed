@@ -13,10 +13,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Outtake;
-import org.firstinspires.ftc.teamcode.Systems.Arm;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
 @TeleOp(name = "Competition DriveCode", group = "Robot")
@@ -34,7 +32,7 @@ public class DriveCode extends OpMode {
 
     //create mechanism variables
     Intake intake;
-    Outtake outtake;
+    Flywheels outtake;
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
@@ -77,7 +75,7 @@ public class DriveCode extends OpMode {
 
         //create the mechanism objects
         intake = new Intake(hardwareMap);
-        outtake = new Outtake(hardwareMap);
+        outtake = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 

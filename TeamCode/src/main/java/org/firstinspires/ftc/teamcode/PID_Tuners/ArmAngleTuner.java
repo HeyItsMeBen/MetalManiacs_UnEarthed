@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
-import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 @Config
 @Autonomous(name = "ArmAngleTuner", group = "Autonomous")
@@ -17,11 +17,11 @@ public class ArmAngleTuner extends LinearOpMode {
     public static double armShootPosition=700;
     double velocityPeak=0;
     double armTarget=0;
-    Outtake outtake;
+    Flywheels outtake;
     Hinge hinge;
     Arm arm;
     public void runOpMode() {
-        outtake = new Outtake(hardwareMap);
+        outtake = new Flywheels(hardwareMap);
         hinge = new Hinge(hardwareMap);
         arm = new Arm(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());

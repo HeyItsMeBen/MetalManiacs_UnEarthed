@@ -12,7 +12,7 @@ public class Transfer {
     private Servo intakeHinge = null;
     private Servo outtakeHinge = null;
 
-    public float intakeHingeLiftPosition = 1.01f; //Pushes ball into flywheel holder
+    public float intakeHingeLiftPosition = 1.07f; //Pushes ball into flywheel holder
 
     public float intakeHingeStandbyPosition = 0.46f; //Tucks hinge into wheels
 

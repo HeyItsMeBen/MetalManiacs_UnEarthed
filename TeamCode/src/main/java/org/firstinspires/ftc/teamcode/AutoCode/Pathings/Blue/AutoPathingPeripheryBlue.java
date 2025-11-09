@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 @Autonomous(name = "Auto Pathing Periphery Blue", group = "Concept")
 //@Disabled
@@ -24,7 +24,7 @@ public class AutoPathingPeripheryBlue extends LinearOpMode {
 
     Intake intake;
     Arm arm;
-    Outtake outtake;
+    Flywheels outtake;
     Hinge hinge;
 
     double armTarget=0;
@@ -37,7 +37,7 @@ public class AutoPathingPeripheryBlue extends LinearOpMode {
 
         intake = new Intake(hardwareMap);
         arm = new Arm(hardwareMap);
-        outtake = new Outtake(hardwareMap);
+        outtake = new Flywheels(hardwareMap);
         hinge = new Hinge(hardwareMap);
         //to do: add another hinge servo transfer servo
 

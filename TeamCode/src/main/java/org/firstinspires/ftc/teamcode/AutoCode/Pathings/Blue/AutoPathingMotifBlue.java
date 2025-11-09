@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -42,7 +42,7 @@ public class AutoPathingMotifBlue extends LinearOpMode {
 
     Intake Intake;
     Arm Aim;
-    Outtake Flywheel;
+    Flywheels Flywheel;
     Hinge hinge;
 
     @Override
@@ -53,7 +53,7 @@ public class AutoPathingMotifBlue extends LinearOpMode {
 
         Intake = new Intake(hardwareMap);
         Aim = new Arm(hardwareMap);
-        Flywheel = new Outtake(hardwareMap);
+        Flywheel = new Flywheels(hardwareMap);
         hinge = new Hinge(hardwareMap);
 
         initAprilTag();

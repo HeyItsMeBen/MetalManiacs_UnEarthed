@@ -4,10 +4,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.Systems.Outtake;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +21,13 @@ public class OuttakeFlywheelTestFile extends LinearOpMode {
 
     public GamepadEx gamepad;
 
-    Outtake outtake;
+    Flywheels outtake;
 
     @Override
     public void runOpMode() {
 
         gamepad = new GamepadEx(gamepad1);
-        outtake = new Outtake(hardwareMap);
+        outtake = new Flywheels(hardwareMap);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 

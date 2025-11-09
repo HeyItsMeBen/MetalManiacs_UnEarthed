@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Outtake {
+public class Flywheels {
 
     private DcMotorEx leftFlyWheel = null;
     private DcMotorEx rightFlyWheel = null;
@@ -18,7 +15,7 @@ public class Outtake {
     public boolean isOpModeActive=true;
 
     //Outtake subsystem
-    public Outtake(HardwareMap hMap) {
+    public Flywheels(HardwareMap hMap) {
 
         leftFlyWheel = hMap.get(DcMotorEx.class, "leftFlyWheel");
         rightFlyWheel = hMap.get(DcMotorEx.class, "rightFlyWheel");
