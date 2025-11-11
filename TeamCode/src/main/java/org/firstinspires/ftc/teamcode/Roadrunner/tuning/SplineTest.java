@@ -5,7 +5,9 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+//change bottom to MecanumDriveOldValues if you need to test this pathing with previous season bot
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
+//import org.firstinspires.ftc.teamcode.Testing.MecanumDriveOldValues;
 
 public final class SplineTest extends LinearOpMode {
     @Override
