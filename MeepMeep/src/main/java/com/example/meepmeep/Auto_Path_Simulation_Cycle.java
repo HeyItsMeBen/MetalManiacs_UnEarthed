@@ -15,27 +15,34 @@ import javax.imageio.ImageIO;
 
 // In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
 
+// Note that optimate firing spot is roughly around x: 10, y: 10
+
 public class Auto_Path_Simulation_Cycle {
     public static void main(String[] args) {
+
+        double firing_position_x = 15;
+        double firing_position_y = 15;
+
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(100, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(225)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(215)))
 
                         // Travel to scoring
 
-                            .strafeTo(new Vector2d(37, 37))
+                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
 
                         // Grabs first set of balls
 
+                            .turn(Math.toRadians(100))
                             .splineTo(new Vector2d(46, 13), 0) // For PPG
 
                         // Travel to scoring
 
                             .setReversed(true)
-                            .splineTo(new Vector2d(37, 37), 45)
+                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
 
                         // Grabs second set of balls
 
@@ -45,7 +52,7 @@ public class Auto_Path_Simulation_Cycle {
                         // Travel to scoring
 
                             .setReversed(true)
-                            .splineTo(new Vector2d(37, 37), 45)
+                            .splineTo(new Vector2d(firing_position_x, firing_position_y), 45)
 
                         // Grabs third set of balls
 
@@ -55,12 +62,12 @@ public class Auto_Path_Simulation_Cycle {
                         // Travel to scoring
 
                             .setReversed(true)
-                            .splineTo(new Vector2d(37, 37), 45)
+                            .splineTo(new Vector2d(firing_position_x, firing_position_y), 45)
 
                         // Park outside scoring zone
 
                             .setReversed(false)
-                            .splineToLinearHeading(new Pose2d(15, -40, Math.toRadians(270)), Math.toRadians(270))
+                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
 
                         .build());
 

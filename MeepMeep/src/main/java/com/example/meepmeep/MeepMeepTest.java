@@ -23,7 +23,8 @@ public class MeepMeepTest {
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.PI/2))
 //                        .strafeTo(new Vector2d(0, 50))
 //                        .turn(Math.toRadians(90))
-//                        .splineTo(new Vector2d(0, 30), 3)
+
+                        .splineTo(new Vector2d(0, 30), 3)
                         .splineTo(new Vector2d(0, 60), 0)
 
 //                        .strafeTo(new Vector2d(50,50))

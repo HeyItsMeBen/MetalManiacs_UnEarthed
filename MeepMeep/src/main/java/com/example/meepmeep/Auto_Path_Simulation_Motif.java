@@ -15,8 +15,13 @@ import javax.imageio.ImageIO;
 
 // In this pathing, the robot drives
 
+// Note that optimate firing spot is roughly around x: 10, y: 10
+
 public class Auto_Path_Simulation_Motif {
     public static void main(String[] args) {
+
+        double firing_position_x = 15;
+        double firing_position_y = 15;
 
         MeepMeep meepMeep = new MeepMeep(800);
 
@@ -24,7 +29,7 @@ public class Auto_Path_Simulation_Motif {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setDimensions(17,17)
                 .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(90))) //Direction the robot faces is based on radians
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(90))) //Direction the robot faces is based on radians
 
                         // Getting into position
 
@@ -32,20 +37,21 @@ public class Auto_Path_Simulation_Motif {
 
                         // Pathing to motif
 
-                            //.splineTo(new Vector2d(48, 13), 0) // For PPG
+                            .splineTo(new Vector2d(48, 13), 0) // For PPG
 
                             //.splineTo(new Vector2d(46, -11), 0) // For PGP
 
-                            .splineTo(new Vector2d(46, -35), 0) //For GPP
+                            //.splineTo(new Vector2d(46, -35), 0) //For GPP
 
                         // Travel to scoring
 
                             .setTangent(Math.toRadians(180))
-                            .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                            .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+                            .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                         // Park outside scoring zone
 
-                            .splineToLinearHeading(new Pose2d(15, -40, Math.toRadians(270)), Math.toRadians(270))
+                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
 
                         .build());
 
