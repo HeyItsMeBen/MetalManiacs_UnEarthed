@@ -31,6 +31,16 @@ public class Flywheels {
 
     }
 
+    public void setFlywheelPower(double power) {
+        if (power > 1) {
+            leftFlyWheel.setPower(1.0);
+            rightFlyWheel.setPower(1.0);
+        } else {
+            leftFlyWheel.setPower(power);
+            rightFlyWheel.setPower(power);
+        }
+    }
+
     public void setFlywheelVelocity(float givenRPM) {
         leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
         rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));

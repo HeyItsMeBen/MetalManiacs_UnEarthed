@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.PID_Tuners;
+package org.firstinspires.ftc.teamcode.PID_Tuners.FlywheelTuning;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.dashboard.config.Config;
+
+// A simplified verison of the older outtakeWnheelVelocity_Tuner file
 
 @Config
 public class FlywheelPIDClass {
