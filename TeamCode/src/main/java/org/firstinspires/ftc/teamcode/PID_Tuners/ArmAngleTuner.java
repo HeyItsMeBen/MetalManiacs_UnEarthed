@@ -4,13 +4,15 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Systems.Arm;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
-
+@Deprecated
+@Disabled
 @Config
 @Autonomous(name = "ArmAngleTuner", group = "Autonomous")
 public class ArmAngleTuner extends LinearOpMode {
