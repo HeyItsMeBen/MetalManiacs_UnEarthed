@@ -54,4 +54,8 @@ public class Flywheels {
         return 0;
 
     }
+    public void setFlywheelRawVelocity(float givenRPM) {
+        leftFlyWheel.setVelocity(givenRPM);
+        rightFlyWheel.setVelocity(givenRPM);
+    }
 }

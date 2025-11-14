@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PID_Tuners.FlywheelTuning;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.dashboard.config.Config;
@@ -29,11 +30,17 @@ public class FlywheelPIDClass {
 
     public FlywheelPIDClass(HardwareMap hMap) {
         // Make sure to use DcMotorEx for velocity access
-        leftFlywheel = hMap.get(DcMotorEx.class, "leftFlywheel");
-        rightFlywheel = hMap.get(DcMotorEx.class, "rightFlywheel");
+        leftFlywheel = hMap.get(DcMotorEx.class, "leftFlyWheel");
+        rightFlywheel = hMap.get(DcMotorEx.class, "rightFlyWheel");
 
-        leftFlywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        rightFlywheel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftFlywheel.setDirection(DcMotorEx.Direction.FORWARD);
+        rightFlywheel.setDirection(DcMotorEx.Direction.REVERSE);
+
+        leftFlywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFlywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     // Run this continuously in a loop
