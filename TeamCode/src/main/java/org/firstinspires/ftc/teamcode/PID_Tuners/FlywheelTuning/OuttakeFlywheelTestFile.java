@@ -41,7 +41,7 @@ public class OuttakeFlywheelTestFile extends LinearOpMode {
                 outtake.setFlywheelRawVelocity(2350);
             }
             else if (gamepad.getButton(GamepadKeys.Button.B)) {
-                outtake.setFlywheelVelocity(0);
+                outtake.setFlywheelRawVelocity(0);
             }
 
             //Send data to FTC dashbaord. The dashboard will graph it in real-time
