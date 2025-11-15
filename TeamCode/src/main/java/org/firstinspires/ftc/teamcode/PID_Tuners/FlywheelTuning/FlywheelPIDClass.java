@@ -12,10 +12,12 @@ import com.acmerobotics.dashboard.config.Config;
 public class FlywheelPIDClass {
 
     // PID constants (tunable via Dashboard)
+
+    public static double maxVelocity = 2000;
     public static double Kp = 0.002;
     public static double Ki = 0.0;
     public static double Kd = 0.0001;
-    public static double Kf = 0.0;
+    public static double Kf = 1 / maxVelocity;
 
     // Target velocity (ticks per second)
     public static double targetVelocity = 2000;
@@ -55,8 +57,14 @@ public class FlywheelPIDClass {
         double rightOutput = rightController.calculate(rightVelocity, targetVelocity);
 
         // Optional feedforward term (e.g., static power to overcome friction)
-        double leftPower = leftOutput + Kf;
-        double rightPower = rightOutput + Kf;
+        double leftPower = leftOutput + Kf * targetVelocity;
+        double rightPower = rightOutput + Kf * targetVelocity;
+
+        // Feedforward term proportional to target velocity
+
+        // Clip power to [-1, 1]
+        leftPower = Math.max(-1, Math.min(1, leftPower));
+        rightPower = Math.max(-1, Math.min(1, rightPower));
 
         leftFlywheel.setPower(leftPower);
         rightFlywheel.setPower(rightPower);
