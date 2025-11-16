@@ -36,7 +36,10 @@ public class Auto_Path_Simulation_Direct {
 
                         // Travel to scoring
 
-                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(45)))
+                            //.splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(45)))
+                            .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+
+                            .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                         // Park outside scoring zone
 

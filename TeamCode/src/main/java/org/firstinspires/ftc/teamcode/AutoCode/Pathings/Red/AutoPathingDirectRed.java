@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Action;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "Auto Pathing Direct Red", group = "Concept")
+@Autonomous(name = "Competition Pathing: Auto Direct Red", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingDirectRed extends LinearOpMode {
 
@@ -26,17 +27,19 @@ public class AutoPathingDirectRed extends LinearOpMode {
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
+    double firing_position_x = 15;
+    double firing_position_y = 15;
+
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(12, -60, 3*Math.PI / 2);
+        Pose2d beginPose = new Pose2d(15, -60, 3*Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
         outtake = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
-        //to do: add another hinge servo transfer servo
 
         waitForStart();
 
@@ -47,25 +50,30 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
                         .splineTo(new Vector2d(37, 37), Math.toRadians(45))
 
-                        .strafeTo(new Vector2d(20,20))
+
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                         .waitSeconds(1)
 
-                        .stopAndAdd(new AutoPathingDirectRed.scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new runFlywheels(hardwareMap))
+
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                        .stopAndAdd(new stopFlywheels(hardwareMap))
 
                         .setReversed(false)
 
-                        .strafeTo(new Vector2d(30, -30))
+                        .strafeTo(new Vector2d(15, -40))
 
                         .build());
     }
 
-
-    public class scoreBallSequence implements Action {
-        public scoreBallSequence(HardwareMap hMap) {}
+    public class runFlywheels implements Action {
+        public runFlywheels(HardwareMap hMap) {
+        }
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            outtakeHinge.outtakeHingeRelax();
 
             outtake.setFlywheelVelocity(2350);
 
@@ -73,40 +81,37 @@ public class AutoPathingDirectRed extends LinearOpMode {
                 sleep(500);
             }
 
-            outtakeHinge.outtakeHingeFire();
-            intakeHinge.intakeHingeStandby();
+            return false;
+        }
+    }
 
-            sleep(500);
-
-            outtakeHinge.outtakeHingeRelax();
-
-            sleep(500);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(500);
-
-            outtakeHinge.outtakeHingeFire();
-            intakeHinge.intakeHingeStandby();
-
-            sleep(500);
-
-            outtakeHinge.outtakeHingeRelax();
-
-            sleep(500);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(500);
-
-            outtakeHinge.outtakeHingeFire();
-            intakeHinge.intakeHingeStandby();
-
-            sleep(500);
+    public class stopFlywheels implements Action {
+        public stopFlywheels(HardwareMap hMap) {
+        }
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
             outtake.setFlywheelVelocity(0);
 
+            return false;
+        }
+    }
+
+    public class scoreBallSequence implements Action {
+        public scoreBallSequence(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
+
+            sleep(500);
+
             outtakeHinge.outtakeHingeRelax();
+
+            sleep(500);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(500);
 
             return false;
         }

@@ -32,11 +32,10 @@ public class Auto_Path_Simulation_Periphery {
 
                         // Travel to scoring
 
-                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                        // Park outside scoring zone
 
-                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
+                        .strafeTo(new Vector2d(15, -40))
 
                         .build());
 

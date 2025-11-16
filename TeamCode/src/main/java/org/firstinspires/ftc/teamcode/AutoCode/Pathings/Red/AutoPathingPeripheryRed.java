@@ -15,47 +15,74 @@ import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "Auto Pathing Periphery Red", group = "Concept")
+@Autonomous(name = "Competition Pathing: Auto Periphery Red", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingPeripheryRed extends LinearOpMode {
 
     Intake intake;
     Flywheels outtake;
-    Hinge hinge;
+    Transfer intakeHinge;
+    Transfer outtakeHinge;
 
-    double armTarget=0;
+    double firing_position_x = 15;
+    double firing_position_y = 15;
 
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(50, 50, Math.toRadians(225));
+        Pose2d beginPose = new Pose2d(50, 50, Math.toRadians(215));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
         outtake = new Flywheels(hardwareMap);
-        hinge = new Hinge(hardwareMap);
+        intakeHinge = new Transfer(hardwareMap);
+        outtakeHinge = new Transfer(hardwareMap);
         //to do: add another hinge servo transfer servo
 
         waitForStart();
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .stopAndAdd(new AutoPathingPeripheryRed.setHingePosition())
 
-                        .strafeTo(new Vector2d(26, 26))
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                        .stopAndAdd(new AutoPathingPeripheryRed.scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new runFlywheels(hardwareMap))
 
-                        .splineTo(new Vector2d(25, -35), Math.toRadians(270))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                        .stopAndAdd(new stopFlywheels(hardwareMap))
+
+                        .strafeTo(new Vector2d(15, -40))
 
                         .build());
     }
 
-    public class setHingePosition implements Action {
-        public setHingePosition() {}
+    public class runFlywheels implements Action {
+        public runFlywheels(HardwareMap hMap) {
+        }
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(hinge.holdPosition);
+
+            outtake.setFlywheelVelocity(2350);
+
+            while (outtake.getCurrentWheelVelocity("left") < 2300) {
+                sleep(500);
+            }
+
+            return false;
+        }
+    }
+
+    public class stopFlywheels implements Action {
+        public stopFlywheels(HardwareMap hMap) {
+        }
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            outtake.setFlywheelVelocity(0);
+
             return false;
         }
     }
@@ -64,18 +91,18 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
         public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            hinge.liftHinge(hinge.holdPosition);
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
 
             sleep(500);
 
-//            outtake.setFlywheelVelocity(3000);
-            outtake.setFlywheelVelocity(2350);
+            outtakeHinge.outtakeHingeRelax();
 
-            hinge.liftHinge(hinge.firePosition);
+            sleep(500);
 
-            outtake.setFlywheelVelocity(0);
+            intakeHinge.intakeHingeLift();
 
-            hinge.liftHinge(hinge.holdPosition);
+            sleep(500);
 
             return false;
         }

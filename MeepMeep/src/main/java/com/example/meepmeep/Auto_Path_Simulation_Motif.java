@@ -33,25 +33,39 @@ public class Auto_Path_Simulation_Motif {
 
                         // Getting into position
 
-                            .lineToLinearHeading(new Pose2d(15, -50, Math.toRadians(90)))
+//                            .lineToLinearHeading(new Pose2d(15, -50, Math.toRadians(90)))
+//
+//                        // Pathing to motif
+//
+//                            .splineTo(new Vector2d(48, 13), 0) // For PPG
+//
+//                            //.splineTo(new Vector2d(46, -11), 0) // For PGP
+//
+//                            //.splineTo(new Vector2d(46, -35), 0) //For GPP
+//
+//                        // Travel to scoring
+//
+//                            .setTangent(Math.toRadians(180))
+//                            .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+//                            .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+//
+//                        // Park outside scoring zone
+//
+//                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
 
-                        // Pathing to motif
+//                        .strafeToLinearHeading(new Vector2d(12, -50), Math.toRadians(-90))
+//                        .strafeToLinearHeading(new Vector2d(12, -45), Math.toRadians(90))
+                        //.splineToConstantHeading(new Vector2d(40, 13), Math.toRadians(0))
+                        //.splineToSplineHeading(new Pose2d(48, 13, Math.toRadians(90)), Math.toRadians(0))
+                        //.splineTo(new Vector2d(30, 0), 0)
+                        .splineTo(new Vector2d(46, 13), 0)
 
-                            .splineTo(new Vector2d(48, 13), 0) // For PPG
+                        //run intake to pick up balls
 
-                            //.splineTo(new Vector2d(46, -11), 0) // For PGP
-
-                            //.splineTo(new Vector2d(46, -35), 0) //For GPP
-
-                        // Travel to scoring
-
-                            .setTangent(Math.toRadians(180))
-                            .splineTo(new Vector2d(20, 20), Math.toRadians(45))
-                            .strafeTo(new Vector2d(firing_position_x, firing_position_y))
-
-                        // Park outside scoring zone
-
-                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
+                        .waitSeconds(0.5f)
+                        .setTangent(Math.toRadians(180))
+                            .splineTo(new Vector2d(30, 30), Math.toRadians(45))
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                         .build());
 

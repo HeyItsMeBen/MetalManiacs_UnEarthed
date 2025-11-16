@@ -26,8 +26,7 @@ import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 import java.util.List;
 
-@Disabled
-@Autonomous(name = "Auto Pathing Motif Red", group = "Concept")
+@Autonomous(name = "Competition Pathing: Auto Motif Red", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingMotifRed extends LinearOpMode {
 
@@ -41,19 +40,22 @@ public class AutoPathingMotifRed extends LinearOpMode {
 
     private VisionPortal visionPortal;
 
-    Intake Intake;
-    Flywheels Flywheel;
+    Intake intake;
+    Flywheels outtake;
     Transfer intakeHinge;
     Transfer outtakeHinge;
+
+    double firing_position_x = 15;
+    double firing_position_y = 15;
 
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(12, -60, Math.toRadians(-90));
+        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(-90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
-        Intake = new Intake(hardwareMap);
-        Flywheel = new Flywheels(hardwareMap);
+        intake = new Intake(hardwareMap);
+        outtake = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 
@@ -76,18 +78,26 @@ public class AutoPathingMotifRed extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .strafeToLinearHeading(new Vector2d(12, -50), Math.toRadians(-90))
-                                    .strafeToLinearHeading(new Vector2d(12, -45), Math.toRadians(90))
 
-                                    .splineTo(new Vector2d(46, -11-24), 0)
+                                    .stopAndAdd(new runIntake(hardwareMap))
 
-                                    //run intake to pick up balls
+                                    .splineTo(new Vector2d(46, -35), 0)
 
                                     .waitSeconds(0.5f)
+                                    .stopAndAdd(new stopIntake(hardwareMap))
                                     .setTangent(Math.toRadians(180))
-                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                                    .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+                                    .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                                    //lift and launch all three balls
+                                    .stopAndAdd(new runFlywheels(hardwareMap))
+
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                                    .stopAndAdd(new stopFlywheels(hardwareMap))
+
+                                    .strafeTo(new Vector2d(15, -40))
 
                                     .build());
 
@@ -97,21 +107,26 @@ public class AutoPathingMotifRed extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .strafeToLinearHeading(new Vector2d(12, -50), Math.toRadians(-90))
-                                    .strafeToLinearHeading(new Vector2d(12, -45), Math.toRadians(90))
+
+                                    .stopAndAdd(new runIntake(hardwareMap))
 
                                     .splineTo(new Vector2d(46, -11), 0)
 
-                                    //run intake to pick up balls
-
                                     .waitSeconds(0.5f)
-                                    .setTangent(Math.toRadians(180))
-                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                                    .stopAndAdd(new stopIntake(hardwareMap))
+                                    .strafeToLinearHeading(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225))
 
-                                    //lift and launch all three balls
+                                    .stopAndAdd(new runFlywheels(hardwareMap))
+
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                                    .stopAndAdd(new stopFlywheels(hardwareMap))
+
+                                    .strafeTo(new Vector2d(15, -40))
 
                                     .build());
-
 
                 } else if (motif.equals("PPG")){
                     telemetry.addData(">", "Running PPG Pathing");
@@ -119,19 +134,24 @@ public class AutoPathingMotifRed extends LinearOpMode {
                     waitForStart();
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .strafeToLinearHeading(new Vector2d(12, -50), Math.toRadians(-90))
-                                    .strafeToLinearHeading(new Vector2d(12, -45), Math.toRadians(90))
 
+                                    .stopAndAdd(new runIntake(hardwareMap))
 
-                                    .splineTo(new Vector2d(48, 13), 0)
-
-                                    //run intake to pick up balls
+                                    .splineTo(new Vector2d(46, 13), 0)
 
                                     .waitSeconds(0.5f)
-                                    .setTangent(Math.toRadians(180))
-                                    .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                                    .stopAndAdd(new stopIntake(hardwareMap))
+                                    .strafeToLinearHeading(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225))
 
-                                    //lift and launch all three balls
+                                    .stopAndAdd(new runFlywheels(hardwareMap))
+
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                                    .stopAndAdd(new stopFlywheels(hardwareMap))
+
+                                    .strafeTo(new Vector2d(15, -40))
 
                                     .build());
 
@@ -227,7 +247,13 @@ public class AutoPathingMotifRed extends LinearOpMode {
     public class runIntake implements Action {
         public runIntake(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Intake.setMotorPower(0.5);
+
+            intakeHinge.intakeHingeStandby();
+
+            sleep(250);
+
+            intake.setMotorPower(0.5);
+
             return false;
         }
     }
@@ -235,22 +261,43 @@ public class AutoPathingMotifRed extends LinearOpMode {
     public class stopIntake implements Action {
         public stopIntake(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-            Intake.setMotorPower(0);
+
+            intake.setMotorPower(0);
+
             return false;
         }
     }
 
-    public class scoreBall implements Action {
-        public scoreBall(HardwareMap hMap) {}
+    public class runFlywheels implements Action {
+        public runFlywheels(HardwareMap hMap) {
+        }
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            outtakeHinge.outtakeHingeRelax();
 
-            Flywheel.setFlywheelVelocity(2350);
+            outtake.setFlywheelVelocity(2350);
 
-            while (Flywheel.getCurrentWheelVelocity("left") < 2300) {
+            while (outtake.getCurrentWheelVelocity("left") < 2300) {
                 sleep(500);
             }
 
+            return false;
+        }
+    }
+
+    public class stopFlywheels implements Action {
+        public stopFlywheels(HardwareMap hMap) {
+        }
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            outtake.setFlywheelVelocity(0);
+
+            return false;
+        }
+    }
+
+    public class scoreBallSequence implements Action {
+        public scoreBallSequence(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
             outtakeHinge.outtakeHingeFire();
             intakeHinge.intakeHingeStandby();
 
@@ -263,28 +310,6 @@ public class AutoPathingMotifRed extends LinearOpMode {
             intakeHinge.intakeHingeLift();
 
             sleep(500);
-
-            outtakeHinge.outtakeHingeFire();
-            intakeHinge.intakeHingeStandby();
-
-            sleep(500);
-
-            outtakeHinge.outtakeHingeRelax();
-
-            sleep(500);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(500);
-
-            outtakeHinge.outtakeHingeFire();
-            intakeHinge.intakeHingeStandby();
-
-            sleep(500);
-
-            Flywheel.setFlywheelVelocity(0);
-
-            outtakeHinge.outtakeHingeRelax();
 
             return false;
         }
