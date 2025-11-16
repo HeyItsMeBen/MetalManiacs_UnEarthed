@@ -9,18 +9,19 @@ import com.acmerobotics.dashboard.config.Config;
 public class PIDFSync {
 
     // PID constants for target velocity
-    public static double Kp = 0.002;
+    public static double Kp = 0.000205; //from tuning
     public static double Ki = 0.0;
-    public static double Kd = 0.0001;
+    public static double Kd = 0.0001; //needs to be tuned still
 
     // Feedforward constant
-    public static double Kf = 1.0 / 5000.0; // max motor velocity goes on bottom
+    //public static double Kf = 1.0 / 5000.0; // max motor velocity goes on  0.00042
+    public static double Kf = 0.00042; // from testing
 
     // Left-right sync constant
     public static double K_sync = 0.001; // adjust via dashboard
 
     // Target velocity (ticks/sec)
-    public static double targetVelocity = 1000.0;
+    public static double targetVelocity = 1400.0;
 
     private final PIDController leftController = new PIDController(Kp, Ki, Kd);
     private final PIDController rightController = new PIDController(Kp, Ki, Kd);
@@ -72,6 +73,10 @@ public class PIDFSync {
     public double getLeftVelocity() { return leftFlywheel.getVelocity(); }
     public double getRightVelocity() { return rightFlywheel.getVelocity(); }
     public double getAverageVelocity() { return (getLeftVelocity() + getRightVelocity()) / 2.0; }
+
+    public double getTargetVelocity() {
+        return targetVelocity;
+    }
 
     /** Update target velocity dynamically */
     public void setTargetVelocity(double velocity) { targetVelocity = velocity; }

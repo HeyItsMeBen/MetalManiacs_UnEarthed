@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Flywheel PIDF Sync Tuner", group = "Tuning")
 public class PIDFSyncTuner extends LinearOpMode {
 
-    public static double targetVelocity = 1000.0;
+    public static double targetVelocity = 1400.0;
 
     private PIDFSync flywheel;
     private FtcDashboard dashboard;
@@ -22,7 +22,7 @@ public class PIDFSyncTuner extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Update target velocity
-            flywheel.setTargetVelocity(targetVelocity);
+
 
             // Run PIDF sync loop
             flywheel.update();
@@ -34,16 +34,16 @@ public class PIDFSyncTuner extends LinearOpMode {
 
             // Send to dashboard
             TelemetryPacket packet = new TelemetryPacket();
-            packet.put("targetVelocity", targetVelocity);
+            packet.put("targetVelocity", flywheel.getTargetVelocity()); //changed to access the targetVelocity in sync object for tuning
             packet.put("leftVelocity", leftVel);
             packet.put("rightVelocity", rightVel);
             packet.put("delta L-R", delta);
-            packet.put("Kf * targetVelocity", PIDFSync.Kf * targetVelocity);
+            packet.put("Kf * targetVelocity", PIDFSync.Kf * flywheel.getTargetVelocity());
             packet.put("K_sync", PIDFSync.K_sync);
             dashboard.sendTelemetryPacket(packet);
 
             // Driver Station telemetry
-            telemetry.addData("Target Velocity", targetVelocity);
+            telemetry.addData("Target Velocity", flywheel.getTargetVelocity());
             telemetry.addData("Left Velocity", leftVel);
             telemetry.addData("Right Velocity", rightVel);
             telemetry.addData("L-R Delta", delta);

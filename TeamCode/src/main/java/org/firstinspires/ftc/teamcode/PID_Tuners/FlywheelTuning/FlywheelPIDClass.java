@@ -13,14 +13,14 @@ public class FlywheelPIDClass {
 
     // PID constants (tunable via Dashboard)
 
-    public static double maxVelocity = 2000;
+    public static double maxVelocity = 1400;
     public static double Kp = 0.002;
     public static double Ki = 0.0;
     public static double Kd = 0.0001;
     public static double Kf = 1 / maxVelocity;
 
     // Target velocity (ticks per second)
-    public static double targetVelocity = 2000;
+    public static double targetVelocity = 1400;
 
     // Two PID controllers — one for each flywheel
     private final PIDController leftController = new PIDController(Kp, Ki, Kd);
