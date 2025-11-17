@@ -207,12 +207,14 @@ public class DriveCode extends OpMode {
 
         // Manual intake control
         if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
+            intakeHinge.intakeHingeStandby();
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
             } else {
                 intakePower = 1;
             }
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            intakeHinge.intakeHingeStandby();
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
             } else {

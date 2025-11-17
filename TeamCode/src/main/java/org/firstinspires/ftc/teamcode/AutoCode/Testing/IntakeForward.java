@@ -1,26 +1,34 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.Red;
+package org.firstinspires.ftc.teamcode.AutoCode.Testing;
 
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
+import org.firstinspires.ftc.robotcore. external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
-import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "Competition Pathing: Auto Direct Red", group = "Auto Pathing")
+import java.util.List;
+
+@Autonomous(name = "IntakeForward", group = "Auto Pathing")
 //@Disabled
-public class AutoPathingDirectRed extends LinearOpMode {
+public class IntakeForward extends LinearOpMode {
 
     Intake intake;
     Flywheels outtake;
@@ -33,7 +41,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(15, -60, 3*Math.PI / 2);
+        Pose2d beginPose = new Pose2d(0, -35, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
@@ -41,33 +49,53 @@ public class AutoPathingDirectRed extends LinearOpMode {
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 
+        // Wait for the DS start button to be touched.
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addData(">", "Touch START to start OpMode");
+        telemetry.update();
         waitForStart();
 
-                Actions.runBlocking(
-                drive.actionBuilder(beginPose)
-
-                        .setReversed(true)
-
-                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+        if (opModeIsActive()) {
 
 
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+            waitForStart();
+            Actions.runBlocking(
+                    drive.actionBuilder(beginPose)
 
-                        .waitSeconds(1)
+                            .stopAndAdd(new runIntake(hardwareMap))
 
-                        .stopAndAdd(new runFlywheels(hardwareMap))
+                            .strafeTo(new Vector2d(46, -35))
 
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                            .waitSeconds(1.5f)
+                            .stopAndAdd(new stopIntake(hardwareMap))
 
-                        .stopAndAdd(new stopFlywheels(hardwareMap))
+                            .build());
+        }
 
-                        .setReversed(false)
+    }
 
-                        .strafeTo(new Vector2d(15, -40))
+    public class runIntake implements Action {
+        public runIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
 
-                        .build());
+            intakeHinge.intakeHingeStandby();
+
+            sleep(250);
+
+            intake.setMotorPower(-0.8);
+
+            return false;
+        }
+    }
+
+    public class stopIntake implements Action {
+        public stopIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+
+            intake.setMotorPower(0);
+
+            return false;
+        }
     }
 
     public class runFlywheels implements Action {
@@ -108,14 +136,6 @@ public class AutoPathingDirectRed extends LinearOpMode {
             outtakeHinge.outtakeHingeRelax();
 
             sleep(500);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(250);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(250);
 
             intakeHinge.intakeHingeLift();
 

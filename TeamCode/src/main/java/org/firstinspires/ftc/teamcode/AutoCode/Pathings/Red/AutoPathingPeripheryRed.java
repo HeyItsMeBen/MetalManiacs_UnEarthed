@@ -102,6 +102,14 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
 
             intakeHinge.intakeHingeLift();
 
+            sleep(250);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(250);
+
+            intakeHinge.intakeHingeLift();
+
             sleep(500);
 
             return false;

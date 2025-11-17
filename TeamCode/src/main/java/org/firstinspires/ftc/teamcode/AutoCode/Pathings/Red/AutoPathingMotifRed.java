@@ -51,7 +51,7 @@ public class AutoPathingMotifRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(-90));
+        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);

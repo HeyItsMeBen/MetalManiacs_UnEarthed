@@ -58,7 +58,7 @@ public class Auto_Path_Simulation_Motif {
                         //.splineToConstantHeading(new Vector2d(40, 13), Math.toRadians(0))
                         //.splineToSplineHeading(new Pose2d(48, 13, Math.toRadians(90)), Math.toRadians(0))
                         //.splineTo(new Vector2d(30, 0), 0)
-                        .splineTo(new Vector2d(46, 13), 0)
+                        .splineTo(new Vector2d(46, -35), 0)
 
                         //run intake to pick up balls
 

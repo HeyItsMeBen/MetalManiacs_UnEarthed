@@ -13,7 +13,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 // The goal of this file is, strangely enough, determine the feedforward K-value
 // Calculate the K_v slope, and set K_f = 1/K_v
 
-@TeleOp (name="Outtake Flywheel Test", group="test")
+@TeleOp (name="Outtake Flywheel Power Test", group="test")
 public class OuttakeFlywheelPowerTest extends LinearOpMode {
 
     public GamepadEx gamepad;

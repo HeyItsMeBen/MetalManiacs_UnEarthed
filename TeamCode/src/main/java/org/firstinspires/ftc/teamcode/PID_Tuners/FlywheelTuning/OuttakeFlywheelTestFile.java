@@ -16,7 +16,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 // One of the biggest issue with our flywheels is that they drop in velocity when launching each time.
 // As a result, this file will determine the time it takes for the velocities to return
 
-@TeleOp (name="Outtake Flywheel Test", group="test")
+@TeleOp (name="Outtake Flywheel Test File", group="test")
 public class OuttakeFlywheelTestFile extends LinearOpMode {
 
     public GamepadEx gamepad;
@@ -38,10 +38,10 @@ public class OuttakeFlywheelTestFile extends LinearOpMode {
         //executing
         while (opModeIsActive()) {
             if (gamepad.getButton(GamepadKeys.Button.A)) {
-                outtake.setFlywheelRawVelocity(2350);
+                outtake.setFlywheelVelocity(2350);
             }
             else if (gamepad.getButton(GamepadKeys.Button.B)) {
-                outtake.setFlywheelRawVelocity(0);
+                outtake.setFlywheelVelocity(0);
             }
 
             //Send data to FTC dashbaord. The dashboard will graph it in real-time
