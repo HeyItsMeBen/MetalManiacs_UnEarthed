@@ -10,112 +10,130 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Systems.Arm;
-import org.firstinspires.ftc.teamcode.Systems.Hinge;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "Auto Pathing Periphery Blue", group = "Concept")
+@Autonomous(name = "Competition Pathing: Auto Periphery Blue", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingPeripheryBlue extends LinearOpMode {
 
     Intake intake;
-    Arm arm;
     Flywheels outtake;
-    Hinge hinge;
+    Transfer intakeHinge;
+    Transfer outtakeHinge;
 
-    double armTarget=0;
+    double firing_position_x = -15;
+    double firing_position_y = 15;
 
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(-50, 50, Math.toRadians(315));
+        Pose2d beginPose = new Pose2d(-50, 50, Math.toRadians(305));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
-        arm = new Arm(hardwareMap);
         outtake = new Flywheels(hardwareMap);
-        hinge = new Hinge(hardwareMap);
+        intakeHinge = new Transfer(hardwareMap);
+        outtakeHinge = new Transfer(hardwareMap);
         //to do: add another hinge servo transfer servo
 
         waitForStart();
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .stopAndAdd(new AutoPathingPeripheryBlue.setHingePosition())
 
-                        .strafeTo(new Vector2d(-26, 26))
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                        .stopAndAdd(new AutoPathingPeripheryBlue.raiseArm(600))
+                        .stopAndAdd(new maintainIntake(hardwareMap))
 
-                        .stopAndAdd(new AutoPathingPeripheryBlue.scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new runFlywheels(hardwareMap))
 
-                        .stopAndAdd(new AutoPathingPeripheryBlue.lowerArmFully())
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
 
-                        .splineTo(new Vector2d(-25, -35), Math.toRadians(270))
+                        .stopAndAdd(new stopFlywheels(hardwareMap))
+                        .stopAndAdd(new stopIntake(hardwareMap))
+
+                        .strafeTo(new Vector2d(-15, -40))
 
                         .build());
     }
 
-    public class setHingePosition implements Action {
-        public setHingePosition() {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hinge.liftHinge(hinge.holdPosition);
+    public class maintainIntake implements Action {
+        public maintainIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+
+            intake.setMotorPower(-0.4);
+
             return false;
         }
     }
 
-    public class raiseArm implements Action {
-        public raiseArm(double givenTarget) {armTarget=givenTarget;}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            sleepWhileRunningArmPID(2000);
+    public class stopIntake implements Action {
+        public stopIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+
+            intake.setMotorPower(0);
+
             return false;
         }
     }
+    public class runFlywheels implements Action {
+        public runFlywheels(HardwareMap hMap) {
+        }
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            outtake.setFlywheelVelocity(2350);
+
+            while (outtake.getCurrentWheelVelocity("left") < 2300) {
+                sleep(500);
+            }
+
+            return false;
+        }
+    }
+
+    public class stopFlywheels implements Action {
+        public stopFlywheels(HardwareMap hMap) {
+        }
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            outtake.setFlywheelVelocity(0);
+
+            return false;
+        }
+    }
+
     public class scoreBallSequence implements Action {
         public scoreBallSequence(HardwareMap hMap) {}
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            hinge.liftHinge(hinge.holdPosition);
+            outtakeHinge.outtakeHingeFire();
+            intakeHinge.intakeHingeStandby();
 
             sleep(500);
 
-//            outtake.setFlywheelVelocity(3000);
-            outtake.setFlywheelVelocity(3000);
+            outtakeHinge.outtakeHingeRelax();
 
-            sleepWhileRunningArmPID(2000);
+            sleep(500);
 
-            hinge.liftHinge(hinge.firePosition);
+            intakeHinge.intakeHingeLift();
 
-            sleepWhileRunningArmPID(1000);
+            sleep(250);
 
-            outtake.setFlywheelVelocity(0);
+            intakeHinge.intakeHingeLift();
 
-            hinge.liftHinge(hinge.holdPosition);
+            sleep(250);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(500);
 
             return false;
-        }
-    }
-    public class lowerArmFully implements Action {    //lowers the arm to 0, to prepare for teleOp
-        public lowerArmFully() {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            armTarget=300;
-            sleepWhileRunningArmPID(1000); //change later
-            armTarget=100;
-            sleepWhileRunningArmPID(500); //change later
-            armTarget=0;
-            sleepWhileRunningArmPID(100); //change later
-            return false;
-        }
-    }
-    public void sleepWhileRunningArmPID(double milliseconds){  //acts as a sleep function, while also running the arm PID. This keeps the arm at it's target position.
-        ElapsedTime sleepTimer;
-        sleepTimer = new ElapsedTime();
-        while (sleepTimer.milliseconds()<milliseconds && opModeIsActive()){
-            arm.raiseArmManual(arm.setArmTarget(armTarget));
         }
     }
 

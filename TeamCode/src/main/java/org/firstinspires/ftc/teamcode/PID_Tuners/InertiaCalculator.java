@@ -8,9 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Systems.Hinge;
 
 /*
 Configurations:
@@ -27,7 +24,6 @@ Configurations:
 public class InertiaCalculator extends LinearOpMode {
     DcMotorEx flywheelLeft; //creates "flywheel" variable, and sets as a "DcMotorEx"-type variable.
     DcMotorEx flywheelRight;
-    Hinge hinge;
 
     public static float rpm=2500;  //rotations per minute. Change the value to whatever u want
     public static int prepSeconds=2;
@@ -53,8 +49,6 @@ public class InertiaCalculator extends LinearOpMode {
         flywheelRight = hardwareMap.get(DcMotorEx.class, "rightFlyWheel");
         flywheelLeft.setDirection(DcMotor.Direction.FORWARD);
         flywheelRight.setDirection(DcMotor.Direction.REVERSE);
-
-        hinge=new Hinge(hardwareMap);
 
         flywheelLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flywheelRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  //The video told me to type it...
