@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.Action;
@@ -14,13 +13,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
-import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "Competition Pathing: Auto Direct Red", group = "Auto Pathing")
+import org.firstinspires.ftc.teamcode.Systems.Intake;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
+
+@Autonomous(name = "Competition Pathing: Auto Cycle Periphery Red", group = "Auto Pathing")
 //@Disabled
-public class AutoPathingDirectRed extends LinearOpMode {
+public class AutoPathingCyclePeripheryRed extends LinearOpMode {
 
     Intake intake;
     Flywheels outtake;
@@ -33,7 +33,7 @@ public class AutoPathingDirectRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(15, -60, 3*Math.PI / 2);
+        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
@@ -41,19 +41,16 @@ public class AutoPathingDirectRed extends LinearOpMode {
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 
+        // Wait for the DS start button to be touched.
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addData(">", "Touch START to start OpMode");
+        telemetry.update();
         waitForStart();
 
-                Actions.runBlocking(
+        Actions.runBlocking(
                 drive.actionBuilder(beginPose)
 
-                        .setReversed(true)
-
-                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
-
-
                         .strafeTo(new Vector2d(firing_position_x, firing_position_y))
-
-                        .waitSeconds(1)
 
                         .stopAndAdd(new runFlywheels(hardwareMap))
 
@@ -63,11 +60,48 @@ public class AutoPathingDirectRed extends LinearOpMode {
 
                         .stopAndAdd(new stopFlywheels(hardwareMap))
 
-                        .setReversed(false)
+                        // Grab First Set
+
+                        .turn(Math.toRadians(100))
+
+                        .stopAndAdd(new runIntake(hardwareMap))
+
+                        .splineTo(new Vector2d(46, 13), 0)
+
+                        // Grab First Set
+
+                        .setReversed(true)
+                        .stopAndAdd(new maintainIntake(hardwareMap))
+                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225))
+
+                        .stopAndAdd(new runFlywheels(hardwareMap))
+
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                        .stopAndAdd(new stopIntake(hardwareMap))
+                        .stopAndAdd(new stopFlywheels(hardwareMap))
 
                         .strafeTo(new Vector2d(15, -40))
 
                         .build());
+    }
+
+
+
+    public class runIntake implements Action {
+        public runIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+
+            intakeHinge.intakeHingeStandby();
+
+            sleep(250);
+
+            intake.setMotorPower(-0.8);
+
+            return false;
+        }
     }
 
     public class maintainIntake implements Action {
@@ -128,14 +162,6 @@ public class AutoPathingDirectRed extends LinearOpMode {
             outtakeHinge.outtakeHingeRelax();
 
             sleep(500);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(250);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(250);
 
             intakeHinge.intakeHingeLift();
 

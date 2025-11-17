@@ -31,7 +31,6 @@ public class Auto_Path_Simulation_Cycle {
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(215)))
 
                         // Travel to scoring
-
                             .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
 
                         // Grabs first set of balls
@@ -42,7 +41,9 @@ public class Auto_Path_Simulation_Cycle {
                         // Travel to scoring
 
                             .setReversed(true)
-                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
+                            //.lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
+                            .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225)) // For PPG
+
 
                         // Grabs second set of balls
 

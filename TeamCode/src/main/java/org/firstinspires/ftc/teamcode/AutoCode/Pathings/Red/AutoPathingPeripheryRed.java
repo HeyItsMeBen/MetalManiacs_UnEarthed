@@ -48,6 +48,8 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
 
                         .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
+                        .stopAndAdd(new maintainIntake(hardwareMap))
+
                         .stopAndAdd(new runFlywheels(hardwareMap))
 
                         .stopAndAdd(new scoreBallSequence(hardwareMap))
@@ -55,12 +57,32 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
                         .stopAndAdd(new scoreBallSequence(hardwareMap))
 
                         .stopAndAdd(new stopFlywheels(hardwareMap))
+                        .stopAndAdd(new stopIntake(hardwareMap))
 
                         .strafeTo(new Vector2d(15, -40))
 
                         .build());
     }
 
+    public class maintainIntake implements Action {
+        public maintainIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+
+            intake.setMotorPower(-0.4);
+
+            return false;
+        }
+    }
+
+    public class stopIntake implements Action {
+        public stopIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+
+            intake.setMotorPower(0);
+
+            return false;
+        }
+    }
     public class runFlywheels implements Action {
         public runFlywheels(HardwareMap hMap) {
         }

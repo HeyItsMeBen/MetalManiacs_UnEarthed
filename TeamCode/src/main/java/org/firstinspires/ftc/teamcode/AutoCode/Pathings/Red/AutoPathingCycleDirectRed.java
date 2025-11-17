@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.Systems.Transfer;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
-@Autonomous(name = "Competition Pathing: Auto Cycle Red", group = "Auto Pathing")
+@Autonomous(name = "Competition Pathing: Auto Cycle Direct Red", group = "Auto Pathing")
 //@Disabled
-public class AutoPathingCycleRed extends LinearOpMode {
+public class AutoPathingCycleDirectRed extends LinearOpMode {
 
     Intake intake;
     Flywheels outtake;
@@ -47,37 +47,34 @@ public class AutoPathingCycleRed extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
+        Actions.runBlocking(
+                drive.actionBuilder(beginPose)
 
+                        .stopAndAdd(new runIntake(hardwareMap))
 
-                    waitForStart();
-                    Actions.runBlocking(
-                            drive.actionBuilder(beginPose)
+                        .splineTo(new Vector2d(46, -35), 0)
 
-                                    .stopAndAdd(new runIntake(hardwareMap))
+                        .waitSeconds(0.5f)
+                        .stopAndAdd(new maintainIntake(hardwareMap))
+                        .setTangent(Math.toRadians(180))
+                        .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                                    .splineTo(new Vector2d(46, -35), 0)
+                        .stopAndAdd(new runFlywheels(hardwareMap))
 
-                                    .waitSeconds(0.5f)
-                                    .stopAndAdd(new stopIntake(hardwareMap))
-                                    .setTangent(Math.toRadians(180))
-                                    .splineTo(new Vector2d(20, 20), Math.toRadians(45))
-                                    .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
 
-                                    .stopAndAdd(new runFlywheels(hardwareMap))
+                        .stopAndAdd(new stopFlywheels(hardwareMap))
+                        .stopAndAdd(new stopIntake(hardwareMap))
 
-                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
-                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
-                                    .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .strafeTo(new Vector2d(15, -40))
 
-                                    .stopAndAdd(new stopFlywheels(hardwareMap))
-
-                                    .strafeTo(new Vector2d(15, -40))
-
-                                    .build());
-                }
-
+                        .build());
     }
+
+
 
     public class runIntake implements Action {
         public runIntake(HardwareMap hMap) {}
@@ -87,7 +84,17 @@ public class AutoPathingCycleRed extends LinearOpMode {
 
             sleep(250);
 
-            intake.setMotorPower(0.5);
+            intake.setMotorPower(-0.8);
+
+            return false;
+        }
+    }
+
+    public class maintainIntake implements Action {
+        public maintainIntake(HardwareMap hMap) {}
+        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+
+            intake.setMotorPower(-0.4);
 
             return false;
         }
