@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.AutoCode;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.INCH;
+
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +19,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.DriveCode.outtakeFlywheel;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -32,6 +38,7 @@ public class AutoTesting extends LinearOpMode {
     //defining variables
     //conveyerBelt belt = new conveyerBelt(hardwareMap);
     outtakeFlywheel flywheel;
+    GoBildaPinpointDriver odo;
 
 
     int randomization = 0;
@@ -54,10 +61,22 @@ public class AutoTesting extends LinearOpMode {
     //This runs when the program is activated
     public void runOpMode() {
         flywheel = new outtakeFlywheel(hardwareMap);
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+
+        odo.setOffsets(82.55, 0, DistanceUnit.INCH);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+
+        odo.resetPosAndIMU();
+        Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
+        odo.setPosition(startingPosition);
+
         initAprilTag();
         waitForStart();
         while (opModeIsActive()){
-            telemetryAprilTag();
+            Pose2D pos = odo.getPosition();
+            double heading = pos.getHeading(AngleUnit.RADIANS);
+            /*telemetryAprilTag();
             double givenY=yDistance; //the x-y coordinates directly from camera will need to be adjusted and set to robotCenter. GivenY is distance from camera to basket.
             if (givenY!=0){
                 //flywheel.getValues(givenY-yCameraOffset);
@@ -83,7 +102,7 @@ public class AutoTesting extends LinearOpMode {
                 sleep(1000);
                 //flywheel.setOuttakeVelocity(2900);
                 sleep(30000);
-            }
+            }*/
         }
     }
     /*public void intakeBall(){

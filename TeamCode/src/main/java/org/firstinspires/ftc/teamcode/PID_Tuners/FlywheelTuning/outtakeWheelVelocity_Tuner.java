@@ -55,18 +55,31 @@ public class outtakeWheelVelocity_Tuner extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart(); //waits until you start the program from the driver station
+        telemetry.addData("Target RPM", rpm);
+        telemetry.addData("Current RPM", flywheelRight.getVelocity()*60/tickPerRevolution);
+        telemetry.update();
+        sleep(5000);
         while (opModeIsActive()){   //infinite loop
-            //double power = PIDControl(ticksPerSecond, flywheelRight.getVelocity());    //calculates the needed power with PID
-            ticksPerSecond=tickPerRevolution*(rpm/60);
             flywheelLeft.setVelocity(ticksPerSecond);
             flywheelRight.setVelocity(ticksPerSecond);
+            telemetry.addData("Target RPM", rpm);
+            telemetry.addData("Current RPM", flywheelRight.getVelocity()*60/tickPerRevolution);
+            telemetry.update();
+
+            //double power = PIDControl(ticksPerSecond, flywheelRight.getVelocity());    //calculates the needed power with PID
+            /*ticksPerSecond=tickPerRevolution*(rpm/60);
+            flywheelLeft.setVelocity(ticksPerSecond);
+            flywheelRight.setVelocity(ticksPerSecond);
+            sleep(onSeconds*1000);
+            telemetry.addLine("slide ball in now");
+            telemetry.update();
             sleep(onSeconds*1000);
             telemetry.addData("Target RPM", rpm);
             telemetry.addData("Current RPM", flywheelRight.getVelocity()*60/tickPerRevolution);
             telemetry.update();
             flywheelLeft.setVelocity(0);
             flywheelRight.setVelocity(0);
-            sleep(offSeconds*1000);
+            sleep(offSeconds*1000);*/
         }
     }
     public double PIDControl(double reference, double state){   //This is where the magic happens. It does some weird math
