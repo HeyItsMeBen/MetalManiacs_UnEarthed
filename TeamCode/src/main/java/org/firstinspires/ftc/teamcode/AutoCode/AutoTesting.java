@@ -31,7 +31,6 @@ import java.util.List;
 
 
 //sets mode to autonomous and makes the main class
-@Disabled
 
 @Autonomous(name = "AutoTesting", group = "Linear OpMode")
 public class AutoTesting extends LinearOpMode {
@@ -39,6 +38,11 @@ public class AutoTesting extends LinearOpMode {
     //conveyerBelt belt = new conveyerBelt(hardwareMap);
     outtakeFlywheel flywheel;
     GoBildaPinpointDriver odo;
+
+    private DcMotor frontLeftDrive = null;  //  Used to control the left front drive wheel
+    private DcMotor frontRightDrive = null;  //  Used to control the right front drive wheel
+    private DcMotor backLeftDrive = null;  //  Used to control the left back drive wheel
+    private DcMotor backRightDrive = null;  //  Used to control the right back drive wheel
 
 
     int randomization = 0;
@@ -61,7 +65,19 @@ public class AutoTesting extends LinearOpMode {
     //This runs when the program is activated
     public void runOpMode() {
         flywheel = new outtakeFlywheel(hardwareMap);
-        odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+        frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
+        backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
+
+        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        /*odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         odo.setOffsets(82.55, 0, DistanceUnit.INCH);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
@@ -69,13 +85,19 @@ public class AutoTesting extends LinearOpMode {
 
         odo.resetPosAndIMU();
         Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
-        odo.setPosition(startingPosition);
+        odo.setPosition(startingPosition);*/
 
         initAprilTag();
         waitForStart();
         while (opModeIsActive()){
-            Pose2D pos = odo.getPosition();
-            double heading = pos.getHeading(AngleUnit.RADIANS);
+            backLeftDrive.setPower(0.25);
+            frontLeftDrive.setPower(0.25);
+            backRightDrive.setPower(0.25);
+            frontRightDrive.setPower(0.25);
+            //Pose2D pos = odo.getPosition();
+            //double heading = pos.getHeading(AngleUnit.RADIANS);
+
+
             /*telemetryAprilTag();
             double givenY=yDistance; //the x-y coordinates directly from camera will need to be adjusted and set to robotCenter. GivenY is distance from camera to basket.
             if (givenY!=0){
