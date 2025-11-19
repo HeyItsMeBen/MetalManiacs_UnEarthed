@@ -33,7 +33,7 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(270));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
@@ -41,24 +41,17 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 
-        // Wait for the DS start button to be touched.
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch START to start OpMode");
-        telemetry.update();
         waitForStart();
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
 
-                        .stopAndAdd(new runIntake(hardwareMap))
+                        .setReversed(true)
 
-                        .splineTo(new Vector2d(46, -35), 0)
-
-                        .waitSeconds(0.5f)
-                        .stopAndAdd(new maintainIntake(hardwareMap))
-                        .setTangent(Math.toRadians(180))
-                        .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
                         .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+
+                        .stopAndAdd(new maintainIntake(hardwareMap))
 
                         .stopAndAdd(new runFlywheels(hardwareMap))
 
@@ -67,14 +60,22 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
                         .stopAndAdd(new scoreBallSequence(hardwareMap))
 
                         .stopAndAdd(new stopFlywheels(hardwareMap))
-                        .stopAndAdd(new stopIntake(hardwareMap))
+
+                        .stopAndAdd(new runIntake(hardwareMap))
+
+                        .setReversed(false)
+
+                        .splineTo(new Vector2d(46, -40), 0)
+
+                        .waitSeconds(0.5f)
+                        .stopAndAdd(new maintainIntake(hardwareMap))
 
                         .strafeTo(new Vector2d(15, -40))
 
+                        .stopAndAdd(new stopIntake(hardwareMap))
+
                         .build());
     }
-
-
 
     public class runIntake implements Action {
         public runIntake(HardwareMap hMap) {}
@@ -117,7 +118,7 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
             outtake.setFlywheelVelocity(2350);
 
-            while (outtake.getCurrentWheelVelocity("left") < 2300) {
+            for (int t = 0; t < 6 && outtake.getCurrentWheelVelocity("right") < 2200; t++) {
                 sleep(500);
             }
 
@@ -148,6 +149,14 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
             outtakeHinge.outtakeHingeRelax();
 
             sleep(500);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(250);
+
+            intakeHinge.intakeHingeLift();
+
+            sleep(250);
 
             intakeHinge.intakeHingeLift();
 

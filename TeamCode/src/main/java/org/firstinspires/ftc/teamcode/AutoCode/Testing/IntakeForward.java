@@ -38,6 +38,7 @@ public class IntakeForward extends LinearOpMode {
     double firing_position_x = 15;
     double firing_position_y = 15;
 
+
     @Override
     public void runOpMode() {
 
@@ -54,6 +55,7 @@ public class IntakeForward extends LinearOpMode {
         telemetry.addData(">", "Touch START to start OpMode");
         telemetry.update();
         waitForStart();
+
 
         if (opModeIsActive()) {
 

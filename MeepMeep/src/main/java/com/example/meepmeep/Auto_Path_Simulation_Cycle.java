@@ -28,47 +28,60 @@ public class Auto_Path_Simulation_Cycle {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(100, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(215)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(270)))
+
+                        .setReversed(true)
+
+                        .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+
+                        .setReversed(false)
+                        .splineTo(new Vector2d(46, -35), 0)
+
+                        .setReversed(true)
+
+                        .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                         // Travel to scoring
-                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
-
-                        // Grabs first set of balls
-
-                            .turn(Math.toRadians(100))
-                            .splineTo(new Vector2d(46, 13), 0) // For PPG
-
-                        // Travel to scoring
-
-                            .setReversed(true)
-                            //.lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
-                            .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225)) // For PPG
-
-
-                        // Grabs second set of balls
-
-                            .setReversed(false)
-                            .splineTo(new Vector2d(46, -11), 0) // For PGP
-
-                        // Travel to scoring
-
-                            .setReversed(true)
-                            .splineTo(new Vector2d(firing_position_x, firing_position_y), 45)
-
-                        // Grabs third set of balls
-
-                            .setReversed(false)
-                            .splineTo(new Vector2d(46, -35), 0) //For GPP
-
-                        // Travel to scoring
-
-                            .setReversed(true)
-                            .splineTo(new Vector2d(firing_position_x, firing_position_y), 45)
-
-                        // Park outside scoring zone
-
-                            .setReversed(false)
-                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
+//                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
+//
+//                        // Grabs first set of balls
+//
+//                            .turn(Math.toRadians(100))
+//                            .splineTo(new Vector2d(46, 13), 0) // For PPG
+//
+//                        // Travel to scoring
+//
+//                            .setReversed(true)
+//                            //.lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))
+//                            .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225)) // For PPG
+//
+//
+//                        // Grabs second set of balls
+//
+//                            .setReversed(false)
+//                            .splineTo(new Vector2d(46, -11), 0) // For PGP
+//
+//                        // Travel to scoring
+//
+//                            .setReversed(true)
+//                            .splineTo(new Vector2d(firing_position_x, firing_position_y), 45)
+//
+//                        // Grabs third set of balls
+//
+//                            .setReversed(false)
+//                            .splineTo(new Vector2d(46, -35), 0) //For GPP
+//
+//                        // Travel to scoring
+//
+//                            .setReversed(true)
+//                            .splineTo(new Vector2d(firing_position_x, firing_position_y), 45)
+//
+//                        // Park outside scoring zone
+//
+//                            .setReversed(false)
+//                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
 
                         .build());
 
