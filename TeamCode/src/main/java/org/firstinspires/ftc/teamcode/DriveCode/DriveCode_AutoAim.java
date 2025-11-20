@@ -1,16 +1,13 @@
-package org.firstinspires.ftc.teamcode.DriveCode.Test_Files;
+package org.firstinspires.ftc.teamcode.DriveCode;
 
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -20,8 +17,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
+import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -30,8 +27,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "Finn AutoAim", group = "Robot")
-public class autoAimTesting_DriveCode extends OpMode {
+@TeleOp(name = "DriveCode_AutoAim", group = "Robot")
+public class DriveCode_AutoAim extends OpMode {
 
     // Driver Code
     public GamepadEx driver;
@@ -44,6 +41,10 @@ public class autoAimTesting_DriveCode extends OpMode {
     DcMotor backRightDrive;
 
     //create mechanism variables
+    Intake intake;
+    Flywheels outtake;
+    Transfer intakeHinge;
+    Transfer outtakeHinge;
 
     ElapsedTime timer;
 
@@ -88,7 +89,7 @@ public class autoAimTesting_DriveCode extends OpMode {
     double  drive           = 0;        // Desired forward power/speed (-1 to +1)
     double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-    final double DESIRED_DISTANCE = 36; //  this is how close the camera should get to the target (inches)
+    final double DESIRED_DISTANCE = 53; //  this is how close the camera should get to the target (inches)
 
     @Override
     public void init() {
@@ -100,27 +101,18 @@ public class autoAimTesting_DriveCode extends OpMode {
         operator = new GamepadEx(gamepad2);
 
         //create and set the motor objects
-//        frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeftDrive");
-//        frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
-//        backLeftDrive = hardwareMap.get(DcMotor.class, "backLeftDrive");
-//        backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
-//
-//
-//        //setup
-//
-//        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-//        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-//        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-//        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-
         frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        //create the mechanism objects
+        intake = new Intake(hardwareMap);
+        outtake = new Flywheels(hardwareMap);
+        intakeHinge = new Transfer(hardwareMap);
+        outtakeHinge = new Transfer(hardwareMap);
+
+        //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -250,18 +242,21 @@ public class autoAimTesting_DriveCode extends OpMode {
 
         // Manual intake control
         if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
+            intakeHinge.intakeHingeStandby();
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
             } else {
                 intakePower = 1;
             }
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            intakeHinge.intakeHingeStandby();
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
             } else {
                 intakePower = -1;
             }
         }
+        intake.setMotorPower(intakePower);
 
         double operatorLeftTrigger = operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
         double operatorRightTrigger = operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
@@ -283,18 +278,77 @@ public class autoAimTesting_DriveCode extends OpMode {
         telemetry.addData("Outtake Speed", outtakeSpeed);
 
         //cycles the ball into positions for launch
+        if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+
+            outtakeHinge.outtakeHingeRelax();
+
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            intakeHinge.intakeHingeLift();
+
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            intakeHinge.intakeHingeStandby();
+
+        }
 
         //Launches the ball
+        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+
+            intakeHinge.intakeHingeStandby();
+
+            outtakeHinge.outtakeHingeRelax();
+
+            outtake.setFlywheelVelocity(2350);      //turns on the flywheels
+
+            while (outtake.getCurrentWheelVelocity("left") < 2300 && outtake.getCurrentWheelVelocity("right") < 2300) {
+                telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
+                telemetry.update();
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball
+
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            outtake.setFlywheelVelocity(0);     //turns off the flywheels. We don't need it running because we just launched the ball
+
+            outtakeHinge.outtakeHingeRelax();
+        }
+        //Auto-aims
         if (operator.isDown(GamepadKeys.Button.A)) {
             scanForTags();
             if (targetFound) {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing;
+                double  headingError    = -desiredTag.ftcPose.bearing;
                 double  yawError        = desiredTag.ftcPose.yaw;   //set this to 0 if you want it to approach the goal from any angle. Just keep in mind that it won't be as accurate if you shoot towards the goal at an angle (rather than head-on).
                 runPIDStuff(rangeError, headingError, yawError);
             }
         }
+//        else {
+//            //reset wheel directions
+//            backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+//            frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+//            backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+//            frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+//        }
 
         driver.readButtons();
         operator.readButtons();
@@ -366,7 +420,6 @@ public class autoAimTesting_DriveCode extends OpMode {
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
     }
-
     //auto-aim methods
     public void scanForTags(){
         targetFound = false;
@@ -471,7 +524,7 @@ public class autoAimTesting_DriveCode extends OpMode {
                     .build();
         }
     }
-    private void setManualExposure(int exposureMS, int gain) {
+    private void    setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {
