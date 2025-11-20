@@ -90,7 +90,7 @@ public class DriveCode_AutoAim extends OpMode {
     double  drive           = 0;        // Desired forward power/speed (-1 to +1)
     double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-    final double DESIRED_DISTANCE = 36; //  this is how close the camera should get to the target (inches)
+    final double DESIRED_DISTANCE = 53; //  this is how close the camera should get to the target (inches)
 
     @Override
     public void init() {
@@ -337,12 +337,13 @@ public class DriveCode_AutoAim extends OpMode {
 
             outtakeHinge.outtakeHingeRelax();
         }
+        //Auto-aims
         if (operator.isDown(GamepadKeys.Button.A)) {
             scanForTags();
             if (targetFound) {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing;
+                double  headingError    = -desiredTag.ftcPose.bearing;
                 double  yawError        = desiredTag.ftcPose.yaw;   //set this to 0 if you want it to approach the goal from any angle. Just keep in mind that it won't be as accurate if you shoot towards the goal at an angle (rather than head-on).
                 runPIDStuff(rangeError, headingError, yawError);
             }
