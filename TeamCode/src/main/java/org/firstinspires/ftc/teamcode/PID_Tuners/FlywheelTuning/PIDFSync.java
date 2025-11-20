@@ -21,7 +21,7 @@ public class PIDFSync {
     public static double K_sync = 0.001; // adjust via dashboard
 
     // Target velocity (ticks/sec)
-    public static double targetVelocity = 1400.0;
+    public static double targetVelocity = 1000;
 
     private final PIDController leftController = new PIDController(Kp, Ki, Kd);
     private final PIDController rightController = new PIDController(Kp, Ki, Kd);

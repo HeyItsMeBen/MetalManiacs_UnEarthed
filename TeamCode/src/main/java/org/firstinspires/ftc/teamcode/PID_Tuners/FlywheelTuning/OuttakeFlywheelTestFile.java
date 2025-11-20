@@ -46,12 +46,12 @@ public class OuttakeFlywheelTestFile extends LinearOpMode {
 
             //Send data to FTC dashbaord. The dashboard will graph it in real-time
             TelemetryPacket packet = new TelemetryPacket();
-            packet.put("Left Motor Velocity", outtake.getCurrentWheelVelocity("left"));
-            packet.put("Right Motor Velocity", outtake.getCurrentWheelVelocity("right"));
+            packet.put("Left Motor Velocity", outtake.getCurrentWheelRawVelocity("left"));
+            packet.put("Right Motor Velocity", outtake.getCurrentWheelRawVelocity("right"));
             dashboard.sendTelemetryPacket(packet);
 
             //Sends data to the driver station as quantitative values
-            logHistory.add("Velocities: " + (int) Math.round(outtake.getCurrentWheelVelocity("left")) + " , " + (int) Math.round(outtake.getCurrentWheelVelocity("right")));
+            logHistory.add("Velocities: " + (int) Math.round(outtake.getCurrentWheelRawVelocity("left")) + " , " + (int) Math.round(outtake.getCurrentWheelRawVelocity("right")));
             int maxLines = 8; // Display the last few entries (so it doesn’t overflow)
             int start = Math.max(0, logHistory.size() - maxLines);
             for (int i = start; i < logHistory.size(); i++) {

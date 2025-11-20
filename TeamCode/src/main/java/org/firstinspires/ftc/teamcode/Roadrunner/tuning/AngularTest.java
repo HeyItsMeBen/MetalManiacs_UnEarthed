@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
-public final class ForwardTest extends LinearOpMode {
+public final class AngularTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d beginPose = new Pose2d(0, 0, 0);
@@ -17,10 +17,12 @@ public final class ForwardTest extends LinearOpMode {
             waitForStart();
 
             Actions.runBlocking(
-                drive.actionBuilder(beginPose)
-                        .strafeTo(new Vector2d(30, 0))
-                        .strafeTo(new Vector2d(0, 0))
-                        .build());
+                    drive.actionBuilder(beginPose)
+                            .turnTo(Math.toRadians(90))
+                            .turnTo(Math.toRadians(180))
+                            .turnTo(Math.toRadians(270))
+                            .turnTo(Math.toRadians(0))
+                            .build());
         } else {
             throw new RuntimeException();
         }

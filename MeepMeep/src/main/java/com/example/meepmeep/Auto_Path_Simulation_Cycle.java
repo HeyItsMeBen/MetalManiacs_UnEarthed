@@ -15,8 +15,6 @@ import javax.imageio.ImageIO;
 
 // In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
 
-// Note that optimate firing spot is roughly around x: 10, y: 10
-
 public class Auto_Path_Simulation_Cycle {
     public static void main(String[] args) {
 
@@ -27,21 +25,30 @@ public class Auto_Path_Simulation_Cycle {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(100, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(270)))
 
                         .setReversed(true)
 
-                        .splineTo(new Vector2d(20, 20), Math.toRadians(45))
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+                        .splineTo(new Vector2d(20, -30), Math.toRadians(90))
+                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(45))
+                        //.strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                        .setReversed(false)
-                        .splineTo(new Vector2d(46, -35), 0)
+                        .turn(Math.toRadians(135))
+                        .strafeTo(new Vector2d(45, 15))
+                        .setTangent(180)
+                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
+                        .strafeTo(new Vector2d(15, -40))
 
-                        .setReversed(true)
 
-                        .splineTo(new Vector2d(20, 20), Math.toRadians(45))
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+
+//                        .setReversed(false)
+//                        .splineTo(new Vector2d(46, -35), 0)
+//
+//                        .setReversed(true)
+//
+//                        .splineTo(new Vector2d(20, 20), Math.toRadians(45))
+//                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                         // Travel to scoring
 //                            .lineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)))

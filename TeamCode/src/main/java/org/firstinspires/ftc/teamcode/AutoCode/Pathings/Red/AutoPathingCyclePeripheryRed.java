@@ -33,7 +33,7 @@ public class AutoPathingCyclePeripheryRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d(50, 50, Math.toRadians(205));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);

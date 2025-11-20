@@ -86,12 +86,12 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@TeleOp(name="Auto Aim, Version 1", group = "Concept")
+@TeleOp(name="Lebot Auto Aim Raw", group = "Concept")
 //@Disabled
 public class AidedAimTrial1 extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
-    final double DESIRED_DISTANCE = 36; //  this is how close the camera should get to the target (inches)
+    final double DESIRED_DISTANCE = 43; //  this is how close the camera should get to the target (inches)
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -191,8 +191,8 @@ public class AidedAimTrial1 extends LinearOpMode
             if (gamepad1.left_bumper && targetFound) {
 
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing-0;
+                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE*Math.sqrt(2));
+                double  headingError    = -desiredTag.ftcPose.bearing-0;
                 double  yawError        = desiredTag.ftcPose.yaw-0;
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
@@ -286,7 +286,7 @@ public class AidedAimTrial1 extends LinearOpMode
      Manually set the camera gain and exposure.
      This can only be called AFTER calling initAprilTag(), and only works for Webcams;
     */
-    private void    setManualExposure(int exposureMS, int gain) {
+    private void setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {

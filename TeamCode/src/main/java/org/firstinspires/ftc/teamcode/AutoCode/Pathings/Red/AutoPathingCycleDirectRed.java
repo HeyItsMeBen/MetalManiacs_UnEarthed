@@ -27,8 +27,8 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
-    double firing_position_x = 15;
-    double firing_position_y = 15;
+    double firing_position_x = 17;
+    double firing_position_y = 17;
 
     @Override
     public void runOpMode() {
@@ -48,8 +48,8 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
                         .setReversed(true)
 
-                        .splineTo(new Vector2d(37, 37), Math.toRadians(45))
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+                        .splineTo(new Vector2d(20, -30), Math.toRadians(90))
+                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(45))
 
                         .stopAndAdd(new maintainIntake(hardwareMap))
 
@@ -61,18 +61,28 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
                         .stopAndAdd(new stopFlywheels(hardwareMap))
 
+                        .turn(Math.toRadians(135))
+
                         .stopAndAdd(new runIntake(hardwareMap))
 
-                        .setReversed(false)
+                        .splineTo(new Vector2d(50, 6), Math.toRadians(0))
 
-                        .splineTo(new Vector2d(46, -40), 0)
+                        .stopAndAdd(new runFlywheels(hardwareMap))
 
-                        .waitSeconds(0.5f)
+                        .setTangent(180)
+                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
+
                         .stopAndAdd(new maintainIntake(hardwareMap))
 
-                        .strafeTo(new Vector2d(15, -40))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+
+                        .stopAndAdd(new stopFlywheels(hardwareMap))
 
                         .stopAndAdd(new stopIntake(hardwareMap))
+
+                        .strafeTo(new Vector2d(15, -40))
 
                         .build());
     }

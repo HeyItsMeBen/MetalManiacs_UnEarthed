@@ -18,7 +18,7 @@ public final class LateralTest extends LinearOpMode {
 
             Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .strafeTo(new Vector2d(30, 0))
+                        .strafeTo(new Vector2d(0, 30))
                         .strafeTo(new Vector2d(0, 0))
                         .build());
         } else {

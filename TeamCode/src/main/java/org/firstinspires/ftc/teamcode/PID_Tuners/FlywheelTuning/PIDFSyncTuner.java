@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Flywheel PIDF Sync Tuner", group = "Tuning")
 public class PIDFSyncTuner extends LinearOpMode {
 
-    public static double targetVelocity = 1200.0;
+    public static double targetVelocity = 1000.0;
 
     private PIDFSync flywheel;
     private FtcDashboard dashboard;

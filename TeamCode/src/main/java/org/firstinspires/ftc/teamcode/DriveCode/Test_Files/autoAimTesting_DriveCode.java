@@ -30,7 +30,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "autoAimTesting_DriveCode", group = "Robot")
+@TeleOp(name = "Finn AutoAim", group = "Robot")
 public class autoAimTesting_DriveCode extends OpMode {
 
     // Driver Code
@@ -100,18 +100,31 @@ public class autoAimTesting_DriveCode extends OpMode {
         operator = new GamepadEx(gamepad2);
 
         //create and set the motor objects
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeftDrive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "backLeftDrive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
+//        frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeftDrive");
+//        frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
+//        backLeftDrive = hardwareMap.get(DcMotor.class, "backLeftDrive");
+//        backRightDrive = hardwareMap.get(DcMotor.class, "backRightDrive");
+//
+//
+//        //setup
+//
+//        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+//        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+//        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+//        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
+        backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
 
-        //setup
-
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         imu = hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
@@ -458,7 +471,7 @@ public class autoAimTesting_DriveCode extends OpMode {
                     .build();
         }
     }
-    private void    setManualExposure(int exposureMS, int gain) {
+    private void setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {

@@ -28,7 +28,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "Competition DriveCode Auto", group = "Robot")
+@TeleOp(name = "Lebot Auto Aim", group = "Robot")
 public class DriveCode_AutoAim extends OpMode {
 
     // Driver Code

@@ -28,11 +28,11 @@ public class Auto_Path_Simulation_Periphery {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(215)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(205)))
 
                         // Travel to scoring
 
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(215))
 
 
                         .strafeTo(new Vector2d(15, -40))

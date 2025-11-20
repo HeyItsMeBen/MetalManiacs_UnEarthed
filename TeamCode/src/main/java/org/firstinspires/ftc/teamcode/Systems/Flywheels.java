@@ -54,6 +54,15 @@ public class Flywheels {
         return 0;
 
     }
+    public double getCurrentWheelRawVelocity(String motor){
+        if (motor.contains("left") || motor.contains("Left")) {
+            return leftFlyWheel.getVelocity();
+        } else if (motor.contains("right") || motor.contains("Right")) {
+            return rightFlyWheel.getVelocity();
+        }
+        return 0;
+
+    }
     public void setFlywheelRawVelocity(float givenRPM) {
         leftFlyWheel.setVelocity(givenRPM);
         rightFlyWheel.setVelocity(givenRPM);
