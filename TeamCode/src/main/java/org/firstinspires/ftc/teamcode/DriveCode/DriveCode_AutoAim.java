@@ -70,6 +70,7 @@ public class DriveCode_AutoAim extends OpMode {
     private double speedMultiplier = 1;
     public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
 
+
     //autoAim stuff
     final double SPEED_GAIN  =  0.1  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     final double STRAFE_GAIN =  0.1 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
@@ -332,23 +333,16 @@ public class DriveCode_AutoAim extends OpMode {
             outtakeHinge.outtakeHingeRelax();
         }
         //Auto-aims
-        if (operator.isDown(GamepadKeys.Button.A)) {
+        if (driver.isDown(GamepadKeys.Button.DPAD_UP)) {
             scanForTags();
             if (targetFound) {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
                 double  headingError    = -desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;   //set this to 0 if you want it to approach the goal from any angle. Just keep in mind that it won't be as accurate if you shoot towards the goal at an angle (rather than head-on).
-                runPIDStuff(rangeError, headingError, yawError);
+                double  yawError        = desiredTag.ftcPose.yaw;
+                runPIDStuff(rangeError, headingError, yawError);    //calculates and sends power to the wheels
             }
         }
-//        else {
-//            //reset wheel directions
-//            backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-//            frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-//            backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-//            frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-//        }
 
         driver.readButtons();
         operator.readButtons();
@@ -421,7 +415,7 @@ public class DriveCode_AutoAim extends OpMode {
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
     }
     //auto-aim methods
-    public void scanForTags(){
+    public void scanForTags(){  //Checks if april tags are on screen, and if so, it sets the desiredTag object to that tag
         targetFound = false;
         desiredTag  = null;
 
@@ -457,7 +451,7 @@ public class DriveCode_AutoAim extends OpMode {
             telemetry.addData("\n>","Drive using joysticks to find valid target\n");
         }
     }
-    public void runPIDStuff(double rangeError, double headingError, double yawError){
+    public void runPIDStuff(double rangeError, double headingError, double yawError){   //Calculate the power needed for driving/strafing/turning
 
         // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
         if (targetFound) {
@@ -473,7 +467,7 @@ public class DriveCode_AutoAim extends OpMode {
         // Apply desired axes motions to the drivetrain.
         moveRobot(drive, strafe, turn);
     }
-    public void moveRobot(double x, double y, double yaw) {
+    public void moveRobot(double x, double y, double yaw) { //calculates and sends the power needed for each motor
         // Calculate wheel powers.
         double frontLeftPower    =  x - y - yaw;
         double frontRightPower   =  x + y + yaw;
@@ -498,7 +492,7 @@ public class DriveCode_AutoAim extends OpMode {
         backLeftDrive.setPower(backLeftPower);
         backRightDrive.setPower(backRightPower);
     }
-    private void initAprilTag() {
+    private void initAprilTag() {   //Sets up the april tag and camera stuff. Gets it ready for use.
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
 
@@ -524,7 +518,7 @@ public class DriveCode_AutoAim extends OpMode {
                     .build();
         }
     }
-    private void    setManualExposure(int exposureMS, int gain) {
+    private void setManualExposure(int exposureMS, int gain) {   //not exactly sure what this does. It sets up the camera's setting or something
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {
