@@ -34,8 +34,10 @@ public class Auto_Path_Simulation_Cycle {
                         .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(45))
                         //.strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                        .turn(Math.toRadians(135))
-                        .strafeTo(new Vector2d(45, 15))
+                        //.turn(Math.toRadians(135))
+                        .setReversed(false)
+
+                        .splineTo(new Vector2d(50, 6), Math.toRadians(0))
                         .setTangent(180)
                         .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
                         .strafeTo(new Vector2d(15, -40))

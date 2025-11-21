@@ -18,12 +18,14 @@ import org.firstinspires.ftc.teamcode.Systems.Transfer;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
+
 @Autonomous(name = "Competition Pathing: Auto Cycle Direct Red", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingCycleDirectRed extends LinearOpMode {
 
     Intake intake;
-    Flywheels outtake;
+    Flywheels flywheels;
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
@@ -37,7 +39,7 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
-        outtake = new Flywheels(hardwareMap);
+        flywheels = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 
@@ -51,129 +53,144 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
                         .splineTo(new Vector2d(20, -30), Math.toRadians(90))
                         .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(45))
 
-                        .stopAndAdd(new maintainIntake(hardwareMap))
+                        .stopAndAdd(new PathingActions.maintainIntake(intake))
 
-                        .stopAndAdd(new runFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
 
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge))
 
-                        .stopAndAdd(new stopFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.maintainFlywheels(flywheels))
 
                         .turn(Math.toRadians(135))
 
-                        .stopAndAdd(new runIntake(hardwareMap))
+                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
 
                         .splineTo(new Vector2d(50, 6), Math.toRadians(0))
 
-                        .stopAndAdd(new runFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
 
                         .setTangent(180)
                         .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
 
-                        .stopAndAdd(new maintainIntake(hardwareMap))
+                        .stopAndAdd(new PathingActions.maintainIntake(intake))
 
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge))
 
-                        .stopAndAdd(new stopFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
 
-                        .stopAndAdd(new stopIntake(hardwareMap))
+                        .stopAndAdd(new PathingActions.stopIntake(intake))
 
                         .strafeTo(new Vector2d(15, -40))
 
                         .build());
     }
 
-    public class runIntake implements Action {
-        public runIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-
-            intakeHinge.intakeHingeStandby();
-
-            sleep(250);
-
-            intake.setMotorPower(-0.8);
-
-            return false;
-        }
-    }
-
-    public class maintainIntake implements Action {
-        public maintainIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-
-            intake.setMotorPower(-0.4);
-
-            return false;
-        }
-    }
-
-    public class stopIntake implements Action {
-        public stopIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-
-            intake.setMotorPower(0);
-
-            return false;
-        }
-    }
-
-    public class runFlywheels implements Action {
-        public runFlywheels(HardwareMap hMap) {
-        }
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            outtake.setFlywheelVelocity(2350);
-
-            for (int t = 0; t < 6 && outtake.getCurrentWheelVelocity("right") < 2200; t++) {
-                sleep(500);
-            }
-
-            return false;
-        }
-    }
-
-    public class stopFlywheels implements Action {
-        public stopFlywheels(HardwareMap hMap) {
-        }
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            outtake.setFlywheelVelocity(0);
-
-            return false;
-        }
-    }
-
-    public class scoreBallSequence implements Action {
-        public scoreBallSequence(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            outtakeHinge.outtakeHingeFire();
-            intakeHinge.intakeHingeStandby();
-
-            sleep(500);
-
-            outtakeHinge.outtakeHingeRelax();
-
-            sleep(500);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(250);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(250);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(500);
-
-            return false;
-        }
-    }
+//    public class runIntake implements Action {
+//        public runIntake(HardwareMap hMap) {}
+//        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+//
+//            intakeHinge.intakeHingeStandby();
+//
+//            sleep(250);
+//
+//            intake.setMotorPower(-0.8);
+//
+//            return false;
+//        }
+//    }
+//
+//    public class maintainIntake implements Action {
+//        public maintainIntake(HardwareMap hMap) {}
+//        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+//
+//            intake.setMotorPower(-0.4);
+//
+//            return false;
+//        }
+//    }
+//
+//    public class stopIntake implements Action {
+//        public stopIntake(HardwareMap hMap) {}
+//        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
+//
+//            intake.setMotorPower(0);
+//
+//            return false;
+//        }
+//    }
+//
+//    public class runFlywheels implements Action {
+//        public runFlywheels(HardwareMap hMap) {
+//        }
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//
+//            outtake.setFlywheelVelocity(2350);
+//
+//            for (int t = 0; t < 6 && outtake.getCurrentWheelVelocity("right") < 2200; t++) {
+//                sleep(500);
+//            }
+//
+//            return false;
+//        }
+//    }
+//
+//    public class stopFlywheels implements Action {
+//        public stopFlywheels(HardwareMap hMap) {
+//        }
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//
+//            outtake.setFlywheelVelocity(0);
+//
+//            return false;
+//        }
+//    }
+//
+//    public class maintainFlywheels implements Action {
+//        public maintainFlywheels(HardwareMap hMap) {
+//        }
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//
+//            outtake.setFlywheelVelocity(2350);
+//
+//            for (int t = 0; t < 6 && outtake.getCurrentWheelVelocity("right") < 2200; t++) {
+//                sleep(500);
+//            }
+//
+//            return false;
+//        }
+//    }
+//
+//    public class scoreBallSequence implements Action {
+//        public scoreBallSequence(HardwareMap hMap) {}
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//
+//            outtakeHinge.outtakeHingeFire();
+//            intakeHinge.intakeHingeStandby();
+//
+//            sleep(500);
+//
+//            outtakeHinge.outtakeHingeRelax();
+//
+//            sleep(500);
+//
+//            intakeHinge.intakeHingeLift();
+//
+//            sleep(250);
+//
+//            intakeHinge.intakeHingeLift();
+//
+//            sleep(250);
+//
+//            intakeHinge.intakeHingeLift();
+//
+//            sleep(500);
+//
+//            return false;
+//        }
+//    }
 
 }  // end class
