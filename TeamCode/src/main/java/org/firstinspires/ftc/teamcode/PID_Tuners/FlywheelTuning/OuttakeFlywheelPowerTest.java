@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.PID_Tuners.FlywheelTuning;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,7 +13,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 // The goal of this file is, strangely enough, determine the feedforward K-value
 // Calculate the K_v slope, and set K_f = 1/K_v
-
+@Disabled
 @TeleOp (name="Outtake Flywheel Power Test", group="test")
 public class OuttakeFlywheelPowerTest extends LinearOpMode {
 

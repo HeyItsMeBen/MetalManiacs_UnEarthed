@@ -5,6 +5,7 @@ import static java.lang.Thread.sleep;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 // Changes made here: Attempted to optimize the code to make it easier to read / follow. Cloned 11/15
-
+@Disabled
 @TeleOp(name = "Ben's Custom DriveCode", group = "Robot")
 public class Ben_Custom_DriveCode extends OpMode {
 
