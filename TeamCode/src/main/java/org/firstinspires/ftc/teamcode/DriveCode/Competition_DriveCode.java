@@ -52,7 +52,7 @@ public class Competition_DriveCode extends OpMode {
     //set up variables
     private int intakePower = 0;
     private boolean flyWheelOn = false;
-    private double outtakeSpeed = 3000;
+    private float outtakeSpeed = 2350;
 
     boolean opModeIsActive = true;
 
@@ -262,17 +262,17 @@ public class Competition_DriveCode extends OpMode {
         double operatorRightTrigger = operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
 
         if (operatorLeftTrigger > 0.1) {
-            outtakeSpeed += operatorLeftTrigger * 500;
+            outtakeSpeed += 250;
         }
         if (operatorRightTrigger > 0.1) {
-            outtakeSpeed -= operatorRightTrigger * 500;
+            outtakeSpeed -= 250;
         }
 
         if (outtakeSpeed > 3000) {
             outtakeSpeed = 3000;
         }
-        if (outtakeSpeed < 500) {
-            outtakeSpeed = 500;
+        if (outtakeSpeed < 2300) {
+            outtakeSpeed = 2300;
         }
 
         telemetry.addData("Outtake Speed", outtakeSpeed);
@@ -308,7 +308,7 @@ public class Competition_DriveCode extends OpMode {
             outtakeHinge.outtakeHingeRelax();
 
             if (flyWheelOn) {
-                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < 2200 && outtake.getCurrentWheelVelocity("right") < 2200; t++) {
+                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < (outtakeSpeed - 150) && outtake.getCurrentWheelVelocity("right") < (outtakeSpeed - 150); t++) {
                     telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
                     telemetry.update();
                     try {
@@ -342,7 +342,7 @@ public class Competition_DriveCode extends OpMode {
                 outtake.setFlywheelVelocity(0);      //turns off the flywheels
                 flyWheelOn = false;
             } else {
-                outtake.runOptimalFlywheelVelocity();      //turns on the flywheels
+                outtake.setFlywheelVelocity(outtakeSpeed);      //turns on the flywheels
                 flyWheelOn = true;
             }
         }
