@@ -45,7 +45,9 @@ public class AutoPathingPeripheryBlue extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
 
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+                        .waitSeconds(5)
+
+                        .strafeToLinearHeading(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(315))
 
                         .stopAndAdd(new maintainIntake(hardwareMap))
 
@@ -58,7 +60,7 @@ public class AutoPathingPeripheryBlue extends LinearOpMode {
                         .stopAndAdd(new stopFlywheels(hardwareMap))
                         .stopAndAdd(new stopIntake(hardwareMap))
 
-                        .strafeTo(new Vector2d(-15, -40))
+                        .strafeTo(new Vector2d(-25, -30))
 
                         .build());
     }

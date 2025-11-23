@@ -37,7 +37,7 @@ public class Auto_Path_Simulation_Direct {
                             .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                             .setReversed(false)
-                            .lineToSplineHeading(new Pose2d(25, -20, Math.toRadians(0)))
+                            .lineToSplineHeading(new Pose2d(25, 20, Math.toRadians(0)))
 
                         .build());
 

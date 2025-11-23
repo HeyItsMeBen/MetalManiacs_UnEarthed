@@ -63,7 +63,7 @@ public class AutoPathingPeripheryRed extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(25, 20), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(25, -30), Math.toRadians(0))
 
                         .build());
     }
