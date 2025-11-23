@@ -258,20 +258,17 @@ public class Competition_DriveCode extends OpMode {
         }
         intake.setMotorPower(intakePower);
 
-        double operatorLeftTrigger = operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
-        double operatorRightTrigger = operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
-
-        if (operatorLeftTrigger > 0.1) {
+        if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
             outtakeSpeed += 250;
-        }
-        if (operatorRightTrigger > 0.1) {
+        } else if (operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
             outtakeSpeed -= 250;
+        } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
+            outtakeSpeed = 2350;
         }
 
         if (outtakeSpeed > 3000) {
             outtakeSpeed = 3000;
-        }
-        if (outtakeSpeed < 2300) {
+        } else if (outtakeSpeed < 2300) {
             outtakeSpeed = 2300;
         }
 
