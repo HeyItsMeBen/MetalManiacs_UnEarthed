@@ -46,7 +46,7 @@ public class AutoPathingDirectBlue extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .waitSeconds(5)
+                        .waitSeconds(9)
 
                         .setReversed(true)
 
@@ -68,7 +68,7 @@ public class AutoPathingDirectBlue extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(-25, 30),Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-25, -30),Math.toRadians(180))
 
                         .stopAndAdd(new PathingActions.stopIntake(intake))
 
