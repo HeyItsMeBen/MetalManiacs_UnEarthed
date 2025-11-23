@@ -30,14 +30,49 @@ public class Auto_Path_Simulation_Direct {
                 .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, 3*Math.PI/2))
 
-                            .setReversed(true)
+                        .setReversed(true)
 
-                             .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                        .splineTo(new Vector2d(-20, -30), Math.toRadians(90))
+                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(130))
 
-                            .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+                        /*.stopAndAdd(new PathingActions.maintainIntake(intake))
 
-                            .setReversed(false)
-                            .lineToSplineHeading(new Pose2d(25, 20, Math.toRadians(0)))
+                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
+
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+
+                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))*/
+
+                        .setReversed(false)
+
+                        .splineTo(new Vector2d(firing_position_x, 6), Math.toRadians(180))
+
+                        //.stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
+
+                        .strafeTo(new Vector2d(-63, 5))
+
+                        .setTangent(270)
+                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(315)), Math.toRadians(225))
+
+                        /*.stopAndAdd(new PathingActions.maintainIntake(intake))
+
+                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
+
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+
+                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
+
+                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
+
+                        .stopAndAdd(new PathingActions.stopIntake(intake))*/
+
+                        .setReversed(false)
+
+                        .splineTo(new Vector2d(-25, -30),Math.toRadians(180))
 
                         .build());
 

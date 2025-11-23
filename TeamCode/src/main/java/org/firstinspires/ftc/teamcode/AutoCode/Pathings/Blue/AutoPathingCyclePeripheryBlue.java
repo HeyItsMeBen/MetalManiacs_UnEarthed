@@ -63,7 +63,7 @@ public class AutoPathingCyclePeripheryBlue extends LinearOpMode {
 
                         .waitSeconds(1)
 
-                        .setTangent(180)
+                        .setTangent(270)
                         .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(315)), Math.toRadians(225))
 
                         .stopAndAdd(new PathingActions.maintainIntake(intake))
