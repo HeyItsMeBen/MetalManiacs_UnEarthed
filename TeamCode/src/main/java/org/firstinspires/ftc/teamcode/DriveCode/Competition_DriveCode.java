@@ -308,11 +308,11 @@ public class Competition_DriveCode extends OpMode {
             outtakeHinge.outtakeHingeRelax();
 
             if (flyWheelOn) {
-                while (outtake.getCurrentWheelVelocity("left") < 2300 && outtake.getCurrentWheelVelocity("right") < 2300) {
+                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < 2200 && outtake.getCurrentWheelVelocity("right") < 2200; t++) {
                     telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
                     telemetry.update();
                     try {
-                        sleep(500);
+                        sleep(250);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

@@ -39,7 +39,7 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.setMotorPower(-0.4);
+            intake.setMotorPower(-0.5);
             return false;
         }
     }

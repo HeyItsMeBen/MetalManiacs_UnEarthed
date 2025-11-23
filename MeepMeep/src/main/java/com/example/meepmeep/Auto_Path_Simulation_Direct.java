@@ -30,21 +30,14 @@ public class Auto_Path_Simulation_Direct {
                 .setConstraints(70, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, 3*Math.PI/2))
 
-                        // Getting into position
-
                             .setReversed(true)
 
-                        // Travel to scoring
-
-                            //.splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(45)))
-                            .splineTo(new Vector2d(37, 37), Math.toRadians(45))
+                             .splineTo(new Vector2d(37, 37), Math.toRadians(45))
 
                             .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
-                        // Park outside scoring zone
-
                             .setReversed(false)
-                            .lineToSplineHeading(new Pose2d(15, -40, Math.toRadians(0)))
+                            .lineToSplineHeading(new Pose2d(25, -20, Math.toRadians(0)))
 
                         .build());
 
