@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Systems.Transfer;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
-@Autonomous(name = "(Red, Long) Competition Pathing: Auto Periphery", group = "Auto Pathing")
+@Autonomous(name = "(To Red Goal, Long Run, Start at Goal) Competition Pathing: Auto Periphery", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingCyclePeripheryRed extends LinearOpMode {
 
@@ -34,7 +34,7 @@ public class AutoPathingCyclePeripheryRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(54, 54, Math.toRadians(220));
+        Pose2d beginPose = new Pose2d(52, 52, Math.toRadians(220));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
@@ -62,7 +62,7 @@ public class AutoPathingCyclePeripheryRed extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(firing_position_x, 6), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(firing_position_x, 4), Math.toRadians(0))
 
                         .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
 

@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "(Blue, Short) Competition Pathing: Auto Direct", group = "Auto Pathing")
+@Autonomous(name = "(To Blue Goal, Short Run (5 second delay), Start at Wall) Competition Pathing: Auto Direct", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingDirectBlue extends LinearOpMode {
 
@@ -50,7 +50,7 @@ public class AutoPathingDirectBlue extends LinearOpMode {
 
                         .setReversed(true)
 
-                        .splineTo(new Vector2d(20, -30), Math.toRadians(90))
+                        .splineTo(new Vector2d(-20, -30), Math.toRadians(90))
                         .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(130))
 
                         .stopAndAdd(new PathingActions.maintainIntake(intake))
@@ -66,7 +66,7 @@ public class AutoPathingDirectBlue extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(25, -40),Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(-25, 30),Math.toRadians(180))
 
                         .build());
     }

@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
 
-@Autonomous(name = "(Red, Long) Competition Pathing: Auto Direct", group = "Auto Pathing")
+@Autonomous(name = "(To Red Goal, Long Run, Start at Wall) Competition Pathing: Auto Direct", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingCycleDirectRed extends LinearOpMode {
 
@@ -67,11 +67,11 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(firing_position_x, 8), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(firing_position_x, 6), Math.toRadians(0))
 
                         .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
 
-                        .strafeTo(new Vector2d(63, 8))
+                        .strafeTo(new Vector2d(63, 5))
 
                         .setTangent(180)
                         .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
@@ -90,7 +90,7 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(25, -20),Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(25, -30),Math.toRadians(0))
 
                         .build());
     }
