@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 public class Auto_Path_Simulation_Cycle {
     public static void main(String[] args) {
 
-        double firing_position_x = 15;
+        double firing_position_x = -15;
         double firing_position_y = 15;
 
         MeepMeep meepMeep = new MeepMeep(800);
@@ -26,15 +26,11 @@ public class Auto_Path_Simulation_Cycle {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(50, 50, Math.toRadians(220)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-15, -60, Math.toRadians(270)))
 
-
-
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
 
                         .setReversed(true)
 
-                        .splineTo(new Vector2d(-20, -30), Math.toRadians(90))
                         .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(130))
 
 
