@@ -1,42 +1,33 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.Red;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.Blue;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
-
-import org.firstinspires.ftc.teamcode.Systems.Transfer;
-
-import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
+import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Systems.Flywheels;
+import org.firstinspires.ftc.teamcode.Systems.Intake;
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "(Red, Long) Competition Pathing: Auto Direct", group = "Auto Pathing")
+@Autonomous(name = "(Blue, Short) Competition Pathing: Auto Direct", group = "Auto Pathing")
 //@Disabled
-public class AutoPathingCycleDirectRed extends LinearOpMode {
+public class AutoPathingCycleDirectBlue extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
-    double firing_position_x = 18;
+    double firing_position_x = -18;
     double firing_position_y = 18;
 
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(15, -60, Math.toRadians(270));
+        Pose2d beginPose = new Pose2d(-15, -60, Math.toRadians(270));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
@@ -51,8 +42,8 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
                         .setReversed(true)
 
-                        .splineTo(new Vector2d(20, -30), Math.toRadians(90))
-                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(40))
+                        .splineTo(new Vector2d(-20, -30), Math.toRadians(90))
+                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(130))
 
                         .stopAndAdd(new PathingActions.maintainIntake(intake))
 
@@ -61,20 +52,19 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
                         .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
                         .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
                         .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
 
                         .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(firing_position_x, 8), Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(firing_position_x, 8), Math.toRadians(180))
 
                         .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
 
-                        .strafeTo(new Vector2d(63, 8))
+                        .strafeTo(new Vector2d(-63, 8))
 
                         .setTangent(180)
-                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
+                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(315)), Math.toRadians(225))
 
                         .stopAndAdd(new PathingActions.maintainIntake(intake))
 
@@ -90,7 +80,7 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(25, -20),Math.toRadians(0))
+                        .strafeToLinearHeading(new Vector2d(-25, -20),Math.toRadians(180))
 
                         .build());
     }

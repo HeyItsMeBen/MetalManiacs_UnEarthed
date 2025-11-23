@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode.PID_Tuners.FlywheelTuning;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 // The "interpreter," in a sense, of the flywheel PID. It will graph the target values and allow you
 // to tune your PID values to match
-
+@Disabled
 @Config
 @TeleOp(name = "Flywheel Velocity PID Tuner", group = "Tuning")
 public class FlywheelPIDTuner extends LinearOpMode {

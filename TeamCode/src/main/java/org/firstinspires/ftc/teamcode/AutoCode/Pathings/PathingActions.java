@@ -25,7 +25,7 @@ public class PathingActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             intakeHinge.intakeHingeStandby();
             try { Thread.sleep(250); } catch (InterruptedException e) {}
-            intake.setMotorPower(-0.8);
+            intake.setMotorPower(-1);
             return false;
         }
     }
@@ -68,9 +68,6 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             flywheels.setFlywheelVelocity(2350);
-            for (int t = 0; t < 6 && flywheels.getCurrentWheelVelocity("right") < 2200; t++) {
-                try { Thread.sleep(500); } catch (InterruptedException e) {}
-            }
             return false;
         }
     }
@@ -84,7 +81,7 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelVelocity(800);
+            flywheels.setFlywheelVelocity(800  );
             return false;
         }
     }
@@ -107,26 +104,31 @@ public class PathingActions {
         private final Transfer intakeHinge;
         private final Transfer outtakeHinge;
 
-        public scoreBallSequence(Transfer intakeHinge, Transfer outtakeHinge) {
+        private final Flywheels flywheels;
+
+        public scoreBallSequence(Transfer intakeHinge, Transfer outtakeHinge, Flywheels flywheels) {
             this.intakeHinge = intakeHinge;
             this.outtakeHinge = outtakeHinge;
+            this.flywheels = flywheels;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            for (int t = 0; t < 12 && flywheels.getCurrentWheelVelocity("left") < 2200 && flywheels.getCurrentWheelVelocity("right") < 2200; t++) {
+                try { Thread.sleep(250); } catch (InterruptedException e) { }
+            }
+
             outtakeHinge.outtakeHingeFire();
+
             intakeHinge.intakeHingeStandby();
 
             try { Thread.sleep(500); } catch (InterruptedException e) {}
+
             outtakeHinge.outtakeHingeRelax();
 
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
-            intakeHinge.intakeHingeLift();
-
             try { Thread.sleep(250); } catch (InterruptedException e) {}
-            intakeHinge.intakeHingeLift();
 
-            try { Thread.sleep(250); } catch (InterruptedException e) {}
             intakeHinge.intakeHingeLift();
 
             try { Thread.sleep(500); } catch (InterruptedException e) {}

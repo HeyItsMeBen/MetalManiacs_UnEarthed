@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 import java.util.List;
-
+@Disabled
 @Autonomous(name = "Competition Pathing: Auto Motif Red", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingMotifRed extends LinearOpMode {

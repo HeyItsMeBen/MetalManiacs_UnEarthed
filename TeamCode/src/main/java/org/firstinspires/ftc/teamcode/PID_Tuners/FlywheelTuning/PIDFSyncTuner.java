@@ -1,10 +1,17 @@
 package org.firstinspires.ftc.teamcode.PID_Tuners.FlywheelTuning;
 
+import static java.lang.Thread.sleep;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.Systems.Transfer;
+
+@Disabled
 @TeleOp(name = "Flywheel PIDF Sync Tuner", group = "Tuning")
 public class PIDFSyncTuner extends LinearOpMode {
 
@@ -13,10 +20,14 @@ public class PIDFSyncTuner extends LinearOpMode {
     private PIDFSync flywheel;
     private FtcDashboard dashboard;
 
+    private Transfer hinge;
+
     @Override
     public void runOpMode() {
         flywheel = new PIDFSync(hardwareMap);
         dashboard = FtcDashboard.getInstance();
+
+        hinge = new Transfer(hardwareMap);
 
         waitForStart();
 
@@ -41,6 +52,17 @@ public class PIDFSyncTuner extends LinearOpMode {
             packet.put("Kf * targetVelocity", PIDFSync.Kf * flywheel.getTargetVelocity());
             packet.put("K_sync", PIDFSync.K_sync);
             dashboard.sendTelemetryPacket(packet);
+
+            if (gamepad2.right_bumper) {
+                hinge.outtakeHingeFire();
+
+            }
+
+            if (gamepad2.left_bumper) {
+                hinge.outtakeHingeRelax();
+
+            }
+
 
             // Driver Station telemetry
             telemetry.addData("Target Velocity", flywheel.getTargetVelocity());

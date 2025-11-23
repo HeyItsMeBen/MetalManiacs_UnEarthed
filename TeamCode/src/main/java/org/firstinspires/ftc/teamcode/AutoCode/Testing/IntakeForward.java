@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
 import java.util.List;
-
+@Disabled
 @Autonomous(name = "IntakeForward", group = "Auto Pathing")
 //@Disabled
 public class IntakeForward extends LinearOpMode {

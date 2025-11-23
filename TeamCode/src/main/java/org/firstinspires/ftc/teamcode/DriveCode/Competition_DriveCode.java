@@ -5,11 +5,11 @@ import static java.lang.Thread.sleep;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -28,10 +28,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-// Changes made here: Attempted to optimize the code to make it easier to read / follow. Cloned 11/15
-@Disabled
-@TeleOp(name = "Ben's Custom DriveCode", group = "Robot")
-public class Ben_Custom_DriveCode extends OpMode {
+@TeleOp(name = "Competition DriveCode", group = "Robot")
+public class Competition_DriveCode extends OpMode {
 
     // Driver Code
     public GamepadEx driver;
@@ -73,6 +71,7 @@ public class Ben_Custom_DriveCode extends OpMode {
     private double speedMultiplier = 1;
     public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
 
+
     //autoAim stuff
     final double SPEED_GAIN  =  0.1  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     final double STRAFE_GAIN =  0.1 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
@@ -92,7 +91,7 @@ public class Ben_Custom_DriveCode extends OpMode {
     double  drive           = 0;        // Desired forward power/speed (-1 to +1)
     double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-    final double DESIRED_DISTANCE = 36; //  this is how close the camera should get to the target (inches)
+    final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
     @Override
     public void init() {
@@ -169,10 +168,10 @@ public class Ben_Custom_DriveCode extends OpMode {
 
 
         // Speed multiplier adjustable via right and left triggers
-        // Can be reset by pressing B
+        // Can be reset by pressing Y
         speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.2;
         speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) * 0.2;
-        if (driver.getButton(GamepadKeys.Button.B)) {
+        if (driver.getButton(GamepadKeys.Button.X)) {
             speedMultiplier = 0.5;
         }
         // Max speed is 1
@@ -264,13 +263,15 @@ public class Ben_Custom_DriveCode extends OpMode {
 
         if (operatorLeftTrigger > 0.1) {
             outtakeSpeed += operatorLeftTrigger * 500;
-        } else if (operatorRightTrigger > 0.1) {
+        }
+        if (operatorRightTrigger > 0.1) {
             outtakeSpeed -= operatorRightTrigger * 500;
         }
 
         if (outtakeSpeed > 3000) {
             outtakeSpeed = 3000;
-        } else if (outtakeSpeed < 500) {
+        }
+        if (outtakeSpeed < 500) {
             outtakeSpeed = 500;
         }
 
@@ -278,6 +279,8 @@ public class Ben_Custom_DriveCode extends OpMode {
 
         //cycles the ball into positions for launch
         if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+
+            intake.setMotorPower(-1);
 
             outtakeHinge.outtakeHingeRelax();
 
@@ -302,19 +305,17 @@ public class Ben_Custom_DriveCode extends OpMode {
         //Launches the ball
         if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
-            intakeHinge.intakeHingeStandby();
-
             outtakeHinge.outtakeHingeRelax();
 
-            outtake.setFlywheelVelocity(2350);      //turns on the flywheels
-
-            while (outtake.getCurrentWheelVelocity("left") < 2300 && outtake.getCurrentWheelVelocity("right") < 2300) {
-                telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
-                telemetry.update();
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+            if (flyWheelOn) {
+                while (outtake.getCurrentWheelVelocity("left") < 2300 && outtake.getCurrentWheelVelocity("right") < 2300) {
+                    telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
+                    telemetry.update();
+                    try {
+                        sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
@@ -326,18 +327,35 @@ public class Ben_Custom_DriveCode extends OpMode {
                 throw new RuntimeException(e);
             }
 
-            outtake.setFlywheelVelocity(0);     //turns off the flywheels. We don't need it running because we just launched the ball
-
             outtakeHinge.outtakeHingeRelax();
         }
-        if (operator.isDown(GamepadKeys.Button.A)) {
+
+        if (operator.wasJustPressed((GamepadKeys.Button.DPAD_UP))) {
+            intakeHinge.changeHingePosition("intake", 0.05);
+        } else if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            intakeHinge.changeHingePosition("intake", -0.05);
+        }
+
+        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
+            outtakeHinge.outtakeHingeRelax();
+            if (flyWheelOn) {
+                outtake.setFlywheelVelocity(0);      //turns off the flywheels
+                flyWheelOn = false;
+            } else {
+                outtake.setFlywheelVelocity(2350);      //turns on the flywheels
+                flyWheelOn = true;
+            }
+        }
+
+        //Auto-aims
+        if (driver.isDown(GamepadKeys.Button.B)) {
             scanForTags();
             if (targetFound) {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;   //set this to 0 if you want it to approach the goal from any angle. Just keep in mind that it won't be as accurate if you shoot towards the goal at an angle (rather than head-on).
-                runPIDStuff(rangeError, headingError, yawError);
+                double  headingError    = -desiredTag.ftcPose.bearing;
+                double  yawError        = desiredTag.ftcPose.yaw;
+                runPIDStuff(rangeError, headingError, yawError);    //calculates and sends power to the wheels
             }
         }
 
@@ -411,9 +429,8 @@ public class Ben_Custom_DriveCode extends OpMode {
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
     }
-
     //auto-aim methods
-    public void scanForTags(){
+    public void scanForTags(){  //Checks if april tags are on screen, and if so, it sets the desiredTag object to that tag
         targetFound = false;
         desiredTag  = null;
 
@@ -449,7 +466,7 @@ public class Ben_Custom_DriveCode extends OpMode {
             telemetry.addData("\n>","Drive using joysticks to find valid target\n");
         }
     }
-    public void runPIDStuff(double rangeError, double headingError, double yawError){
+    public void runPIDStuff(double rangeError, double headingError, double yawError){   //Calculate the power needed for driving/strafing/turning
 
         // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
         if (targetFound) {
@@ -465,7 +482,7 @@ public class Ben_Custom_DriveCode extends OpMode {
         // Apply desired axes motions to the drivetrain.
         moveRobot(drive, strafe, turn);
     }
-    public void moveRobot(double x, double y, double yaw) {
+    public void moveRobot(double x, double y, double yaw) { //calculates and sends the power needed for each motor
         // Calculate wheel powers.
         double frontLeftPower    =  x - y - yaw;
         double frontRightPower   =  x + y + yaw;
@@ -490,7 +507,7 @@ public class Ben_Custom_DriveCode extends OpMode {
         backLeftDrive.setPower(backLeftPower);
         backRightDrive.setPower(backRightPower);
     }
-    private void initAprilTag() {
+    private void initAprilTag() {   //Sets up the april tag and camera stuff. Gets it ready for use.
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
 
@@ -516,7 +533,7 @@ public class Ben_Custom_DriveCode extends OpMode {
                     .build();
         }
     }
-    private void setManualExposure(int exposureMS, int gain) {
+    private void setManualExposure(int exposureMS, int gain) {   //not exactly sure what this does. It sets up the camera's setting or something
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {
@@ -528,7 +545,7 @@ public class Ben_Custom_DriveCode extends OpMode {
             telemetry.addData("Camera", "Waiting");
             telemetry.update();
             while (opModeIsActive && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep1(20);
+                //sleep1(20);
             }
             telemetry.addData("Camera", "Ready");
             telemetry.update();
@@ -540,17 +557,13 @@ public class Ben_Custom_DriveCode extends OpMode {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep1(50);
+                //sleep1(50);
             }
             exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            sleep1(20);
+            //sleep1(20);
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
             gainControl.setGain(gain);
-            sleep1(20);
+            //sleep1(20);
         }
-    }
-    public void sleep1(double milliseconds){
-        ElapsedTime sleepTimer = new ElapsedTime();
-        while (sleepTimer.seconds()<milliseconds){}
     }
 }

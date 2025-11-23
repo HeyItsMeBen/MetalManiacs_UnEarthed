@@ -8,11 +8,11 @@ public class Flywheels {
 
     private DcMotorEx leftFlyWheel = null;
     private DcMotorEx rightFlyWheel = null;
-    final double tickPerRevolution=28;
+    final double tickPerRevolution = 28;
 
 
-    public boolean done=true;
-    public boolean isOpModeActive=true;
+    public boolean done = true;
+    public boolean isOpModeActive = true;
 
     //Outtake subsystem
     public Flywheels(HardwareMap hMap) {
@@ -45,6 +45,7 @@ public class Flywheels {
         leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
         rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
     }
+
     public double getCurrentWheelVelocity(String motor){
         if (motor.contains("left") || motor.contains("Left")) {
             return leftFlyWheel.getVelocity()*60/tickPerRevolution;

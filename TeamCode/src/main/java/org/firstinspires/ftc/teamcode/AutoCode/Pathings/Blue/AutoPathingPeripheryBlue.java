@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "Competition Pathing: Auto Periphery Blue", group = "Auto Pathing")
+@Autonomous(name = "(Blue, Short) Competition Pathing: Auto Periphery", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingPeripheryBlue extends LinearOpMode {
 

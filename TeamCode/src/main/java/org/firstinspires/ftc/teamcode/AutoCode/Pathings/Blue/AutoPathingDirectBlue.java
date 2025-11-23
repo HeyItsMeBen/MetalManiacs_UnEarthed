@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
 
-@Autonomous(name = "Competition Pathing: Auto Direct Blue", group = "Auto Pathing")
+@Autonomous(name = "(Blue, Short) Competition Pathing: Auto Direct", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingDirectBlue extends LinearOpMode {
 

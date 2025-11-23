@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
 import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 
 import org.firstinspires.ftc.teamcode.Systems.Transfer;
@@ -18,157 +19,75 @@ import org.firstinspires.ftc.teamcode.Systems.Transfer;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Flywheels;
 
-@Autonomous(name = "Competition Pathing: Auto Cycle Periphery Red", group = "Auto Pathing")
+@Autonomous(name = "(Red, Long) Competition Pathing: Auto Periphery", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingCyclePeripheryRed extends LinearOpMode {
 
     Intake intake;
-    Flywheels outtake;
+    Flywheels flywheels;
     Transfer intakeHinge;
     Transfer outtakeHinge;
 
-    double firing_position_x = 15;
-    double firing_position_y = 15;
+    double firing_position_x = 18;
+    double firing_position_y = 18;
 
     @Override
     public void runOpMode() {
 
-        Pose2d beginPose = new Pose2d(50, 50, Math.toRadians(205));
+        Pose2d beginPose = new Pose2d(54, 54, Math.toRadians(220));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         intake = new Intake(hardwareMap);
-        outtake = new Flywheels(hardwareMap);
+        flywheels = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
 
-        // Wait for the DS start button to be touched.
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch START to start OpMode");
-        telemetry.update();
         waitForStart();
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
 
-                        .strafeTo(new Vector2d(firing_position_x, firing_position_y))
+                        .strafeToLinearHeading(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225))
 
-                        .stopAndAdd(new runFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.maintainIntake(intake))
 
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
 
-                        .stopAndAdd(new stopFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
 
-                        // Grab First Set
+                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
 
-                        .turn(Math.toRadians(100))
+                        .setReversed(false)
 
-                        .stopAndAdd(new runIntake(hardwareMap))
+                        .strafeToLinearHeading(new Vector2d(firing_position_x, 6), Math.toRadians(0))
 
-                        .splineTo(new Vector2d(46, 13), 0)
+                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
 
-                        // Grab First Set
+                        .strafeTo(new Vector2d(62, 3))
 
-                        .setReversed(true)
-                        .stopAndAdd(new maintainIntake(hardwareMap))
-                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(225))
+                        .setTangent(180)
+                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
 
-                        .stopAndAdd(new runFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.maintainIntake(intake))
 
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
-                        .stopAndAdd(new scoreBallSequence(hardwareMap))
+                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
 
-                        .stopAndAdd(new stopIntake(hardwareMap))
-                        .stopAndAdd(new stopFlywheels(hardwareMap))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
 
-                        .strafeTo(new Vector2d(15, -40))
+                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
+
+                        .stopAndAdd(new PathingActions.stopIntake(intake))
+
+                        .setReversed(false)
+
+                        .strafeToLinearHeading(new Vector2d(25, -30),Math.toRadians(0))
 
                         .build());
-    }
-
-
-
-    public class runIntake implements Action {
-        public runIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-
-            intakeHinge.intakeHingeStandby();
-
-            sleep(250);
-
-            intake.setMotorPower(-0.8);
-
-            return false;
-        }
-    }
-
-    public class maintainIntake implements Action {
-        public maintainIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-
-            intake.setMotorPower(-0.4);
-
-            return false;
-        }
-    }
-
-    public class stopIntake implements Action {
-        public stopIntake(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemtryPacket)  {
-
-            intake.setMotorPower(0);
-
-            return false;
-        }
-    }
-
-    public class runFlywheels implements Action {
-        public runFlywheels(HardwareMap hMap) {
-        }
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            outtake.setFlywheelVelocity(2350);
-
-            while (outtake.getCurrentWheelVelocity("left") < 2300) {
-                sleep(500);
-            }
-
-            return false;
-        }
-    }
-
-    public class stopFlywheels implements Action {
-        public stopFlywheels(HardwareMap hMap) {
-        }
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            outtake.setFlywheelVelocity(0);
-
-            return false;
-        }
-    }
-
-    public class scoreBallSequence implements Action {
-        public scoreBallSequence(HardwareMap hMap) {}
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-            outtakeHinge.outtakeHingeFire();
-            intakeHinge.intakeHingeStandby();
-
-            sleep(500);
-
-            outtakeHinge.outtakeHingeRelax();
-
-            sleep(500);
-
-            intakeHinge.intakeHingeLift();
-
-            sleep(500);
-
-            return false;
-        }
     }
 
 }  // end class
