@@ -74,6 +74,8 @@ public class AutoPathingCycleDirectBlue extends LinearOpMode {
                         .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
                         .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
 
+                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
+
                         .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
 
                         .stopAndAdd(new PathingActions.stopIntake(intake))

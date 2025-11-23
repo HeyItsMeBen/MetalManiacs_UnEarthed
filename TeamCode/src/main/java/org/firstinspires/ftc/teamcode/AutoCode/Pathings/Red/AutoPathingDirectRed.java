@@ -62,11 +62,15 @@ public class AutoPathingDirectRed extends LinearOpMode {
                         .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
                         .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
 
+                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
+
                         .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
 
                         .setReversed(false)
 
                         .strafeToLinearHeading(new Vector2d(25, 30),Math.toRadians(0))
+
+                        .stopAndAdd(new PathingActions.stopIntake(intake))
 
                         .build());
     }
