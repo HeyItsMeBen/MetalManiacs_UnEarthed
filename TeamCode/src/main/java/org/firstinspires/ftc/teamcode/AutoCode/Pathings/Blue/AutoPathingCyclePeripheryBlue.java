@@ -55,11 +55,13 @@ public class AutoPathingCyclePeripheryBlue extends LinearOpMode {
 
                         .setReversed(false)
 
-                        .strafeToLinearHeading(new Vector2d(firing_position_x, 4), Math.toRadians(180))
+                        .strafeToLinearHeading(new Vector2d(firing_position_x, 5), Math.toRadians(180))
 
                         .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
 
-                        .strafeTo(new Vector2d(-62, 3))
+                        .strafeTo(new Vector2d(-63, 5))
+
+                        .waitSeconds(1)
 
                         .setTangent(180)
                         .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(315)), Math.toRadians(225))

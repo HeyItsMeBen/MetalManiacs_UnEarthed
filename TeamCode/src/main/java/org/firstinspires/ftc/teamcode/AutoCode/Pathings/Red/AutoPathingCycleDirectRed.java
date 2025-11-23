@@ -73,6 +73,8 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
 
                         .strafeTo(new Vector2d(63, 5))
 
+                        .waitSeconds(0.5)
+
                         .setTangent(180)
                         .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
 
