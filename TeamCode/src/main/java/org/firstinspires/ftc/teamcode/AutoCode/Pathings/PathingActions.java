@@ -67,7 +67,7 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelVelocity(2350);
+            flywheels.runOptimalFlywheelVelocity(); //2350
             return false;
         }
     }
@@ -81,7 +81,7 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelVelocity(800  );
+            flywheels.setFlywheelVelocity(800);
             return false;
         }
     }

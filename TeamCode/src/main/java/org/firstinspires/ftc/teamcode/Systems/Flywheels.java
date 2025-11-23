@@ -10,6 +10,7 @@ public class Flywheels {
     private DcMotorEx rightFlyWheel = null;
     final double tickPerRevolution = 28;
 
+    double optimalVelocity = 2350;
 
     public boolean done = true;
     public boolean isOpModeActive = true;
@@ -62,8 +63,17 @@ public class Flywheels {
             return rightFlyWheel.getVelocity();
         }
         return 0;
-
     }
+
+    public void runOptimalFlywheelVelocity() {
+        leftFlyWheel.setVelocity(tickPerRevolution*(optimalVelocity/60));
+        rightFlyWheel.setVelocity(tickPerRevolution*(optimalVelocity/60));
+    }
+
+    public double returnOptimalFlywheelVelocity() {
+        return optimalVelocity;
+    }
+
     public void setFlywheelRawVelocity(float givenRPM) {
         leftFlyWheel.setVelocity(givenRPM);
         rightFlyWheel.setVelocity(givenRPM);

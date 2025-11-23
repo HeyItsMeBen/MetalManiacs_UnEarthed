@@ -75,7 +75,7 @@ public class Competition_DriveCode extends OpMode {
     //autoAim stuff
     final double SPEED_GAIN  =  0.1  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     final double STRAFE_GAIN =  0.1 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
-    final double TURN_GAIN   =  0.05  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    final double TURN_GAIN   =  0.07  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
     final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     final double MAX_AUTO_STRAFE= 0.5;   //  Clip the strafing speed to this max value (adjust for your robot)
@@ -330,9 +330,9 @@ public class Competition_DriveCode extends OpMode {
             outtakeHinge.outtakeHingeRelax();
         }
 
-        if (operator.wasJustPressed((GamepadKeys.Button.DPAD_UP))) {
+        if (operator.isDown((GamepadKeys.Button.DPAD_UP))) {
             intakeHinge.changeHingePosition("intake", 0.05);
-        } else if (operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+        } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
             intakeHinge.changeHingePosition("intake", -0.05);
         }
 
@@ -342,7 +342,7 @@ public class Competition_DriveCode extends OpMode {
                 outtake.setFlywheelVelocity(0);      //turns off the flywheels
                 flyWheelOn = false;
             } else {
-                outtake.setFlywheelVelocity(2350);      //turns on the flywheels
+                outtake.runOptimalFlywheelVelocity();      //turns on the flywheels
                 flyWheelOn = true;
             }
         }
@@ -354,7 +354,7 @@ public class Competition_DriveCode extends OpMode {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
                 double  headingError    = -desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;
+                double  yawError        = desiredTag.ftcPose.yaw + 1;
                 runPIDStuff(rangeError, headingError, yawError);    //calculates and sends power to the wheels
             }
         }
