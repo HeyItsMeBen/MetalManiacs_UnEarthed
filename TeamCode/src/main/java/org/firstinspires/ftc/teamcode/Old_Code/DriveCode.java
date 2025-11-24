@@ -1,34 +1,26 @@
-package org.firstinspires.ftc.teamcode.DriveCode;
+package org.firstinspires.ftc.teamcode.Old_Code;
 
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-@TeleOp(name = "Competition DriveCode", group = "Robot")
-public class Competition_DriveCode extends OpMode {
+@Disabled
+@TeleOp(name = "DriveCode without Autoaim", group = "Robot")
+public class DriveCode extends OpMode {
 
     // Driver Code
     public GamepadEx driver;
@@ -51,7 +43,7 @@ public class Competition_DriveCode extends OpMode {
     //set up variables
     private int intakePower = 0;
     private boolean flyWheelOn = false;
-    private float outtakeSpeed = 2350;
+    private double outtakeSpeed = 3000;
 
     boolean opModeIsActive = true;
 
@@ -70,33 +62,8 @@ public class Competition_DriveCode extends OpMode {
     private double speedMultiplier = 1;
     public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
 
-
-    //autoAim stuff
-    final double SPEED_GAIN  =  0.1  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN =  0.1 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
-    final double TURN_GAIN   =  0.05 ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-
-    final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE= 0.5;   //  Clip the strafing speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-
-    private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private static final int DESIRED_TAG_ID = 24;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private static final int DESIRED_TAG_ID2 = 20;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private VisionPortal visionPortal;               // Used to manage the video source.
-    private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
-    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-
-    boolean targetFound     = false;    // Set to true when an AprilTag target is detected
-    double  drive           = 0;        // Desired forward power/speed (-1 to +1)
-    double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
-    double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-    final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
-
     @Override
     public void init() {
-        // Initialize the Apriltag Detection process
-        initAprilTag();
 
         //create driver objects
         driver = new GamepadEx(gamepad1);
@@ -115,6 +82,7 @@ public class Competition_DriveCode extends OpMode {
         outtakeHinge = new Transfer(hardwareMap);
 
         //setup
+
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -131,9 +99,6 @@ public class Competition_DriveCode extends OpMode {
         // Initialize target heading to current heading
         targetHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        //April tag stuff
-        if (USE_WEBCAM)
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
     }
 
     @Override
@@ -168,10 +133,10 @@ public class Competition_DriveCode extends OpMode {
 
 
         // Speed multiplier adjustable via right and left triggers
-        // Can be reset by pressing Y
+        // Can be reset by pressing B
         speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.2;
         speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) * 0.2;
-        if (driver.getButton(GamepadKeys.Button.X)) {
+        if (driver.getButton(GamepadKeys.Button.B)) {
             speedMultiplier = 0.5;
         }
         // Max speed is 1
@@ -244,12 +209,14 @@ public class Competition_DriveCode extends OpMode {
 
         // Manual intake control
         if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
+            intakeHinge.intakeHingeStandby();
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
             } else {
                 intakePower = 1;
             }
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            intakeHinge.intakeHingeStandby();
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
             } else {
@@ -258,26 +225,27 @@ public class Competition_DriveCode extends OpMode {
         }
         intake.setMotorPower(intakePower);
 
-        if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
-            outtakeSpeed += 250;
-        } else if (operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
-            outtakeSpeed -= 250;
-        } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
-            outtakeSpeed = 2350;
+        double operatorLeftTrigger = operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
+        double operatorRightTrigger = operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
+
+        if (operatorLeftTrigger > 0.1) {
+            outtakeSpeed += operatorLeftTrigger * 500;
+        }
+        if (operatorRightTrigger > 0.1) {
+            outtakeSpeed -= operatorRightTrigger * 500;
         }
 
         if (outtakeSpeed > 3000) {
             outtakeSpeed = 3000;
-        } else if (outtakeSpeed < 2300) {
-            outtakeSpeed = 2300;
+        }
+        if (outtakeSpeed < 500) {
+            outtakeSpeed = 500;
         }
 
         telemetry.addData("Outtake Speed", outtakeSpeed);
 
         //cycles the ball into positions for launch
         if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-
-            intake.setMotorPower(-1);
 
             outtakeHinge.outtakeHingeRelax();
 
@@ -302,17 +270,19 @@ public class Competition_DriveCode extends OpMode {
         //Launches the ball
         if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
 
+            intakeHinge.intakeHingeStandby();
+
             outtakeHinge.outtakeHingeRelax();
 
-            if (flyWheelOn) {
-                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < (outtakeSpeed - 150) && outtake.getCurrentWheelVelocity("right") < (outtakeSpeed - 150); t++) {
-                    telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
-                    telemetry.update();
-                    try {
-                        sleep(250);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+            outtake.setFlywheelVelocity(2350);      //turns on the flywheels
+
+            while (outtake.getCurrentWheelVelocity("left") < 2300 && outtake.getCurrentWheelVelocity("right") < 2300) {
+                telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
+                telemetry.update();
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -324,36 +294,9 @@ public class Competition_DriveCode extends OpMode {
                 throw new RuntimeException(e);
             }
 
+            outtake.setFlywheelVelocity(0);     //turns off the flywheels. We don't need it running because we just launched the ball
+
             outtakeHinge.outtakeHingeRelax();
-        }
-
-        if (operator.isDown((GamepadKeys.Button.DPAD_UP))) {
-            intakeHinge.changeHingePosition("intake", 0.05);
-        } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
-            intakeHinge.changeHingePosition("intake", -0.05);
-        }
-
-        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
-            outtakeHinge.outtakeHingeRelax();
-            if (flyWheelOn) {
-                outtake.setFlywheelVelocity(0);      //turns off the flywheels
-                flyWheelOn = false;
-            } else {
-                outtake.setFlywheelVelocity(outtakeSpeed);      //turns on the flywheels
-                flyWheelOn = true;
-            }
-        }
-
-        //Auto-aims
-        if (driver.isDown(GamepadKeys.Button.B)) {
-            scanForTags();
-            if (targetFound) {
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = -desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw + 0.1; //changed to help with heading offset
-                runPIDStuff(rangeError, headingError, yawError);    //calculates and sends power to the wheels
-            }
         }
 
         driver.readButtons();
@@ -425,142 +368,5 @@ public class Competition_DriveCode extends OpMode {
         frontRightDrive.setPower(maxSpeed * (frontRightPower / maxPower));
         backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
         backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
-    }
-    //auto-aim methods
-    public void scanForTags(){  //Checks if april tags are on screen, and if so, it sets the desiredTag object to that tag
-        targetFound = false;
-        desiredTag  = null;
-
-        // Step through the list of detected tags and look for a matching tag
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-        for (AprilTagDetection detection : currentDetections) {
-            // Look to see if we have size info on this tag.
-            if (detection.metadata != null) {
-                //  Check to see if we want to track towards this tag.
-                if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID || detection.id == DESIRED_TAG_ID2)) {
-                    // Yes, we want to use this tag.
-                    targetFound = true;
-                    desiredTag = detection;
-                    break;  // don't look any further.
-                } else {
-                    // This tag is in the library, but we do not want to track it right now.
-                    telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                }
-            } else {
-                // This tag is NOT in the library, so we don't have enough information to track to it.
-                telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
-            }
-        }
-
-        // Tell the driver what we see, and what to do.
-        if (targetFound) {
-            telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-        } else {
-            telemetry.addData("\n>","Drive using joysticks to find valid target\n");
-        }
-    }
-    public void runPIDStuff(double rangeError, double headingError, double yawError){   //Calculate the power needed for driving/strafing/turning
-
-        // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-        if (targetFound) {
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-        }
-        telemetry.update();
-
-        // Apply desired axes motions to the drivetrain.
-        moveRobot(drive, strafe, turn);
-    }
-    public void moveRobot(double x, double y, double yaw) { //calculates and sends the power needed for each motor
-        // Calculate wheel powers.
-        double frontLeftPower    =  x - y - yaw;
-        double frontRightPower   =  x + y + yaw;
-        double backLeftPower     =  x + y - yaw;
-        double backRightPower    =  x - y + yaw;
-
-        // Normalize wheel powers to be less than 1.0
-        double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
-        max = Math.max(max, Math.abs(backLeftPower));
-        max = Math.max(max, Math.abs(backRightPower));
-
-        if (max > 1.0) {
-            frontLeftPower /= max;
-            frontRightPower /= max;
-            backLeftPower /= max;
-            backRightPower /= max;
-        }
-
-        // Send powers to the wheels.
-        frontLeftDrive.setPower(frontLeftPower);
-        frontRightDrive.setPower(frontRightPower);
-        backLeftDrive.setPower(backLeftPower);
-        backRightDrive.setPower(backRightPower);
-    }
-    private void initAprilTag() {   //Sets up the april tag and camera stuff. Gets it ready for use.
-        // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder().build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // e.g. Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTag.setDecimation(2);
-
-        // Create the vision portal by using a builder.
-        if (USE_WEBCAM) {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                    .addProcessor(aprilTag)
-                    .build();
-        } else {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTag)
-                    .build();
-        }
-    }
-    private void setManualExposure(int exposureMS, int gain) {   //not exactly sure what this does. It sets up the camera's setting or something
-        // Wait for the camera to be open, then use the controls
-
-        if (visionPortal == null) {
-            return;
-        }
-
-        // Make sure camera is streaming before we try to set the exposure controls
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (opModeIsActive && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                //sleep1(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-        // Set camera controls unless we are stopping.
-        if (opModeIsActive)
-        {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                //sleep1(50);
-            }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            //sleep1(20);
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            //sleep1(20);
-        }
     }
 }

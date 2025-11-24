@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Systems.Lights;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
 
 @Disabled
 @TeleOp (name="Test LED Lights", group="test")

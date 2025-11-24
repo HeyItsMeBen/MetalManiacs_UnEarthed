@@ -1,21 +1,16 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings.Red;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
-import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Flywheels;
-import org.firstinspires.ftc.teamcode.Systems.Transfer;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 @Autonomous(name = "(To Red Goal, Short Run (5 Second Delay), Start at Goal) Competition Pathing: Auto Periphery", group = "Auto Pathing")
 //@Disabled

@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
-import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Systems.Flywheels;
-import org.firstinspires.ftc.teamcode.Systems.Intake;
-import org.firstinspires.ftc.teamcode.Systems.Transfer;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 @Autonomous(name = "(To Blue Goal, Long Run, Start at Goal) Competition Pathing: Auto Periphery", group = "Auto Pathing")
 //@Disabled
