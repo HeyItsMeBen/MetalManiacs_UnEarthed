@@ -352,8 +352,14 @@ public class AutoAim extends OpMode {
         if (targetFound) {
             // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
             double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-            double  headingError    = -desiredTag.ftcPose.bearing;
             double  yawError        = desiredTag.ftcPose.yaw + 0.1; //changed to help with heading offset
+            double headingError = -desiredTag.ftcPose.bearing;
+//            if (inRange(desiredTag.ftcPose.yaw, 55, 27.5)) {  //manual adjustments instead of the complex math. It may help us turn towards the goal center, rather than directly at the tag.
+//                headingError = -desiredTag.ftcPose.bearing+5;
+//            }
+//            else if (inRange(desiredTag.ftcPose.yaw, -55, 27.5)) {
+//                headingError = -desiredTag.ftcPose.bearing-5;
+//            }
             runPIDStuff(0, headingError, 0);    //calculates and sends power to the turret. Since headingError is the only non-zero value, it will only adjust the robot's rotation.
         }
 
@@ -540,6 +546,14 @@ public class AutoAim extends OpMode {
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
             gainControl.setGain(gain);
             //sleep1(20);
+        }
+    }
+    public boolean inRange (double input, double target, double range){
+        if (input>=target-range && input<=target+range){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }
