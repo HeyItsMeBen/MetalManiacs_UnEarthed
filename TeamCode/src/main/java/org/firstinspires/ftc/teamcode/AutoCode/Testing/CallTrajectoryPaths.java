@@ -12,40 +12,29 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 import java.util.Arrays;
 
 @Disabled
 @Config
-@Autonomous(name = "Trajectory Test", group = "Autonomous")
-public class TrajectoryTest extends LinearOpMode {
+@Autonomous(name = "Trajectory Path Caller", group = "Autonomous")
+public class CallTrajectoryPaths extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         Pose2d startPose = new Pose2d(0, 0, 0); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(startPose)
-                .lineToYSplineHeading(33, Math.toRadians(0))
-                .waitSeconds(2)
-                .setTangent(Math.toRadians(90))
-                .lineToY(48)
-                .setTangent(Math.toRadians(0))
-                .lineToX(32)
-                .strafeTo(new Vector2d(44.5, 30))
-                .turn(Math.toRadians(180))
-                .lineToX(47.5)
-                .waitSeconds(3);
+        Action trajectoryActionChosen = PathingTrajectories.buildTab1(drive, startPose);
+        Action trajectoryActionChosen2 = PathingTrajectories.buildTab2(drive,  new Pose2d(0, 0, 0));
 
 
-
-        Action trajectoryActionChosen = tab1.build();
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajectoryActionChosen
-                )
+        Actions.runBlocking(new SequentialAction(
+                trajectoryActionChosen,
+                trajectoryActionChosen2
+            )
         );
 
     }

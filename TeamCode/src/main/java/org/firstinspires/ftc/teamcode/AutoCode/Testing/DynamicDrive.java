@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.AutoCode.Testing;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -18,27 +19,21 @@ import java.util.Arrays;
 
 @Disabled
 @Config
-@Autonomous(name = "Trajectory Test", group = "Autonomous")
-public class TrajectoryTest extends LinearOpMode {
+@Autonomous(name = "Dynamic Drive", group = "Autonomous")
+public class DynamicDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         Pose2d startPose = new Pose2d(0, 0, 0); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
+        MinVelConstraint maxSpeedConstraint = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(50.0),
+                new AngularVelConstraint(Math.PI / 2)
+        ));
+
         TrajectoryActionBuilder tab1 = drive.actionBuilder(startPose)
-                .lineToYSplineHeading(33, Math.toRadians(0))
-                .waitSeconds(2)
-                .setTangent(Math.toRadians(90))
-                .lineToY(48)
-                .setTangent(Math.toRadians(0))
-                .lineToX(32)
-                .strafeTo(new Vector2d(44.5, 30))
-                .turn(Math.toRadians(180))
-                .lineToX(47.5)
-                .waitSeconds(3);
-
-
+                .strafeToLinearHeading(new Vector2d(11, -26), Math.toRadians(-90), maxSpeedConstraint);
 
         Action trajectoryActionChosen = tab1.build();
 
@@ -47,6 +42,7 @@ public class TrajectoryTest extends LinearOpMode {
                         trajectoryActionChosen
                 )
         );
+
 
     }
 }
