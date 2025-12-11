@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
 
-@Autonomous(name = "(To Red Goal, Long Run, Start at Wall) Competition Pathing: Auto Direct", group = "Auto Pathing")
+@Autonomous(name = "Path Comparison Test", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingCycleDirectRed extends LinearOpMode {
 
@@ -48,47 +48,47 @@ public class AutoPathingCycleDirectRed extends LinearOpMode {
                         .splineTo(new Vector2d(20, -30), Math.toRadians(90))
                         .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(40))
 
-                        .stopAndAdd(new PathingActions.maintainIntake(intake))
+//                        .stopAndAdd(new PathingActions.maintainIntake(intake))
+//
+//                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
+//
+//                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+//                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+//                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+//                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+//
+//                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
 
-                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
+                        //.setReversed(false)
 
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-
-                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
-
-                        .setReversed(false)
-
-                        .strafeToLinearHeading(new Vector2d(firing_position_x, 6), Math.toRadians(0))
-
-                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
-
-                        .strafeTo(new Vector2d(63, 5))
-
-                        .waitSeconds(0.5)
-
-                        .setTangent(180)
-                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
-
-                        .stopAndAdd(new PathingActions.maintainIntake(intake))
-
-                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
-
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
-
-                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
-
-                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
-
-                        .stopAndAdd(new PathingActions.stopIntake(intake))
-
-                        .setReversed(false)
-
-                        .strafeToLinearHeading(new Vector2d(25, -30),Math.toRadians(0))
+//                        .strafeToLinearHeading(new Vector2d(firing_position_x, 6), Math.toRadians(0))
+//
+//                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
+//
+//                        .strafeTo(new Vector2d(63, 5))
+//
+//                        .waitSeconds(0.5)
+//
+//                        .setTangent(180)
+//                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(225)), Math.toRadians(135))
+//
+//                        .stopAndAdd(new PathingActions.maintainIntake(intake))
+//
+//                        .stopAndAdd(new PathingActions.runFlywheels(flywheels))
+//
+//                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+//                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+//                        .stopAndAdd(new PathingActions.scoreBallSequence(intakeHinge, outtakeHinge, flywheels))
+//
+//                        .stopAndAdd(new PathingActions.runIntake(intake, intakeHinge))
+//
+//                        .stopAndAdd(new PathingActions.stopFlywheels(flywheels))
+//
+//                        .stopAndAdd(new PathingActions.stopIntake(intake))
+//
+//                        .setReversed(false)
+//
+//                        .strafeToLinearHeading(new Vector2d(25, -30),Math.toRadians(0))
 
                         .build());
     }

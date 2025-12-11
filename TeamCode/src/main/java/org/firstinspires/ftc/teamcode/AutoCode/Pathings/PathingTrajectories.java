@@ -11,39 +11,31 @@ public class PathingTrajectories {
 
     static double defaultAngVelocity = Math.PI;
 
-    public static Action buildTab1(MecanumDrive drive, Pose2d currentPose) {
+    public static Action aimingPosition(MecanumDrive drive, Pose2d currentPose) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
-                        new TranslationalVelConstraint(20),
-                        new AngularVelConstraint(Math.PI / 2)
-                )
-        );
-
-        return drive.actionBuilder(currentPose)
-                .strafeToLinearHeading(
-                        new Vector2d(11, -26),
-                        Math.toRadians(-90),
-                        maxSpeedConstraint
-                )
-                .build();
-    }
-
-    public static Action buildTab2(MecanumDrive drive, Pose2d currentPose) {
-
-        MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
-                java.util.Arrays.asList(
-                        new TranslationalVelConstraint(defaultVelocity),
+                        new TranslationalVelConstraint(10),
                         new AngularVelConstraint(defaultAngVelocity)
                 )
         );
 
         return drive.actionBuilder(currentPose)
-                .strafeToLinearHeading(
-                        new Vector2d(11, -26),
-                        Math.toRadians(-90),
-                        maxSpeedConstraint
-                )
+
+                .setReversed(true)
+                .splineTo(new Vector2d(20, -30), Math.toRadians(90), maxSpeedConstraint)
+                .splineTo(new Vector2d(18, 18), Math.toRadians(40), maxSpeedConstraint)
+
+                .build();
+    }
+
+    public static Action aimingPositionRegularSpeed(MecanumDrive drive, Pose2d currentPose) {
+
+        return drive.actionBuilder(currentPose)
+
+                .splineTo(new Vector2d(20, -30), Math.toRadians(0))
+                .splineTo(new Vector2d(18, 18), Math.toRadians(0))
+
                 .build();
     }
 }
