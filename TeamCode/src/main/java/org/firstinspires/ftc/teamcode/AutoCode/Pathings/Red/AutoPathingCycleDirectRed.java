@@ -13,8 +13,6 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
-
 @Autonomous(name = "Path Comparison Test", group = "Auto Pathing")
 //@Disabled
 public class AutoPathingCycleDirectRed extends LinearOpMode {

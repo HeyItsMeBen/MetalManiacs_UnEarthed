@@ -29,12 +29,19 @@ public class PathingTrajectories {
                 .build();
     }
 
-    public static Action aimingPositionRegularSpeed(MecanumDrive drive, Pose2d currentPose) {
+    public static Action forwardMovement(MecanumDrive drive, Pose2d currentPose) {
+
+        MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
+                java.util.Arrays.asList(
+                        new TranslationalVelConstraint(30),
+                        new AngularVelConstraint(defaultAngVelocity)
+                )
+        );
 
         return drive.actionBuilder(currentPose)
 
-                .splineTo(new Vector2d(20, -30), Math.toRadians(0))
-                .splineTo(new Vector2d(18, 18), Math.toRadians(0))
+                .setReversed(true)
+                .splineTo(new Vector2d(20, -30), Math.toRadians(40), maxSpeedConstraint)
 
                 .build();
     }
