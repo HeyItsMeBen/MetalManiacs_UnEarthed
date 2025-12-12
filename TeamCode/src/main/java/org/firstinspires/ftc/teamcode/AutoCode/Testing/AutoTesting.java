@@ -19,13 +19,13 @@ import java.util.List;
 
 
 //sets mode to autonomous and makes the main class
-@Disabled
 @Autonomous(name = "AutoTesting", group = "Linear OpMode")
 public class AutoTesting extends LinearOpMode {
     //defining variables
     //conveyerBelt belt = new conveyerBelt(hardwareMap);
     Flywheels flywheel;
     GoBildaPinpointDriver odo;
+    RotationMatrices rotationMatrices;
 
     private DcMotor frontLeftDrive = null;  //  Used to control the left front drive wheel
     private DcMotor frontRightDrive = null;  //  Used to control the right front drive wheel
@@ -44,9 +44,11 @@ public class AutoTesting extends LinearOpMode {
     double xCameraOffset=0; //sideways distance from webcam to robotCenter
     double yCameraOffset=0; // back/forth distance from webcam to robotCenter
     double yDistance=0;
-    double tagTilt=0;
-    double tagElevation=0;  //rotational elevation
-    double cameraPitch=0;
+    double tagYaw=0;
+    double tagPitch=0;
+    double tagRoll=0;
+    double tagElevation=0;
+    double cameraPitch=22.5;
 
     private VisionPortal visionPortal;
     @Override
@@ -74,17 +76,22 @@ public class AutoTesting extends LinearOpMode {
         odo.resetPosAndIMU();
         Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
         odo.setPosition(startingPosition);*/
+        rotationMatrices = new RotationMatrices();
 
         initAprilTag();
         waitForStart();
         while (opModeIsActive()){
-            backLeftDrive.setPower(0.25);
-            frontLeftDrive.setPower(0.25);
-            backRightDrive.setPower(0.25);
-            frontRightDrive.setPower(0.25);
+            telemetryAprilTag();
+            if (tagScanned) {
+                double[] tagEulerAngles=rotationMatrices.getActualYaw(Math.toRadians(tagYaw), Math.toRadians(tagPitch), Math.toRadians(tagRoll), Math.toRadians(cameraPitch));
+                telemetry.addData("Tag Yaw", Math.toDegrees(tagEulerAngles[0]));
+                telemetry.addData("Tag Pitch", Math.toDegrees(tagEulerAngles[1]));
+                telemetry.addData("Tag Roll", Math.toDegrees(tagEulerAngles[2]));
+            }
+            telemetry.update();
+
             //Pose2D pos = odo.getPosition();
             //double heading = pos.getHeading(AngleUnit.RADIANS);
-
 
             /*telemetryAprilTag();
             double givenY=yDistance; //the x-y coordinates directly from camera will need to be adjusted and set to robotCenter. GivenY is distance from camera to basket.
@@ -160,8 +167,9 @@ public class AutoTesting extends LinearOpMode {
         for (AprilTagDetection detection : currentDetections) {
             if (randomization > 0) {
                 telemetry.addLine("wow this code is amazing");
+                tagScanned=true;
                 //does nothing
-            } else if (detection.id == 24) {
+            } else if (detection.id > 20 && detection.id <25) {
                 telemetry.addLine("Motif 1: GPP ");
                 randomization = 1;
                 tagScanned=true;
@@ -185,7 +193,9 @@ public class AutoTesting extends LinearOpMode {
             }
             if (tagScanned){
                 yDistance = detection.ftcPose.range;
-                tagTilt = detection.ftcPose.yaw; //When robot rotates, it changes yaw. Js so u know which one yaw is.
+                tagYaw = detection.ftcPose.yaw; //When robot rotates, it changes yaw. Js so u know which one yaw is.
+                tagPitch = detection.ftcPose.pitch;
+                tagRoll = detection.ftcPose.roll;
                 tagElevation = detection.ftcPose.elevation;
             }
         }   // end for() loop
@@ -193,8 +203,8 @@ public class AutoTesting extends LinearOpMode {
         // Add "key" information to telemetry
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-        telemetry.addLine("RBE = Range, Bearing & Elevation");
-        telemetry.update();
+        telemetry.addLine("RBE = Range, Bearing & Elevation\n\n");
+        //telemetry.update();
     }
     private double toMeters(double inches){
         return inches/39.3700787;
