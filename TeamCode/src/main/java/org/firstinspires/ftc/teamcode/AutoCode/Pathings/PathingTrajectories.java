@@ -15,7 +15,7 @@ public class PathingTrajectories {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
-                        new TranslationalVelConstraint(10),
+                        new TranslationalVelConstraint(20),
                         new AngularVelConstraint(defaultAngVelocity)
                 )
         );
@@ -33,15 +33,13 @@ public class PathingTrajectories {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
-                        new TranslationalVelConstraint(30),
+                        new TranslationalVelConstraint(10),
                         new AngularVelConstraint(defaultAngVelocity)
                 )
         );
 
         return drive.actionBuilder(currentPose)
-
-                .setReversed(true)
-                .splineTo(new Vector2d(20, -30), Math.toRadians(40), maxSpeedConstraint)
+                .strafeTo(new Vector2d(30, 30), maxSpeedConstraint)
 
                 .build();
     }

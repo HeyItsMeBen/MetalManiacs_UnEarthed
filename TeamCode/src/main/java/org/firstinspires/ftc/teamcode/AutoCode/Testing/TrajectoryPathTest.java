@@ -11,9 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectories;
-import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.Localizer;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.PinpointLocalizer;
 
 @Config
 @Autonomous(name = "Trajectory Path Tester", group = "Autonomous")
@@ -26,11 +24,17 @@ public class TrajectoryPathTest extends LinearOpMode {
 
         Action directPathing = PathingTrajectories.aimingPosition(drive, startPose);
 
+        //Action nextPathing = PathingTrajectories.forwardMovement(drive, drive.localizer.getPose());
+
+        waitForStart();
+
+        Actions.runBlocking(
+                new SequentialAction(directPathing));
+        
         Action nextPathing = PathingTrajectories.forwardMovement(drive, drive.localizer.getPose());
 
         Actions.runBlocking(
-                new SequentialAction(directPathing, nextPathing)
-        );
+                new SequentialAction(nextPathing));
 
     }
 }

@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.Drawing;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 @Config
-@TeleOp(name = "Absolute Field Localizer", group = "Autonomous")
-public class LocalizationTester extends LinearOpMode {
+@TeleOp(name = "Localizer", group = "Autonomous")
+public class Localization extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(0, 0, 0); // x, y, heading in radians
+        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270)); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         waitForStart();
