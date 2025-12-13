@@ -22,19 +22,15 @@ public class TrajectoryPathTest extends LinearOpMode {
         Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270)); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
-        Action directPathing = PathingTrajectories.aimingPosition(drive, startPose);
-
-        //Action nextPathing = PathingTrajectories.forwardMovement(drive, drive.localizer.getPose());
-
         waitForStart();
 
         Actions.runBlocking(
-                new SequentialAction(directPathing));
-        
-        Action nextPathing = PathingTrajectories.forwardMovement(drive, drive.localizer.getPose());
+                new SequentialAction(
 
-        Actions.runBlocking(
-                new SequentialAction(nextPathing));
+                        PathingTrajectories.aimingPosition(drive, startPose),
 
+                        PathingTrajectories.forwardMovement(drive, drive.localizer.getPose()))
+
+        );
     }
 }
