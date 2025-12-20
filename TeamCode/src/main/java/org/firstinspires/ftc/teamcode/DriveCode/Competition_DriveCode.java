@@ -147,14 +147,17 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addLine("Hold left bumper for robot-relative drive");
         telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
 
-        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
-            lights.Light_Red();
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))){
+            lights.Light_Sequence("PPG");
         }
 
         if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
-            lights.Light_Green();
+            lights.Light_Sequence("GPP");
         }
-        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_UP))){
+            lights.Light_Sequence("PGP");
+        }
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_DOWN))){
             lights.Light_Off();
         }
 
