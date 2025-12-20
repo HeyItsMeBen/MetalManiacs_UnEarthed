@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Testing;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 @Config
-@Autonomous(name = "Trajectory Path Tester", group = "Autonomous")
-public class TrajectoryPathTest extends LinearOpMode {
+@Autonomous(name = "Three Pattern Red Wall", group = "Autonomous")
+public class ThreePatternRedWall extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -37,7 +37,22 @@ public class TrajectoryPathTest extends LinearOpMode {
 
                         PathingTrajectories.initializationPosition(drive, startPose),
 
-                        PathingTrajectories.firingPosition(drive, drive.localizer.getPose(), flywheels)
+                        PathingTrajectories.firingPosition(drive, drive.localizer.getPose(), flywheels),
+
+                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), PatternOne, intake),
+
+                        PathingTrajectories.firingPosition(drive, drive.localizer.getPose(), flywheels),
+
+                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), PatternTwo, intake),
+
+                        PathingTrajectories.firingPosition(drive, drive.localizer.getPose(), flywheels),
+
+                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), PatternThree, intake),
+
+                        PathingTrajectories.firingPosition(drive, drive.localizer.getPose(), flywheels),
+
+                        PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake)
+
 
                 )
 
