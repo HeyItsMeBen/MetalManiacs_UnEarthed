@@ -42,7 +42,7 @@ public class LED_Manual_Test extends LinearOpMode {
                 lights.Light_Green();
             }
             else if (gamepad.getButton(GamepadKeys.Button.X)) {
-                lights.Light_Blue();
+                lights.Light_Off();
             }
             else if (gamepad.getButton(GamepadKeys.Button.Y)) {
                 lights.Light_Off();

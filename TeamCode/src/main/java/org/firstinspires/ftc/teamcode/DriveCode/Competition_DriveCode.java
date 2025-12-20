@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -45,6 +46,7 @@ public class Competition_DriveCode extends OpMode {
     Flywheels outtake;
     Transfer intakeHinge;
     Transfer outtakeHinge;
+    Lights lights;
 
     ElapsedTime timer;
 
@@ -113,6 +115,7 @@ public class Competition_DriveCode extends OpMode {
         outtake = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
+        lights = new Lights(hardwareMap);
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -143,6 +146,17 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addLine("Press Y to toggle outtake forward");
         telemetry.addLine("Hold left bumper for robot-relative drive");
         telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
+
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
+            lights.Light_Red();
+        }
+
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
+            lights.Light_Green();
+        }
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
+            lights.Light_Off();
+        }
 
         // Toggles if outtake is forward
         if (driver.wasJustPressed(GamepadKeys.Button.Y)) {

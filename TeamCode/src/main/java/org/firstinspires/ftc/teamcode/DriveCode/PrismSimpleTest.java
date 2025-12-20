@@ -1,75 +1,63 @@
 package org.firstinspires.ftc.teamcode.DriveCode;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
 import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 import org.firstinspires.ftc.teamcode.Prism.Color;
 
+
 @TeleOp(name = "Prism Simple Test", group = "Test")
-public class PrismSimpleTest extends LinearOpMode {
+public class PrismSimpleTest extends OpMode {
 
     GoBildaPrismDriver prism;
+    Lights lights;
+
+    public GamepadEx driver;
+    public GamepadEx operator;
 
     @Override
-    public void runOpMode() {
+    public void init() {
         // Initialize the Prism driver
-        prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
+        lights = new Lights(hardwareMap);
+
+        driver = new GamepadEx(gamepad1);
+        operator = new GamepadEx(gamepad2);
 
         telemetry.addData("Status", "Prism Initialized");
-        telemetry.addData("Device ID", prism.getDeviceID());
-        telemetry.addData("Firmware", prism.getFirmwareVersionString());
-        telemetry.addData("Hardware", prism.getHardwareVersionString());
-        telemetry.addData("LED Count", prism.getNumberOfLEDs());
-        telemetry.addData("Info", "Press Play to test colors");
-        telemetry.update();
 
-        waitForStart();
 
         // Clear any existing animations
-        prism.clearAllAnimations();
+        lights.Light_Off();
+    }
 
-        while (opModeIsActive()) {
-            // Test Red - Create a solid color animation
-            telemetry.addData("Color", "RED");
-            telemetry.update();
-            PrismAnimations.Solid red = new PrismAnimations.Solid(Color.RED);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, red);
-            sleep(2000);
+    @Override
+    public void loop() {
+        driver.readButtons();
+        operator.readButtons();
 
-            // Test Green
-            telemetry.addData("Color", "GREEN");
-            telemetry.update();
-            PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, green);
-            sleep(2000);
-
-            // Test Blue
-            telemetry.addData("Color", "BLUE");
-            telemetry.update();
-            PrismAnimations.Solid blue = new PrismAnimations.Solid(Color.BLUE);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, blue);
-            sleep(2000);
-
-            // Test White
-            telemetry.addData("Color", "WHITE");
-            telemetry.update();
-            PrismAnimations.Solid white = new PrismAnimations.Solid(Color.WHITE);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, white);
-            sleep(2000);
-
-            // Test Rainbow animation
-            telemetry.addData("Animation", "RAINBOW");
-            telemetry.update();
-            PrismAnimations.Rainbow rainbow = new PrismAnimations.Rainbow();
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, rainbow);
-            sleep(5000);
-
-            // Turn off
-            telemetry.addData("Status", "OFF");
-            telemetry.update();
-            prism.clearAllAnimations();
-            sleep(2000);
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
+            lights.Light_Sequence("GPP");
         }
+
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))){
+            lights.Light_Sequence("PPG");
+        }
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_DOWN))){
+            telemetry.addData("DPAD", "DOWN PRESSED!");
+
+            lights.Light_Off();
+        }
+
+        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_UP))){
+            telemetry.addData("DPAD", "UP PRESSED!");
+            lights.Light_Sequence("PGP");
+        }
+        telemetry.update();
     }
 }
