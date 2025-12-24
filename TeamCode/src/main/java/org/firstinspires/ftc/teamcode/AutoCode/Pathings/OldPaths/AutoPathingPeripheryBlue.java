@@ -9,8 +9,8 @@
 //import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
 //import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 //import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-//import org.firstinspires.ftc.teamcode.Hardware.Intake;
-//import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+//import org.firstinspires.ftc.teamcode.Old_Code.Intake;
+//import org.firstinspires.ftc.teamcode.Old_Code.Transfer;
 //
 //@Autonomous(name = "(To Blue Goal, Short Run (5 second delay), Start at Goal) Competition Pathing: Auto Periphery", group = "Auto Pathing")
 ////@Disabled

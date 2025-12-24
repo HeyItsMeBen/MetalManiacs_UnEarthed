@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Old_Code.Intake;
 
 @Config
 @Autonomous(name = "Trajectory Path Tester", group = "Autonomous")
@@ -35,7 +35,7 @@ public class TrajectoryPathTest extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
 
-                        PathingTrajectories.initializationPosition(drive, startPose),
+                        PathingTrajectories.initialFiringFromWall(drive, startPose, flywheels),
 
                         PathingTrajectories.firingPosition(drive, drive.localizer.getPose(), flywheels)
 

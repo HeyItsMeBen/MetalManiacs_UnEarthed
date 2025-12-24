@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Old_Code.Intake;
 
 @Config
 @Autonomous(name = "Three Pattern Red Goal", group = "Autonomous")
@@ -21,7 +21,7 @@ public class ThreePatternRedGoal extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(220));
+        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(315));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -35,8 +35,8 @@ public class ThreePatternRedGoal extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        
-                        PathingTrajectories.firingPosition(drive, startPose, flywheels),
+
+                        PathingTrajectories.initialFiringFromGoal(drive, startPose, flywheels),
 
                         PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), PatternOne, intake),
 
@@ -51,7 +51,6 @@ public class ThreePatternRedGoal extends LinearOpMode {
                         PathingTrajectories.firingPosition(drive, drive.localizer.getPose(), flywheels),
 
                         PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake)
-
 
                 )
 

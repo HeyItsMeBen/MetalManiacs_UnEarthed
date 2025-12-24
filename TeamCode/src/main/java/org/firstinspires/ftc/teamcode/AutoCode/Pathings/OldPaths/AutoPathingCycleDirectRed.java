@@ -8,8 +8,8 @@
 //
 //import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 //import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-//import org.firstinspires.ftc.teamcode.Hardware.Intake;
-//import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+//import org.firstinspires.ftc.teamcode.Old_Code.Intake;
+//import org.firstinspires.ftc.teamcode.Old_Code.Transfer;
 //
 //@Autonomous(name = "Path Comparison Test", group = "Auto Pathing")
 ////@Disabled

@@ -19,10 +19,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.AutoCode.Testing.RotationMatrices;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
-import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
+import org.firstinspires.ftc.teamcode.Old_Code.Intake;
+import org.firstinspires.ftc.teamcode.Old_Code.Transfer;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -48,8 +46,6 @@ public class AutoAim extends OpMode {
     Flywheels outtake;
     Transfer intakeHinge;
     Transfer outtakeHinge;
-    Turret turret;
-    OuttakeHood outtakeHood;
     RotationMatrices rotationMatrices;
 
     ElapsedTime timer;
@@ -132,8 +128,6 @@ public class AutoAim extends OpMode {
         outtake = new Flywheels(hardwareMap);
         intakeHinge = new Transfer(hardwareMap);
         outtakeHinge = new Transfer(hardwareMap);
-        turret = new Turret(hardwareMap);
-        outtakeHood = new OuttakeHood(hardwareMap);
         rotationMatrices = new RotationMatrices();
 
         //setup
@@ -365,33 +359,33 @@ public class AutoAim extends OpMode {
                 flyWheelOn = true;
             }
         }
-        scanForTags();
-        if (targetFound) {
-            //adjust turret to point towards the tag
-            double  headingError    = -desiredTag.ftcPose.bearing;
-            turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-            turret.setMotorPower(turn);
 
-            //adjust hood angle to score
-            double launchPointToGoalCenterX_Distance=getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation), Math.toRadians(22.5)); //Basically the horizontal distance to the tag
-            double launchAngle1=Math.atan((Math.pow(ballVelocity, 2)+Math.sqrt(Math.pow(ballVelocity, 4)-gravity*(gravity*Math.pow(launchPointToGoalCenterX_Distance, 2)+2*(basketHeight)*Math.pow(ballVelocity, 2))))/(gravity*launchPointToGoalCenterX_Distance));  //Uses the "trajectory for projectile motion" equation to find the angle needed to score.
-            double launchAngle2=Math.atan((Math.pow(ballVelocity, 2)-Math.sqrt(Math.pow(ballVelocity, 4)-gravity*(gravity*Math.pow(launchPointToGoalCenterX_Distance, 2)+2*(basketHeight)*Math.pow(ballVelocity, 2))))/(gravity*launchPointToGoalCenterX_Distance));
+        //Auto-aims
+        if (driver.isDown(GamepadKeys.Button.B)) {
+            scanForTags();
+            if (targetFound) {
+                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+                double launchPointToGoalCenterX_Distance=getCorrectDistance(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.elevation), Math.toRadians(22.5));
+                double  rangeError      = toInches(launchPointToGoalCenterX_Distance - DESIRED_DISTANCE);
+                double  headingError    = -desiredTag.ftcPose.bearing;
+                double  yawError        = 0;// + 0.1; //changed to help with heading offset
+                //runPIDStuff(rangeError, headingError, yawError);    //calculates and sends power to the wheels`//this is commented out because we don't want the drivetrain to move
 
-            //find the larger theta value.
-            if (launchAngle1>=launchAngle2){
-                hoodTarget=launchAngle1;
-            }
-            else if (launchAngle2>launchAngle1){
-                hoodTarget=launchAngle2;
-            }
-            else {  //if this one runs, something went wrong
-                hoodTarget=0;
+                double launchAngle1=Math.atan((Math.pow(ballVelocity, 2)+Math.sqrt(Math.pow(ballVelocity, 4)-gravity*(gravity*Math.pow(launchPointToGoalCenterX_Distance, 2)+2*(basketHeight)*Math.pow(ballVelocity, 2))))/(gravity*launchPointToGoalCenterX_Distance));  //this is the angle (in radians) that the hood needs to be set to. It is not the needed servo position yet.;
+                double launchAngle2=Math.atan((Math.pow(ballVelocity, 2)-Math.sqrt(Math.pow(ballVelocity, 4)-gravity*(gravity*Math.pow(launchPointToGoalCenterX_Distance, 2)+2*(basketHeight)*Math.pow(ballVelocity, 2))))/(gravity*launchPointToGoalCenterX_Distance));  //this is the angle (in radians) that the hood needs to be set to. It is not the needed servo position yet.;
+
+                //find the larger theta value.
+                if (launchAngle1>=launchAngle2){
+                    hoodTarget=launchAngle1;
+                }
+                else if (launchAngle2>launchAngle1){
+                    hoodTarget=launchAngle2;
+                }
+                else {  //if this one runs, something went wrong
+                    hoodTarget=0;
+                }
             }
         }
-        else {
-            turret.setMotorPower(0); //stops the motor, preventing the turret from rotating when the tag is not sight
-        }
-        outtakeHood.setAngle(hoodTarget);
         telemetry.addData("HoodTarget: ", Math.toDegrees(hoodTarget));
         driver.readButtons();
         operator.readButtons();
@@ -500,6 +494,47 @@ public class AutoAim extends OpMode {
             telemetry.addData("\n>","Drive using joysticks to find valid target\n");
         }
     }
+    public void runPIDStuff(double rangeError, double headingError, double yawError){   //Calculate the power needed for driving/strafing/turning
+
+        // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+        if (targetFound) {
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+            drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+            turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+        }
+        telemetry.update();
+
+        // Apply desired axes motions to the drivetrain.
+        moveRobot(drive, strafe, turn);
+    }
+    public void moveRobot(double x, double y, double yaw) { //calculates and sends the power needed for each motor
+        // Calculate wheel powers.
+        double frontLeftPower    =  x - y - yaw;
+        double frontRightPower   =  x + y + yaw;
+        double backLeftPower     =  x + y - yaw;
+        double backRightPower    =  x - y + yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
+        max = Math.max(max, Math.abs(backLeftPower));
+        max = Math.max(max, Math.abs(backRightPower));
+
+        if (max > 1.0) {
+            frontLeftPower /= max;
+            frontRightPower /= max;
+            backLeftPower /= max;
+            backRightPower /= max;
+        }
+
+        // Send powers to the wheels.
+        frontLeftDrive.setPower(frontLeftPower);
+        frontRightDrive.setPower(frontRightPower);
+        backLeftDrive.setPower(backLeftPower);
+        backRightDrive.setPower(backRightPower);
+    }
     private void initAprilTag() {   //Sets up the april tag and camera stuff. Gets it ready for use.
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
@@ -563,13 +598,12 @@ public class AutoAim extends OpMode {
         double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;   //robotBaseX is horizontal distance from the center of the robot to the tag.
         return robotBaseX-robotCenterToArmBase_Distance+tagToGoalCenter_Distance;                   //returns the horizontal distance from the launchPoint to the tag. LaunchPoint is the point that the ball leaves the shooter at.
     }
-    public double getCorrectDistance2(double givenX, double tagYaw, double tagPitch, double tagElevation, double cameraPitch){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
+    public double getCorrectDistance2(double givenX, double tagYaw, double tagElevation, double cameraPitch){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
         //REMINDER: Use rotation matrices for yaw translation
-        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;   //robotBaseX is horizontal distance from the center of the robot to the tag.
-        double [] actualTagYaw=rotationMatrices.getActualYaw(tagYaw, tagPitch, 0, cameraPitch);
-        double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-actualTagYaw[0]));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
+        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;
+        double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-tagYaw));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
         //outtakeFlywheelValues.angleDeviation=Math.asin(tagToGoalCenter_Distance*Math.sin(Math.PI-tagYaw)/newX);    //law of sines
-        return (newX-robotCenterToArmBase_Distance);  //returns horizontal distance from the launchPoint to goalCenter
+        return (newX-robotCenterToArmBase_Distance);  //returns distance from the armBase to goalCenter
     }
     private double toMeters(double inches){
         return inches/39.3700787;

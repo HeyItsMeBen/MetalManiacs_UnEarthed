@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 // In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
 
-public class AutoPathSim {
+public class AutoPathSimLongRange {
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(800);
@@ -25,27 +25,8 @@ public class AutoPathSim {
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(270)))
 
-
-                        .setReversed(true)
-                        .splineTo(new Vector2d(20, -30), Math.toRadians(90))
-
-                        .setReversed(true)
-                        .splineTo(new Vector2d(18, 18), Math.toRadians(45))
-                        .setReversed(false)
-
-                        .splineTo(new Vector2d(50,12), Math.toRadians(0))
-
-                        .setReversed(true)
-                        .splineTo(new Vector2d(18, 18), Math.toRadians(45))
-                        .setReversed(false)
-
-                        .splineTo(new Vector2d(50,-12), Math.toRadians(0))
-
-                        .setReversed(true)
-                        .splineTo(new Vector2d(18, 18), Math.toRadians(45))
-                        .setReversed(false)
-
-                        .splineTo(new Vector2d(20, -30), Math.toRadians(270))
+                        .lineTo(new Vector2d(15, -50))
+                        .turn(Math.toRadians(90))
 
                         .build());
 
