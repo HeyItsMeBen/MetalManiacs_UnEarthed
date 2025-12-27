@@ -9,9 +9,9 @@ public class TransferBelt {
     private Servo trapdoorServo = null;
     private DcMotor conveyorbeltMotor = null;
 
-    public float openTrapdoorPosition = 0.67f; //Pushes ball into flywheel holder
+    public float openTrapdoorPosition = 0.67f; // Get New Values
 
-    public float closeTrapdoorPosition = 0.32f; //Tucks hinge into wheels
+    public float closeTrapdoorPosition = 0.32f; // Get New Values
 
     public TransferBelt(HardwareMap hMap) {
         trapdoorServo = hMap.get(Servo.class, "trapdoor");

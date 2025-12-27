@@ -25,4 +25,8 @@ public class IntakeSystem {
     public void reverseIntake(){
         intakeWheels.setPower(-0.75);
     }
+
+    public void stopIntake() {
+        intakeWheels.setPower(0);
+    }
 }
