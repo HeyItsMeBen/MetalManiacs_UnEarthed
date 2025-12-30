@@ -9,51 +9,36 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.IntakeSystem;
+import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Old_Code.Intake;
 
-@TeleOp (name="Intake Tester", group="test")
-public class IntakeTester extends LinearOpMode {
-
+@TeleOp (name="Outtake Tester", group="test")
+public class OuttakeTest extends LinearOpMode{
     public GamepadEx gamepad;
+    public Flywheels flywheel;
+//    public OuttakeHood hood;
+    public double angle = 0;
 
-    IntakeSystem intake;
-
-    public DcMotor transfer = null;
+    public double speed = 0.5;
     public int rpm = 3000;
 
-    Flywheels flywheel;
-
-
-
-        @Override
+    @Override
     public void runOpMode() {
 
-//        DcMotor Motor = hardwareMap.get(DcMotor.class, "Intake");
-
-        transfer = hardwareMap.get(DcMotor.class, "transfer");
-
-        intake = new IntakeSystem(hardwareMap);
+        flywheel = new Flywheels(hardwareMap);
+//        hood = new OuttakeHood(hardwareMap);
 
         gamepad = new GamepadEx(gamepad1);
 
-        flywheel = new Flywheels(hardwareMap);
-
-
-            waitForStart();
+        waitForStart();
 
         //executing
         while (opModeIsActive()) {
-            if (gamepad.getLeftY() > 0) {
-                intake.runIntakeFullPower();
-                transfer.setPower(1);
-            } else if (gamepad.getLeftY() < 0) {
-                intake.reverseIntake();
-                transfer.setPower(-1);
-            }
-            intake.stopIntake();
-            transfer.setPower(0);
-
-
+//            if (gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+//                flywheel.setFlywheelPower(speed);
+//            } else {
+//                flywheel.stopFlywheel();
+//            }
             if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
                 flywheel.setFlywheelVelocity(rpm);
             }else{
@@ -61,14 +46,26 @@ public class IntakeTester extends LinearOpMode {
             }
 
 
+//            angle += gamepad.getLeftY();
+
+//            hood.setAngle(angle);
+
+//            telemetry.addData("angle", angle);
+            speed += gamepad.getLeftY()*0.01;
+            if (speed >= 1){
+                speed = 1;
+            }else if(speed<=0.1){
+                speed = 0.1;
+            }
+
             rpm += (int) (gamepad.getRightY()*10);
             if (rpm > 6000){
                 rpm = 6000;
             }else if (rpm < 1000){
                 rpm = 1000;
             }
-            telemetry.addData("velocity",flywheel.getCurrentWheelVelocity("neither"));
-            telemetry.addData("rpm",rpm);
+            telemetry.addData("rpm",flywheel.getCurrentWheelVelocity("neither"));
+
             telemetry.update();
 
             idle();

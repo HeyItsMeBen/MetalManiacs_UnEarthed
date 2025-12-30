@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.Hardware.TransferBelt;
 
-@TeleOp (name="Intake Tester", group="test")
+@TeleOp (name="Transfer Tester", group="test")
 public class TransferTester extends LinearOpMode {
 
     public GamepadEx gamepad;
@@ -20,7 +20,7 @@ public class TransferTester extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        DcMotor Motor = hardwareMap.get(DcMotor.class, "Intake");
+        DcMotor Motor = hardwareMap.get(DcMotor.class, "intake");
 
         belt = new TransferBelt(hardwareMap);
 

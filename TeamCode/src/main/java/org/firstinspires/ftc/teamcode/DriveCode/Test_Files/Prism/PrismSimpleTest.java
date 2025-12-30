@@ -39,11 +39,13 @@ public class PrismSimpleTest extends OpMode {
         operator.readButtons();
 
         if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
-            lights.Light_Sequence("GPP");
+            lights.Light_Sequence("XGP");
+//            lights.Light_Green();
         }
 
         if(driver.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))){
-            lights.Light_Sequence("PPG");
+            lights.Light_Sequence("PGX");
+//            lights.Light_Purple();
         }
         if(driver.wasJustPressed((GamepadKeys.Button.DPAD_DOWN))){
             telemetry.addData("DPAD", "DOWN PRESSED!");
@@ -53,7 +55,7 @@ public class PrismSimpleTest extends OpMode {
 
         if(driver.wasJustPressed((GamepadKeys.Button.DPAD_UP))){
             telemetry.addData("DPAD", "UP PRESSED!");
-            lights.Light_Sequence("PGP");
+//            lights.Light_Sequence("PXX");
         }
         telemetry.update();
     }
