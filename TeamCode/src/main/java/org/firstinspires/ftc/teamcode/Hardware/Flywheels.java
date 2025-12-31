@@ -65,12 +65,13 @@ public class Flywheels {
 
     }
     public double getCurrentWheelRawVelocity(String motor){
-        if (motor.contains("left") || motor.contains("Left")) {
-            return leftFlyWheel.getVelocity();
-        } else if (motor.contains("right") || motor.contains("Right")) {
-            return rightFlyWheel.getVelocity();
-        }
-        return 0;
+//        if (motor.contains("left") || motor.contains("Left")) {
+//            return leftFlyWheel.getVelocity();
+//        } else if (motor.contains("right") || motor.contains("Right")) {
+//            return rightFlyWheel.getVelocity();
+//        }
+//        return 0;
+        return flywheel.getVelocity();
     }
 
     public void runOptimalFlywheelVelocity() {
