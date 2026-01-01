@@ -8,6 +8,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -18,9 +19,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Old_Code.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
-import org.firstinspires.ftc.teamcode.Old_Code.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -43,9 +44,9 @@ public class Competition_DriveCode extends OpMode {
 
     //create mechanism variables
     Intake intake;
-    Flywheels outtake;
-    Transfer intakeHinge;
-    Transfer outtakeHinge;
+    Flywheels flywheels;
+    Transfer belt;
+    Transfer trapdoor;
     Lights lights;
 
     ElapsedTime timer;
@@ -112,14 +113,14 @@ public class Competition_DriveCode extends OpMode {
 
         //create the mechanism objects
         intake = new Intake(hardwareMap);
-        outtake = new Flywheels(hardwareMap);
-        intakeHinge = new Transfer(hardwareMap);
-        outtakeHinge = new Transfer(hardwareMap);
+        flywheels = new Flywheels(hardwareMap);
+        belt = new Transfer(hardwareMap);
+        trapdoor = new Transfer(hardwareMap);
         lights = new Lights(hardwareMap);
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -141,34 +142,20 @@ public class Competition_DriveCode extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addLine("Press A to reset Yaw");
+        telemetry.addLine("Press Y to reset Yaw");
         telemetry.addLine("Press RIGHT STICK to toggle rotation mode");
-        telemetry.addLine("Press Y to toggle outtake forward");
+        telemetry.addLine("Press Xx to toggle outtake forward");
         telemetry.addLine("Hold left bumper for robot-relative drive");
         telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
 
-        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))){
-            lights.Light_Sequence("PPG");
-        }
-
-        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_LEFT))){
-            lights.Light_Sequence("GPP");
-        }
-        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_UP))){
-            lights.Light_Sequence("PGP");
-        }
-        if(driver.wasJustPressed((GamepadKeys.Button.DPAD_DOWN))){
-            lights.Light_Off();
-        }
-
         // Toggles if outtake is forward
-        if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
+        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
             outtakeForward = !outtakeForward;
         }
         telemetry.addData("Outtake Forward", outtakeForward);
 
-        // Reset yaw with A button
-        if (driver.getButton(GamepadKeys.Button.A)) {
+        // Reset yaw with Y button
+        if (driver.getButton(GamepadKeys.Button.Y)) {
             imu.resetYaw();
             targetHeading = 0;  // Reset target heading too
         }
@@ -274,6 +261,7 @@ public class Competition_DriveCode extends OpMode {
             }
         }
         intake.setMotorPower(intakePower);
+        belt.setMotorPower(intakePower);
 
         if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
             outtakeSpeed += 250;
@@ -291,20 +279,12 @@ public class Competition_DriveCode extends OpMode {
 
         telemetry.addData("Outtake Speed", outtakeSpeed);
 
-        //cycles the ball into positions for launch
-        if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+        //Launches the balls while right bumper is held
+        if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 
-            intake.setMotorPower(-1);
-
-            outtakeHinge.outtakeHingeRelax();
-
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            intakeHinge.intakeHingeLift();
+//            intake.setMotorPower(-1);
+            belt.setMotorPower(1);
+            flywheels.setFlywheelVelocity(outtakeSpeed);
 
             try {
                 sleep(500);
@@ -312,54 +292,67 @@ public class Competition_DriveCode extends OpMode {
                 throw new RuntimeException(e);
             }
 
-            intakeHinge.intakeHingeStandby();
+            trapdoor.trapdoorOpen();
 
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+//            intakeHinge.intakeHingeStandby();
+
+        }else{
+            flywheels.setFlywheelVelocity(0);
+            trapdoor.trapdoorClose();
         }
 
         //Launches the ball
-        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-
-            outtakeHinge.outtakeHingeRelax();
-
-            if (flyWheelOn) {
-                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < (outtakeSpeed - 150) && outtake.getCurrentWheelVelocity("right") < (outtakeSpeed - 150); t++) {
-                    telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
-                    telemetry.update();
-                    try {
-                        sleep(250);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-
-            outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball
-
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            outtakeHinge.outtakeHingeRelax();
-        }
+//        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+//
+//            outtakeHinge.outtakeHingeRelax();
+//
+//            if (flyWheelOn) {
+//                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < (outtakeSpeed - 150) && outtake.getCurrentWheelVelocity("right") < (outtakeSpeed - 150); t++) {
+//                    telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
+//                    telemetry.update();
+//                    try {
+//                        sleep(250);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//            }
+//
+//            outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball
+//
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            outtakeHinge.outtakeHingeRelax();
+//        }
 
         if (operator.isDown((GamepadKeys.Button.DPAD_UP))) {
-            intakeHinge.changeHingePosition("intake", 0.05);
+            trapdoor.changeHingePosition(0.05);
+            telemetry.addLine("TRAPDOOR ADJUSTED");
         } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
-            intakeHinge.changeHingePosition("intake", -0.05);
+            trapdoor.changeHingePosition(-0.05);
+            telemetry.addLine("TRAPDOOR ADJUSTED");
         }
 
-        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
-            outtakeHinge.outtakeHingeRelax();
-            if (flyWheelOn) {
-                outtake.setFlywheelVelocity(0);      //turns off the flywheels
-                flyWheelOn = false;
-            } else {
-                outtake.setFlywheelVelocity(outtakeSpeed);      //turns on the flywheels
-                flyWheelOn = true;
-            }
-        }
+//        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
+//            outtakeHinge.outtakeHingeRelax();
+//            if (flyWheelOn) {
+//                outtake.setFlywheelVelocity(0);      //turns off the flywheels
+//                flyWheelOn = false;
+//            } else {
+//                outtake.setFlywheelVelocity(outtakeSpeed);      //turns on the flywheels
+//                flyWheelOn = true;
+//            }
+//        }
 
         //Auto-aims
         if (driver.isDown(GamepadKeys.Button.B)) {

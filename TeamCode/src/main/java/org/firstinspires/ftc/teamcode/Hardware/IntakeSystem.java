@@ -7,7 +7,7 @@ public class IntakeSystem {
     private DcMotor intakeWheels;
     public IntakeSystem(HardwareMap hMap) {
         intakeWheels = hMap.get(DcMotor.class, "intake"); //added 7/24/24
-        intakeWheels.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeWheels.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void setIntakePower(double dblPower){
 
