@@ -175,7 +175,7 @@ public class Competition_DriveCode extends OpMode {
         // Can be reset by pressing Y
         speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.2;
         speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) * 0.2;
-        if (driver.getButton(GamepadKeys.Button.X)) {
+        if (driver.getButton(GamepadKeys.Button.A)) {
             speedMultiplier = 0.5;
         }
         // Max speed is 1
