@@ -54,7 +54,7 @@ public class Competition_DriveCode extends OpMode {
     //set up variables
     private int intakePower = 0;
     private boolean flyWheelOn = false;
-    private float outtakeSpeed = 2350;
+    private float outtakeSpeed = 2300;
 
     boolean opModeIsActive = true;
 
@@ -260,8 +260,8 @@ public class Competition_DriveCode extends OpMode {
                 intakePower = -1;
             }
         }
-        intake.setMotorPower(intakePower);
-        belt.setMotorPower(intakePower);
+//        intake.setMotorPower(intakePower);
+//        belt.setMotorPower(intakePower);
 
         if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
             outtakeSpeed += 250;
@@ -271,21 +271,22 @@ public class Competition_DriveCode extends OpMode {
             outtakeSpeed = 2350;
         }
 
-        if (outtakeSpeed > 3000) {
-            outtakeSpeed = 3000;
+        if (outtakeSpeed > 6000) {
+            outtakeSpeed = 6000;
         } else if (outtakeSpeed < 2300) {
             outtakeSpeed = 2300;
         }
 
         telemetry.addData("Outtake Speed", outtakeSpeed);
+        telemetry.addData("Actual Outtake Speed", flywheels.getCurrentWheelRawVelocity(":)"));
 
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 
 //            intake.setMotorPower(-1);
-            belt.setMotorPower(1);
-            flywheels.setFlywheelVelocity(outtakeSpeed);
+            flywheels.setRawFlywheelVelocity(outtakeSpeed);
 
+            //wait 1 second to startup flywheels
             try {
                 sleep(500);
             } catch (InterruptedException e) {
@@ -293,18 +294,30 @@ public class Competition_DriveCode extends OpMode {
             }
 
             trapdoor.trapdoorOpen();
-
             try {
                 sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
+            belt.setMotorPower(0.25);
+            intake.setMotorPower(1);
+
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+
 //            intakeHinge.intakeHingeStandby();
 
+        }else if(operator.isDown(GamepadKeys.Button.LEFT_BUMPER)){
+            trapdoor.trapdoorOpen();
         }else{
             flywheels.setFlywheelVelocity(0);
             trapdoor.trapdoorClose();
+            intake.setMotorPower(intakePower);
+            belt.setMotorPower((double) intakePower * 0.25);
         }
 
         //Launches the ball
@@ -342,6 +355,7 @@ public class Competition_DriveCode extends OpMode {
             trapdoor.changeHingePosition(-0.05);
             telemetry.addLine("TRAPDOOR ADJUSTED");
         }
+
 
 //        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
 //            outtakeHinge.outtakeHingeRelax();

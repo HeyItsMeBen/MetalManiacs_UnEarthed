@@ -47,6 +47,10 @@ public class Flywheels {
         flywheel.setPower(0);
     }
 
+    public void setRawFlywheelVelocity(float givenRPM){
+        flywheel.setVelocity(givenRPM);
+    }
+
     public void setFlywheelVelocity(float givenRPM) {
         flywheel.setVelocity(tickPerRevolution*(givenRPM/60));
 //        leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));

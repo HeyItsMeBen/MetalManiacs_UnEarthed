@@ -10,7 +10,7 @@ public class Transfer {
     private Servo trapdoor = null;
     private DcMotor belt = null;
 
-    public float openTrapdoorPosition = 0.4f; // Get New Values
+    public float openTrapdoorPosition = 0.5f; // Get New Values
 
     public float closeTrapdoorPosition = 0.15f; // Get New Values
 
