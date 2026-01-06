@@ -8,6 +8,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -19,8 +20,10 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.AutoCode.Testing.RotationMatrices;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Old_Code.Intake;
-import org.firstinspires.ftc.teamcode.Old_Code.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -28,7 +31,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "autoAim_DriveCode", group = "Robot")
+@TeleOp(name = "Auto-Aim DriveCode", group = "Robot")
 public class AutoAim extends OpMode {
 
     // Driver Code
@@ -43,9 +46,11 @@ public class AutoAim extends OpMode {
 
     //create mechanism variables
     Intake intake;
-    Flywheels outtake;
-    Transfer intakeHinge;
-    Transfer outtakeHinge;
+    Flywheels flywheels;
+    Turret turret;
+    Transfer belt;
+    Transfer trapdoor;
+    Lights lights;
     RotationMatrices rotationMatrices;
 
     ElapsedTime timer;
@@ -53,7 +58,7 @@ public class AutoAim extends OpMode {
     //set up variables
     private int intakePower = 0;
     private boolean flyWheelOn = false;
-    private float outtakeSpeed = 2350;
+    private float outtakeSpeed = 2300;
 
     boolean opModeIsActive = true;
 
@@ -93,20 +98,18 @@ public class AutoAim extends OpMode {
     double  drive           = 0;        // Desired forward power/speed (-1 to +1)
     double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
-    final double DESIRED_DISTANCE = toMeters(60); //  this is how close the camera should get to the target
+    final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
-    //autoAim
+    //auto aim calculation variables
+    double angleDeviation=0;
+    double distanceToTagTelemetry=0;
+    double yawTelemetry=0;
+
     //distances
-    double tagToGoalCenter_Distance=toMeters(0);
+    double tagToGoalCenter_Distance=toMeters(18.75);
     double robotCenterToArmBase_Distance=toMeters(0);    //0.25-->0
-    double cameraToRobotCenter_Distance=toMeters(0);    //will probably be a negative if camera is on turret
-    double basketHeight=toMeters(18);   //NEEDS TO BE: basketHeight from floor, minus the height of launch point from floor. //26
-
-    //angles
-    double hoodTarget=0;
-    final double ballVelocityRpm=1500;
-    final double ballVelocity=ballVelocityRpm/60*(toMeters(2)*  Math.PI);  //velocity of the ball, not the wheels. Measured in meters per second
-    double gravity=9.81;
+    double cameraToRobotCenter_Distance=toMeters(7);    //will probably be a negative if camera is on turret
+    double basketHeight=toMeters(21);   //NEEDS TO BE: basketHeight from floor, minus the height of launch point from floor. //26
 
     @Override
     public void init() {
@@ -125,14 +128,16 @@ public class AutoAim extends OpMode {
 
         //create the mechanism objects
         intake = new Intake(hardwareMap);
-        outtake = new Flywheels(hardwareMap);
-        intakeHinge = new Transfer(hardwareMap);
-        outtakeHinge = new Transfer(hardwareMap);
+        flywheels = new Flywheels(hardwareMap);
+        turret = new Turret(hardwareMap);
+        belt = new Transfer(hardwareMap);
+        trapdoor = new Transfer(hardwareMap);
+        lights = new Lights(hardwareMap);
         rotationMatrices = new RotationMatrices();
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -154,20 +159,20 @@ public class AutoAim extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addLine("Press A to reset Yaw");
+        telemetry.addLine("Press Y to reset Yaw");
         telemetry.addLine("Press RIGHT STICK to toggle rotation mode");
-        telemetry.addLine("Press Y to toggle outtake forward");
+        telemetry.addLine("Press Xx to toggle outtake forward");
         telemetry.addLine("Hold left bumper for robot-relative drive");
         telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
 
         // Toggles if outtake is forward
-        if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
+        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
             outtakeForward = !outtakeForward;
         }
         telemetry.addData("Outtake Forward", outtakeForward);
 
-        // Reset yaw with A button
-        if (driver.getButton(GamepadKeys.Button.A)) {
+        // Reset yaw with Y button
+        if (driver.getButton(GamepadKeys.Button.Y)) {
             imu.resetYaw();
             targetHeading = 0;  // Reset target heading too
         }
@@ -187,7 +192,7 @@ public class AutoAim extends OpMode {
         // Can be reset by pressing Y
         speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.2;
         speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) * 0.2;
-        if (driver.getButton(GamepadKeys.Button.X)) {
+        if (driver.getButton(GamepadKeys.Button.A)) {
             speedMultiplier = 0.5;
         }
         // Max speed is 1
@@ -272,7 +277,8 @@ public class AutoAim extends OpMode {
                 intakePower = -1;
             }
         }
-        intake.setMotorPower(intakePower);
+//        intake.setMotorPower(intakePower);
+//        belt.setMotorPower(intakePower);
 
         if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
             outtakeSpeed += 250;
@@ -282,111 +288,121 @@ public class AutoAim extends OpMode {
             outtakeSpeed = 2350;
         }
 
-        if (outtakeSpeed > 3000) {
-            outtakeSpeed = 3000;
+        if (outtakeSpeed > 6000) {
+            outtakeSpeed = 6000;
         } else if (outtakeSpeed < 2300) {
             outtakeSpeed = 2300;
         }
 
         telemetry.addData("Outtake Speed", outtakeSpeed);
+        telemetry.addData("Actual Outtake Speed", flywheels.getCurrentWheelRawVelocity(":)"));
 
-        //cycles the ball into positions for launch
-        if (operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+        //Launches the balls while right bumper is held
+        if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 
-            intake.setMotorPower(-1);
+//            intake.setMotorPower(-1);
+            flywheels.setRawFlywheelVelocity(outtakeSpeed);
 
-            outtakeHinge.outtakeHingeRelax();
-
+            //wait 1 second to startup flywheels
             try {
                 sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
-            intakeHinge.intakeHingeLift();
-
+            trapdoor.trapdoorOpen();
             try {
                 sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
-            intakeHinge.intakeHingeStandby();
+            belt.setMotorPower(1);
+            intake.setMotorPower(1);
 
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+
+//            intakeHinge.intakeHingeStandby();
+
+        }else if(operator.isDown(GamepadKeys.Button.LEFT_BUMPER)){
+            trapdoor.trapdoorOpen();
+        }else{
+            flywheels.setFlywheelVelocity(0);
+            trapdoor.trapdoorClose();
+            intake.setMotorPower(intakePower);
+            belt.setMotorPower((double) intakePower * 0.25);
         }
 
         //Launches the ball
-        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-
-            outtakeHinge.outtakeHingeRelax();
-
-            if (flyWheelOn) {
-                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < (outtakeSpeed - 150) && outtake.getCurrentWheelVelocity("right") < (outtakeSpeed - 150); t++) {
-                    telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
-                    telemetry.update();
-                    try {
-                        sleep(250);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-
-            outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball
-
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            outtakeHinge.outtakeHingeRelax();
-        }
+//        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+//
+//            outtakeHinge.outtakeHingeRelax();
+//
+//            if (flyWheelOn) {
+//                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < (outtakeSpeed - 150) && outtake.getCurrentWheelVelocity("right") < (outtakeSpeed - 150); t++) {
+//                    telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
+//                    telemetry.update();
+//                    try {
+//                        sleep(250);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//            }
+//
+//            outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball
+//
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            outtakeHinge.outtakeHingeRelax();
+//        }
 
         if (operator.isDown((GamepadKeys.Button.DPAD_UP))) {
-            intakeHinge.changeHingePosition("intake", 0.05);
+            trapdoor.changeHingePosition(0.05);
+            telemetry.addLine("TRAPDOOR ADJUSTED");
         } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
-            intakeHinge.changeHingePosition("intake", -0.05);
+            trapdoor.changeHingePosition(-0.05);
+            telemetry.addLine("TRAPDOOR ADJUSTED");
         }
 
-        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
-            outtakeHinge.outtakeHingeRelax();
-            if (flyWheelOn) {
-                outtake.setFlywheelVelocity(0);      //turns off the flywheels
-                flyWheelOn = false;
-            } else {
-                outtake.setFlywheelVelocity(outtakeSpeed);      //turns on the flywheels
-                flyWheelOn = true;
-            }
+
+//        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
+//            outtakeHinge.outtakeHingeRelax();
+//            if (flyWheelOn) {
+//                outtake.setFlywheelVelocity(0);      //turns off the flywheels
+//                flyWheelOn = false;
+//            } else {
+//                outtake.setFlywheelVelocity(outtakeSpeed);      //turns on the flywheels
+//                flyWheelOn = true;
+//            }
+//        }
+
+        scanForTags();
+        if (targetFound) {
+            double launchPointToGoalCenterX_Distance = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation), Math.toRadians(22.5)); //Basically the horizontal distance to the tag
+            double  headingError    = desiredTag.ftcPose.bearing+Math.toDegrees(angleDeviation);
+            turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+            turret.setMotorPower(turn);
+
+            telemetry.addData("actual distance: ", toInches(launchPointToGoalCenterX_Distance));
+            telemetry.addData("distanceToTagTelemetry: ", toInches(distanceToTagTelemetry));
+            telemetry.addData("angle Deviation", Math.toDegrees(angleDeviation));
+            telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
+            telemetry.addData("TagYaw (Actual)", Math.toDegrees(yawTelemetry));
+            telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
+            telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
+
+            telemetry.update();
         }
 
-        //Auto-aims
-        if (driver.isDown(GamepadKeys.Button.B)) {
-            scanForTags();
-            if (targetFound) {
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double launchPointToGoalCenterX_Distance=getCorrectDistance(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.elevation), Math.toRadians(22.5));
-                double  rangeError      = toInches(launchPointToGoalCenterX_Distance - DESIRED_DISTANCE);
-                double  headingError    = -desiredTag.ftcPose.bearing;
-                double  yawError        = 0;// + 0.1; //changed to help with heading offset
-                //runPIDStuff(rangeError, headingError, yawError);    //calculates and sends power to the wheels`//this is commented out because we don't want the drivetrain to move
-
-                double launchAngle1=Math.atan((Math.pow(ballVelocity, 2)+Math.sqrt(Math.pow(ballVelocity, 4)-gravity*(gravity*Math.pow(launchPointToGoalCenterX_Distance, 2)+2*(basketHeight)*Math.pow(ballVelocity, 2))))/(gravity*launchPointToGoalCenterX_Distance));  //this is the angle (in radians) that the hood needs to be set to. It is not the needed servo position yet.;
-                double launchAngle2=Math.atan((Math.pow(ballVelocity, 2)-Math.sqrt(Math.pow(ballVelocity, 4)-gravity*(gravity*Math.pow(launchPointToGoalCenterX_Distance, 2)+2*(basketHeight)*Math.pow(ballVelocity, 2))))/(gravity*launchPointToGoalCenterX_Distance));  //this is the angle (in radians) that the hood needs to be set to. It is not the needed servo position yet.;
-
-                //find the larger theta value.
-                if (launchAngle1>=launchAngle2){
-                    hoodTarget=launchAngle1;
-                }
-                else if (launchAngle2>launchAngle1){
-                    hoodTarget=launchAngle2;
-                }
-                else {  //if this one runs, something went wrong
-                    hoodTarget=0;
-                }
-            }
-        }
-        telemetry.addData("HoodTarget: ", Math.toDegrees(hoodTarget));
         driver.readButtons();
         operator.readButtons();
         telemetry.update();
@@ -494,47 +510,6 @@ public class AutoAim extends OpMode {
             telemetry.addData("\n>","Drive using joysticks to find valid target\n");
         }
     }
-    public void runPIDStuff(double rangeError, double headingError, double yawError){   //Calculate the power needed for driving/strafing/turning
-
-        // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-        if (targetFound) {
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-        }
-        telemetry.update();
-
-        // Apply desired axes motions to the drivetrain.
-        moveRobot(drive, strafe, turn);
-    }
-    public void moveRobot(double x, double y, double yaw) { //calculates and sends the power needed for each motor
-        // Calculate wheel powers.
-        double frontLeftPower    =  x - y - yaw;
-        double frontRightPower   =  x + y + yaw;
-        double backLeftPower     =  x + y - yaw;
-        double backRightPower    =  x - y + yaw;
-
-        // Normalize wheel powers to be less than 1.0
-        double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
-        max = Math.max(max, Math.abs(backLeftPower));
-        max = Math.max(max, Math.abs(backRightPower));
-
-        if (max > 1.0) {
-            frontLeftPower /= max;
-            frontRightPower /= max;
-            backLeftPower /= max;
-            backRightPower /= max;
-        }
-
-        // Send powers to the wheels.
-        frontLeftDrive.setPower(frontLeftPower);
-        frontRightDrive.setPower(frontRightPower);
-        backLeftDrive.setPower(backLeftPower);
-        backRightDrive.setPower(backRightPower);
-    }
     private void initAprilTag() {   //Sets up the april tag and camera stuff. Gets it ready for use.
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
@@ -594,16 +569,15 @@ public class AutoAim extends OpMode {
             //sleep1(20);
         }
     }
-    public double getCorrectDistance(double givenX, double tagElevation, double cameraPitch){
-        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;   //robotBaseX is horizontal distance from the center of the robot to the tag.
-        return robotBaseX-robotCenterToArmBase_Distance+tagToGoalCenter_Distance;                   //returns the horizontal distance from the launchPoint to the tag. LaunchPoint is the point that the ball leaves the shooter at.
-    }
-    public double getCorrectDistance2(double givenX, double tagYaw, double tagElevation, double cameraPitch){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
+    public double getCorrectDistance2(double givenX, double tagYaw, double tagPitch, double tagElevation, double cameraPitch){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
         //REMINDER: Use rotation matrices for yaw translation
-        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;
-        double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-tagYaw));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
-        //outtakeFlywheelValues.angleDeviation=Math.asin(tagToGoalCenter_Distance*Math.sin(Math.PI-tagYaw)/newX);    //law of sines
-        return (newX-robotCenterToArmBase_Distance);  //returns distance from the armBase to goalCenter
+        double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;   //robotBaseX is horizontal distance from the center of the robot to the tag.
+        distanceToTagTelemetry=robotBaseX;
+        double [] actualTagYaw=rotationMatrices.getActualYaw(tagYaw, tagPitch, 0, cameraPitch);
+        yawTelemetry=actualTagYaw[0];
+        double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-actualTagYaw[0]));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
+        angleDeviation=Math.asin(tagToGoalCenter_Distance*Math.sin(Math.PI-actualTagYaw[0])/newX);    //law of sines
+        return (newX+robotCenterToArmBase_Distance);  //returns horizontal distance from the launchPoint to goalCenter
     }
     private double toMeters(double inches){
         return inches/39.3700787;
