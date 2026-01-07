@@ -21,7 +21,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
+import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -48,6 +50,8 @@ public class Competition_DriveCode extends OpMode {
     Transfer belt;
     Transfer trapdoor;
     Lights lights;
+    Turret turret;
+    OuttakeHood hood;
 
     ElapsedTime timer;
 
@@ -96,6 +100,8 @@ public class Competition_DriveCode extends OpMode {
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
+    double hoodAngle;
+
     @Override
     public void init() {
         // Initialize the Apriltag Detection process
@@ -117,6 +123,8 @@ public class Competition_DriveCode extends OpMode {
         belt = new Transfer(hardwareMap);
         trapdoor = new Transfer(hardwareMap);
         lights = new Lights(hardwareMap);
+        turret = new Turret(hardwareMap);
+        hood = new OuttakeHood(hardwareMap);
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -138,6 +146,7 @@ public class Competition_DriveCode extends OpMode {
         //April tag stuff
         if (USE_WEBCAM)
             setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        hood.resetZeroPosition();
     }
 
     @Override
@@ -300,7 +309,7 @@ public class Competition_DriveCode extends OpMode {
                 throw new RuntimeException(e);
             }
 
-            belt.setMotorPower(0.25);
+            belt.setMotorPower(1);
             intake.setMotorPower(1);
 
 //            try {
@@ -354,6 +363,11 @@ public class Competition_DriveCode extends OpMode {
         } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
             trapdoor.changeHingePosition(-0.05);
             telemetry.addLine("TRAPDOOR ADJUSTED");
+        }
+        else if (operator.isDown((GamepadKeys.Button.DPAD_LEFT))) {
+            hood.setAngle(Math.toRadians(90));
+        } else if (operator.isDown(GamepadKeys.Button.DPAD_RIGHT)) {
+            hood.setAngle(Math.toRadians(50));
         }
 
 
