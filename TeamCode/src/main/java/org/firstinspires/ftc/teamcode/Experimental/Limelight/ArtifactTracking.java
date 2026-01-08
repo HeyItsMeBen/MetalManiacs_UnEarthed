@@ -17,6 +17,8 @@ import java.util.List;
 @Disabled
 public class ArtifactTracking extends LinearOpMode {
     private Limelight3A limelight;
+    public double xpos = 0;
+    public double ypos = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
