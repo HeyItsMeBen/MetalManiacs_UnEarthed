@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 public class Flywheels {
 
     private DcMotorEx flywheel = null;
-    private DcMotorEx leftFlyWheel = null;
-    private DcMotorEx rightFlyWheel = null;
+//    private DcMotorEx leftFlyWheel = null;
+//    private DcMotorEx rightFlyWheel = null;
     final double tickPerRevolution = 28;
 
     double optimalVelocity = 2350;
@@ -16,11 +17,19 @@ public class Flywheels {
     public boolean done = true;
     public boolean isOpModeActive = true;
 
+    public double f = 14.12;
+    public double p = 100;
+
     //Outtake subsystem
     public Flywheels(HardwareMap hMap) {
 
         flywheel = hMap.get(DcMotorEx.class, "flywheel");
-        flywheel.setDirection(DcMotor.Direction.REVERSE);
+        flywheel.setDirection(DcMotorEx.Direction.REVERSE);
+        flywheel.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
+        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
 //        leftFlyWheel = hMap.get(DcMotorEx.class, "leftFlyWheel");
 //        rightFlyWheel = hMap.get(DcMotorEx.class, "rightFlyWheel");
@@ -36,13 +45,19 @@ public class Flywheels {
 
     }
 
-    public void setFlywheelPower(double power) {
-        if (power > 1) {
-            flywheel.setPower(1.0);
-        } else {
-            flywheel.setPower(power);
-        }
+    public void setFlywheelSpeed(double rpm){
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
+        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        flywheel.setVelocity(rpm);
     }
+
+//    public void setFlywheelPower(double power) {
+//        if (power > 1) {
+//            flywheel.setPower(1.0);
+//        } else {
+//            flywheel.setPower(power);
+//        }
+//    }
     public void stopFlywheel(){
         flywheel.setPower(0);
     }
@@ -89,8 +104,8 @@ public class Flywheels {
         return optimalVelocity;
     }
 
-    public void setFlywheelRawVelocity(float givenRPM) {
-        leftFlyWheel.setVelocity(givenRPM);
-        rightFlyWheel.setVelocity(givenRPM);
-    }
+//    public void setFlywheelRawVelocity(float givenRPM) {
+//        leftFlyWheel.setVelocity(givenRPM);
+//        rightFlyWheel.setVelocity(givenRPM);
+//    }
 }

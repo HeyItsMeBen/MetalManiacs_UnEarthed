@@ -35,12 +35,12 @@ public class OuttakeFlywheelPowerTest extends LinearOpMode {
 
         //executing
         while (opModeIsActive()) {
-            if (gamepad.getButton(GamepadKeys.Button.A)) {
-                outtake.setFlywheelPower(power);
-            }
-            else if (gamepad.getButton(GamepadKeys.Button.B)) {
-                outtake.setFlywheelPower(0);
-            }
+//            if (gamepad.getButton(GamepadKeys.Button.A)) {
+//                outtake.setFlywheelPower(power);
+//            }
+//            else if (gamepad.getButton(GamepadKeys.Button.B)) {
+//                outtake.setFlywheelPower(0);
+//            }
 
             //Send data to FTC dashbaord. The dashboard will graph it in real-time
             TelemetryPacket packet = new TelemetryPacket();

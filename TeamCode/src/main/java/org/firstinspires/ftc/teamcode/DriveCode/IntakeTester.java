@@ -65,7 +65,7 @@ public class IntakeTester extends LinearOpMode {
 //                flywheel.setFlywheelVelocity(0);
 //            }
             if (gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
-                flywheel.setFlywheelPower(speed);
+//                flywheel.setFlywheelPower(speed);
             }else{
                 flywheel.stopFlywheel();
             }

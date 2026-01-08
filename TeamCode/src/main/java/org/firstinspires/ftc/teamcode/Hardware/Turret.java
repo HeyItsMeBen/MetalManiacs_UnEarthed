@@ -13,4 +13,21 @@ public class Turret {
     public void setMotorPower(double dblPower){
         turretMotor.setPower(dblPower);
     }
+
+    public void getTurretPosition(){
+        turretMotor.getCurrentPosition();
+    }
+
+    public void resetPosition(){
+        int targetPosition = 0;
+        turretMotor.setTargetPosition(targetPosition);
+        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turretMotor.setPower(0.5);
+    }
+
+    public void resetInitial(){
+        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
 }
