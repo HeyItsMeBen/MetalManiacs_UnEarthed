@@ -419,9 +419,7 @@ public class Competition_DriveCode extends OpMode {
         } else {
             turret.setMotorPower(0);
         }
-        else{
-            turret.setMotorPower(0);    //stops turret if no tag is seen
-        }
+        
 
         driver.readButtons();
         operator.readButtons();
