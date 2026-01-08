@@ -312,7 +312,7 @@ public class Competition_DriveCode extends OpMode {
                 throw new RuntimeException(e);
             }
 
-            belt.setMotorPower(1);
+            belt.setTransferPower(1);
             intake.setIntakePower(1);
 
 //            try {

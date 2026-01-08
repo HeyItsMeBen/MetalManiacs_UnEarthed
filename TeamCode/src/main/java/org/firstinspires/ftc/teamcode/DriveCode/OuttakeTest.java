@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.IntakeSystem;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
@@ -66,8 +65,8 @@ public class OuttakeTest extends LinearOpMode{
                     intakePower = -1;
                 }
             }
-        intake.setMotorPower(intakePower);
-        transfer.setMotorPower(intakePower);
+        intake.setIntakePower(intakePower);
+        transfer.setTransferPower(intakePower);
 
         telemetry.addData("Intake speed", intakePower);
 
