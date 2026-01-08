@@ -8,7 +8,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -390,14 +389,21 @@ public class Competition_DriveCode extends OpMode {
         if (targetFound) {
             autoAim.calculateEverything(desiredTag);
             turret.setMotorPower(autoAim.turn);
+            hood.setAngle(autoAim.hoodAngle);
 
-            telemetry.addData("actual distance: ", toInches(autoAim.launchPointToGoalCenterX_Distance));
-            telemetry.addData("distanceToTagTelemetry: ", toInches(autoAim.distanceToTagTelemetry));
+            telemetry.addData("ballVelocity (m/s)", autoAim.ballVelocity);
+            telemetry.addData("hood Angle", Math.toDegrees(autoAim.hoodAngle));
+            telemetry.addData("other hood Angle", Math.toDegrees(autoAim.otherHoodAngle));
+            telemetry.addData("actual distance", toInches(autoAim.launchPointToGoalCenterX_Distance));
+            telemetry.addData("distanceToTagTelemetry", toInches(autoAim.distanceToTagTelemetry));
             telemetry.addData("angle Deviation", Math.toDegrees(autoAim.angleDeviation));
             telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
             telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
             telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
             telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
+        }
+        else{
+            turret.setMotorPower(0);    //stops turret if no tag is seen
         }
 
         driver.readButtons();
