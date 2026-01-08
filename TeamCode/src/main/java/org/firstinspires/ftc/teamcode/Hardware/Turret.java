@@ -8,14 +8,14 @@ public class Turret {
     private DcMotorEx turretMotor;
     public Turret(HardwareMap hMap) {
         turretMotor = hMap.get(DcMotorEx.class, "turret"); //added 7/24/24
-        turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void setMotorPower(double dblPower){
         turretMotor.setPower(dblPower);
     }
 
-    public void getTurretPosition(){
-        turretMotor.getCurrentPosition();
+    public int getTurretPosition(){
+        return turretMotor.getCurrentPosition();
     }
 
     public void resetPosition(){

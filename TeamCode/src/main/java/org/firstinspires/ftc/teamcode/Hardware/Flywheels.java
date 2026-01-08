@@ -51,6 +51,12 @@ public class Flywheels {
         flywheel.setVelocity(rpm);
     }
 
+    public double launchFromDistance(double distance){ //distance in feet
+        double optimalRpm = 1000+ (83.3 * distance);
+        setFlywheelSpeed(optimalRpm);
+        return optimalRpm; //return the optimal rpm for telemetry debugging...
+    }
+
 //    public void setFlywheelPower(double power) {
 //        if (power > 1) {
 //            flywheel.setPower(1.0);

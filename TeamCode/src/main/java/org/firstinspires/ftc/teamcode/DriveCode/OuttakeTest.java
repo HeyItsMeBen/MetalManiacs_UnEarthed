@@ -10,22 +10,30 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.IntakeSystem;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
-import org.firstinspires.ftc.teamcode.Old_Code.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 @TeleOp (name="Outtake Tester", group="test")
 public class OuttakeTest extends LinearOpMode{
     public GamepadEx gamepad;
     public Flywheels flywheel;
-//    public OuttakeHood hood;
-    public double angle = 0;
+    public Turret turret;
+    public Transfer transfer;
+    public Intake intake;
 
-    public double speed = 0.5;
-    public int rpm = 3000;
+    public int intakePower;
+    public int distance = 6;
+//    public OuttakeHood hood;
+    public int rpm = 2100;
 
     @Override
     public void runOpMode() {
 
         flywheel = new Flywheels(hardwareMap);
+        turret = new Turret(hardwareMap);
+        transfer = new Transfer(hardwareMap);
+        intake = new Intake(hardwareMap);
 //        hood = new OuttakeHood(hardwareMap);
 
         gamepad = new GamepadEx(gamepad1);
@@ -40,10 +48,30 @@ public class OuttakeTest extends LinearOpMode{
 //                flywheel.stopFlywheel();
 //            }
             if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
-                flywheel.setFlywheelVelocity(rpm);
+                telemetry.addData("Optimal Launch Speed",flywheel.launchFromDistance(distance));
             }else{
-                flywheel.setFlywheelVelocity(0);
+                flywheel.setFlywheelSpeed(0);
             }
+
+            transfer.trapdoorOpen();
+
+            if (gamepad.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))) {
+                if (Math.abs(intakePower) == 1) {
+                    intakePower = 0;
+                } else {
+                    intakePower = 1;
+                }
+            } else if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                if (Math.abs(intakePower) == 1) {
+                    intakePower = 0;
+                } else {
+                    intakePower = -1;
+                }
+            }
+        intake.setMotorPower(intakePower);
+        transfer.setMotorPower(intakePower);
+
+        telemetry.addData("Intake speed", intakePower);
 
 
 //            angle += gamepad.getLeftY();
@@ -51,21 +79,30 @@ public class OuttakeTest extends LinearOpMode{
 //            hood.setAngle(angle);
 
 //            telemetry.addData("angle", angle);
-            speed += gamepad.getLeftY()*0.01;
-            if (speed >= 1){
-                speed = 1;
-            }else if(speed<=0.1){
-                speed = 0.1;
+            turret.setMotorPower(gamepad1.left_stick_x);
+
+            if(gamepad.getButton(GamepadKeys.Button.B)){
+                turret.resetInitial();
             }
 
-            rpm += (int) (gamepad.getRightY()*10);
-            if (rpm > 6000){
-                rpm = 6000;
-            }else if (rpm < 1000){
-                rpm = 1000;
+            telemetry.addData("turret rotation", turret.getTurretPosition());
+//            rpm += (int) (gamepad.getRightY()*-10);
+//            if (rpm > 3000){
+//                rpm = 6000;
+//            }else if (rpm < 300){
+//                rpm = 300;
+//            }
+//            distance += (int) -gamepad.getRightY();
+            if(gamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+                distance+=1;
+            }else if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
+                distance-=1;
             }
-            telemetry.addData("rpm",flywheel.getCurrentWheelVelocity("neither"));
+            telemetry.addData("distance", distance);
+//            telemetry.addData("rpm",rpm);
+            telemetry.addData("velo",flywheel.getCurrentWheelRawVelocity("neither"));
 
+            gamepad.readButtons();
             telemetry.update();
 
             idle();
