@@ -67,25 +67,25 @@ public final class MecanumDrive {
         // TODO: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.UP;
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+                RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
 
-        public double inPerTick = 0.001964154; //0.00200116735
-        public double lateralInPerTick = 0.0014236824640281177;
-        public double trackWidthTicks = 7560.333282780619;
+        public double inPerTick = 0; //0.00200116735
+        public double lateralInPerTick = 0;
+        public double trackWidthTicks = 0;
 
 
-        public double kS = 0.9540689083133345; //1.1093082993526546 + 0.9398375327382706 + 0.9754192716382062; //1.0166366397311046
-        public double kV = 0.0003168580770654241; //0.00035327377051735324 + 0.0003616951211600252 + 0.00035765101432894375; //0.0003626712341893614
-        public double kA = 0.00006;
+        public double kS = 0; //1.1093082993526546 + 0.9398375327382706 + 0.9754192716382062; //1.0166366397311046
+        public double kV = 0; //0.00035327377051735324 + 0.0003616951211600252 + 0.00035765101432894375; //0.0003626712341893614
+        public double kA = 0;
 
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 30;
-        public double minProfileAccel = -15;
-        public double maxProfileAccel = 20;
+        public double maxWheelVel = 50;
+        public double minProfileAccel = -25;
+        public double maxProfileAccel = 25;
 
 
         // turn profile parameters (in radians)
@@ -94,9 +94,9 @@ public final class MecanumDrive {
 
 
         // path controller gains
-        public double axialGain = 4;
-        public double lateralGain = 4; // originally 2
-        public double headingGain = 3;// shared with turn
+        public double axialGain = 0;
+        public double lateralGain = 0; // originally 2
+        public double headingGain = 0;// shared with turn
 
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
@@ -252,9 +252,8 @@ public final class MecanumDrive {
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
 
         lazyImu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));

@@ -318,7 +318,7 @@ public class AutoAim extends OpMode {
             }
 
             belt.setMotorPower(1);
-            intake.setMotorPower(1);
+            intake.setIntakePower(1);
 
 //            try {
 //                sleep(500);
@@ -333,7 +333,7 @@ public class AutoAim extends OpMode {
         }else{
             flywheels.setFlywheelVelocity(0);
             trapdoor.trapdoorClose();
-            intake.setMotorPower(intakePower);
+            intake.setIntakePower(intakePower);
             belt.setMotorPower((double) intakePower * 0.25);
         }
 

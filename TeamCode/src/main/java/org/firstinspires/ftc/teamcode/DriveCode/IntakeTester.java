@@ -10,15 +10,14 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.IntakeSystem;
-import org.firstinspires.ftc.teamcode.Old_Code.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 @TeleOp (name="Intake Tester", group="test")
 public class IntakeTester extends LinearOpMode {
 
     public GamepadEx gamepad;
 
-    IntakeSystem intake;
+    Intake intake;
 
     public DcMotor transfer = null;
     public Servo trapdoor = null;
@@ -37,7 +36,7 @@ public class IntakeTester extends LinearOpMode {
         transfer = hardwareMap.get(DcMotor.class, "transfer");
         trapdoor = hardwareMap.get(Servo.class, "trapdoor");
 
-        intake = new IntakeSystem(hardwareMap);
+        intake = new Intake(hardwareMap);
 
         gamepad = new GamepadEx(gamepad1);
 

@@ -37,7 +37,7 @@ public class Transfer {
         trapdoor.setPosition(position);
     }
 
-    public void setMotorPower(double power){
+    public void setTransferPower(double power){
         belt.setPower(power);
     }
     public void runTransfer() {
