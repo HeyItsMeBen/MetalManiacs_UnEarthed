@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Experimental.TurretAutoAim.AutoAim;
+import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
@@ -329,7 +329,7 @@ public class Competition_DriveCode extends OpMode {
             flywheels.setFlywheelVelocity(0);
             trapdoor.trapdoorClose();
             intake.setIntakePower(intakePower);
-            belt.setMotorPower((double) intakePower * 0.25);
+            belt.setTransferPower((double) intakePower * 0.25);
         }
 
         //Launches the ball
