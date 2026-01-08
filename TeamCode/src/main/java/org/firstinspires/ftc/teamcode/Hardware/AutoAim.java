@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Experimental.TurretAutoAim;
+package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.util.Range;
 
@@ -13,18 +13,20 @@ public class AutoAim {
 
     //auto aim calculation variables
     private double gravity = 9.8;
-    private double ballVelocity=rpmToMetersPerSecond(ticksToRpm(1000, 28), toMeters(5));
+    public double ballVelocity=rpmToMetersPerSecond(3250, toMeters(3.77953));
+    //public double ballVelocity=16.3362818;
 
     //distances
     private double tagToGoalCenter_Distance=toMeters(10);
     private double robotCenterToArmBase_Distance=toMeters(2.5);    //0.25-->0
     private double cameraToRobotCenter_Distance=toMeters(4.25);    //will probably be a negative if camera is on turret
-    private double basketHeight=toMeters(21);   //NEEDS TO BE: basketHeight from floor, minus the height of launch point from floor. //26
+    private double basketHeight=toMeters(39-16);   //NEEDS TO BE: basketHeight from floor, minus the height of launch point from floor. //26
     private double cameraPitch=0;
 
     //public variables
     public double turn = 0;
     public double hoodAngle=0;
+    public double otherHoodAngle=0;
     public double launchPointToGoalCenterX_Distance=0;
     public double angleDeviation=0;
     public double distanceToTagTelemetry=0;
@@ -39,9 +41,9 @@ public class AutoAim {
     private double toInches(double inches){
         return inches*39.3700787;
     }
-    private double ticksToRpm(double ticksPerSecond, double tickPerRevolution){
-        return ticksPerSecond*60/tickPerRevolution;
-    }
+//    private double ticksToRpm(double ticksPerSecond, double tickPerRevolution){
+//        return ticksPerSecond*60/tickPerRevolution;
+//    }
     private double rpmToMetersPerSecond(double givenRpm, double wheelDiameter){
         return wheelDiameter*Math.PI*(givenRpm/60);
     }
@@ -56,10 +58,12 @@ public class AutoAim {
 
         //find the larger theta value.
         if (launchAngle1>=launchAngle2){
-            hoodAngle=launchAngle1;
+            hoodAngle=Math.PI-(launchAngle1+Math.PI/2);
+            otherHoodAngle=Math.PI-(launchAngle2+Math.PI/2);
         }
         else if (launchAngle2>launchAngle1){
-            hoodAngle=launchAngle2;
+            hoodAngle=Math.PI-(launchAngle2+Math.PI/2);
+            otherHoodAngle=Math.PI-(launchAngle1+Math.PI/2);
         }
         else {  //if this one runs, something went wrong
             hoodAngle=0;
