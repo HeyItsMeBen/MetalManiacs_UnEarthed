@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Experimental.TurretAutoAim.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
@@ -52,6 +53,7 @@ public class Competition_DriveCode extends OpMode {
     Lights lights;
     Turret turret;
     OuttakeHood hood;
+    AutoAim autoAim;
 
     ElapsedTime timer;
 
@@ -125,6 +127,7 @@ public class Competition_DriveCode extends OpMode {
         lights = new Lights(hardwareMap);
         turret = new Turret(hardwareMap);
         hood = new OuttakeHood(hardwareMap);
+        autoAim = new AutoAim(Math.toRadians(15));
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -383,15 +386,18 @@ public class Competition_DriveCode extends OpMode {
 //        }
 
         //Auto-aims
-        if (driver.isDown(GamepadKeys.Button.B)) {
-            scanForTags();
-            if (targetFound) {
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = -desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw + 0.1; //changed to help with heading offset
-                runPIDStuff(rangeError, headingError, yawError);    //calculates and sends power to the wheels
-            }
+        scanForTags();
+        if (targetFound) {
+            autoAim.calculateEverything(desiredTag);
+            turret.setMotorPower(autoAim.turn);
+
+            telemetry.addData("actual distance: ", toInches(autoAim.launchPointToGoalCenterX_Distance));
+            telemetry.addData("distanceToTagTelemetry: ", toInches(autoAim.distanceToTagTelemetry));
+            telemetry.addData("angle Deviation", Math.toDegrees(autoAim.angleDeviation));
+            telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
+            telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
+            telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
+            telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
         }
 
         driver.readButtons();
@@ -600,5 +606,8 @@ public class Competition_DriveCode extends OpMode {
             gainControl.setGain(gain);
             //sleep1(20);
         }
+    }
+    private double toInches(double inches){
+        return inches*39.3700787;
     }
 }
