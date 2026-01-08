@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Old_Code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+@Deprecated
 public class
 Intake {
     private DcMotor intakeWheels;
@@ -12,5 +12,9 @@ Intake {
     }
     public void setMotorPower(double dblPower){
         intakeWheels.setPower(dblPower);
+    }
+
+    public void runIntakeFullPower() {
+
     }
 }

@@ -24,23 +24,23 @@ public class AutoPathSimShortRange {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
 
-                //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(270)))
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(315)))
-
-//                        .setReversed(true)
-//                        .splineTo(new Vector2d(20, -30), Math.toRadians(90))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(270)))
+                //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(315)))
 
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225))
+                        .splineTo(new Vector2d(20, -30), Math.toRadians(90))
+
+//                        .setReversed(true)
+//                        .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225))
 
                         .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270))
 
-//                        .strafeTo(new Vector2d(18, -20))
-//                        .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0))
-//
-//                        .setReversed(true)
-//                        .splineToConstantHeading(new Vector2d(18, 18), Math.toRadians(90))
-//                        .setReversed(false)
+                        .strafeTo(new Vector2d(18, -20))
+                        .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0))
+
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(18, 18), Math.toRadians(90))
+                        .setReversed(false)
 
                         .strafeTo(new Vector2d(18, 0))
                         .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0))

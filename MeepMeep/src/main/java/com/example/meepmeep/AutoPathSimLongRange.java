@@ -25,8 +25,12 @@ public class AutoPathSimLongRange {
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(270)))
 
-                        .lineTo(new Vector2d(15, -50))
+                        .lineTo(new Vector2d(15, -47))
                         .turn(Math.toRadians(90))
+
+                        .strafeTo(new Vector2d(60, -55))
+
+                        .lineTo(new Vector2d(15, -47))
 
                         .build());
 

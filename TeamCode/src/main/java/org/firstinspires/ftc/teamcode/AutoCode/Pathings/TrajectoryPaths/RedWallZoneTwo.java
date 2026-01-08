@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Testing;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -9,38 +9,41 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Old_Code.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 @Config
-@Autonomous(name = "Trajectory Path Tester", group = "Autonomous")
-public class TrajectoryPathTest extends LinearOpMode {
+@Autonomous(name = "[Red] Start at Red Wall, Shoot from Zone Two", group = "Autonomous")
+public class RedWallZoneTwo extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
 
+    Transfer belt;
+
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270)); // x, y, heading in radians
+
+        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(315));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-
-        String PatternOne = "PPG";
-        String PatternTwo = "PGP";
-        String PatternThree = "GPP";
+        belt = new Transfer(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
 
-                        PathingTrajectories.initialFiringFromWallZoneOne(drive, startPose, flywheels),
+                        PathingTrajectories.firingPositionZoneTwo(drive, startPose, flywheels),
 
-                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
+                        PathingTrajectories.collectArtifactsZoneTwo(drive, startPose, intake, belt),
+
+                        PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake, belt)
 
                 )
 
-            );
+        );
     }
 }
