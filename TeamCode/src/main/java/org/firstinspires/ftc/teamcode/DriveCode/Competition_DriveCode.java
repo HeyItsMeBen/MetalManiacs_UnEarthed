@@ -296,11 +296,12 @@ public class Competition_DriveCode extends OpMode {
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 
 //            intake.setMotorPower(-1);
-            flywheels.setRawFlywheelVelocity(outtakeSpeed);
+//            flywheels.setRawFlywheelVelocity(outtakeSpeed);
+            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)));
 
             //wait 1 second to startup flywheels
             try {
-                sleep(500);
+                sleep(1500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -323,13 +324,27 @@ public class Competition_DriveCode extends OpMode {
 
 //            intakeHinge.intakeHingeStandby();
 
+//Its a massive level up.
+//First lego league was my little league, it taught me the basics.
+//I went from winning lego trophies like these to winning trophies like this.
+//Now, as a software engineer for the metal maniacs,
+//I need to apply what I've learned to writing code for robot
+//Its like writing the DNA for a metal organism except I get complete creative freedom
+//However, if my code isn't perfect, then our robot becomes a door step.
+//A door step is what we call a robot when its unable to move or score on the field.
+//It becomes a decoration on the field
+//Fortunately, our robot is not a door step, we'll showcase the running robot soon.
+//At Metal Maniacs, we apply what we've learned to real world engineering
+
+
+
         }else if(operator.isDown(GamepadKeys.Button.LEFT_BUMPER)){
             trapdoor.trapdoorOpen();
         }else{
             flywheels.setFlywheelVelocity(0);
             trapdoor.trapdoorClose();
             intake.setIntakePower(intakePower);
-            belt.setTransferPower((double) intakePower * 0.25);
+            belt.setTransferPower(intakePower);
         }
 
         //Launches the ball
@@ -398,6 +413,8 @@ public class Competition_DriveCode extends OpMode {
             telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
             telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
             telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
+        } else {
+            turret.setMotorPower(0);
         }
 
         driver.readButtons();
@@ -609,5 +626,8 @@ public class Competition_DriveCode extends OpMode {
     }
     private double toInches(double inches){
         return inches*39.3700787;
+    }
+    private double toFeet(double inches){
+        return inches / 12;
     }
 }

@@ -317,7 +317,7 @@ public class AutoAim extends OpMode {
                 throw new RuntimeException(e);
             }
 
-            belt.setMotorPower(1);
+            belt.setTransferPower(1);
             intake.setIntakePower(1);
 
 //            try {
@@ -334,7 +334,7 @@ public class AutoAim extends OpMode {
             flywheels.setFlywheelVelocity(0);
             trapdoor.trapdoorClose();
             intake.setIntakePower(intakePower);
-            belt.setMotorPower((double) intakePower * 0.25);
+            belt.setTransferPower((double) intakePower * 0.25);
         }
 
         //Launches the ball
