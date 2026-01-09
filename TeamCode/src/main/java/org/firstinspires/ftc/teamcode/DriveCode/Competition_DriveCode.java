@@ -101,6 +101,7 @@ public class Competition_DriveCode extends OpMode {
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
+    public boolean shouldAutoAim = true;
     double hoodAngle;
 
     @Override
@@ -323,20 +324,6 @@ public class Competition_DriveCode extends OpMode {
 
 //            intakeHinge.intakeHingeStandby();
 
-//Its a massive level up.
-//First lego league was my little league, it taught me the basics.
-//I went from winning lego trophies like these to winning trophies like this.
-//Now, as a software engineer for the metal maniacs,
-//I need to apply what I've learned to writing code for robot
-//Its like writing the DNA for a metal organism except I get complete creative freedom
-//However, if my code isn't perfect, then our robot becomes a door step.
-//A door step is what we call a robot when its unable to move or score on the field.
-//It becomes a decoration on the field
-//Fortunately, our robot is not a door step, we'll showcase the running robot soon.
-//At Metal Maniacs, we apply what we've learned to real world engineering
-
-
-
         }else if(operator.isDown(GamepadKeys.Button.LEFT_BUMPER)){
             trapdoor.trapdoorOpen();
         }else{
@@ -401,25 +388,48 @@ public class Competition_DriveCode extends OpMode {
 
         //Auto-aims
         scanForTags();
-        if (targetFound) {
-            autoAim.calculateEverything(desiredTag);
-            turret.setMotorPower(autoAim.turn);
-            hood.setAngle(autoAim.hoodAngle);
-
-            telemetry.addData("ballVelocity (m/s)", autoAim.ballVelocity);
-            telemetry.addData("hood Angle", Math.toDegrees(autoAim.hoodAngle));
-            telemetry.addData("other hood Angle", Math.toDegrees(autoAim.otherHoodAngle));
-            telemetry.addData("actual distance", toInches(autoAim.launchPointToGoalCenterX_Distance));
-            telemetry.addData("distanceToTagTelemetry", toInches(autoAim.distanceToTagTelemetry));
-            telemetry.addData("angle Deviation", Math.toDegrees(autoAim.angleDeviation));
-            telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
-            telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
-            telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
-            telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
-        } else {
-            turret.setMotorPower(0);
+        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)){
+            shouldAutoAim = !shouldAutoAim;
         }
-        
+
+        if(operator.wasJustPressed(GamepadKeys.Button.Y)){
+            turret.resetInitial();
+        }
+
+        telemetry.addData("Auto aiming", shouldAutoAim);
+        telemetry.addData("Turret rotation", turret.getTurretPosition());
+
+        if (!shouldAutoAim){
+            turret.setMotorPower(-operator.getLeftX());
+        }else{
+
+            if (targetFound) {
+                autoAim.calculateEverything(desiredTag);
+                if (turret.getTurretPosition() > 1500){
+                    turret.rotateToPosition(1500);
+                }else if(turret.getTurretPosition() < 0){
+                    turret.rotateToPosition(0);
+                }else{
+                    turret.setMotorPower(autoAim.turn);
+                }
+                hood.setAngle(autoAim.hoodAngle);
+
+                telemetry.addData("ballVelocity (m/s)", autoAim.ballVelocity);
+                telemetry.addData("hood Angle", Math.toDegrees(autoAim.hoodAngle));
+                telemetry.addData("other hood Angle", Math.toDegrees(autoAim.otherHoodAngle));
+                telemetry.addData("actual distance", toInches(autoAim.launchPointToGoalCenterX_Distance));
+                telemetry.addData("distanceToTagTelemetry", toInches(autoAim.distanceToTagTelemetry));
+                telemetry.addData("angle Deviation", Math.toDegrees(autoAim.angleDeviation));
+                telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
+                telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
+                telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
+                telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
+            } else {
+//                turret.setMotorPower(0);
+                turret.resetPosition();
+            }
+        }
+
 
         driver.readButtons();
         operator.readButtons();

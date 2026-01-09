@@ -19,7 +19,13 @@ public class Turret {
     }
 
     public void resetPosition(){
-        int targetPosition = 0;
+        int targetPosition = 750;
+        turretMotor.setTargetPosition(targetPosition);
+        turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turretMotor.setPower(0.5);
+    }
+
+    public void rotateToPosition(int targetPosition){
         turretMotor.setTargetPosition(targetPosition);
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(0.5);
