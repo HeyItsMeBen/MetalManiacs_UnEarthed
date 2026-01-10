@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
+import org.firstinspires.ftc.teamcode.Hardware.VisionAssistLimelight;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -52,6 +53,7 @@ public class NewTransfer_DriveCode extends OpMode {
     Turret turret;
     OuttakeHood hood;
     AutoAim autoAim;
+    VisionAssistLimelight visionAssist;
 
     ElapsedTime timer;
 
@@ -131,6 +133,7 @@ public class NewTransfer_DriveCode extends OpMode {
         turret = new Turret(hardwareMap);
         hood = new OuttakeHood(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
+        visionAssist = new VisionAssistLimelight(hardwareMap, 3);
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -204,6 +207,7 @@ public class NewTransfer_DriveCode extends OpMode {
 
         // Calculate rotation control
         double rotate;
+        boolean visionAssistEnabled = driver.getButton(GamepadKeys.Button.DPAD_UP);
 
         telemetry.addLine("-----Robot Information-----");
         telemetry.addLine("Driver");
@@ -239,6 +243,13 @@ public class NewTransfer_DriveCode extends OpMode {
             // NORMAL ROTATION MODE - Just use right stick X for rotation
             rotate = rightStickX;
             telemetry.addLine("MODE: Normal Rotation");
+
+            // Combine driver rotation + vision assist
+            double visionTurn = visionAssist.getTurnCorrection(visionAssistEnabled);
+            rotate += visionTurn;
+
+            telemetry.addData("Vision Assist", visionAssistEnabled);
+            telemetry.addData("Vision Turn", visionTurn);
         }
 
         // Choose drive mode based on toggle
