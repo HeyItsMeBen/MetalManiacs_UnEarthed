@@ -33,7 +33,7 @@ public class PathingTrajectories {
 
                 .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(70), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.runFlywheels(flywheel))
+                //.stopAndAdd(new PathingActions.runFlywheels(flywheel))
 
                 .build();
 
@@ -55,7 +55,7 @@ public class PathingTrajectories {
 
                 .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.runFlywheels(flywheel))
+                //.stopAndAdd(new PathingActions.runFlywheels(flywheel))
 
                 .build();
 
@@ -72,10 +72,10 @@ public class PathingTrajectories {
 
         return drive.actionBuilder(currentPose)
 
+                .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(45), maxSpeedConstraint)
-                .setReversed(false)
 
-                .stopAndAdd(new PathingActions.runFlywheels(flywheel))
+                //.stopAndAdd(new PathingActions.runFlywheels(flywheel))
 
                 .build();
     }
@@ -91,10 +91,9 @@ public class PathingTrajectories {
 
         return drive.actionBuilder(currentPose)
 
-                .strafeTo(new Vector2d(15, -47), maxSpeedConstraint)
-                .turn(Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(15, -47), Math.toRadians(90), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.runFlywheels(flywheel))
+                //.stopAndAdd(new PathingActions.runFlywheels(flywheel))
 
                 .build();
     }
@@ -112,11 +111,12 @@ public class PathingTrajectories {
 
             return drive.actionBuilder(currentPose)
 
-                    .stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
+                    //.stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
 
+                    .setReversed(false)
                     .splineTo(new Vector2d(50,12), Math.toRadians(0), maxSpeedConstraint)
-                    .setReversed(true)
 
+                    //.strafeTo(new Vector2d(40, 18))
                     .build();
 
         }
@@ -124,10 +124,10 @@ public class PathingTrajectories {
 
             return drive.actionBuilder(currentPose)
 
-                    .stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
+                    //.stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
 
+                    .setReversed(false)
                     .splineTo(new Vector2d(50,-12), Math.toRadians(0), maxSpeedConstraint)
-                    .setReversed(true)
 
                     .build();
 
@@ -137,10 +137,10 @@ public class PathingTrajectories {
 
             return drive.actionBuilder(currentPose)
 
-                    .stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
+                    //.stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
 
+                    .setReversed(false)
                     .strafeTo(new Vector2d(50, -35), maxSpeedConstraint)
-                    .setReversed(true)
 
                     .build();
 
@@ -149,10 +149,10 @@ public class PathingTrajectories {
         else {
             return drive.actionBuilder(currentPose)
 
-                    .stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
+                    //.stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
 
+                    .setReversed(false)
                     .splineTo(new Vector2d(20, -35), Math.toRadians(270), maxSpeedConstraint)
-                    .setReversed(true)
 
                     .build();
         }
@@ -171,7 +171,7 @@ public class PathingTrajectories {
 
                 .strafeTo(new Vector2d(60, -55), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
+                //.stopAndAdd(new PathingActions.runIntakeAndTransferForward(intake, belt))
 
                 .build();
     }
@@ -187,10 +187,13 @@ public class PathingTrajectories {
 
         return drive.actionBuilder(currentPose)
 
-                .stopAndAdd(new PathingActions.stopIntakeAndTransfer(intake, belt))
+                //.stopAndAdd(new PathingActions.stopIntakeAndTransfer(intake, belt))
 
-                .strafeTo(new Vector2d(45,8))
-                .splineToConstantHeading(new Vector2d(55,5), Math.toRadians(0))
+                .setReversed(false)
+                .strafeTo(new Vector2d(45,8), maxSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(52,5), Math.toRadians(0), maxSpeedConstraint)
+
+                .waitSeconds(1)
 
                 .build();
     }
@@ -206,10 +209,10 @@ public class PathingTrajectories {
 
         return drive.actionBuilder(currentPose)
 
-                .stopAndAdd(new PathingActions.stopFlywheels(flywheel))
-                .stopAndAdd(new PathingActions.stopIntakeAndTransfer(intake, belt))
+                //.stopAndAdd(new PathingActions.stopFlywheels(flywheel))
+                //.stopAndAdd(new PathingActions.stopIntakeAndTransfer(intake, belt))
 
-
+                .setReversed(false)
                 .splineTo(new Vector2d(20, -35), Math.toRadians(270), maxSpeedConstraint)
 
                 .build();

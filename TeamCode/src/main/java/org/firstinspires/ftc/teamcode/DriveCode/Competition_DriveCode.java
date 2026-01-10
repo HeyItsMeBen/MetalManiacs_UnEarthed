@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Experimental.TurretAutoAim.AutoTurretAim;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
@@ -31,7 +32,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "Competition DriveCode", group = "Robot")
+@TeleOp(name = "[Competition] DriveCode", group = "Robot")
 public class Competition_DriveCode extends OpMode {
 
     // Driver Code
@@ -101,7 +102,6 @@ public class Competition_DriveCode extends OpMode {
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
-    public boolean shouldAutoAim = true;
     double hoodAngle;
 
     @Override
@@ -296,12 +296,11 @@ public class Competition_DriveCode extends OpMode {
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 
 //            intake.setMotorPower(-1);
-//            flywheels.setRawFlywheelVelocity(outtakeSpeed);
-            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)));
+            flywheels.setRawFlywheelVelocity(outtakeSpeed);
 
             //wait 1 second to startup flywheels
             try {
-                sleep(1500);
+                sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -330,7 +329,7 @@ public class Competition_DriveCode extends OpMode {
             flywheels.setFlywheelVelocity(0);
             trapdoor.trapdoorClose();
             intake.setIntakePower(intakePower);
-            belt.setTransferPower(intakePower);
+            belt.setTransferPower((double) intakePower * 0.25);
         }
 
         //Launches the ball
@@ -388,48 +387,18 @@ public class Competition_DriveCode extends OpMode {
 
         //Auto-aims
         scanForTags();
-        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)){
-            shouldAutoAim = !shouldAutoAim;
+        if (targetFound) {
+            autoAim.calculateEverything(desiredTag);
+            turret.setMotorPower(autoAim.turn);
+
+            telemetry.addData("actual distance: ", toInches(autoAim.launchPointToGoalCenterX_Distance));
+            telemetry.addData("distanceToTagTelemetry: ", toInches(autoAim.distanceToTagTelemetry));
+            telemetry.addData("angle Deviation", Math.toDegrees(autoAim.angleDeviation));
+            telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
+            telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
+            telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
+            telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
         }
-
-        if(operator.wasJustPressed(GamepadKeys.Button.Y)){
-            turret.resetInitial();
-        }
-
-        telemetry.addData("Auto aiming", shouldAutoAim);
-        telemetry.addData("Turret rotation", turret.getTurretPosition());
-
-        if (!shouldAutoAim){
-            turret.setMotorPower(-operator.getLeftX());
-        }else{
-
-            if (targetFound) {
-                autoAim.calculateEverything(desiredTag);
-                if (turret.getTurretPosition() > 1500){
-                    turret.rotateToPosition(1500);
-                }else if(turret.getTurretPosition() < 0){
-                    turret.rotateToPosition(0);
-                }else{
-                    turret.setMotorPower(autoAim.turn);
-                }
-                hood.setAngle(autoAim.hoodAngle);
-
-                telemetry.addData("ballVelocity (m/s)", autoAim.ballVelocity);
-                telemetry.addData("hood Angle", Math.toDegrees(autoAim.hoodAngle));
-                telemetry.addData("other hood Angle", Math.toDegrees(autoAim.otherHoodAngle));
-                telemetry.addData("actual distance", toInches(autoAim.launchPointToGoalCenterX_Distance));
-                telemetry.addData("distanceToTagTelemetry", toInches(autoAim.distanceToTagTelemetry));
-                telemetry.addData("angle Deviation", Math.toDegrees(autoAim.angleDeviation));
-                telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
-                telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
-                telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
-                telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
-            } else {
-//                turret.setMotorPower(0);
-                turret.resetPosition();
-            }
-        }
-
 
         driver.readButtons();
         operator.readButtons();
@@ -640,8 +609,5 @@ public class Competition_DriveCode extends OpMode {
     }
     private double toInches(double inches){
         return inches*39.3700787;
-    }
-    private double toFeet(double inches){
-        return inches / 12;
     }
 }

@@ -13,13 +13,13 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 @Config
-@Autonomous(name = "[Red] Start at Red Goal, Shoot from Zone One", group = "Autonomous")
+@Autonomous(name = "[Competition] [Red] Start at Red Goal, Shoot from Zone One", group = "Autonomous")
 public class RedGoalZoneOne extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
-
     Transfer belt;
+    Transfer trapdoor;
 
     @Override
     public void runOpMode() {
@@ -30,32 +30,62 @@ public class RedGoalZoneOne extends LinearOpMode {
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         belt = new Transfer(hardwareMap);
+        trapdoor = new Transfer(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
-
-                        PathingTrajectories.initialFiringFromGoalZoneOne(drive, startPose, flywheels),
-
-                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake, belt),
-
-                        PathingTrajectories.openChannel(drive, drive.localizer.getPose(), intake, belt),
-
-                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels),
-
-                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), "PGP", intake, belt),
-
-                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels),
-
-                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake, belt),
-
-                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels),
-
-                        PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake, belt)
-
+                        PathingTrajectories.initialFiringFromGoalZoneOne(drive, startPose, flywheels)
                 )
+        );
 
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake, belt)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.openChannel(drive, drive.localizer.getPose(), intake, belt)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), "PGP", intake, belt)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake, belt)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake, belt)
+                )
         );
     }
 }
