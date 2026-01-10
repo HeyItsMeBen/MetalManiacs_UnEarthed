@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Action;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 public class PathingActions {
 
@@ -59,34 +60,6 @@ public class PathingActions {
         }
     }
 
-    public static class runFlywheels implements Action {
-        private final Flywheels flywheels;
-
-        public runFlywheels(Flywheels flywheels) {
-            this.flywheels = flywheels;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelSpeed(2350); //Find new values later
-            return false;
-        }
-    }
-
-    public static class stopFlywheels implements Action {
-        private final Flywheels flywheels;
-
-        public stopFlywheels(Flywheels flywheels) {
-            this.flywheels = flywheels;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelSpeed(2350); //Find new values later
-            return false;
-        }
-    }
-
     public static class openTrapdoor implements Action {
         private final Transfer trapdoor;
 
@@ -111,6 +84,68 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             trapdoor.trapdoorClose(); //Find new values later
+            return false;
+        }
+    }
+
+    public class setTurretPosition implements Action {
+
+        private final Turret turret;
+
+        public setTurretPosition(Turret turret) {
+            this.turret = turret;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            turret.resetPosition();
+            turret.rotateToPosition(375);
+            return false;
+        }
+    }
+
+    public class endTurretPosition implements Action {
+
+        private final Turret turret;
+
+        public endTurretPosition(Turret turret) {
+            this.turret = turret;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            turret.rotateToPosition(0);
+            turret.resetPosition();
+            return false;
+        }
+    }
+
+    public static class firingSequence implements Action {
+
+        private final Intake intake;
+        private final Transfer belt;
+        private final Flywheels flywheels;
+        private final Transfer trapdoor;
+
+        public firingSequence(Intake intake, Flywheels flywheels, Transfer trapdoor, Transfer belt) {
+            this.intake = intake;
+            this.flywheels = flywheels;
+            this.belt = belt;
+            this.trapdoor = trapdoor;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            trapdoor.trapdoorOpen();
+
+            flywheels.setFlywheelVelocity(2350);
+            
+            try { Thread.sleep(500); } catch (InterruptedException e) {}
+
+            intake.runIntakeFullPower();
+            belt.runTransfer();
+
+            flywheels.setFlywheelVelocity(0);
+
             return false;
         }
     }

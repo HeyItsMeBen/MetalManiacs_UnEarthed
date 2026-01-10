@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
 @Autonomous(name = "[Competition] [Red] Start at Red Wall, Shoot from Zone Two", group = "Autonomous")
@@ -20,6 +21,7 @@ public class RedWallZoneTwo extends LinearOpMode {
     Flywheels flywheels;
     Transfer belt;
     Transfer trapdoor;
+    Turret turret;
 
     @Override
     public void runOpMode() {
@@ -31,6 +33,7 @@ public class RedWallZoneTwo extends LinearOpMode {
         flywheels = new Flywheels(hardwareMap);
         belt = new Transfer(hardwareMap);
         trapdoor = new Transfer(hardwareMap);
+        turret = new Turret(hardwareMap);
 
         waitForStart();
 

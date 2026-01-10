@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.teamcode.Old_Code.Intake;
 
 @Config
@@ -18,6 +19,8 @@ public class TrajectoryPathTest extends LinearOpMode {
     Intake intake;
     Flywheels flywheels;
 
+    Turret turret;
+
     @Override
     public void runOpMode() {
         Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270)); // x, y, heading in radians
@@ -25,6 +28,7 @@ public class TrajectoryPathTest extends LinearOpMode {
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
+        turret = new Turret(hardwareMap);
 
         String PatternOne = "PPG";
         String PatternTwo = "PGP";
@@ -35,7 +39,7 @@ public class TrajectoryPathTest extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
 
-                        PathingTrajectories.initialFiringFromWallZoneOne(drive, startPose, flywheels),
+                        PathingTrajectories.initialFiringFromWallZoneOne(drive, startPose, flywheels, turret),
 
                         PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
 

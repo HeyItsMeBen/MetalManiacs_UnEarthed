@@ -56,26 +56,29 @@ public class Flywheels {
         setFlywheelSpeed(optimalRpm);
         return optimalRpm; //return the optimal rpm for telemetry debugging...
     }
-
-//    public void setFlywheelPower(double power) {
-//        if (power > 1) {
-//            flywheel.setPower(1.0);
-//        } else {
-//            flywheel.setPower(power);
-//        }
-//    }
     public void stopFlywheel(){
         flywheel.setPower(0);
     }
 
-    public void setRawFlywheelVelocity(float givenRPM){
-        flywheel.setVelocity(givenRPM);
+    public double returnWheelVelocity(){
+        return flywheel.getVelocity();
     }
 
     public void setFlywheelVelocity(float givenRPM) {
         flywheel.setVelocity(tickPerRevolution*(givenRPM/60));
-//        leftFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
-//        rightFlyWheel.setVelocity(tickPerRevolution*(givenRPM/60));
+    }
+
+
+
+    public void setFlywheelPower(double power) {
+        if (power > 1) {
+            flywheel.setPower(1.0);
+        } else {
+            flywheel.setPower(power);
+        }
+    }
+    public void setRawFlywheelVelocity(float givenRPM){
+        flywheel.setVelocity(givenRPM);
     }
 
     public double getCurrentWheelVelocity(String motor){

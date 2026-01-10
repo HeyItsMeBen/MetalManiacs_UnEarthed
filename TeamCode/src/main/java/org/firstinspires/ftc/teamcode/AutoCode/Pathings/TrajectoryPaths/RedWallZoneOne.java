@@ -22,6 +22,7 @@ public class RedWallZoneOne extends LinearOpMode {
     Flywheels flywheels;
     Transfer belt;
     Transfer trapdoor;
+    Turret turret;
 
     @Override
     public void runOpMode() {
@@ -32,12 +33,13 @@ public class RedWallZoneOne extends LinearOpMode {
         flywheels = new Flywheels(hardwareMap);
         belt = new Transfer(hardwareMap);
         trapdoor = new Transfer(hardwareMap);
+        turret = new Turret(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.initialFiringFromWallZoneOne(drive, startPose, flywheels)
+                        PathingTrajectories.initialFiringFromWallZoneOne(drive, startPose, flywheels, turret)
                 )
         );
 
