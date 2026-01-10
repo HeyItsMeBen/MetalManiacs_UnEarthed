@@ -271,7 +271,7 @@ public class NewTransfer_DriveCode extends OpMode {
         telemetry.addData("Auto aiming", shouldAutoAim);
         telemetry.addData("Sees april tag", targetFound);
         telemetry.addData("Turret rotation", turret.getTurretPosition());
-        telemetry.addData("Active flywheel speed", flywheels.getCurrentWheelRawVelocity(":)"));
+        telemetry.addData("Active flywheel speed", flywheels.getFlywheelVelocity());
 
         //practically irrelevant data
         telemetry.addLine("");
@@ -304,7 +304,7 @@ public class NewTransfer_DriveCode extends OpMode {
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
             drive(0, 0, 0, 0);
-            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
+            flywheels.setFlywheelSpeed(flywheels.getRPMFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)))); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
             try {
@@ -377,7 +377,7 @@ public class NewTransfer_DriveCode extends OpMode {
 
 
         if (!shouldAutoAim){
-            turret.setMotorPower(-operator.getLeftX());
+            turret.setMotorPower(-operator.getLeftX()*0.5);
             isCorrectingBoundary = false;
 
         } else {
@@ -387,12 +387,12 @@ public class NewTransfer_DriveCode extends OpMode {
 
                 if (turret.getTurretPosition() > 1500){
                     if (!isCorrectingBoundary) {
-                        turret.rotateToPosition(1500);
+//                        turret.rotateToPosition(1500);
                         isCorrectingBoundary = true;
                     }
                 } else if(turret.getTurretPosition() < 0){
                     if (!isCorrectingBoundary) {
-                        turret.rotateToPosition(0);
+//                        turret.rotateToPosition(0);
                         isCorrectingBoundary = true;
                     }
                 } else {
@@ -404,8 +404,12 @@ public class NewTransfer_DriveCode extends OpMode {
                 telemetry.addLine();
             } else {    //moves the turret to standby position if not tags are found
                 if (wasTargetFound) {
-                    turret.resetPosition();
-                    wasTargetFound = false;
+                    turret.rotateTowardsTarget(750);
+                    if (turret.isAtTargetPosition(750)){
+                        wasTargetFound = false;
+                        turret.setMotorPower(0);
+                    }
+
                 }
                 isCorrectingBoundary = false;
             }
