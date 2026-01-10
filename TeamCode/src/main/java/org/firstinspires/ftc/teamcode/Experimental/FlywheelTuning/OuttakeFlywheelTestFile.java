@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Experimental.FlywheelTuning;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -16,6 +17,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 // One of the biggest issue with our flywheels is that they drop in velocity when launching each time.
 // As a result, this file will determine the time it takes for the velocities to return
 
+@Disabled
 @TeleOp (name="Outtake Flywheel Test File", group="test")
 public class OuttakeFlywheelTestFile extends LinearOpMode {
 

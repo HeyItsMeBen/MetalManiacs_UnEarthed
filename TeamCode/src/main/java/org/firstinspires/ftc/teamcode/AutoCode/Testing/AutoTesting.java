@@ -19,6 +19,7 @@ import java.util.List;
 
 
 //sets mode to autonomous and makes the main class
+@Disabled
 @Autonomous(name = "AutoTesting", group = "Linear OpMode")
 public class AutoTesting extends LinearOpMode {
     //defining variables
