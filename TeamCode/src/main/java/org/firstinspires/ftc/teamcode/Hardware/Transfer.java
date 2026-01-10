@@ -7,11 +7,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Transfer {
 
-    private Servo trapdoor = null;
     private DcMotor belt = null;
+    private Servo trapdoor = null;
 
     public float openTrapdoorPosition = 0.5f; // Get New Values
-
     public float closeTrapdoorPosition = 0.15f; // Get New Values
 
     public Transfer(HardwareMap hMap) {

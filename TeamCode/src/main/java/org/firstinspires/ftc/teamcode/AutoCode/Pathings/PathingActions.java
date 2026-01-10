@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 public class PathingActions {
 
-    public static class runIntakeAndTransferForward implements Action {
+    public static class runIntakeAndTransfer implements Action {
         private final Intake intake;
 
         private final Transfer belt;
 
-        public runIntakeAndTransferForward(Intake intake, Transfer belt) {
+        public runIntakeAndTransfer(Intake intake, Transfer belt) {
 
             this.intake = intake;
             this.belt = belt;
@@ -31,30 +31,6 @@ public class PathingActions {
             }
             intake.setIntakePower(1);
             belt.setTransferPower(1);
-            return false;
-        }
-    }
-
-    public static class runIntakeAndTransferBackward implements Action {
-        private final Intake intake;
-
-        private final Transfer belt;
-
-        public runIntakeAndTransferBackward(Intake intake, Transfer belt) {
-
-            this.intake = intake;
-            this.belt = belt;
-
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-            }
-            intake.setIntakePower(-1);
-            belt.setTransferPower(-1);
             return false;
         }
     }
@@ -107,6 +83,34 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             flywheels.setFlywheelSpeed(2350); //Find new values later
+            return false;
+        }
+    }
+
+    public static class openTrapdoor implements Action {
+        private final Transfer trapdoor;
+
+        public openTrapdoor(Transfer trapdoor) {
+            this.trapdoor = trapdoor;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            trapdoor.trapdoorOpen(); //Find new values later
+            return false;
+        }
+    }
+
+    public static class closeTrapdoor implements Action {
+        private final Transfer trapdoor;
+
+        public closeTrapdoor(Transfer trapdoor) {
+            this.trapdoor = trapdoor;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            trapdoor.trapdoorClose(); //Find new values later
             return false;
         }
     }

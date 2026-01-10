@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.Experimental.TurretAutoAim;
 
 
 import com.qualcomm.robotcore.util.Range;
@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.AutoCode.Testing.RotationMatrices;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 
-public class AutoAim {
+public class AutoTurretAim {
     RotationMatrices rotationMatrices;
     //autoAim stuff
     final private double TURN_GAIN   =  0.05 ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
@@ -37,7 +37,7 @@ public class AutoAim {
     public double angleDeviation=0;
     public double distanceToTagTelemetry=0;
     public double yawTelemetry=0;
-    public AutoAim(double cameraAngleOfElevation){
+    public AutoTurretAim(double cameraAngleOfElevation){
         cameraPitch=cameraAngleOfElevation;
         rotationMatrices = new RotationMatrices();
     }
