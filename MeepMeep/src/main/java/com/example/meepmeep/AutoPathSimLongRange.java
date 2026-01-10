@@ -23,10 +23,10 @@ public class AutoPathSimLongRange {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(270)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(0)))
 
-                        .lineTo(new Vector2d(15, -47))
-                        .turn(Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(15, -47, Math.toRadians(0)), Math.toRadians(90))
+
 
                         .strafeTo(new Vector2d(60, -55))
 

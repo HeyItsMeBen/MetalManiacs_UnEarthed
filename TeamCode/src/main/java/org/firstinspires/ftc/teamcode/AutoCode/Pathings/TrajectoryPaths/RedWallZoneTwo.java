@@ -19,45 +19,43 @@ public class RedWallZoneTwo extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
-    Transfer belt;
-    Transfer trapdoor;
+    Transfer transfer;
     Turret turret;
 
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        belt = new Transfer(hardwareMap);
-        trapdoor = new Transfer(hardwareMap);
+        transfer = new Transfer(hardwareMap);
         turret = new Turret(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, belt, trapdoor, turret)
+                        PathingTrajectoriesRed.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, transfer, turret, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.collectArtifactsZoneTwo(drive, startPose, intake, belt)
+                        PathingTrajectoriesRed.collectArtifactsZoneTwo(drive, startPose, intake)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, startPose, intake, flywheels, belt, trapdoor)
+                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake, belt, turret)
+                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake, turret)
                 )
         );
     }

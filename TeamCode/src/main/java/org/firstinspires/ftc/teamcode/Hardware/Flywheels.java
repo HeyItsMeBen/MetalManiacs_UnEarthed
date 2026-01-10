@@ -39,6 +39,12 @@ public class Flywheels {
         flywheel.setVelocity(rpm);
     }
 
+    public void maintainFlywheelSpeed(double rpm){
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
+        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        flywheel.setVelocity(rpm/2);
+    }
+
     public double launchFromDistance(double distance){ //distance in feet from goal
         double optimalRpm = 1000+ (83.3 * distance);
         setFlywheelSpeed(optimalRpm);

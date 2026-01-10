@@ -19,8 +19,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
-    Transfer belt;
-    Transfer trapdoor;
+    Transfer transfer;
     Turret turret;
 
     @Override
@@ -31,63 +30,62 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        belt = new Transfer(hardwareMap);
-        trapdoor = new Transfer(hardwareMap);
+        transfer = new Transfer(hardwareMap);
         turret = new Turret(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.initialFiringFromGoalZoneOne(drive, startPose, intake, flywheels, belt, trapdoor, turret)
+                        PathingTrajectoriesRed.initialFiringFromGoalZoneOne(drive, startPose, intake, flywheels, transfer, turret, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake, belt)
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.openChannel(drive, drive.localizer.getPose(), intake, belt)
+                        PathingTrajectoriesRed.openChannel(drive, drive.localizer.getPose(), intake)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, belt, trapdoor)
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, transfer, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PGP", intake, belt)
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PGP", intake)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, belt, trapdoor)
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, transfer, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake, belt)
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, belt, trapdoor)
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, transfer, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake, belt, turret)
+                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake, turret)
                 )
         );
     }

@@ -31,7 +31,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "New Transfer DriveCode", group = "Robot")
+@TeleOp(name = "[Competition] New Transfer DriveCode", group = "Robot")
 public class NewTransfer_DriveCode extends OpMode {
 
     // Driver Code
