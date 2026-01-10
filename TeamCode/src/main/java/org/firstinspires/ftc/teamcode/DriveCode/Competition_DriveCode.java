@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
+import org.firstinspires.ftc.teamcode.Hardware.VisionAssistLimelight;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -54,6 +55,8 @@ public class Competition_DriveCode extends OpMode {
     OuttakeHood hood;
     AutoAim autoAim;
 
+    VisionAssistLimelight visionAssist;
+
     ElapsedTime timer;
 
     //set up variables
@@ -77,7 +80,6 @@ public class Competition_DriveCode extends OpMode {
     private double rotationMaxSpeed = 1.0;  // Maximum rotation speed (set to 1.0 for full power)
     private double speedMultiplier = 1;
     public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
-
 
     //autoAim stuff
     final double SPEED_GAIN  =  0.1  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
@@ -130,6 +132,7 @@ public class Competition_DriveCode extends OpMode {
         turret = new Turret(hardwareMap);
         hood = new OuttakeHood(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
+        visionAssist = new VisionAssistLimelight(hardwareMap, 3);
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -204,6 +207,8 @@ public class Competition_DriveCode extends OpMode {
         // Calculate rotation control
         double rotate;
 
+        boolean visionAssistEnabled = driver.getButton(GamepadKeys.Button.DPAD_UP);
+
         telemetry.addLine("-----Robot Information-----");
         telemetry.addLine("Driver");
         telemetry.addData("Speed multiplier", speedMultiplier);
@@ -238,7 +243,16 @@ public class Competition_DriveCode extends OpMode {
             // NORMAL ROTATION MODE - Just use right stick X for rotation
             rotate = rightStickX;
             telemetry.addLine("MODE: Normal Rotation");
+
+            // Combine driver rotation + vision assist
+            double visionTurn = visionAssist.getTurnCorrection(visionAssistEnabled);
+            rotate += visionTurn;
+
+            telemetry.addData("Vision Assist", visionAssistEnabled);
+            telemetry.addData("Vision Turn", visionTurn);
         }
+
+
 
         // Choose drive mode based on toggle
         if (useFieldCentricDrive) {
@@ -285,6 +299,7 @@ public class Competition_DriveCode extends OpMode {
                 intakePower = -1;
             }
         }
+
 
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
