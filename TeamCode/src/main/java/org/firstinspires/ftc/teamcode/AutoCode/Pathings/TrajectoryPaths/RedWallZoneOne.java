@@ -39,7 +39,7 @@ public class RedWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.initialFiringFromWallZoneOne(drive, startPose, flywheels, turret)
+                        PathingTrajectories.initialFiringFromWallZoneOne(drive, startPose, intake, flywheels, belt, trapdoor, turret)
                 )
         );
 
@@ -57,7 +57,7 @@ public class RedWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
+                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, belt, trapdoor)
                 )
         );
 
@@ -69,7 +69,7 @@ public class RedWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
+                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, belt, trapdoor)
                 )
         );
 
@@ -81,13 +81,13 @@ public class RedWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), flywheels)
+                        PathingTrajectories.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, belt, trapdoor)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake, belt)
+                        PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake, belt, turret)
                 )
         );
     }

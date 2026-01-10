@@ -88,11 +88,11 @@ public class PathingActions {
         }
     }
 
-    public class setTurretPosition implements Action {
+    public static class setTurretPositionZoneOne implements Action {
 
         private final Turret turret;
 
-        public setTurretPosition(Turret turret) {
+        public setTurretPositionZoneOne(Turret turret) {
             this.turret = turret;
         }
         @Override
@@ -103,16 +103,30 @@ public class PathingActions {
         }
     }
 
-    public class endTurretPosition implements Action {
+    public static class setTurretPositionZoneTwo implements Action {
 
         private final Turret turret;
 
-        public endTurretPosition(Turret turret) {
+        public setTurretPositionZoneTwo(Turret turret) {
             this.turret = turret;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            turret.rotateToPosition(0);
+            turret.resetInitial();
+            turret.rotateToPosition(375);
+            return false;
+        }
+    }
+
+    public static class endingTurretPosition implements Action {
+
+        private final Turret turret;
+
+        public endingTurretPosition(Turret turret) {
+            this.turret = turret;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             turret.resetPosition();
             return false;
         }
@@ -124,27 +138,48 @@ public class PathingActions {
         private final Transfer belt;
         private final Flywheels flywheels;
         private final Transfer trapdoor;
+        private final int zone;
 
-        public firingSequence(Intake intake, Flywheels flywheels, Transfer trapdoor, Transfer belt) {
+        public firingSequence(Intake intake, Flywheels flywheels, Transfer belt, Transfer trapdoor, int launchZone) {
             this.intake = intake;
             this.flywheels = flywheels;
             this.belt = belt;
             this.trapdoor = trapdoor;
+            this.zone = launchZone;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
+            //opens trapdoor
             trapdoor.trapdoorOpen();
 
-            flywheels.setFlywheelVelocity(2350);
-            
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
+            //prepares flywheels
+            int launchDistance = 48;
+            if (zone == 1) {
+                launchDistance = 48;
+            }
+            else if (zone == 2) {
+                launchDistance = 1000; //not calculated yet
+            }
 
-            intake.runIntakeFullPower();
-            belt.runTransfer();
+            //sequence runs 3 times
+            for (int t = 0; t < 4; t++) {
+                flywheels.launchFromDistance(launchDistance);
+                for (int i = 0; i < 12 && flywheels.returnWheelVelocity() < flywheels.launchFromDistance(launchDistance); i++) { //waits for flywheels to catch up to speed
+                    try { Thread.sleep(250); } catch (InterruptedException e) { }
+                    intake.stopIntake();
+                    belt.stopBelt();
+                }
+                intake.runIntakeFullPower();
+                belt.runTransfer();
+            }
 
-            flywheels.setFlywheelVelocity(0);
+            //turns flywheels off
+            flywheels.stopFlywheel();
+
+            //closes trapdoor
+            trapdoor.trapdoorClose();
 
             return false;
         }

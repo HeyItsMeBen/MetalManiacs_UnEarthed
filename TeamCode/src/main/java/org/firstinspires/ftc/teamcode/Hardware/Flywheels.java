@@ -31,18 +31,6 @@ public class Flywheels {
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
         flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-//        leftFlyWheel = hMap.get(DcMotorEx.class, "leftFlyWheel");
-//        rightFlyWheel = hMap.get(DcMotorEx.class, "rightFlyWheel");
-//
-//        leftFlyWheel.setDirection(DcMotorEx.Direction.FORWARD);
-//        rightFlyWheel.setDirection(DcMotorEx.Direction.REVERSE);
-//
-//        leftFlyWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        rightFlyWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//        leftFlyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rightFlyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 
     public void setFlywheelSpeed(double rpm){
@@ -51,11 +39,12 @@ public class Flywheels {
         flywheel.setVelocity(rpm);
     }
 
-    public double launchFromDistance(double distance){ //distance in feet
+    public double launchFromDistance(double distance){ //distance in feet from goal
         double optimalRpm = 1000+ (83.3 * distance);
         setFlywheelSpeed(optimalRpm);
         return optimalRpm; //return the optimal rpm for telemetry debugging...
     }
+
     public void stopFlywheel(){
         flywheel.setPower(0);
     }
@@ -70,6 +59,7 @@ public class Flywheels {
 
 
 
+    @Deprecated
     public void setFlywheelPower(double power) {
         if (power > 1) {
             flywheel.setPower(1.0);
@@ -77,10 +67,13 @@ public class Flywheels {
             flywheel.setPower(power);
         }
     }
+
+    @Deprecated
     public void setRawFlywheelVelocity(float givenRPM){
         flywheel.setVelocity(givenRPM);
     }
 
+    @Deprecated
     public double getCurrentWheelVelocity(String motor){
 //        if (motor.contains("left") || motor.contains("Left")) {
 //            return leftFlyWheel.getVelocity()*60/tickPerRevolution;
@@ -92,6 +85,8 @@ public class Flywheels {
 //        return 0;
 
     }
+
+    @Deprecated
     public double getCurrentWheelRawVelocity(String motor){
 //        if (motor.contains("left") || motor.contains("Left")) {
 //            return leftFlyWheel.getVelocity();
@@ -102,6 +97,7 @@ public class Flywheels {
         return flywheel.getVelocity();
     }
 
+    @Deprecated
     public void runOptimalFlywheelVelocity() {
         flywheel.setVelocity(tickPerRevolution*(optimalVelocity/60));
 
@@ -109,6 +105,7 @@ public class Flywheels {
 //        rightFlyWheel.setVelocity(tickPerRevolution*(optimalVelocity/60));
     }
 
+    @Deprecated
     public double returnOptimalFlywheelVelocity() {
         return optimalVelocity;
     }
