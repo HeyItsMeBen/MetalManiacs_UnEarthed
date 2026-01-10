@@ -104,7 +104,7 @@ public class Competition_DriveCode extends OpMode {
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
-    public boolean shouldAutoAim = true;
+    public boolean shouldAutoAim = false;
     double hoodAngle;
 
     @Override
@@ -289,6 +289,7 @@ public class Competition_DriveCode extends OpMode {
 
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+            drive(0, 0, 0, 0);
             flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
