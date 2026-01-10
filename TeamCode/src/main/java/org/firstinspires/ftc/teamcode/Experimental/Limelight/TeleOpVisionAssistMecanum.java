@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import java.util.List;
 
 @TeleOp(name = "TeleOp Vision Assist Mecanum")
-@Disabled
+//@Disabled
 public class TeleOpVisionAssistMecanum extends LinearOpMode {
 
     // Drive motors
@@ -49,7 +49,7 @@ public class TeleOpVisionAssistMecanum extends LinearOpMode {
         limelight.pipelineSwitch(3);
         limelight.start();
 
-        telemetry.addLine("TeleOp Vision Assist Ready");
+        telemetry.addLine("Robot Ready");
         telemetry.update();
 
         waitForStart();
@@ -77,7 +77,7 @@ public class TeleOpVisionAssistMecanum extends LinearOpMode {
                     double largestArea = 0;
 
                     for (LLResultTypes.DetectorResult det : detections) {
-                        if (det.getClassName().equals(TARGET_CLASS_NAME)) {
+                        if (det.getClassName().equals("g") || det.getClassName().equals("p")) {
 
                             double area = det.getTargetArea();
                             if (area > largestArea) {
@@ -89,13 +89,14 @@ public class TeleOpVisionAssistMecanum extends LinearOpMode {
 
                     if (bestTarget != null) {
 
-                        double tx = bestTarget.	getTargetXDegrees();
+                        double tx = bestTarget.getTargetXDegrees();
 
                         if (Math.abs(tx) > toleranceDeg) {
-                            visionTurn = kP * tx;
+                            visionTurn = kP * -tx;
                             visionTurn = Math.max(-maxVisionTurn,
                                     Math.min(maxVisionTurn, visionTurn));
                         }
+                        telemetry.addData("tx", tx);
                     }
                 }
             }
