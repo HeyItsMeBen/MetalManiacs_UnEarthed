@@ -70,16 +70,19 @@ public class OuttakeTest extends LinearOpMode{
 
         telemetry.addData("Intake speed", intakePower);
 
+        if(gamepad.wasJustPressed(GamepadKeys.Button.Y)){
+            turret.resetInitial();
+        }
 
 //            angle += gamepad.getLeftY();
 
 //            hood.setAngle(angle);
 
 //            telemetry.addData("angle", angle);
-            turret.setMotorPower(gamepad1.left_stick_x);
+            turret.setMotorPower(gamepad.getLeftX());
 
             if(gamepad.getButton(GamepadKeys.Button.B)){
-                turret.resetInitial();
+                turret.resetPosition();
             }
 
             telemetry.addData("turret rotation", turret.getTurretPosition());

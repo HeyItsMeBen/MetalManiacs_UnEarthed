@@ -96,6 +96,8 @@ public class Competition_DriveCode extends OpMode {
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
+    boolean wasTargetFound  = false;
+    boolean isCorrectingBoundary = false;
     double  drive           = 0;        // Desired forward power/speed (-1 to +1)
     double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
@@ -154,17 +156,11 @@ public class Competition_DriveCode extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addLine("Press Y to reset Yaw");
-        telemetry.addLine("Press RIGHT STICK to toggle rotation mode");
-        telemetry.addLine("Press Xx to toggle outtake forward");
-        telemetry.addLine("Hold left bumper for robot-relative drive");
-        telemetry.addLine("Left stick = translation, Right stick = rotation/heading");
 
         // Toggles if outtake is forward
         if (driver.wasJustPressed(GamepadKeys.Button.X)) {
             outtakeForward = !outtakeForward;
         }
-        telemetry.addData("Outtake Forward", outtakeForward);
 
         // Reset yaw with Y button
         if (driver.getButton(GamepadKeys.Button.Y)) {
@@ -198,7 +194,6 @@ public class Competition_DriveCode extends OpMode {
         if (speedMultiplier < 0.25) {
             speedMultiplier = 0.25;
         }
-        telemetry.addData("Speed Multiplier", speedMultiplier);
 
         // Get stick inputs
         double forward = -driver.getLeftY();
@@ -208,6 +203,10 @@ public class Competition_DriveCode extends OpMode {
 
         // Calculate rotation control
         double rotate;
+
+        telemetry.addLine("-----Robot Information-----");
+        telemetry.addLine("Driver");
+        telemetry.addData("Speed multiplier", speedMultiplier);
 
         if (useSnapRotation) {
             // SNAP-TO-HEADING MODE
@@ -251,10 +250,24 @@ public class Competition_DriveCode extends OpMode {
             drive(forward, right, rotate, speedMultiplier);
             telemetry.addLine("DRIVE: Robot-Relative");
         }
-
         // Display current heading
         double currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         telemetry.addData("Current Heading", Math.toDegrees(currentHeading));
+
+        telemetry.addLine();
+        telemetry.addLine("Operator");
+        telemetry.addData("Auto aiming", shouldAutoAim);
+        telemetry.addData("Sees april tag", targetFound);
+        telemetry.addData("Turret rotation", turret.getTurretPosition());
+        telemetry.addData("Active flywheel speed", flywheels.getCurrentWheelRawVelocity(":)"));
+
+        //practically irrelevant data
+        telemetry.addLine("");
+        telemetry.addLine("Extra:");
+        telemetry.addData("Outtake Speed", outtakeSpeed);
+        telemetry.addData("Outtake forward", outtakeForward);
+        telemetry.addLine("");
+
 
         // [Rest of your original code for intake, arm, outtake, etc.]
 
@@ -288,9 +301,6 @@ public class Competition_DriveCode extends OpMode {
         } else if (outtakeSpeed < 2300) {
             outtakeSpeed = 2300;
         }
-
-        telemetry.addData("Outtake Speed", outtakeSpeed);
-        telemetry.addData("Actual Outtake Speed", flywheels.getCurrentWheelRawVelocity(":)"));
 
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -363,10 +373,8 @@ public class Competition_DriveCode extends OpMode {
 
         if (operator.isDown((GamepadKeys.Button.DPAD_UP))) {
             trapdoor.changeHingePosition(0.05);
-            telemetry.addLine("TRAPDOOR ADJUSTED");
         } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
             trapdoor.changeHingePosition(-0.05);
-            telemetry.addLine("TRAPDOOR ADJUSTED");
         }
         else if (operator.isDown((GamepadKeys.Button.DPAD_LEFT))) {
             hood.setAngle(Math.toRadians(90));
@@ -388,7 +396,7 @@ public class Competition_DriveCode extends OpMode {
 
         //Auto-aims
         scanForTags();
-        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)){
+        if (operator.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)){
             shouldAutoAim = !shouldAutoAim;
         }
 
@@ -396,24 +404,33 @@ public class Competition_DriveCode extends OpMode {
             turret.resetInitial();
         }
 
-        telemetry.addData("Auto aiming", shouldAutoAim);
-        telemetry.addData("Turret rotation", turret.getTurretPosition());
 
         if (!shouldAutoAim){
             turret.setMotorPower(-operator.getLeftX());
-        }else{
+            isCorrectingBoundary = false;
 
+        } else {
             if (targetFound) {
+                wasTargetFound = true;
                 autoAim.calculateEverything(desiredTag);
+
                 if (turret.getTurretPosition() > 1500){
-                    turret.rotateToPosition(1500);
-                }else if(turret.getTurretPosition() < 0){
-                    turret.rotateToPosition(0);
-                }else{
+                    if (!isCorrectingBoundary) {
+                        turret.rotateToPosition(1500);
+                        isCorrectingBoundary = true;
+                    }
+                } else if(turret.getTurretPosition() < 0){
+                    if (!isCorrectingBoundary) {
+                        turret.rotateToPosition(0);
+                        isCorrectingBoundary = true;
+                    }
+                } else {
+                    isCorrectingBoundary = false;
                     turret.setMotorPower(autoAim.turn);
                 }
-                hood.setAngle(autoAim.hoodAngle);
 
+                hood.setAngle(autoAim.hoodAngle);
+                telemetry.addLine("-----Auto Aim-----");
                 telemetry.addData("ballVelocity (m/s)", autoAim.ballVelocity);
                 telemetry.addData("hood Angle", Math.toDegrees(autoAim.hoodAngle));
                 telemetry.addData("other hood Angle", Math.toDegrees(autoAim.otherHoodAngle));
@@ -424,12 +441,34 @@ public class Competition_DriveCode extends OpMode {
                 telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
                 telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
                 telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
+                telemetry.addLine();
             } else {
-//                turret.setMotorPower(0);
-                turret.resetPosition();
+                if (wasTargetFound) {
+                    turret.resetPosition();
+                    wasTargetFound = false;
+                }
+                isCorrectingBoundary = false;
             }
         }
 
+        //Telemetry
+        telemetry.addLine("-----HOW TO DRIVE FOR DUMMIES*-----");
+        telemetry.addLine("*No offense ;D");
+        telemetry.addLine("");
+        telemetry.addLine("-----Driver Controls-----");
+        telemetry.addLine("Y = reset Yaw");
+        telemetry.addLine("RIGHT STICK DOWN = toggle snap/relative rotation mode");
+        telemetry.addLine("X = toggle outtake forward");
+        telemetry.addLine("RIGHT BUMPER = intake");
+        telemetry.addLine("LEFT BUMPER = reverse intake");
+        telemetry.addLine("LEFT SICK = translation, RIGHT STICK = rotation");
+        telemetry.addLine("");
+        telemetry.addLine("-----Operator Controls-----");
+        telemetry.addLine("Y = set initial turret position to current turret position");
+        telemetry.addLine("LEFT STICK DOWN = toggle auto/manual turret aim");
+        telemetry.addLine("RIGHT BUMPER (hold) = charges up flywheels and launches");
+        telemetry.addLine("LEFT BUMPER (hold) = manually opens trapdoor");
+        telemetry.addLine("LEFT STICK = manually adjust turret rotation");
 
         driver.readButtons();
         operator.readButtons();
@@ -528,15 +567,15 @@ public class Competition_DriveCode extends OpMode {
         }
 
         // Tell the driver what we see, and what to do.
-        if (targetFound) {
-            telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-        } else {
-            telemetry.addData("\n>","Drive using joysticks to find valid target\n");
-        }
+//        if (targetFound) {
+//            telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
+//            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+//            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
+//            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
+//            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+//        } else {
+//            telemetry.addData("\n>","Drive using joysticks to find valid target\n");
+//        }
     }
     public void runPIDStuff(double rangeError, double headingError, double yawError){   //Calculate the power needed for driving/strafing/turning
 
