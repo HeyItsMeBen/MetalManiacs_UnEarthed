@@ -1,18 +1,19 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings;
 
-import com.acmerobotics.roadrunner.*;
-import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
-
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.Vector2d;
 
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
-import java.lang.Math;
-
-public class PathingTrajectories {
+public class PathingTrajectoriesBlue {
 
     static double defaultVelocity = 50.0;
 
@@ -32,7 +33,7 @@ public class PathingTrajectories {
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(70), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.setTurretPositionZoneOne(turret))
+                .stopAndAdd(new PathingActions.setTurretPositionZoneOneRed(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, belt, trapdoor, 1))
 
                 .build();
@@ -55,7 +56,7 @@ public class PathingTrajectories {
 
                 .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.setTurretPositionZoneOne(turret))
+                .stopAndAdd(new PathingActions.setTurretPositionZoneOneRed(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, belt, trapdoor, 1))
 
                 .build();

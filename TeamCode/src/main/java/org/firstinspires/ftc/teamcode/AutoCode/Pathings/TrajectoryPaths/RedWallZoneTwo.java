@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectories;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
@@ -39,25 +39,25 @@ public class RedWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, belt, trapdoor, turret)
+                        PathingTrajectoriesRed.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, belt, trapdoor, turret)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.collectArtifactsZoneTwo(drive, startPose, intake, belt)
+                        PathingTrajectoriesRed.collectArtifactsZoneTwo(drive, startPose, intake, belt)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.firingPositionZoneTwo(drive, startPose, intake, flywheels, belt, trapdoor)
+                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, startPose, intake, flywheels, belt, trapdoor)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectories.park(drive, drive.localizer.getPose(), flywheels, intake, belt, turret)
+                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake, belt, turret)
                 )
         );
     }
