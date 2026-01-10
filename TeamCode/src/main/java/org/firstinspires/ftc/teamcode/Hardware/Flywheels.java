@@ -53,8 +53,13 @@ public class Flywheels {
         return flywheel.getVelocity();
     }
 
+    //Update
     public void setFlywheelVelocity(float givenRPM) {
         flywheel.setVelocity(tickPerRevolution*(givenRPM/60));
+    }
+
+    public double getFlywheelVelocity(){
+        return flywheel.getVelocity();
     }
 
 
@@ -72,6 +77,12 @@ public class Flywheels {
     public void setRawFlywheelVelocity(float givenRPM){
         flywheel.setVelocity(givenRPM);
     }
+
+    public double getRPMFromDistance(double distance){
+        return 1000+ (83.3 * distance);  //return the optimal rpm for telemetry debugging...
+
+    }
+
 
     @Deprecated
     public double getCurrentWheelVelocity(String motor){

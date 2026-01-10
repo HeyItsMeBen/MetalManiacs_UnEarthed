@@ -12,6 +12,7 @@ public class Turret {
     private static final double POSITION_TOLERANCE = 10; // ticks
 
     private boolean isInPositionMode = false;
+    private int manualTargetPosition = CENTER_POSITION; // Track target for manual positioning
 
     public Turret(HardwareMap hMap) {
         turretMotor = hMap.get(DcMotorEx.class, "turret");
@@ -51,28 +52,47 @@ public class Turret {
     }
 
     /**
-     * Resets turret to center position (750)
-     * Call this when april tag is lost
+     * Manually rotates towards a target position
+     * This sets isInPositionMode so isAtTargetPosition works correctly
      */
-
     public void rotateTowardsTarget(int target){
-        if(turretMotor.getCurrentPosition() < target){
+        // Clamp target to valid range
+        target = Math.max(MIN_POSITION, Math.min(MAX_POSITION, target));
+        manualTargetPosition = target;
+        isInPositionMode = true; // Important: set this flag!
+
+        int currentPos = turretMotor.getCurrentPosition();
+
+        // Check if we're at target
+        if (Math.abs(currentPos - target) < POSITION_TOLERANCE) {
+            turretMotor.setPower(0);
+            return;
+        }
+
+        // Move towards target
+        if(currentPos < target){
             turretMotor.setPower(0.5);
-        }else if (turretMotor.getCurrentPosition() > target){
+        } else {
             turretMotor.setPower(-0.5);
         }
     }
+
+    /**
+     * Resets turret to center position (750)
+     * Call this when april tag is lost
+     */
     public void resetPosition(){
-        rotateToPosition(CENTER_POSITION);
+        rotateTowardsTarget(CENTER_POSITION);
     }
 
     /**
-     * Rotates turret to a specific encoder position
+     * Rotates turret to a specific encoder position using RUN_TO_POSITION
      * Clamps target to valid range (0-1500)
      */
     public void rotateToPosition(int targetPosition){
         // Clamp target position to valid range
         targetPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, targetPosition));
+        manualTargetPosition = targetPosition;
 
         turretMotor.setTargetPosition(targetPosition);
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -82,9 +102,9 @@ public class Turret {
 
     /**
      * Check if turret has reached its target position
-     * Useful for knowing when position commands are complete
+     * Works for both manual (rotateTowardsTarget) and RUN_TO_POSITION modes
      */
-    public boolean isAtTargetPosition(double targetPos) {
+    public boolean isAtTargetPosition(int targetPos) {
         if (!isInPositionMode) {
             return true; // Not in position mode, so no target to reach
         }
@@ -94,10 +114,14 @@ public class Turret {
     }
 
     /**
-     * Stops the turret motor
+     * Stops the turret motor and exits position mode
      */
     public void stop() {
         turretMotor.setPower(0);
+        if (isInPositionMode) {
+            turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            isInPositionMode = false;
+        }
     }
 
     /**
@@ -111,7 +135,7 @@ public class Turret {
     }
 
     /**
-     * Gets whether the motor is currently in RUN_TO_POSITION mode
+     * Gets whether the motor is currently in position targeting mode
      */
     public boolean isInPositionMode() {
         return isInPositionMode;

@@ -304,6 +304,7 @@ public class NewTransfer_DriveCode extends OpMode {
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
             drive(0, 0, 0, 0);
+            autoAim.calculateEverything(desiredTag);
             flywheels.setFlywheelSpeed(flywheels.getRPMFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)))); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
@@ -383,7 +384,7 @@ public class NewTransfer_DriveCode extends OpMode {
         } else {
             if (targetFound) {
                 wasTargetFound = true;
-                autoAim.calculateEverything(desiredTag);
+
 
                 if (turret.getTurretPosition() > 1500){
                     if (!isCorrectingBoundary) {
