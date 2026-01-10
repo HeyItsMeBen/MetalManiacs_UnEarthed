@@ -11,8 +11,6 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
-//See if this sends through
-
 public class PathingActions {
 
     public static class runIntake implements Action {
