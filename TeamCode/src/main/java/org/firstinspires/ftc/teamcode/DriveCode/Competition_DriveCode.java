@@ -67,7 +67,7 @@ public class Competition_DriveCode extends OpMode {
     // IMU for getting robot heading
     IMU imu;
 
-    // NEW: Variables for field-centric rotation control
+    //Variables for field-centric rotation control
     private double targetHeading = 0;  // The direction we want to face (in radians)
     private boolean useSnapRotation = true;  // Toggle between snap-to-heading and normal rotation
     private boolean useFieldCentricDrive = true;  // Toggle between field-centric and robot-relative drive
@@ -150,9 +150,9 @@ public class Competition_DriveCode extends OpMode {
         targetHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         //April tag stuff
-        if (USE_WEBCAM)
+        if (USE_WEBCAM) {
             setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-        hood.resetZeroPosition();
+        }
     }
 
     @Override
@@ -270,9 +270,9 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addLine("");
 
 
-        // [Rest of your original code for intake, arm, outtake, etc.]
+        // Listen for button presses
 
-        // Manual intake control
+        // Intake control
         if (driver.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
@@ -286,29 +286,10 @@ public class Competition_DriveCode extends OpMode {
                 intakePower = -1;
             }
         }
-//        intake.setMotorPower(intakePower);
-//        belt.setMotorPower(intakePower);
-
-        if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
-            outtakeSpeed += 250;
-        } else if (operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
-            outtakeSpeed -= 250;
-        } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
-            outtakeSpeed = 2350;
-        }
-
-        if (outtakeSpeed > 6000) {
-            outtakeSpeed = 6000;
-        } else if (outtakeSpeed < 2300) {
-            outtakeSpeed = 2300;
-        }
 
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-
-//            intake.setMotorPower(-1);
-//            flywheels.setRawFlywheelVelocity(outtakeSpeed);
-            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)));
+            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
             try {
@@ -324,54 +305,36 @@ public class Competition_DriveCode extends OpMode {
                 throw new RuntimeException(e);
             }
 
+            //send the balls into the flywheel to launch
             belt.setTransferPower(1);
             intake.setIntakePower(1);
 
-//            try {
-//                sleep(500);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-
-//            intakeHinge.intakeHingeStandby();
-
-        }else if(operator.isDown(GamepadKeys.Button.LEFT_BUMPER)){
+        }else if(operator.isDown(GamepadKeys.Button.LEFT_BUMPER)){  //open only the trapdoor
             trapdoor.trapdoorOpen();
-        }else{
+        }else{  //resets everything and sets transfer/intake power
             flywheels.setFlywheelVelocity(0);
             trapdoor.trapdoorClose();
             intake.setIntakePower(intakePower);
             belt.setTransferPower(intakePower);
         }
 
-        //Launches the ball
-//        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-//
-//            outtakeHinge.outtakeHingeRelax();
-//
-//            if (flyWheelOn) {
-//                for (int t = 0; t < 20 && outtake.getCurrentWheelVelocity("left") < (outtakeSpeed - 150) && outtake.getCurrentWheelVelocity("right") < (outtakeSpeed - 150); t++) {
-//                    telemetry.addData("Current Velocity: ", outtake.getCurrentWheelVelocity("left") + ", " + outtake.getCurrentWheelVelocity("right"));
-//                    telemetry.update();
-//                    try {
-//                        sleep(250);
-//                    } catch (InterruptedException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//            }
-//
-//            outtakeHinge.outtakeHingeFire();    //Sets the hinge to the position that holds the ball
-//
-//            try {
-//                sleep(500);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            outtakeHinge.outtakeHingeRelax();
-//        }
+        //flywheel speed adjustments (manual)
+        if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
+            outtakeSpeed += 250;
+        } else if (operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
+            outtakeSpeed -= 250;
+        } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
+            outtakeSpeed = 2350;
+        }
 
+        //clamps speed to bounds
+        if (outtakeSpeed > 6000) {
+            outtakeSpeed = 6000;
+        } else if (outtakeSpeed < 2300) {
+            outtakeSpeed = 2300;
+        }
+
+        //trapdoor position adjustments (manual)
         if (operator.isDown((GamepadKeys.Button.DPAD_UP))) {
             trapdoor.changeHingePosition(0.05);
         } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
@@ -384,18 +347,7 @@ public class Competition_DriveCode extends OpMode {
         }
 
 
-//        if (operator.wasJustPressed((GamepadKeys.Button.B))) {
-//            outtakeHinge.outtakeHingeRelax();
-//            if (flyWheelOn) {
-//                outtake.setFlywheelVelocity(0);      //turns off the flywheels
-//                flyWheelOn = false;
-//            } else {
-//                outtake.setFlywheelVelocity(outtakeSpeed);      //turns on the flywheels
-//                flyWheelOn = true;
-//            }
-//        }
-
-        //Auto-aims
+        //Auto-aims and moves the turret
         scanForTags();
         if (operator.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)){
             shouldAutoAim = !shouldAutoAim;
@@ -431,19 +383,8 @@ public class Competition_DriveCode extends OpMode {
                 }
 
                 hood.setAngle(autoAim.hoodAngle);
-                telemetry.addLine("-----Auto Aim-----");
-                telemetry.addData("ballVelocity (m/s)", autoAim.ballVelocity);
-                telemetry.addData("hood Angle", Math.toDegrees(autoAim.hoodAngle));
-                telemetry.addData("other hood Angle", Math.toDegrees(autoAim.otherHoodAngle));
-                telemetry.addData("actual distance", toInches(autoAim.launchPointToGoalCenterX_Distance));
-                telemetry.addData("distanceToTagTelemetry", toInches(autoAim.distanceToTagTelemetry));
-                telemetry.addData("angle Deviation", Math.toDegrees(autoAim.angleDeviation));
-                telemetry.addData("TagYaw (Read)", desiredTag.ftcPose.yaw);
-                telemetry.addData("TagYaw (Actual)", Math.toDegrees(autoAim.yawTelemetry));
-                telemetry.addData("Bearing", desiredTag.ftcPose.bearing);
-                telemetry.addData("Elevation", desiredTag.ftcPose.elevation);
                 telemetry.addLine();
-            } else {
+            } else {    //moves the turret to standby position if not tags are found
                 if (wasTargetFound) {
                     turret.resetPosition();
                     wasTargetFound = false;
@@ -566,58 +507,6 @@ public class Competition_DriveCode extends OpMode {
                 telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
             }
         }
-
-        // Tell the driver what we see, and what to do.
-//        if (targetFound) {
-//            telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-//            telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-//            telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-//            telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-//            telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-//        } else {
-//            telemetry.addData("\n>","Drive using joysticks to find valid target\n");
-//        }
-    }
-    public void runPIDStuff(double rangeError, double headingError, double yawError){   //Calculate the power needed for driving/strafing/turning
-
-        // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-        if (targetFound) {
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-            turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-            strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-            telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-        }
-        telemetry.update();
-
-        // Apply desired axes motions to the drivetrain.
-        moveRobot(drive, strafe, turn);
-    }
-    public void moveRobot(double x, double y, double yaw) { //calculates and sends the power needed for each motor
-        // Calculate wheel powers.
-        double frontLeftPower    =  x - y - yaw;
-        double frontRightPower   =  x + y + yaw;
-        double backLeftPower     =  x + y - yaw;
-        double backRightPower    =  x - y + yaw;
-
-        // Normalize wheel powers to be less than 1.0
-        double max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
-        max = Math.max(max, Math.abs(backLeftPower));
-        max = Math.max(max, Math.abs(backRightPower));
-
-        if (max > 1.0) {
-            frontLeftPower /= max;
-            frontRightPower /= max;
-            backLeftPower /= max;
-            backRightPower /= max;
-        }
-
-        // Send powers to the wheels.
-        frontLeftDrive.setPower(frontLeftPower);
-        frontRightDrive.setPower(frontRightPower);
-        backLeftDrive.setPower(backLeftPower);
-        backRightDrive.setPower(backRightPower);
     }
     private void initAprilTag() {   //Sets up the april tag and camera stuff. Gets it ready for use.
         // Create the AprilTag processor by using a builder.
@@ -657,7 +546,7 @@ public class Competition_DriveCode extends OpMode {
             telemetry.addData("Camera", "Waiting");
             telemetry.update();
             while (opModeIsActive && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                //sleep1(20);
+                //sleep(20);
             }
             telemetry.addData("Camera", "Ready");
             telemetry.update();
@@ -669,13 +558,10 @@ public class Competition_DriveCode extends OpMode {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
-                //sleep1(50);
             }
             exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            //sleep1(20);
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
             gainControl.setGain(gain);
-            //sleep1(20);
         }
     }
     private double toInches(double inches){
