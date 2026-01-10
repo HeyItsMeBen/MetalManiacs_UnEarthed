@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.Blue;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesBlue;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
@@ -14,8 +15,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "[Competition] [Red] Start at Red Wall, Shoot from Zone Two", group = "Autonomous")
-public class RedWallZoneTwo extends LinearOpMode {
+@Autonomous(name = "[Competition] [Blue] Start at Blue Wall, Shoot from Zone Two", group = "Autonomous")
+public class BlueWallZoneTwo extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -37,25 +38,25 @@ public class RedWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, transfer, turret, telemetry)
+                        PathingTrajectoriesBlue.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, transfer, turret, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.collectArtifactsZoneTwo(drive, startPose, intake)
+                        PathingTrajectoriesBlue.collectArtifactsZoneTwo(drive, startPose, intake)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
+                        PathingTrajectoriesBlue.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake, turret)
+                        PathingTrajectoriesBlue.park(drive, drive.localizer.getPose(), flywheels, intake, turret)
                 )
         );
     }
