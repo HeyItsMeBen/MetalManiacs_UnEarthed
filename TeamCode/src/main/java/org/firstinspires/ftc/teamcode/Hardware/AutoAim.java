@@ -13,14 +13,14 @@ public class AutoAim {
 
     //auto aim calculation variables
     private double gravity = 9.8;
-    public double ballVelocity=rpmToMetersPerSecond(3250, toMeters(3.77953));
-    //public double ballVelocity=16.3362818;
+    //public double ballVelocity=rpmToMetersPerSecond(3250, toMeters(3.77953));
+    public double ballVelocity=7; //16.3362818
 
     //distances
     private double tagToGoalCenter_Distance=toMeters(10);
     private double robotCenterToArmBase_Distance=toMeters(2.5);    //0.25-->0
     private double cameraToRobotCenter_Distance=toMeters(4.25);    //will probably be a negative if camera is on turret
-    private double basketHeight=toMeters(39-16);   //NEEDS TO BE: basketHeight from floor, minus the height of launch point from floor. //26
+    public double basketHeight=toMeters(39-16);   //NEEDS TO BE: basketHeight from floor, minus the height of launch point from floor. //26
     private double cameraPitch=0;
 
     //public variables
@@ -49,7 +49,7 @@ public class AutoAim {
     }
     public void calculateEverything(AprilTagDetection desiredTag){
         launchPointToGoalCenterX_Distance = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
-        double  headingError    = desiredTag.ftcPose.bearing+Math.toDegrees(angleDeviation);
+        double  headingError    = (desiredTag.ftcPose.bearing+Math.toDegrees(angleDeviation));
         turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
         //turret.setMotorPower(turn);
 
@@ -58,12 +58,12 @@ public class AutoAim {
 
         //find the larger theta value.
         if (launchAngle1>=launchAngle2){
-            hoodAngle=Math.PI-(launchAngle1+Math.PI/2);
-            otherHoodAngle=Math.PI-(launchAngle2+Math.PI/2);
+            hoodAngle=launchAngle1;
+            otherHoodAngle=launchAngle2;
         }
         else if (launchAngle2>launchAngle1){
-            hoodAngle=Math.PI-(launchAngle2+Math.PI/2);
-            otherHoodAngle=Math.PI-(launchAngle1+Math.PI/2);
+            hoodAngle=launchAngle2;
+            otherHoodAngle=launchAngle1;
         }
         else {  //if this one runs, something went wrong
             hoodAngle=0;
