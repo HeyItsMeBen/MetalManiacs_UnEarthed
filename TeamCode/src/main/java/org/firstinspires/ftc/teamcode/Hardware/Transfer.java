@@ -1,21 +1,24 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Transfer {
 
-    private DcMotor belt = null;
     private Servo trapdoor = null;
+    private DcMotor belt = null;
+//0.41(open), 0.2 (close)
+    public float openTrapdoorPosition = 0.41f; //0.24
 
-    public float openTrapdoorPosition = 0.5f; // Get New Values
-    public float closeTrapdoorPosition = 0.15f; // Get New Values
+    public float closeTrapdoorPosition = 0.2f; // Get New Values
 
     public Transfer(HardwareMap hMap) {
         trapdoor = hMap.get(Servo.class, "trapdoor");
         belt = hMap.get(DcMotor.class, "transfer");
+        belt.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
     public void trapdoorOpen() {
