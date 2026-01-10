@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
+// MUST UPDATE PATHS AND SWITCH THEM
+
 public class PathingTrajectoriesBlue {
 
     static double defaultVelocity = 50.0;
@@ -33,7 +35,7 @@ public class PathingTrajectoriesBlue {
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(70), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.setTurretPositionZoneOneRed(turret))
+                .stopAndAdd(new PathingActions.setTurretPositionZoneOneBlue(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, belt, trapdoor, 1))
 
                 .build();
@@ -56,7 +58,7 @@ public class PathingTrajectoriesBlue {
 
                 .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.setTurretPositionZoneOneRed(turret))
+                .stopAndAdd(new PathingActions.setTurretPositionZoneOneBlue(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, belt, trapdoor, 1))
 
                 .build();
@@ -77,7 +79,7 @@ public class PathingTrajectoriesBlue {
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.setTurretPositionZoneTwo(turret))
+                .stopAndAdd(new PathingActions.setTurretPositionZoneTwoBlue(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, belt, trapdoor, 2))
 
                 .build();

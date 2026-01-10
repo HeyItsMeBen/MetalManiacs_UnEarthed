@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.Old_Code;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Transfer {
+@Deprecated
+public class TransferOld {
 
     private Servo intakeHinge = null;
     private Servo outtakeHinge = null;
@@ -16,7 +17,7 @@ public class Transfer {
 
     public float outtakeHingeRelaxPosition = 0.51f; //Brings hinge down below ramp
 
-    public Transfer(HardwareMap hMap) {
+    public TransferOld(HardwareMap hMap) {
         intakeHinge = hMap.get(Servo.class, "intakeHinge");
         outtakeHinge = hMap.get(Servo.class, "outtakeHinge");
     }

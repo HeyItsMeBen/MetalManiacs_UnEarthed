@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
+@Disabled
 @TeleOp (name="Intake Tester", group="test")
 public class IntakeTester extends LinearOpMode {
 

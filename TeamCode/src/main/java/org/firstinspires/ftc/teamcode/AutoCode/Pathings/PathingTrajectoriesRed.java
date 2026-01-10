@@ -76,7 +76,7 @@ public class PathingTrajectoriesRed {
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.setTurretPositionZoneTwo(turret))
+                .stopAndAdd(new PathingActions.setTurretPositionZoneTwoRed(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, belt, trapdoor, 2))
 
                 .build();

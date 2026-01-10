@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Old_Code.Transfer;
+import org.firstinspires.ftc.teamcode.Old_Code.TransferOld;
 
 @Disabled
 @TeleOp(name = "Flywheel PIDF Sync Tuner", group = "Tuning")
@@ -19,14 +19,14 @@ public class PIDFSyncTuner extends LinearOpMode {
     private PIDFSync flywheel;
     private FtcDashboard dashboard;
 
-    private Transfer hinge;
+    private TransferOld hinge;
 
     @Override
     public void runOpMode() {
         flywheel = new PIDFSync(hardwareMap);
         dashboard = FtcDashboard.getInstance();
 
-        hinge = new Transfer(hardwareMap);
+        hinge = new TransferOld(hardwareMap);
 
         waitForStart();
 

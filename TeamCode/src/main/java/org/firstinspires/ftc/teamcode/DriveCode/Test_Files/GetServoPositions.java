@@ -14,7 +14,7 @@ public class GetServoPositions extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Servo Servo = hardwareMap.get(Servo.class, "intakeHinge");
+        Servo Servo = hardwareMap.get(Servo.class, "trapdoor");
 
         gamepad = new GamepadEx(gamepad1);
 

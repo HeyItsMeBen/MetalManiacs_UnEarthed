@@ -33,8 +33,8 @@ public class DriveCode extends OpMode {
     //create mechanism variables
     Intake intake;
     Flywheels outtake;
-    Transfer intakeHinge;
-    Transfer outtakeHinge;
+    TransferOld intakeHinge;
+    TransferOld outtakeHinge;
 
     ElapsedTime timer;
 
@@ -76,8 +76,8 @@ public class DriveCode extends OpMode {
         //create the mechanism objects
         intake = new Intake(hardwareMap);
         outtake = new Flywheels(hardwareMap);
-        intakeHinge = new Transfer(hardwareMap);
-        outtakeHinge = new Transfer(hardwareMap);
+        intakeHinge = new TransferOld(hardwareMap);
+        outtakeHinge = new TransferOld(hardwareMap);
 
         //setup
 

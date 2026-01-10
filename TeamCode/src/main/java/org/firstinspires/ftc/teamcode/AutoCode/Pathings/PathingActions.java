@@ -118,17 +118,32 @@ public class PathingActions {
         }
     }
 
-    public static class setTurretPositionZoneTwo implements Action {
+    public static class setTurretPositionZoneTwoRed implements Action {
 
         private final Turret turret;
 
-        public setTurretPositionZoneTwo(Turret turret) {
+        public setTurretPositionZoneTwoRed(Turret turret) {
             this.turret = turret;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             turret.resetInitial();
             turret.rotateToPosition(375);
+            return false;
+        }
+    }
+
+    public static class setTurretPositionZoneTwoBlue implements Action {
+
+        private final Turret turret;
+
+        public setTurretPositionZoneTwoBlue(Turret turret) {
+            this.turret = turret;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            turret.resetInitial();
+            turret.rotateToPosition(1125);
             return false;
         }
     }

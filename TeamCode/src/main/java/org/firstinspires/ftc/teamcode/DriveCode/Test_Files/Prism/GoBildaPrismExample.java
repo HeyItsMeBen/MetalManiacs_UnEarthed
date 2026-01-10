@@ -25,6 +25,7 @@ package org.firstinspires.ftc.teamcode.DriveCode.Test_Files.Prism;
 
 import static org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver.LayerHeight;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -57,6 +58,7 @@ import java.util.concurrent.TimeUnit;
  * Artboards: An Artboard is a set of 10 layers which is stored on the Prism.
  * you can have up to 8 unique Artboards. Artboards are easy and computationally fast to switch between.
  */
+@Disabled
 
 @TeleOp(name="Prism Animations Example", group="Linear OpMode")
 //@Disabled
