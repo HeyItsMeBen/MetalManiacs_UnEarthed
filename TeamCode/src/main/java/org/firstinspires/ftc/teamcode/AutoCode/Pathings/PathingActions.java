@@ -196,7 +196,7 @@ public class PathingActions {
             //sequence runs 3 times
             for (int t = 0; t < 4; t++) {
                 flywheels.launchFromDistance(launchDistance);
-                for (int i = 0; i < 12 && flywheels.returnWheelVelocity() < flywheels.launchFromDistance(launchDistance); i++) { //waits for flywheels to catch up to speed
+                for (int i = 0; i < 12 && flywheels.getFlywheelVelocity() < flywheels.getRPMFromDistance(launchDistance); i++) { //waits for flywheels to catch up to speed
                     try { Thread.sleep(250); } catch (InterruptedException e) { }
                     intake.stopIntake();
                     belt.stopBelt();

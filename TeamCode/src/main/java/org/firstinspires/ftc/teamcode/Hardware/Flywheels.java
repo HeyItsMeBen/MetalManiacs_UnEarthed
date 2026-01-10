@@ -33,23 +33,27 @@ public class Flywheels {
 
     }
 
+    public void launchFromDistance(double launchDistance) {
+        setFlywheelSpeed(getRPMFromDistance(launchDistance)); //Use auto-aim to calculate and set the flywheel velocity.
+    }
+
+
     public void setFlywheelSpeed(double rpm){
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
         flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         flywheel.setVelocity(rpm);
     }
 
-    public double launchFromDistance(double distance){ //distance in feet from goal
-        double optimalRpm = 1000+ (83.3 * distance);
-        setFlywheelSpeed(optimalRpm);
-        return optimalRpm; //return the optimal rpm for telemetry debugging...
+    public double getRPMFromDistance(double distance){
+        return 1000+ (83.3 * distance);  //return the optimal rpm for telemetry debugging...
+
     }
 
     public void stopFlywheel(){
         flywheel.setPower(0);
     }
 
-    public double returnWheelVelocity(){
+    public double getFlywheelVelocity(){
         return flywheel.getVelocity();
     }
 

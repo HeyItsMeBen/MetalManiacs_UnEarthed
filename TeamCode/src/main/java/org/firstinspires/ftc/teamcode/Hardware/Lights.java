@@ -34,21 +34,29 @@ public class Lights {
         return isInitialized && debounceTimer.seconds() >= DEBOUNCE_TIME;
     }
 
-    public void Light_Green(){
-        if (!canUpdate() || lastSequence.equals("GREEN")) return;
+//    public void Light_Green(){
+//        if (!canUpdate() || lastSequence.equals("GREEN")) return;
+//
+//        try {
+//            // Instead of clearing, just overwrite layer 0 with full strip
+//            PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN, 0, TOTAL_LEDS - 1);
+//            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, green);
+//
+//            lastSequence = "GREEN";
+//            debounceTimer.reset();
+//        } catch (Exception e) {
+//            isInitialized = false; // Mark as broken
+//        }
+//    }
 
-        try {
-            // Instead of clearing, just overwrite layer 0 with full strip
-            PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN, 0, TOTAL_LEDS - 1);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, green);
-
-            lastSequence = "GREEN";
-            debounceTimer.reset();
-        } catch (Exception e) {
-            isInitialized = false; // Mark as broken
-        }
+    public void Light_Red(){
+        PrismAnimations.Solid red = new PrismAnimations.Solid(Color.RED);
+        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, red);
     }
-
+    public void Light_Green(){
+        PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN);
+        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, green);
+    }
     public void Light_Purple(){
         if (!canUpdate() || lastSequence.equals("PURPLE")) return;
 

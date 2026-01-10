@@ -96,7 +96,7 @@ public class Competition_DriveCode extends OpMode {
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-
+    private static final int MAX_POSITION = 1500;
     boolean targetFound     = false;    // Set to true when an AprilTag target is detected
     boolean wasTargetFound  = false;
     boolean isCorrectingBoundary = false;
@@ -372,39 +372,48 @@ public class Competition_DriveCode extends OpMode {
             turret.resetInitial();
         }
 
-
         if (!shouldAutoAim){
-            turret.setMotorPower(-operator.getLeftX());
+            // Manual control
+            turret.setMotorPower(-operator.getLeftX() * 0.5);
             isCorrectingBoundary = false;
-
         } else {
             if (targetFound) {
                 wasTargetFound = true;
                 autoAim.calculateEverything(desiredTag);
 
-                if (turret.getTurretPosition() > 1500){
+                int currentPos = turret.getTurretPosition();
+
+                // Handle boundary corrections
+                if (currentPos > MAX_POSITION){
                     if (!isCorrectingBoundary) {
-                        turret.rotateToPosition(1500);
+                        turret.rotateToPosition(MAX_POSITION);
                         isCorrectingBoundary = true;
                     }
-                } else if(turret.getTurretPosition() < 0){
+                } else if(currentPos < 0){
                     if (!isCorrectingBoundary) {
                         turret.rotateToPosition(0);
                         isCorrectingBoundary = true;
                     }
                 } else {
+                    // Within bounds - use auto-aim power
                     isCorrectingBoundary = false;
                     turret.setMotorPower(autoAim.turn);
                 }
 
                 hood.setAngle(autoAim.hoodAngle);
-                telemetry.addLine();
-            } else {    //moves the turret to standby position if not tags are found
+            } else {
+                // No tag found - return to center
                 if (wasTargetFound) {
-                    turret.resetPosition();
+                    turret.resetPosition(); // This will move to position 750
                     wasTargetFound = false;
                 }
                 isCorrectingBoundary = false;
+
+                // Stop manual input while returning to center
+                // Remove this if you want to allow manual override
+                if (!turret.isAtTargetPosition(750)) {
+                    // Still moving to center, don't accept manual input
+                }
             }
         }
 
