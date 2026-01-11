@@ -106,7 +106,7 @@ public class NewTransfer_DriveCode extends OpMode {
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
-    public boolean shouldAutoAim = false;
+    public boolean shouldAutoAim = true;
     double hoodAngle;
 
     @Override
@@ -304,8 +304,9 @@ public class NewTransfer_DriveCode extends OpMode {
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
             drive(0, 0, 0, 0);
+            turret.setMotorPower(0);
 //            autoAim.calculateEverything(desiredTag);
-            flywheels.setFlywheelSpeed(flywheels.getRPMFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)))); //Use auto-aim to calculate and set the flywheel velocity.
+            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
             try {
@@ -383,35 +384,12 @@ public class NewTransfer_DriveCode extends OpMode {
 
         } else {
             if (targetFound) {
-                wasTargetFound = true;
-
-
-                if (turret.getTurretPosition() < -750){
-                    if (!isCorrectingBoundary) {
-//                        turret.rotateToPosition(1500);
-                        isCorrectingBoundary = true;
-                    }
-                } else if(turret.getTurretPosition() > 750){
-                    if (!isCorrectingBoundary) {
-//                        turret.rotateToPosition(0);
-                        isCorrectingBoundary = true;
-                    }
-                } else {
-                    isCorrectingBoundary = false;
-                    turret.setMotorPower(autoAim.turn);
-                }
-
-//                hood.setAngle(autoAim.hoodAngle);
+                autoAim.calculateEverything(desiredTag);
+                isCorrectingBoundary = false;
+                turret.setMotorPower(autoAim.turn);
                 telemetry.addLine();
             } else {    //moves the turret to standby position if not tags are found
-                if (wasTargetFound) {
-                    turret.rotateTowardsTarget(0);
-                    if (turret.isAtTargetPosition(0)){
-                        wasTargetFound = false;
-                        turret.setMotorPower(0);
-                    }
-
-                }
+                turret.setMotorPower(0);
                 isCorrectingBoundary = false;
             }
         }
