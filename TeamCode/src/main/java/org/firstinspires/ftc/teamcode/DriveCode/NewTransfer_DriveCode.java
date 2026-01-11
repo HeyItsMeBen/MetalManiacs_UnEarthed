@@ -280,7 +280,7 @@ public class NewTransfer_DriveCode extends OpMode {
         //practically irrelevant data
         telemetry.addLine("");
         telemetry.addLine("Extra:");
-        telemetry.addData("Outtake Speed", outtakeSpeed);
+        telemetry.addData("Extra outtake speed", extraOuttakeSpeed);
         telemetry.addData("Outtake forward", outtakeForward);
         telemetry.addLine("");
 
