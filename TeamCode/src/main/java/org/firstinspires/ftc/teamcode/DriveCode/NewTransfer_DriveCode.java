@@ -330,7 +330,7 @@ public class NewTransfer_DriveCode extends OpMode {
 //            transferWheels.setTransferPower(1);
 //
 //        }
-        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if ((operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)) {
             flywheelIsReady=false;
             drive(0, 0, 0, 0);
             turret.setMotorPower(0);
@@ -351,13 +351,13 @@ public class NewTransfer_DriveCode extends OpMode {
             //send the balls into the flywheel to launch
             operator.readButtons();
             outtakeSpeedBeforeDrop=flywheels.getCurrentWheelVelocity("");
-            for (int i=0; i<3 && operator.isDown(GamepadKeys.Button.RIGHT_BUMPER); i++) {
+            for (int i=0; i<3; i++) {
                 if (i>0){
-                    //intake.setIntakePower(1);
+                    intake.setIntakePower(1);
                 }
                 transferWheels.setTransferPower(1);
                 ElapsedTime transferTimer2= new ElapsedTime();
-                while (opModeIsActive && operator.isDown(GamepadKeys.Button.RIGHT_BUMPER) && transferTimer2.milliseconds()<3000) {
+                while (opModeIsActive && transferTimer2.milliseconds()<3000) {
                     if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 100) {
                         break;
                     }
@@ -389,10 +389,10 @@ public class NewTransfer_DriveCode extends OpMode {
             intake.setIntakePower(intakePower);
         }
 
-        if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
-            extraOuttakeSpeed += 5;    //0.466666667
-        } else if (operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
-            extraOuttakeSpeed -= 5;
+        if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
+            extraOuttakeSpeed += 25;    //0.466666667
+        } else if (operator.wasJustPressed((GamepadKeys.Button.LEFT_BUMPER))) {
+            extraOuttakeSpeed -= 25;
         } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
             outtakeSpeed = 2350;
             extraOuttakeSpeed = 0;
