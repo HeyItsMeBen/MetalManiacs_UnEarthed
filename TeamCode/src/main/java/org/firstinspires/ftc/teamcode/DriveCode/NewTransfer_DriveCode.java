@@ -62,7 +62,7 @@ public class NewTransfer_DriveCode extends OpMode {
     boolean outtakeOn = false;
     private double outtakePower = 0;
     private boolean flyWheelOn = false;
-    private float outtakeSpeed = 2300;
+    private float outtakeSpeed = 3000;
 
     boolean opModeIsActive = true;
 
@@ -158,7 +158,7 @@ public class NewTransfer_DriveCode extends OpMode {
 
         //April tag stuff
         if (USE_WEBCAM) {
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+            setManualExposure(6, 80);  // Use low exposure time to reduce motion blur
         }
     }
 
@@ -341,6 +341,11 @@ public class NewTransfer_DriveCode extends OpMode {
             ElapsedTime transferTimer= new ElapsedTime();
             while (!flywheelIsReady) {
                 if (flywheels.getCurrentWheelVelocity("") >= targetRPM * 0.85) {
+                    try {
+                        sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     flywheelIsReady = true;
                 } else if (transferTimer.milliseconds()>1200) {
                     flywheelIsReady = true;
@@ -357,7 +362,7 @@ public class NewTransfer_DriveCode extends OpMode {
                 }
                 transferWheels.setTransferPower(1);
                 ElapsedTime transferTimer2= new ElapsedTime();
-                while (opModeIsActive && transferTimer2.milliseconds()<3000) {
+                while (opModeIsActive && transferTimer2.milliseconds()<1800) {
                     if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 100) {
                         break;
                     }
@@ -365,7 +370,7 @@ public class NewTransfer_DriveCode extends OpMode {
                 }
                 transferWheels.setTransferPower(0);
                 operator.readButtons();
-                if (transferTimer2.milliseconds()<3000){
+                if (transferTimer2.milliseconds()<1800){
                     try {
                         sleep(1500);
                     } catch (InterruptedException e) {
