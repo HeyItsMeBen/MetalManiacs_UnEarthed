@@ -109,6 +109,9 @@ public class NewTransfer_DriveCode extends OpMode {
     public boolean shouldAutoAim = true;
     double hoodAngle;
 
+    double outtakeSpeedBeforeDrop=0;
+    boolean flywheelIsReady=false;
+
     @Override
     public void init() {
         // Initialize the Apriltag Detection process
@@ -302,30 +305,71 @@ public class NewTransfer_DriveCode extends OpMode {
         }
 
         //Launches the balls while right bumper is held
-        if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+//        if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+//            drive(0, 0, 0, 0);
+//            turret.setMotorPower(0);
+////            autoAim.calculateEverything(desiredTag);
+//            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
+//
+//            //wait 1 second to startup flywheels
+//            try {
+//                sleep(1500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            trapdoor.trapdoorOpen();
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            //send the balls into the flywheel to launch
+//            transferWheels.setTransferPower(1);
+//
+//        }
+        if (operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            flywheelIsReady=false;
             drive(0, 0, 0, 0);
             turret.setMotorPower(0);
 //            autoAim.calculateEverything(desiredTag);
-            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
+            double targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
-            try {
-                sleep(1500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            ElapsedTime transferTimer= new ElapsedTime();
+            while (!flywheelIsReady) {
+                if (flywheels.getCurrentWheelVelocity("") >= targetRPM * 0.85) {
+                    flywheelIsReady = true;
+                } else if (transferTimer.milliseconds()>1200) {
+                    flywheelIsReady = true;
+                }
             }
-
-            trapdoor.trapdoorOpen();
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            outtakeSpeedBeforeDrop=flywheels.getCurrentWheelVelocity("");
 
             //send the balls into the flywheel to launch
-            transferWheels.setTransferPower(1);
-
-        }else if(operator.isDown(GamepadKeys.Button.DPAD_LEFT)){  //open only the trapdoor
+            operator.readButtons();
+            outtakeSpeedBeforeDrop=flywheels.getCurrentWheelVelocity("");
+            for (int i=0; i<3 && operator.isDown(GamepadKeys.Button.RIGHT_BUMPER); i++) {
+                if (i>0){
+                    intake.setIntakePower(1);
+                }
+                transferWheels.setTransferPower(1);
+                while (opModeIsActive) {
+                    if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 100) {
+                        break;
+                    }
+                }
+                transferWheels.setTransferPower(0);
+                try {
+                    sleep(1500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                operator.readButtons();
+            }
+        }
+        else if(operator.isDown(GamepadKeys.Button.DPAD_LEFT)){  //open only the trapdoor
             trapdoor.trapdoorOpen();
         }else{  //resets everything and sets transfer/intake power
             if (outtakeOn){
