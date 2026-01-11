@@ -445,6 +445,12 @@ public class NewTransfer_DriveCode extends OpMode {
             }
         }
 
+        if (targetFound) {
+            lights.Light_Green();
+        } else {
+            lights.Light_Red();
+        }
+
         //Telemetry
         telemetry.addLine("-----HOW TO DRIVE FOR DUMMIES*-----");
         telemetry.addLine("*No offense ;D");
@@ -471,6 +477,7 @@ public class NewTransfer_DriveCode extends OpMode {
 
     public void stop() { //when we stop the program with the driver station, this method runs. It's a built-in method, similar to and init() and loop()
         opModeIsActive = false;   //tells the rest of the code that the program has been stopped. We use it as a conditional in while() loops, to make sure these loops stop running immediately when the we end the program. We don't want the arm to keep moving after we press stop, for example.
+        lights.Light_Off();
     }
 
     // Calculates rotation angle based on the initial set yaw angle
