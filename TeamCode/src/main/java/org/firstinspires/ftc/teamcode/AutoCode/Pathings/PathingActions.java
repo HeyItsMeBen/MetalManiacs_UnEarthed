@@ -61,8 +61,8 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            double launchDistance = (zone == 1) ? 5.2 : 12.8;
-            flywheels.launchFromDistance(launchDistance * 0.7);
+            double launchDistance = (zone == 1) ? 4.9 : 12.8;
+            flywheels.launchFromDistance(launchDistance);
             return false;
         }
     }
@@ -146,7 +146,7 @@ public class PathingActions {
                 }
                 transfer.setTransferPower(1);
                 long startTime = System.currentTimeMillis();
-                long timeout = 500;
+                long timeout = 1000;
                 while (true) {
                     if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 150) {
                         break;
@@ -164,6 +164,7 @@ public class PathingActions {
             }
 
             intake.stopIntake();
+            transfer.stopTransfer();
             return false;
 
         }
