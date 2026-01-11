@@ -45,7 +45,7 @@ public class Flywheels {
     public double launchFromDistance(double distance){ //distance in feet from goal
         double optimalRpm = b+ (m * distance);
         setFlywheelSpeed(optimalRpm);
-        return optimalRpm; //return the optimal rpm for telemetry debugging...
+        return optimalRpm*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
     }
 
     public void stopFlywheel(){
@@ -80,7 +80,6 @@ public class Flywheels {
     }
 
 
-    @Deprecated
     public double getCurrentWheelVelocity(String motor){
 //        if (motor.contains("left") || motor.contains("Left")) {
 //            return leftFlyWheel.getVelocity()*60/tickPerRevolution;
