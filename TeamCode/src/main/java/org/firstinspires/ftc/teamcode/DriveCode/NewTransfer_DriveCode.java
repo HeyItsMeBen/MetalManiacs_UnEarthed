@@ -105,6 +105,9 @@ public class NewTransfer_DriveCode extends OpMode {
     double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
+    private ElapsedTime targetLostTimer = new ElapsedTime();
+    private boolean wasTargetFoundLastFrame = false;
+    private static final double TARGET_LOST_DELAY = 1.0; // 1 second delay in seconds
 
     public boolean shouldAutoAim = true;
     double hoodAngle;
@@ -410,6 +413,11 @@ public class NewTransfer_DriveCode extends OpMode {
 //            hood.setAngle(Math.toRadians(50));
 //        }
 
+        if(targetFound){
+            lights.Light_Green();
+        }else{
+            lights.Light_Red();
+        }
 
         //Auto-aims and moves the turret
         scanForTags();
@@ -425,15 +433,45 @@ public class NewTransfer_DriveCode extends OpMode {
         if (!shouldAutoAim){
             turret.setMotorPower(-operator.getLeftX()*0.5);
             isCorrectingBoundary = false;
+            wasTargetFoundLastFrame = false; // Reset tracking when manual control
 
         } else {
             if (targetFound) {
+                // Target is found - reset timer and track target
                 autoAim.calculateEverything(desiredTag);
                 isCorrectingBoundary = false;
                 turret.setMotorPower(autoAim.turn);
+
+                // Reset the timer whenever we see the target
+                if (!wasTargetFoundLastFrame) {
+                    targetLostTimer.reset();
+                }
+                wasTargetFoundLastFrame = true;
+
                 telemetry.addLine();
-            } else {    //moves the turret to standby position if not tags are found
-                turret.setMotorPower(0);
+            } else {
+                // Target is NOT found
+                if (wasTargetFoundLastFrame) {
+                    // Target was JUST lost - start the timer
+                    targetLostTimer.reset();
+                    wasTargetFoundLastFrame = false;
+                }
+
+                // Check if enough time has passed since losing the target
+                if (targetLostTimer.seconds() >= TARGET_LOST_DELAY) {
+                    // Wait period is over - return to position 0
+                    if (!turret.isAtTargetPosition(0)) {
+                        turret.rotateTowardsTarget(0);
+                    } else {
+                        turret.setMotorPower(0);
+                    }
+                } else {
+                    // Still within wait period - hold position
+                    turret.setMotorPower(0);
+                    telemetry.addData("Target lost, waiting", "%.1f seconds",
+                            TARGET_LOST_DELAY - targetLostTimer.seconds());
+                }
+
                 isCorrectingBoundary = false;
             }
         }
@@ -464,6 +502,7 @@ public class NewTransfer_DriveCode extends OpMode {
 
     public void stop() { //when we stop the program with the driver station, this method runs. It's a built-in method, similar to and init() and loop()
         opModeIsActive = false;   //tells the rest of the code that the program has been stopped. We use it as a conditional in while() loops, to make sure these loops stop running immediately when the we end the program. We don't want the arm to keep moving after we press stop, for example.
+        lights.Light_Off();
     }
 
     // Calculates rotation angle based on the initial set yaw angle

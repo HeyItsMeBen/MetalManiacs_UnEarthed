@@ -9,7 +9,7 @@ public class Turret {
     private static final int MIN_POSITION = 0;
     private static final int MAX_POSITION = 1500;
     private static final int CENTER_POSITION = 750;
-    private static final double POSITION_TOLERANCE = 10; // ticks
+    private static final double POSITION_TOLERANCE = 30; // ticks
 
     private boolean isInPositionMode = false;
     private int manualTargetPosition = CENTER_POSITION; // Track target for manual positioning
@@ -63,17 +63,16 @@ public class Turret {
      */
     public void rotateTowardsTarget(int target){
         // Clamp target to valid range
-        target = Math.max(MIN_POSITION, Math.min(MAX_POSITION, target));
-        manualTargetPosition = target;
-        isInPositionMode = true; // Important: set this flag!
-
+//        manualTargetPosition = target;
+//        isInPositionMode = true; // Important: set this flag!
+//
         int currentPos = turretMotor.getCurrentPosition();
-
-        // Check if we're at target
-        if (Math.abs(currentPos - target) < POSITION_TOLERANCE) {
-            turretMotor.setPower(0);
-            return;
-        }
+//
+//        // Check if we're at target
+//        if (Math.abs(currentPos - target) < POSITION_TOLERANCE) {
+//            turretMotor.setPower(0);
+//            return;
+//        }
 
         // Move towards target
         if(currentPos < target){
@@ -111,9 +110,9 @@ public class Turret {
      * Works for both manual (rotateTowardsTarget) and RUN_TO_POSITION modes
      */
     public boolean isAtTargetPosition(int targetPos) {
-        if (!isInPositionMode) {
-            return true; // Not in position mode, so no target to reach
-        }
+//        if (!isInPositionMode) {
+//            return true; // Not in position mode, so no target to reach
+//        }
 
         int currentPos = turretMotor.getCurrentPosition();
         return Math.abs(currentPos - targetPos) < POSITION_TOLERANCE;

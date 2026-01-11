@@ -23,7 +23,9 @@ public class OuttakeTest extends LinearOpMode{
     public int intakePower;
     public int distance = 6;
 //    public OuttakeHood hood;
-    public int rpm = 2100;
+    int rpm = 0;
+    int slope =90;
+    int yint = 1000;
 
     @Override
     public void runOpMode() {
@@ -40,18 +42,11 @@ public class OuttakeTest extends LinearOpMode{
 
         //executing
         while (opModeIsActive()) {
-//            if (gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-//                flywheel.setFlywheelPower(speed);
-//            } else {
-//                flywheel.stopFlywheel();
-//            }
             if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
                 telemetry.addData("Optimal Launch Speed",flywheel.getRPMFromDistance(distance));
             }else{
                 flywheel.setFlywheelSpeed(0);
             }
-
-            transfer.trapdoorOpen();
 
             if (gamepad.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))) {
                 if (Math.abs(intakePower) == 1) {
@@ -75,33 +70,40 @@ public class OuttakeTest extends LinearOpMode{
             turret.resetInitial();
         }
 
-//            angle += gamepad.getLeftY();
-
-//            hood.setAngle(angle);
-
-//            telemetry.addData("angle", angle);
-            turret.setMotorPower(gamepad.getLeftX());
+            turret.setMotorPower(-gamepad.getLeftX()*0.5);
 
             if(gamepad.getButton(GamepadKeys.Button.B)){
                 turret.resetPosition();
             }
 
             telemetry.addData("turret rotation", turret.getTurretPosition());
-//            rpm += (int) (gamepad.getRightY()*-10);
-//            if (rpm > 3000){
-//                rpm = 6000;
-//            }else if (rpm < 300){
-//                rpm = 300;
-//            }
-//            distance += (int) -gamepad.getRightY();
+
             if(gamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
                 distance+=1;
             }else if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
                 distance-=1;
             }
+
+            if(gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
+                yint+=100;
+            }else if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
+                yint-=100;
+            }
+
+            rpm += (int) ((int) gamepad.getLeftY() * 0.5);
+
             telemetry.addData("distance", distance);
 //            telemetry.addData("rpm",rpm);
-            telemetry.addData("velo",flywheel.getCurrentWheelRawVelocity("neither"));
+            telemetry.addData("velo",flywheel.getFlywheelVelocity());
+            telemetry.addLine();
+            telemetry.addData("Y (RPM)", rpm);
+            telemetry.addData("M (Slope)", slope);
+            telemetry.addData("X (distance)", distance);
+            telemetry.addData("B (y-int)", yint);
+            telemetry.addData("equation", rpm + " = " + slope + " * " + distance + yint);
+
+
+
 
             gamepad.readButtons();
             telemetry.update();
