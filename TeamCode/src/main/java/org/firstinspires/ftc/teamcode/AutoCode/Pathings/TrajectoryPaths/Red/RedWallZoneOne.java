@@ -46,7 +46,7 @@ public class RedWallZoneOne extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the Apriltag Detection process
-        initAprilTag();
+        //initAprilTag();
 
         Pose2d startPose = new Pose2d(15, -60, Math.toRadians(0)); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
@@ -58,9 +58,9 @@ public class RedWallZoneOne extends LinearOpMode {
         autoAim = new AutoAim(Math.toRadians(15));
 
         //April tag stuff
-        if (USE_WEBCAM) {
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-        }
+//        if (USE_WEBCAM) {
+//            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+//        }
 
         waitForStart();
 
@@ -69,13 +69,13 @@ public class RedWallZoneOne extends LinearOpMode {
                         PathingTrajectoriesRed.initialFiringFromWallZoneOne(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
-        scanForTags();
-        if (targetFound){
-            autoAim.calculateEverything(desiredTag);
-            turret.setMotorPower(autoAim.turn);
-        } else {
-            turret.setMotorPower(0);
-        }
+//        scanForTags();
+//        if (targetFound){
+//            autoAim.calculateEverything(desiredTag);
+//            turret.setMotorPower(autoAim.turn);
+//        } else {
+//            turret.setMotorPower(0);
+//        }
 
         Actions.runBlocking(
                 new SequentialAction(

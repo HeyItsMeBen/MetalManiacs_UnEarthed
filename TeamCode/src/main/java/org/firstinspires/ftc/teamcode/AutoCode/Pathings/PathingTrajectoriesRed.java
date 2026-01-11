@@ -32,7 +32,7 @@ public class PathingTrajectoriesRed {
 
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 1))
 
-                .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(45), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(18, 25, Math.toRadians(0)), Math.toRadians(45), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
@@ -56,7 +56,7 @@ public class PathingTrajectoriesRed {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225), maxSpeedConstraint)
 
-                .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
+                .splineToSplineHeading(new Pose2d(18, 25, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
@@ -100,7 +100,7 @@ public class PathingTrajectoriesRed {
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 1))
 
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(18, 25, Math.toRadians(0)), Math.toRadians(90), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
