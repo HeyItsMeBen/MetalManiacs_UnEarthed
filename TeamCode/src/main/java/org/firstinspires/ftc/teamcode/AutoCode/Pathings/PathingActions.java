@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings;
 
+import static java.lang.Thread.sleep;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
@@ -109,10 +113,8 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            //intake.runIntakeFullPower();
-
             if (!initialized) {
-                launchDistance = (zone == 1) ? 5.2 : 12.8;
+                launchDistance = (zone == 1) ? 5.8 : 12.6;
                 targetRPM = flywheels.launchFromDistance(launchDistance);
 
                 spinUpStartTime = System.currentTimeMillis();
@@ -120,49 +122,49 @@ public class PathingActions {
                 initialized = true;
             }
 
-            double currentRPM = flywheels.getFlywheelVelocity();
+            flywheelIsReady=false;
 
-            telemetry.addData("Current RPM", currentRPM);
-            telemetry.addData("Target RPM", targetRPM);
-            telemetry.addData("Distance", launchDistance);
-            telemetry.addData("Artifacts Fired", artifactsLaunched);
+//            autoAim.calculateEverything(desiredTag);
+            double targetRPM = flywheels.launchFromDistance(launchDistance); //Use auto-aim to calculate and set the flywheel velocity.
 
-            boolean rpmReady = currentRPM >= targetRPM;
-            boolean timedOut = (System.currentTimeMillis() - spinUpStartTime) > spinUpTimeout;
+            //wait 1 second to startup flywheels
+            ElapsedTime transferTimer= new ElapsedTime();
+            while (!flywheelIsReady) {
+                if (flywheels.getCurrentWheelVelocity("") >= targetRPM * 0.85) {
+                    flywheelIsReady = true;
+                } else if (transferTimer.milliseconds()>1000) {
+                    flywheelIsReady = true;
+                }
+            }
+            double outtakeSpeedBeforeDrop = flywheels.getCurrentWheelVelocity("");
 
-            flywheelIsReady = rpmReady || timedOut;
+            //send the balls into the flywheel to launch
 
-            if (rpmReady) {
-                transfer.setTransferPower(0.7);     // only allowed when RPM is good
-                telemetry.addData("Transfer", "RUNNING");
-            } else {
-                transfer.stopTransfer();    // forced off whenever RPM drops
-                telemetry.addData("Transfer", "STOPPED");
+            for (int i = 0; i<3; i++) {
+                if (i>0){
+                    intake.setIntakePower(1);
+                }
+                transfer.setTransferPower(1);
+                long startTime = System.currentTimeMillis();
+                long timeout = 500;
+                while (true) {
+                    if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 150) {
+                        break;
+                    }
+                    if (System.currentTimeMillis() - startTime > timeout) {
+                        break;
+                    }
+                }
+                transfer.setTransferPower(0);
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
-            if (!flywheelIsReady) {
-                telemetry.addData("Status", "Waiting...");
-                telemetry.update();
-                return true;
-            }
-
-            long now = System.currentTimeMillis();
-            if (artifactsLaunched <= 3 && now - lastShotTime > timeBetweenLaunches) {
-                artifactsLaunched++;
-                lastShotTime = now;
-                telemetry.addData("Shot", artifactsLaunched);
-            }
-
-            if (artifactsLaunched > 3) {
-                flywheels.setFlywheelSpeed(targetRPM / 2);
-                transfer.stopTransfer();
-                telemetry.addData("Status", "Finished");
-                telemetry.update();
-                return false;
-            }
-
-            telemetry.update();
-            return true;
+            intake.stopIntake();
+            return false;
 
         }
     }

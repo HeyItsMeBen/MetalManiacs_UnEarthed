@@ -23,7 +23,7 @@ public class BlueGoalZoneOne extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(315));
+        Pose2d startPose = new Pose2d(-52, 52, Math.toRadians(225));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -44,11 +44,11 @@ public class BlueGoalZoneOne extends LinearOpMode {
                 )
         );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesBlue.openChannel(drive, drive.localizer.getPose(), intake)
-                )
-        );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesBlue.openChannel(drive, drive.localizer.getPose(), intake)
+//                )
+//        );
 
         Actions.runBlocking(
                 new SequentialAction(

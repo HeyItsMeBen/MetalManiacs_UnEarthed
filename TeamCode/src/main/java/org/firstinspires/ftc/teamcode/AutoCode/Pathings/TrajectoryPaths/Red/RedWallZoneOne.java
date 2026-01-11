@@ -20,18 +20,16 @@ public class RedWallZoneOne extends LinearOpMode {
     Intake intake;
     Flywheels flywheels;
     Transfer transfer;
-    Turret turret;
 
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270)); // x, y, heading in radians
+        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(0)); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         transfer = new Transfer(hardwareMap);
-        turret = new Turret(hardwareMap);
 
         waitForStart();
 
@@ -47,11 +45,11 @@ public class RedWallZoneOne extends LinearOpMode {
                 )
         );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.openChannel(drive, drive.localizer.getPose(), intake)
-                )
-        );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesRed.openChannel(drive, drive.localizer.getPose(), intake)
+//                )
+//        );
 
         Actions.runBlocking(
                 new SequentialAction(

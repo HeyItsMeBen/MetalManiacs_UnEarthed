@@ -13,79 +13,97 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-// In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
-
+// Blue side mirrored version of AutoPathSimShortRangeRed
 public class AutoPathSimShortRangeBlue {
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
 
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-15, -60, Math.toRadians(270)))
-                //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(315)))
+//                .followTrajectorySequence(drive ->
+//                                drive.trajectorySequenceBuilder(new Pose2d(-52, 52, Math.toRadians(225)))
 
-                        //initialFiringFromWallZoneOne
-                        .setReversed(true)
-                        .splineToLinearHeading(new Pose2d(20, 20, Math.toRadians(0)), Math.toRadians(90))
+                                        // Start pose: X mirrored, heading +180
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(new Pose2d(-15, -60, Math.toRadians(180)))
 
-                        //initialFiringFromGoalZoneOne
-//                        .setReversed(true)
-//                        .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225))
-//                        .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270))
+                                // initialFiringFromWallZoneOne
+                                .setReversed(false)
+                                // Pose X mirrored, heading +180 = 180
+                                // Tangent 45° → (0–180) → +90 → 135
+                                .splineToLinearHeading(
+                                        new Pose2d(-20, 20, Math.toRadians(180)),
+                                        Math.toRadians(135)
+                                )
 
-//                        //pattern collection close
-                        .setReversed(false)
-                        .splineTo(new Vector2d(55,12), Math.toRadians(0))
-                        .setReversed(true)
+//                                        .setReversed(true)
+//
+//                                        .splineToConstantHeading(new Vector2d(-30, 50), Math.toRadians(315))
+//
+//                                .splineToSplineHeading(new Pose2d(-18, 18, Math.toRadians(180)), Math.toRadians(270))
 
-//                        //open channel
-                        .setReversed(false)
-                        .strafeTo(new Vector2d(45,8))
-                        .splineToConstantHeading(new Vector2d(58,5), Math.toRadians(0))
 
-//                        //firing position
-                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
-                        .setReversed(false)
+                                // pattern collection close
+                                .setReversed(false)
+                                .splineTo(new Vector2d(-55, 12), Math.toRadians(180))
+                                .setReversed(true)
 
-                        //pattern collection middle
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(18, 0), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(55, -12, Math.toRadians(0)), Math.toRadians(0))                        .setReversed(true)
+                                // open channel
+                                .setReversed(false)
+                                .strafeTo(new Vector2d(-45, 8))
+                                .splineToConstantHeading(new Vector2d(-58, 5), Math.toRadians(180))
 
-                        //firing position
-                        .setReversed(true)
-                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
-                        .setReversed(false)
+                                // firing position
+                                // Tangent 90° → invariant
+                                .splineToLinearHeading(
+                                        new Pose2d(-18, 18, Math.toRadians(180)),
+                                        Math.toRadians(90)
+                                )
+                                .setReversed(false)
 
-                        //pattern collection far
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(55, -35, Math.toRadians(0)), Math.toRadians(0))
+                                // pattern collection middle
+                                .setReversed(false)
+                                .splineToConstantHeading(new Vector2d(-18, 0), Math.toRadians(270))
+                                .splineToLinearHeading(new Pose2d(-55, -12, Math.toRadians(180)), Math.toRadians(180))
+                                .setReversed(true)
 
-                        //.splineTo(new Vector2d(55,-35), Math.toRadians(0))
-                        .setReversed(true)
+// firing position
+                                .splineToLinearHeading(
+                                        new Pose2d(-18, 18, Math.toRadians(180)),
+                                        Math.toRadians(90)
+                                )
+                                .setReversed(false)
 
-                        //firing position
-                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
-                        .setReversed(false)
+// pattern collection far
+                                .setReversed(false)
+                                .splineToConstantHeading(new Vector2d(-18, -25), Math.toRadians(270))
+                                .splineToLinearHeading(
+                                        new Pose2d(-55, -35, Math.toRadians(180)),
+                                        Math.toRadians(180)
+                                )
+                                .setReversed(true)
 
-                        //park
-                        .splineTo(new Vector2d(20, -35), Math.toRadians(270))
+                                // firing position
+                                // Tangent 90° → invariant
+                                .splineToLinearHeading(
+                                        new Pose2d(-18, 18, Math.toRadians(180)),
+                                        Math.toRadians(90)
+                                )
+                                .setReversed(false)
 
-                        .build());
+                                // park
+                                .splineTo(new Vector2d(-20, -35), Math.toRadians(270))
 
-        //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds
+                                .build()
+                );
+
+        // Field image
         Image img = null;
         try {
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Black.png"));
             img = ImageIO.read(new File("MeepMeep/Field_Backgrounds/Juice-DECODE-Dark.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Light.png"));
-            //img = ImageIO.read(new File("C:\\Users\\blu62\\OneDrive\\GitHub\\MetalManiacs_UnEarthed\\MeepMeep\\Field_Backgrounds\\Juice-DECODE-Paper.png"));
-        }
-        catch(IOException e) {}
+        } catch (IOException e) { }
 
         meepMeep.setBackground(img)
                 .setDarkMode(true)
