@@ -33,7 +33,7 @@ public class PathingTrajectoriesBlue {
 
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 1))
 
-                .splineToLinearHeading(new Pose2d(-18, 25, Math.toRadians(180)), Math.toRadians(135), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(-18, 27, Math.toRadians(180)), Math.toRadians(135), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
@@ -103,7 +103,7 @@ public class PathingTrajectoriesBlue {
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 1))
 
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(-18, 25, Math.toRadians(180)), Math.toRadians(90), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(-18, 30, Math.toRadians(180)), Math.toRadians(90), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 

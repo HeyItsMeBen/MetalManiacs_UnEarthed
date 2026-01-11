@@ -119,7 +119,7 @@ public class PathingActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
             if (!initialized) {
-                launchDistance = (zone == 1) ? 5.8 : 12.6;
+                launchDistance = (zone == 1) ? 6.2 : 12.6;
                 targetRPM = flywheels.launchFromDistance(launchDistance);
 
                 spinUpStartTime = System.currentTimeMillis();
