@@ -63,6 +63,7 @@ public class NewTransfer_DriveCode extends OpMode {
     private double outtakePower = 0;
     private boolean flyWheelOn = false;
     private float outtakeSpeed = 2300;
+    private double extraOuttakeSpeed=0;
 
     boolean opModeIsActive = true;
 
@@ -337,7 +338,7 @@ public class NewTransfer_DriveCode extends OpMode {
             drive(0, 0, 0, 0);
             turret.setMotorPower(0);
 //            autoAim.calculateEverything(desiredTag);
-            double targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
+            double targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
             ElapsedTime transferTimer= new ElapsedTime();
@@ -393,11 +394,11 @@ public class NewTransfer_DriveCode extends OpMode {
 
         //flywheel speed adjustments (manual)
         if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
-            outtakeSpeed += 250;
+            extraOuttakeSpeed += 11.67;    //0.466666667
         } else if (operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
-            outtakeSpeed -= 250;
+            extraOuttakeSpeed -= 11.67;
         } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
-            outtakeSpeed = 2350;
+            extraOuttakeSpeed = 0;
         }
 
         //clamps speed to bounds
