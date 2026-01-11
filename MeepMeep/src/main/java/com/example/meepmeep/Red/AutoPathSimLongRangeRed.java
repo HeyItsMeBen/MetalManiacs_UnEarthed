@@ -1,4 +1,4 @@
-package com.example.meepmeep;
+package com.example.meepmeep.Red;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 // In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
 
-public class AutoPathSimLongRange {
+public class AutoPathSimLongRangeRed {
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(800);

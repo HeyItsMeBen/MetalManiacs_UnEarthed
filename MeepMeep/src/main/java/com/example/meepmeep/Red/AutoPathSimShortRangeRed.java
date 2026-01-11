@@ -1,4 +1,4 @@
-package com.example.meepmeep;
+package com.example.meepmeep.Red;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 // In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
 
-public class AutoPathSimShortRange {
+public class AutoPathSimShortRangeRed {
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(800);
@@ -24,38 +24,39 @@ public class AutoPathSimShortRange {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
 
-                //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(270)))
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(315)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(270)))
+                //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(315)))
 
                         //initialFiringFromWallZoneOne
-//                        .setReversed(true)
-//                        .splineToLinearHeading(new Pose2d(20, 20, Math.toRadians(0)), Math.toRadians(70))
+                        .setReversed(true)
+                        .splineToLinearHeading(new Pose2d(20, 20, Math.toRadians(0)), Math.toRadians(90))
 
                         //initialFiringFromGoalZoneOne
-                        .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225))
-                        .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270))
+//                        .setReversed(true)
+//                        .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225))
+//                        .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270))
 
-                        //pattern collection close
+//                        //pattern collection close
                         .setReversed(false)
                         .splineTo(new Vector2d(55,12), Math.toRadians(0))
                         .setReversed(true)
 
-                        //open channel
+//                        //open channel
                         .setReversed(false)
                         .strafeTo(new Vector2d(45,8))
                         .splineToConstantHeading(new Vector2d(58,5), Math.toRadians(0))
 
-                        //firing position
+//                        //firing position
                         .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
                         .setReversed(false)
 
                         //pattern collection middle
                         .setReversed(false)
-                        .splineTo(new Vector2d(55,-12), Math.toRadians(0))
-                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(18, 0), Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(55, -12, Math.toRadians(0)), Math.toRadians(0))                        .setReversed(true)
 
                         //firing position
+                        .setReversed(true)
                         .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
                         .setReversed(false)
 
