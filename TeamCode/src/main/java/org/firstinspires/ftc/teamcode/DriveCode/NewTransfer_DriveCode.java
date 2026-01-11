@@ -304,7 +304,7 @@ public class NewTransfer_DriveCode extends OpMode {
         //Launches the balls while right bumper is held
         if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
             drive(0, 0, 0, 0);
-            autoAim.calculateEverything(desiredTag);
+//            autoAim.calculateEverything(desiredTag);
             flywheels.setFlywheelSpeed(flywheels.getRPMFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)))); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
@@ -386,12 +386,12 @@ public class NewTransfer_DriveCode extends OpMode {
                 wasTargetFound = true;
 
 
-                if (turret.getTurretPosition() > 1500){
+                if (turret.getTurretPosition() < -750){
                     if (!isCorrectingBoundary) {
 //                        turret.rotateToPosition(1500);
                         isCorrectingBoundary = true;
                     }
-                } else if(turret.getTurretPosition() < 0){
+                } else if(turret.getTurretPosition() > 750){
                     if (!isCorrectingBoundary) {
 //                        turret.rotateToPosition(0);
                         isCorrectingBoundary = true;
@@ -401,12 +401,12 @@ public class NewTransfer_DriveCode extends OpMode {
                     turret.setMotorPower(autoAim.turn);
                 }
 
-                hood.setAngle(autoAim.hoodAngle);
+//                hood.setAngle(autoAim.hoodAngle);
                 telemetry.addLine();
             } else {    //moves the turret to standby position if not tags are found
                 if (wasTargetFound) {
-                    turret.rotateTowardsTarget(750);
-                    if (turret.isAtTargetPosition(750)){
+                    turret.rotateTowardsTarget(0);
+                    if (turret.isAtTargetPosition(0)){
                         wasTargetFound = false;
                         turret.setMotorPower(0);
                     }
