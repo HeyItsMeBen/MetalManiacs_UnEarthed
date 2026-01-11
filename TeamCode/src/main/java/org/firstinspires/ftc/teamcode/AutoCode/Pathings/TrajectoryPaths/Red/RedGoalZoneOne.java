@@ -11,19 +11,18 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
 @Autonomous(name = "[Competition] [Red] Start at Red Goal, Shoot from Zone One", group = "Autonomous")
 public class RedGoalZoneOne extends LinearOpMode {
-
+    // Initialize the Apriltag Detection process
     Intake intake;
     Flywheels flywheels;
     Transfer transfer;
-    Turret turret;
 
     @Override
     public void runOpMode() {
+        // Initialize the Apriltag Detection process
 
         Pose2d startPose = new Pose2d(52, 52, Math.toRadians(315));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
@@ -31,13 +30,12 @@ public class RedGoalZoneOne extends LinearOpMode {
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         transfer = new Transfer(hardwareMap);
-        turret = new Turret(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.initialFiringFromGoalZoneOne(drive, startPose, intake, flywheels, transfer, turret, telemetry)
+                        PathingTrajectoriesRed.initialFiringFromGoalZoneOne(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
 
@@ -85,7 +83,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake, turret)
+                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake)
                 )
         );
     }

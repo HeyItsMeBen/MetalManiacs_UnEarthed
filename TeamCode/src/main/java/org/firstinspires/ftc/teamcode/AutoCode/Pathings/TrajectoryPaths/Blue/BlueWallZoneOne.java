@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
 @Autonomous(name = "[Competition] [Blue] Start at Blue Wall, Shoot from Zone One", group = "Autonomous")
@@ -20,7 +19,6 @@ public class BlueWallZoneOne extends LinearOpMode {
     Intake intake;
     Flywheels flywheels;
     Transfer transfer;
-    Turret turret;
 
     @Override
     public void runOpMode() {
@@ -31,13 +29,12 @@ public class BlueWallZoneOne extends LinearOpMode {
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         transfer = new Transfer(hardwareMap);
-        turret = new Turret(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.initialFiringFromWallZoneOne(drive, startPose, intake, flywheels, transfer, turret, telemetry)
+                        PathingTrajectoriesBlue.initialFiringFromWallZoneOne(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
 
@@ -85,7 +82,7 @@ public class BlueWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.park(drive, drive.localizer.getPose(), flywheels, intake, turret)
+                        PathingTrajectoriesBlue.park(drive, drive.localizer.getPose(), flywheels, intake)
                 )
         );
     }

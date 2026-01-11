@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.Pose2d;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 import java.lang.Math;
 
@@ -20,7 +19,7 @@ public class PathingTrajectoriesRed {
 
     static double defaultAngVelocity = Math.PI;
 
-    public static Action initialFiringFromWallZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Turret turret, Telemetry telemetry) {
+    public static Action initialFiringFromWallZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Telemetry telemetry) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
@@ -34,14 +33,13 @@ public class PathingTrajectoriesRed {
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret, telemetry))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
                 .build();
 
     }
 
-    public static Action initialFiringFromGoalZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Turret turret, Telemetry telemetry) {
+    public static Action initialFiringFromGoalZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Telemetry telemetry) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
@@ -57,14 +55,13 @@ public class PathingTrajectoriesRed {
 
                 .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret, telemetry))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
                 .build();
 
     }
 
-    public static Action initialFiringFromWallZoneTwo(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Turret turret, Telemetry telemetry) {
+    public static Action initialFiringFromWallZoneTwo(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Telemetry telemetry) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
@@ -78,7 +75,6 @@ public class PathingTrajectoriesRed {
                 .setReversed(true)
                 .strafeTo(new Vector2d(15, -47), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneTwoRed(turret, telemetry))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 2, telemetry))
 
                 .build();
@@ -223,14 +219,14 @@ public class PathingTrajectoriesRed {
 
                 .setReversed(false)
                 .strafeTo(new Vector2d(45,8), maxSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(63,5), Math.toRadians(0), maxSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(65,5), Math.toRadians(0), maxSpeedConstraint)
 
                 .waitSeconds(1)
 
                 .build();
     }
 
-    public static Action park(MecanumDrive drive, Pose2d currentPose, Flywheels flywheel, Intake intake, Turret turret) {
+    public static Action park(MecanumDrive drive, Pose2d currentPose, Flywheels flywheel, Intake intake) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
@@ -242,7 +238,6 @@ public class PathingTrajectoriesRed {
         return drive.actionBuilder(currentPose)
 
                 .stopAndAdd(new PathingActions.stopIntake(intake))
-                .stopAndAdd(new PathingActions.endingTurretPosition(turret))
 
                 .setReversed(false)
                 .splineTo(new Vector2d(20, -35), Math.toRadians(270), maxSpeedConstraint)

@@ -66,8 +66,6 @@ public class Flywheels {
 
     }
 
-
-    @Deprecated
     public void setFlywheelPower(double power) {
         if (power > 1) {
             flywheel.setPower(1.0);

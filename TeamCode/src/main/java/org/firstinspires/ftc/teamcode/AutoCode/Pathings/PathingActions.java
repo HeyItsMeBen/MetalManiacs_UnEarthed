@@ -1,5 +1,4 @@
-
-        package org.firstinspires.ftc.teamcode.AutoCode.Pathings;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings;
 
 import androidx.annotation.NonNull;
 
@@ -10,7 +9,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 //See if this sends through
 
@@ -32,22 +30,6 @@ public class PathingActions {
         }
     }
 
-    public static class maintainIntake implements Action {
-        private final Intake intake;
-
-        public maintainIntake(Intake intake) {
-
-            this.intake = intake;
-
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.maintainIntakePower();
-            return false;
-        }
-    }
-
     public static class stopIntake implements Action {
         private final Intake intake;
 
@@ -64,97 +46,39 @@ public class PathingActions {
         }
     }
 
-    public static class InitializeTurretPositionZoneOneRed implements Action {
+    public static class powerUpFlywheels implements Action {
+        private final Flywheels flywheels;
+        private final int zone;
 
-        private final Turret turret;
-        private final Telemetry telemetry;
-
-        public InitializeTurretPositionZoneOneRed(Turret turret, Telemetry telemetry) {
-            this.turret = turret;
-            this.telemetry = telemetry;
+        public powerUpFlywheels(Flywheels flywheels, int zone) {
+            this.flywheels = flywheels;
+            this.zone = zone;
         }
+
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            turret.resetInitial();
-            turret.rotateToPosition(-375);
-            telemetry.addData("Current Position: ", turret.getTurretPosition());
-            telemetry.update();
+            double launchDistance = (zone == 1) ? 5.2 : 12.8;
+            flywheels.launchFromDistance(launchDistance * 0.7);
             return false;
         }
     }
 
-    public static class InitializeTurretPositionZoneTwoRed implements Action {
+    public static class stopFlywheels implements Action {
+        private final Flywheels flywheels;
 
-        private final Turret turret;
-        private final Telemetry telemetry;
+        public stopFlywheels(Flywheels flywheels) {
+            this.flywheels = flywheels;
 
-        public InitializeTurretPositionZoneTwoRed(Turret turret, Telemetry telemetry) {
-            this.turret = turret;
-            this.telemetry = telemetry;
         }
+
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            turret.resetInitial();
-            turret.rotateToPosition(-450);
-            telemetry.addData("Current Position: ", turret.getTurretPosition());
-            telemetry.update();
+            flywheels.setFlywheelVelocity(0);
             return false;
         }
     }
 
-    public static class InitializeTurretPositionZoneOneBlue implements Action {
 
-        private final Turret turret;
-        private final Telemetry telemetry;
-
-        public InitializeTurretPositionZoneOneBlue(Turret turret, Telemetry telemetry) {
-            this.turret = turret;
-            this.telemetry = telemetry;
-        }
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            turret.resetInitial();
-            turret.rotateToPosition(375);
-            telemetry.addData("Current Position: ", turret.getTurretPosition());
-            telemetry.update();
-            return false;
-        }
-    }
-
-    public static class InitializeTurretPositionZoneTwoBlue implements Action {
-
-        private final Turret turret;
-        private final Telemetry telemetry;
-
-
-        public InitializeTurretPositionZoneTwoBlue(Turret turret, Telemetry telemetry) {
-            this.turret = turret;
-            this.telemetry = telemetry;
-        }
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            turret.resetInitial();
-            turret.rotateToPosition(450);
-            telemetry.addData("Current Position: ", turret.getTurretPosition());
-            telemetry.update();
-            return false;
-        }
-    }
-
-    public static class endingTurretPosition implements Action {
-
-        private final Turret turret;
-
-        public endingTurretPosition(Turret turret) {
-            this.turret = turret;
-        }
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            turret.rotateToPosition(0);
-            turret.resetInitial();
-            return false;
-        }
-    }
 
     public static class firingSequence implements Action {
 
@@ -171,8 +95,8 @@ public class PathingActions {
         private long spinUpStartTime = 0;
         private final long spinUpTimeout = 3000; // max 3 seconds to reach speed
         private double targetRPM = 0;
-        private int timeBetweenLaunches = 250;
-        private double launchDistance = 4.4;
+        private int timeBetweenLaunches = 525;
+        private double launchDistance = 6; // in feet
 
         public firingSequence(Intake intake, Flywheels flywheels, Transfer transfer, int launchZone, Telemetry telemetry) {
             this.intake = intake;
@@ -185,56 +109,61 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            intake.runIntakeFullPower();
+            //intake.runIntakeFullPower();
 
             if (!initialized) {
-                launchDistance = (zone == 1) ? 4.9 : 10.3;
+                launchDistance = (zone == 1) ? 5.2 : 12.8;
                 targetRPM = flywheels.launchFromDistance(launchDistance);
-                initialized = true;
+
                 spinUpStartTime = System.currentTimeMillis();
+                lastShotTime = spinUpStartTime;
+                initialized = true;
             }
 
-            // Telemetry for Driver Station
-            telemetry.addData("Current RPM: ", flywheels.getFlywheelVelocity());
-            telemetry.addData("Target RPM: ", targetRPM);
-            telemetry.addData("Distance From Goal: ", launchDistance);
-            telemetry.addData("Estimated Artifacts Fired: ", artifactsLaunched);
-            telemetry.update();
-
-            // Wait for flywheel to reach speed, but with timeout
             double currentRPM = flywheels.getFlywheelVelocity();
+
+            telemetry.addData("Current RPM", currentRPM);
+            telemetry.addData("Target RPM", targetRPM);
+            telemetry.addData("Distance", launchDistance);
+            telemetry.addData("Artifacts Fired", artifactsLaunched);
+
+            boolean rpmReady = currentRPM >= targetRPM;
+            boolean timedOut = (System.currentTimeMillis() - spinUpStartTime) > spinUpTimeout;
+
+            flywheelIsReady = rpmReady || timedOut;
+
+            if (rpmReady) {
+                transfer.setTransferPower(0.7);     // only allowed when RPM is good
+                telemetry.addData("Transfer", "RUNNING");
+            } else {
+                transfer.stopTransfer();    // forced off whenever RPM drops
+                telemetry.addData("Transfer", "STOPPED");
+            }
+
             if (!flywheelIsReady) {
-                if (currentRPM >= targetRPM * 0.85) {
-                    flywheelIsReady = true;
-                    transfer.runTransfer();
-                } else if (System.currentTimeMillis() - spinUpStartTime > spinUpTimeout) {
-                    telemetry.addData("Status: ", "Timed Out");
-                    telemetry.update();
-                    flywheelIsReady = true;
-                } else {
-                    transfer.stopTransfer();
-                    telemetry.addData("Status: ", "Waiting");
-                    telemetry.update();
-                    return true;
-                }
+                telemetry.addData("Status", "Waiting...");
+                telemetry.update();
+                return true;
             }
 
             long now = System.currentTimeMillis();
             if (artifactsLaunched <= 3 && now - lastShotTime > timeBetweenLaunches) {
                 artifactsLaunched++;
                 lastShotTime = now;
-                telemetry.addData("Shot Fired", "");
-                telemetry.update();
+                telemetry.addData("Shot", artifactsLaunched);
             }
 
-            // Check if finished
             if (artifactsLaunched > 3) {
                 flywheels.setFlywheelSpeed(targetRPM / 2);
                 transfer.stopTransfer();
+                telemetry.addData("Status", "Finished");
+                telemetry.update();
                 return false;
             }
 
+            telemetry.update();
             return true;
+
         }
     }
 

@@ -38,7 +38,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, transfer, turret, telemetry)
+                        PathingTrajectoriesBlue.initialFiringFromWallZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
 
@@ -56,7 +56,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.park(drive, drive.localizer.getPose(), flywheels, intake, turret)
+                        PathingTrajectoriesBlue.park(drive, drive.localizer.getPose(), flywheels, intake)
                 )
         );
     }
