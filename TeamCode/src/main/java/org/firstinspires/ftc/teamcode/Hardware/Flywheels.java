@@ -52,10 +52,6 @@ public class Flywheels {
         flywheel.setPower(0);
     }
 
-    public double returnWheelVelocity(){
-        return flywheel.getVelocity();
-    }
-
     //Update
     public void setFlywheelVelocity(float givenRPM) {
         flywheel.setVelocity(tickPerRevolution*(givenRPM/60));
@@ -65,6 +61,10 @@ public class Flywheels {
         return flywheel.getVelocity();
     }
 
+    public double getRPMFromDistance(double distance){
+        return b+ (m * distance);  //return the optimal rpm for telemetry debugging...
+
+    }
 
 
     @Deprecated
@@ -77,13 +77,8 @@ public class Flywheels {
     }
 
     @Deprecated
-    public void setRawFlywheelVelocity(float givenRPM){
+    public void setRawFlywheelVelocity(float givenRPM) {
         flywheel.setVelocity(givenRPM);
-    }
-
-    public double getRPMFromDistance(double distance){
-        return b+ (m * distance);  //return the optimal rpm for telemetry debugging...
-
     }
 
 

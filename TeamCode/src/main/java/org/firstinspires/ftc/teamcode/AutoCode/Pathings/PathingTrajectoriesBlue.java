@@ -35,7 +35,7 @@ public class PathingTrajectoriesBlue {
                 .splineToLinearHeading(new Pose2d(-18, 18, Math.toRadians(180)), Math.toRadians(110), maxSpeedConstraint)
 
 
-                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret))
+                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret, telemetry))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
                 .build();
@@ -58,7 +58,7 @@ public class PathingTrajectoriesBlue {
 
                 .splineToSplineHeading(new Pose2d(-18, 18, Math.toRadians(180)), Math.toRadians(-90), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret))
+                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret, telemetry))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
                 .build();
@@ -79,7 +79,7 @@ public class PathingTrajectoriesBlue {
                 .setReversed(true)
                 .strafeTo(new Vector2d(-15, -47), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneTwoRed(turret))
+                .stopAndAdd(new PathingActions.InitializeTurretPositionZoneTwoRed(turret, telemetry))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 2, telemetry))
 
                 .build();
