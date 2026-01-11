@@ -19,6 +19,9 @@ public class Flywheels {
 
     public double f = 14.12;
     public double p = 100;
+    //rpm = m * distance + b
+    double m = 90;
+    double b = 1000;
 
     //Outtake subsystem
     public Flywheels(HardwareMap hMap) {
@@ -40,7 +43,7 @@ public class Flywheels {
     }
 
     public double launchFromDistance(double distance){ //distance in feet from goal
-        double optimalRpm = 1000+ (83.3 * distance);
+        double optimalRpm = b+ (m * distance);
         setFlywheelSpeed(optimalRpm);
         return optimalRpm; //return the optimal rpm for telemetry debugging...
     }
@@ -79,7 +82,7 @@ public class Flywheels {
     }
 
     public double getRPMFromDistance(double distance){
-        return 1000+ (83.3 * distance);  //return the optimal rpm for telemetry debugging...
+        return b+ (m * distance);  //return the optimal rpm for telemetry debugging...
 
     }
 
