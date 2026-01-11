@@ -391,10 +391,10 @@ public class NewTransfer_DriveCode extends OpMode {
 
         if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
             outtakeSpeed += 250;
-            extraOuttakeSpeed += 11.67;    //0.466666667
+            extraOuttakeSpeed += 25;    //0.466666667
         } else if (operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
             outtakeSpeed -= 250;
-            extraOuttakeSpeed -= 11.67;
+            extraOuttakeSpeed -= 25;
         } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
             outtakeSpeed = 2350;
             extraOuttakeSpeed = 0;
