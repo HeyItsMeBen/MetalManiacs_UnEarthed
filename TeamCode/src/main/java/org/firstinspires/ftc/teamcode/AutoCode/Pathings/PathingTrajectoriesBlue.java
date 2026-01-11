@@ -32,7 +32,8 @@ public class PathingTrajectoriesBlue {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(70), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(-18, 18, Math.toRadians(180)), Math.toRadians(110), maxSpeedConstraint)
+
 
                 .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
@@ -53,9 +54,9 @@ public class PathingTrajectoriesBlue {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225), maxSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-30, 50), Math.toRadians(-45), maxSpeedConstraint)
 
-                .splineToSplineHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
+                .splineToSplineHeading(new Pose2d(-18, 18, Math.toRadians(180)), Math.toRadians(-90), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.InitializeTurretPositionZoneOneRed(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
@@ -76,7 +77,7 @@ public class PathingTrajectoriesBlue {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .strafeTo(new Vector2d(15, -47), maxSpeedConstraint)
+                .strafeTo(new Vector2d(-15, -47), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.InitializeTurretPositionZoneTwoRed(turret))
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 2, telemetry))
@@ -97,7 +98,7 @@ public class PathingTrajectoriesBlue {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(-18, 18, Math.toRadians(180)), Math.toRadians(90), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
@@ -115,7 +116,7 @@ public class PathingTrajectoriesBlue {
 
         return drive.actionBuilder(currentPose)
 
-                .strafeToLinearHeading(new Vector2d(15, -47), Math.toRadians(90), maxSpeedConstraint)
+                .strafeToLinearHeading(new Vector2d(-15, -47), Math.toRadians(-90), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 2, telemetry))
 
@@ -138,7 +139,7 @@ public class PathingTrajectoriesBlue {
                     .stopAndAdd(new PathingActions.runIntake(intake))
 
                     .setReversed(false)
-                    .splineTo(new Vector2d(55,12), Math.toRadians(0), maxSpeedConstraint)
+                    .splineTo(new Vector2d(-55,12), Math.toRadians(180), maxSpeedConstraint)
 
                     .build();
 
@@ -150,7 +151,7 @@ public class PathingTrajectoriesBlue {
                     .stopAndAdd(new PathingActions.runIntake(intake))
 
                     .setReversed(false)
-                    .splineTo(new Vector2d(55,-12), Math.toRadians(0), maxSpeedConstraint)
+                    .splineTo(new Vector2d(-55,-12), Math.toRadians(180), maxSpeedConstraint)
 
                     .build();
 
@@ -163,8 +164,8 @@ public class PathingTrajectoriesBlue {
                     .stopAndAdd(new PathingActions.runIntake(intake))
 
                     .setReversed(false)
-                    .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270), maxSpeedConstraint)
-                    .splineToLinearHeading(new Pose2d(55, -35, Math.toRadians(0)), Math.toRadians(0), maxSpeedConstraint)
+                    .splineToConstantHeading(new Vector2d(-18, -25), Math.toRadians(-90), maxSpeedConstraint)
+                    .splineToLinearHeading(new Pose2d(-55, -35, Math.toRadians(180)), Math.toRadians(180), maxSpeedConstraint)
                     .build();
 
         }
@@ -173,7 +174,7 @@ public class PathingTrajectoriesBlue {
             return drive.actionBuilder(currentPose)
 
                     .setReversed(false)
-                    .splineTo(new Vector2d(20, -35), Math.toRadians(270), maxSpeedConstraint)
+                    .splineTo(new Vector2d(-20, -35), Math.toRadians(-90), maxSpeedConstraint)
 
                     .build();
         }
@@ -190,7 +191,7 @@ public class PathingTrajectoriesBlue {
 
         return drive.actionBuilder(currentPose)
 
-                .strafeTo(new Vector2d(60, -55), maxSpeedConstraint)
+                .strafeTo(new Vector2d(-60, -55), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.runIntake(intake))
 
@@ -211,8 +212,8 @@ public class PathingTrajectoriesBlue {
                 .stopAndAdd(new PathingActions.stopIntake(intake))
 
                 .setReversed(false)
-                .strafeTo(new Vector2d(45,8), maxSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(63,5), Math.toRadians(0), maxSpeedConstraint)
+                .strafeTo(new Vector2d(-45,8), maxSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-63,5), Math.toRadians(180), maxSpeedConstraint)
 
                 .waitSeconds(1)
 
@@ -234,7 +235,7 @@ public class PathingTrajectoriesBlue {
                 .stopAndAdd(new PathingActions.endingTurretPosition(turret))
 
                 .setReversed(false)
-                .splineTo(new Vector2d(20, -35), Math.toRadians(270), maxSpeedConstraint)
+                .splineTo(new Vector2d(-20, -35), Math.toRadians(-90), maxSpeedConstraint)
 
                 .build();
     }
