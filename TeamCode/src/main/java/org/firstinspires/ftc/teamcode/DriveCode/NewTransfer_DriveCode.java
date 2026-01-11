@@ -457,6 +457,7 @@ public class NewTransfer_DriveCode extends OpMode {
                     wasTargetFoundLastFrame = false;
                 }
 
+                // Supposedly fixed
                 // Check if enough time has passed since losing the target
                 if (targetLostTimer.seconds() >= TARGET_LOST_DELAY) {
                     // Wait period is over - return to position 0
