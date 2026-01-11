@@ -355,21 +355,27 @@ public class NewTransfer_DriveCode extends OpMode {
             outtakeSpeedBeforeDrop=flywheels.getCurrentWheelVelocity("");
             for (int i=0; i<3 && operator.isDown(GamepadKeys.Button.RIGHT_BUMPER); i++) {
                 if (i>0){
-                    intake.setIntakePower(1);
+                    //intake.setIntakePower(1);
                 }
                 transferWheels.setTransferPower(1);
-                while (opModeIsActive) {
+                ElapsedTime transferTimer2= new ElapsedTime();
+                while (opModeIsActive && operator.isDown(GamepadKeys.Button.RIGHT_BUMPER) && transferTimer2.milliseconds()<3000) {
                     if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 100) {
                         break;
                     }
+                    operator.readButtons();
                 }
                 transferWheels.setTransferPower(0);
-                try {
-                    sleep(1500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
                 operator.readButtons();
+                if (transferTimer2.milliseconds()<3000){
+                    try {
+                        sleep(1500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    break;
+                }
             }
         }
         else if(operator.isDown(GamepadKeys.Button.DPAD_LEFT)){  //open only the trapdoor
@@ -457,7 +463,6 @@ public class NewTransfer_DriveCode extends OpMode {
                     wasTargetFoundLastFrame = false;
                 }
 
-                // Supposedly fixed
                 // Check if enough time has passed since losing the target
                 if (targetLostTimer.seconds() >= TARGET_LOST_DELAY) {
                     // Wait period is over - return to position 0

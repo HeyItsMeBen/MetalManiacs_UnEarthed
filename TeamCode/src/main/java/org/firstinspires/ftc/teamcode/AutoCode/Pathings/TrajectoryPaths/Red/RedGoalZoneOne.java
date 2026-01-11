@@ -45,11 +45,11 @@ public class RedGoalZoneOne extends LinearOpMode {
                 )
         );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.openChannel(drive, drive.localizer.getPose(), intake)
-                )
-        );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesRed.openChannel(drive, drive.localizer.getPose(), intake)
+//                )
+//        );
 
         Actions.runBlocking(
                 new SequentialAction(

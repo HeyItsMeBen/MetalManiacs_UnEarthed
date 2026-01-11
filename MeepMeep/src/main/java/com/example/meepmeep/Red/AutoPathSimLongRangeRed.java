@@ -25,12 +25,13 @@ public class AutoPathSimLongRangeRed {
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(0)))
 
-                        .splineToLinearHeading(new Pose2d(15, -47, Math.toRadians(0)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(15, -47, Math.toRadians(20)), Math.toRadians(90))
 
-
-                        .strafeTo(new Vector2d(60, -55))
+                        .lineToLinearHeading(new Pose2d(60, -55, Math.toRadians(350)))
 
                         .lineTo(new Vector2d(15, -47))
+                        .splineTo(new Vector2d(20, -35), Math.toRadians(270))
+
 
                         .build());
 

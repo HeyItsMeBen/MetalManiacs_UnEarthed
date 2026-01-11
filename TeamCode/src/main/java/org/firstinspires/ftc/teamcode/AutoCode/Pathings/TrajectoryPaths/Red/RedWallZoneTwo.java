@@ -20,7 +20,6 @@ public class RedWallZoneTwo extends LinearOpMode {
     Intake intake;
     Flywheels flywheels;
     Transfer transfer;
-    Turret turret;
 
     @Override
     public void runOpMode() {
@@ -31,7 +30,6 @@ public class RedWallZoneTwo extends LinearOpMode {
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         transfer = new Transfer(hardwareMap);
-        turret = new Turret(hardwareMap);
 
         waitForStart();
 
@@ -53,9 +51,21 @@ public class RedWallZoneTwo extends LinearOpMode {
                 )
         );
 
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesRed.grabThree(drive, drive.localizer.getPose(), intake)
+//                )
+//        );
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
+//                )
+//        );
+
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake)
+                        PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose(), flywheels, intake)
                 )
         );
     }

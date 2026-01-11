@@ -23,7 +23,7 @@ public class BlueWallZoneOne extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270)); // x, y, heading in radians
+        Pose2d startPose = new Pose2d(-15, -60, Math.toRadians(180)); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -44,11 +44,11 @@ public class BlueWallZoneOne extends LinearOpMode {
                 )
         );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesBlue.openChannel(drive, drive.localizer.getPose(), intake)
-                )
-        );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesBlue.openChannel(drive, drive.localizer.getPose(), intake)
+//                )
+//        );
 
         Actions.runBlocking(
                 new SequentialAction(

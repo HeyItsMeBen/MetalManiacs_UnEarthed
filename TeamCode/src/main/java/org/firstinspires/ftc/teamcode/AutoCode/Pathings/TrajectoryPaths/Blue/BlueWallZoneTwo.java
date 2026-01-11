@@ -21,18 +21,16 @@ public class BlueWallZoneTwo extends LinearOpMode {
     Intake intake;
     Flywheels flywheels;
     Transfer transfer;
-    Turret turret;
 
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(-15, -60, Math.toRadians(180));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         transfer = new Transfer(hardwareMap);
-        turret = new Turret(hardwareMap);
 
         waitForStart();
 
@@ -53,6 +51,18 @@ public class BlueWallZoneTwo extends LinearOpMode {
                         PathingTrajectoriesBlue.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
+
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesBlue.grabThree(drive, drive.localizer.getPose(), intake)
+//                )
+//        );
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesBlue.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
+//                )
+//        );
 
         Actions.runBlocking(
                 new SequentialAction(
