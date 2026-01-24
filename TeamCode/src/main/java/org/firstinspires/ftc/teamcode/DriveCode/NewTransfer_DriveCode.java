@@ -107,10 +107,24 @@ public class NewTransfer_DriveCode extends OpMode {
     double  turn            = 0;        // Desired turning power/speed (-1 to +1)
     final double DESIRED_DISTANCE = 64; //  this is how close the camera should get to the target (inches)
 
+    private enum LaunchState {
+        IDLE,
+        SPINNING_UP,
+        WAITING_AFTER_SPINUP,
+        FEEDING_BALL,
+        WAITING_BETWEEN_BALLS
+    }
+
+    private LaunchState launchState = LaunchState.IDLE;
+    private ElapsedTime launchTimer = new ElapsedTime();
+    private int ballsFed = 0;
+    private double outtakeSpeedBeforeDrop = 0;
+    private double targetRPM = 0;
+    private ElapsedTime targetLostTimer = new ElapsedTime();
+    private boolean wasTargetFoundLastFrame = false;
+    private static final double TARGET_LOST_DELAY = 1.0; // 1 second delay in seconds
     public boolean shouldAutoAim = true;
     double hoodAngle;
-
-    double outtakeSpeedBeforeDrop=0;
     boolean flywheelIsReady=false;
 
     @Override
@@ -330,68 +344,123 @@ public class NewTransfer_DriveCode extends OpMode {
 //            transferWheels.setTransferPower(1);
 //
 //        }
-        if ((operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)) {
-            flywheelIsReady=false;
-            drive(0, 0, 0, 0);
-            turret.setMotorPower(0);
-//            autoAim.calculateEverything(desiredTag);
-            double targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed); //Use auto-aim to calculate and set the flywheel velocity.
+        if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
+            // Trigger is being held - run launch sequence
 
-            //wait 1 second to startup flywheels
-            ElapsedTime transferTimer= new ElapsedTime();
-            while (!flywheelIsReady) {
-                if (flywheels.getCurrentWheelVelocity("") >= targetRPM * 0.85) {
-                    try {
-                        sleep(500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+            switch (launchState) {
+                case IDLE:
+                    // Start the launch sequence
+                    drive(0, 0, 0, 0);
+                    turret.setMotorPower(0);
+                    targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
+                    launchTimer.reset();
+                    launchState = LaunchState.SPINNING_UP;
+                    ballsFed = 0;
+                    break;
+
+                case SPINNING_UP:
+                    // Wait for flywheels to reach target speed
+                    drive(0, 0, 0, 0);  // Keep stopping the drive
+                    turret.setMotorPower(0);  // Keep turret stopped
+
+                    if (flywheels.getCurrentWheelVelocity("") >= targetRPM * 0.85) {
+                        // Flywheels are ready!
+                        launchTimer.reset();
+                        launchState = LaunchState.WAITING_AFTER_SPINUP;
+                    } else if (launchTimer.milliseconds() > 1200) {
+                        // Timeout - proceed anyway
+                        launchTimer.reset();
+                        launchState = LaunchState.WAITING_AFTER_SPINUP;
                     }
-                    flywheelIsReady = true;
-                } else if (transferTimer.milliseconds()>1200) {
-                    flywheelIsReady = true;
-                }
-            }
-            outtakeSpeedBeforeDrop=flywheels.getCurrentWheelVelocity("");
+                    break;
 
-            //send the balls into the flywheel to launch
-            operator.readButtons();
-            outtakeSpeedBeforeDrop=flywheels.getCurrentWheelVelocity("");
-            for (int i=0; i<3; i++) {
-                if (i>0){
-                    intake.setIntakePower(1);
-                }
-                transferWheels.setTransferPower(1);
-                ElapsedTime transferTimer2= new ElapsedTime();
-                while (opModeIsActive && transferTimer2.milliseconds()<1800) {
+                case WAITING_AFTER_SPINUP:
+                    // 500ms stabilization period
+                    drive(0, 0, 0, 0);
+                    turret.setMotorPower(0);
+
+                    if (launchTimer.milliseconds() > 500) {
+                        // Start feeding first ball
+                        outtakeSpeedBeforeDrop = flywheels.getCurrentWheelVelocity("");
+                        if (ballsFed > 0) {
+                            intake.setIntakePower(1);
+                        }
+                        transferWheels.setTransferPower(1);
+                        launchTimer.reset();
+                        launchState = LaunchState.FEEDING_BALL;
+                    }
+                    break;
+
+                case FEEDING_BALL:
+                    // Feed ball and detect when it launches
+                    drive(0, 0, 0, 0);
+                    turret.setMotorPower(0);
+
                     if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 100) {
-                        break;
+                        // Ball detected! Stop transfer and wait
+                        transferWheels.setTransferPower(0);
+                        intake.setIntakePower(0);
+                        ballsFed++;
+                        launchTimer.reset();
+
+                        if (ballsFed < 3) {
+                            launchState = LaunchState.WAITING_BETWEEN_BALLS;
+                        } else {
+                            // All balls fed - done!
+                            launchState = LaunchState.IDLE;
+                        }
+                    } else if (launchTimer.milliseconds() > 1800) {
+                        // Timeout - no ball detected, abort
+                        transferWheels.setTransferPower(0);
+                        intake.setIntakePower(0);
+                        launchState = LaunchState.IDLE;
                     }
-                    operator.readButtons();
+                    break;
+
+                case WAITING_BETWEEN_BALLS:
+                    // 1500ms delay between balls
+                    drive(0, 0, 0, 0);
+                    turret.setMotorPower(0);
+
+                    if (launchTimer.milliseconds() > 1500) {
+                        // Ready for next ball
+                        outtakeSpeedBeforeDrop = flywheels.getCurrentWheelVelocity("");
+                        intake.setIntakePower(1);
+                        transferWheels.setTransferPower(1);
+                        launchTimer.reset();
+                        launchState = LaunchState.FEEDING_BALL;
+                    }
+                    break;
+            }
+
+            // Add telemetry to see what's happening
+            telemetry.addLine("-----LAUNCH STATUS-----");
+            telemetry.addData("State", launchState);
+            telemetry.addData("Balls Fed", ballsFed);
+            telemetry.addData("Timer (ms)", launchTimer.milliseconds());
+            telemetry.addData("Current RPM", flywheels.getCurrentWheelVelocity(""));
+            telemetry.addData("Target RPM", targetRPM);
+
+        } else {
+            // Trigger released - reset to idle if we were launching
+            if (launchState != LaunchState.IDLE) {
+                transferWheels.setTransferPower(0);
+                intake.setIntakePower(0);
+                launchState = LaunchState.IDLE;
+            }
+
+            // Your existing code for normal operation
+            if (operator.isDown(GamepadKeys.Button.DPAD_LEFT)) {
+                trapdoor.trapdoorOpen();
+            } else {
+                if (outtakeOn) {
+                    flywheels.setFlywheelVelocity(outtakeSpeed);
+                } else {
+                    flywheels.setFlywheelVelocity(0);
                 }
                 transferWheels.setTransferPower(0);
-                operator.readButtons();
-                if (transferTimer2.milliseconds()<1800){
-                    try {
-                        sleep(1500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    break;
-                }
+                intake.setIntakePower(intakePower);
             }
-        }
-        else if(operator.isDown(GamepadKeys.Button.DPAD_LEFT)){  //open only the trapdoor
-            trapdoor.trapdoorOpen();
-        }else{  //resets everything and sets transfer/intake power
-            if (outtakeOn){
-                flywheels.setFlywheelVelocity(outtakeSpeed);
-            } else {
-                flywheels.setFlywheelVelocity(0);
-            }
-            //trapdoor.trapdoorClose();
-            transferWheels.setTransferPower(0);
-            intake.setIntakePower(intakePower);
         }
 
         if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
@@ -437,6 +506,8 @@ public class NewTransfer_DriveCode extends OpMode {
         if (!shouldAutoAim){
             turret.setMotorPower(-operator.getLeftX()*0.5);
             isCorrectingBoundary = false;
+            wasTargetFoundLastFrame = false; // Reset tracking when manual control
+
 
         } else {
             if (targetFound) {
@@ -444,9 +515,35 @@ public class NewTransfer_DriveCode extends OpMode {
                 isCorrectingBoundary = false;
                 turret.setMotorPower(autoAim.turn);
                 telemetry.addLine();
+
+                // Reset the timer whenever we see the target
+                if (!wasTargetFoundLastFrame) {
+                    targetLostTimer.reset();
+                }
+                wasTargetFoundLastFrame = true;
+
             } else {    //moves the turret to standby position if not tags are found
-                turret.setMotorPower(0);
-                isCorrectingBoundary = false;
+                // Target is NOT found
+                if (wasTargetFoundLastFrame) {
+                    // Target was JUST lost - start the timer
+                    targetLostTimer.reset();
+                    wasTargetFoundLastFrame = false;
+                }
+
+                // Check if enough time has passed since losing the target
+                if (targetLostTimer.seconds() >= TARGET_LOST_DELAY) {
+                    // Wait period is over - return to position 0
+                    if (!turret.isAtTargetPosition(0)) {
+                        turret.rotateTowardsTarget(0);
+                    } else {
+                        turret.setMotorPower(0);
+                    }
+                } else {
+                    // Still within wait period - hold position
+                    turret.setMotorPower(0);
+                    telemetry.addData("Target lost, waiting", "%.1f seconds",
+                            TARGET_LOST_DELAY - targetLostTimer.seconds());
+                }
             }
         }
 
