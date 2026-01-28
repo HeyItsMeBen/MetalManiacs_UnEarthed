@@ -56,6 +56,7 @@ public class Competition_DriveCode extends OpMode {
     VisionAssistLimelight visionAssist;
 
     ElapsedTime timer;
+    ElapsedTime intakeTimer;
 
     //set up variables
     private int intakePower = 0;
@@ -154,6 +155,7 @@ public class Competition_DriveCode extends OpMode {
         hood = new OuttakeHood(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
         visionAssist = new VisionAssistLimelight(hardwareMap, 3);
+        intakeTimer = new ElapsedTime();
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -174,7 +176,7 @@ public class Competition_DriveCode extends OpMode {
 
         //April tag stuff
         if (USE_WEBCAM) {
-            setManualExposure(6, 80);  // Use low exposure time to reduce motion blur
+            setManualExposure(6, 200);  // Use low exposure time to reduce motion blur
         }
     }
 
@@ -314,13 +316,19 @@ public class Competition_DriveCode extends OpMode {
                 intakePower = 0;
             } else {
                 intakePower = 1;
+                intakeTimer.reset();
             }
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
+                transferWheels.setTransferPower(0);
             } else {
                 intakePower = -1;
+                transferWheels.setTransferPower(-1);
             }
+        }
+        if (intakePower==1 && intakeTimer.milliseconds()>1000 && intake.getVelocityRPM()<500){
+            intakePower = 0;
         }
         intake.setIntakePower(intakePower);
 
@@ -332,7 +340,12 @@ public class Competition_DriveCode extends OpMode {
                     // Start the launch sequence
                     drive(0, 0, 0, 0);
                     turret.setMotorPower(0);
-                    targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
+                    if (targetFound) {
+                        targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
+                    } else {
+                        targetRPM = maintainOuttakeSpeed;
+                        flywheels.setFlywheelSpeed(maintainOuttakeSpeed);
+                    }
                     launchTimer.reset();
                     launchState = LaunchState.SPINNING_UP;
                     ballsFed = 0;
@@ -343,7 +356,7 @@ public class Competition_DriveCode extends OpMode {
                     drive(0, 0, 0, 0);  // Keep stopping the drive
                     turret.setMotorPower(0);  // Keep turret stopped
 
-                    if (flywheels.getCurrentWheelVelocity("") >= targetRPM * 0.85) {
+                    if (flywheels.getFlywheelVelocity() >= targetRPM * 0.9) {
                         // Flywheels are ready!
                         launchTimer.reset();
                         launchState = LaunchState.WAITING_AFTER_SPINUP;
@@ -420,15 +433,15 @@ public class Competition_DriveCode extends OpMode {
                 intake.setIntakePower(0);
                 launchState = LaunchState.IDLE;
             }
-            //flywheels.setFlywheelPower(maintainOuttakeSpeed);
+            flywheels.setFlywheelSpeed(maintainOuttakeSpeed);
         }
         // Add telemetry to see what's happening
         telemetry.addLine("-----LAUNCH STATUS-----");
         telemetry.addData("State", launchState);
         telemetry.addData("Balls Fed", ballsFed);
         telemetry.addData("Timer (ms)", launchTimer.milliseconds());
-        telemetry.addData("Current RPM", flywheels.getCurrentWheelVelocity(""));
-        telemetry.addData("Target RPM", targetRPM);
+        telemetry.addData("Current Speed (ticks per second)", flywheels.getCurrentWheelVelocity(""));
+        telemetry.addData("Target Speed (t/s)", targetRPM);
         telemetry.addLine();
 //
 //        if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
