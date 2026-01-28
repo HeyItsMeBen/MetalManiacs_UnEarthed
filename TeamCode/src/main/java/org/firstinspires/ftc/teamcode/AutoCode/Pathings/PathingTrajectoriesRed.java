@@ -212,7 +212,7 @@ public class PathingTrajectoriesRed {
         return drive.actionBuilder(currentPose)
 
                 .stopAndAdd(new PathingActions.runIntake(intake))
-                .strafeToLinearHeading(new Vector2d(60, -55), Math.toRadians(350), maxSpeedConstraint)
+                .strafeToLinearHeading(new Vector2d(65, -55), Math.toRadians(350), maxSpeedConstraint)
 
                 .build();
     }

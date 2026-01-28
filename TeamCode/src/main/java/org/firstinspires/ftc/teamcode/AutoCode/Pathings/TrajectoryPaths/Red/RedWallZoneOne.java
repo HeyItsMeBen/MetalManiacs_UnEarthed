@@ -121,7 +121,7 @@ public class RedWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake)
+                        PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose(), flywheels, intake)
                 )
         );
     }
