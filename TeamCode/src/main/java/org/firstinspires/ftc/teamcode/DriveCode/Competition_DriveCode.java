@@ -193,12 +193,12 @@ public class Competition_DriveCode extends OpMode {
         }
 
         // Toggle rotation mode with right stick click
-        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
             useSnapRotation = !useSnapRotation;
         }
 
         // Toggle drive mode with left stick click
-        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+        if (driver.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
             useFieldCentricDrive = !useFieldCentricDrive;
         }
 
@@ -459,10 +459,10 @@ public class Competition_DriveCode extends OpMode {
 
 
         if (!shouldAutoAim){
-            if (driver.wasJustPressed(GamepadKeys.Button.START)){
+            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
                 turret.setMotorPower(0.5);
             }
-            if (driver.wasJustPressed(GamepadKeys.Button.BACK)){
+            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
                 turret.setMotorPower(-0.5);
             }
 //            turret.setMotorPower(-operator.getLeftX()*0.5);
