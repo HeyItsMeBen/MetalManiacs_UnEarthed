@@ -315,35 +315,7 @@ public class NewTransfer_DriveCode extends OpMode {
                 intakePower = -1;
             }
         }
-        if (driver.wasJustPressed((GamepadKeys.Button.LEFT_BUMPER))){
-            outtakeOn=!outtakeOn;
-        }
 
-        //Launches the balls while right bumper is held
-//        if (operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-//            drive(0, 0, 0, 0);
-//            turret.setMotorPower(0);
-////            autoAim.calculateEverything(desiredTag);
-//            flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry))); //Use auto-aim to calculate and set the flywheel velocity.
-//
-//            //wait 1 second to startup flywheels
-//            try {
-//                sleep(1500);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            trapdoor.trapdoorOpen();
-//            try {
-//                sleep(500);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            //send the balls into the flywheel to launch
-//            transferWheels.setTransferPower(1);
-//
-//        }
         if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
             // Trigger is being held - run launch sequence
 
@@ -449,18 +421,6 @@ public class NewTransfer_DriveCode extends OpMode {
                 launchState = LaunchState.IDLE;
             }
 
-            // Your existing code for normal operation
-            if (operator.isDown(GamepadKeys.Button.DPAD_LEFT)) {
-                trapdoor.trapdoorOpen();
-            } else {
-                if (outtakeOn) {
-                    flywheels.setFlywheelVelocity(outtakeSpeed);
-                } else {
-                    flywheels.setFlywheelVelocity(0);
-                }
-                transferWheels.setTransferPower(0);
-                intake.setIntakePower(intakePower);
-            }
         }
 
         if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
@@ -478,19 +438,6 @@ public class NewTransfer_DriveCode extends OpMode {
         } else if (outtakeSpeed < 2300) {
             outtakeSpeed = 2300;
         }
-
-        //trapdoor position adjustments (manual)
-        if (operator.isDown((GamepadKeys.Button.DPAD_UP))) {
-            trapdoor.changeHingePosition(0.05);
-        } else if (operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
-            trapdoor.changeHingePosition(-0.05);
-        }
-//        else if (operator.isDown((GamepadKeys.Button.DPAD_LEFT))) {
-//            hood.setAngle(Math.toRadians(90));
-//        } else if (operator.isDown(GamepadKeys.Button.DPAD_RIGHT)) {
-//            hood.setAngle(Math.toRadians(50));
-//        }
-
 
         //Auto-aims and moves the turret
         scanForTags();
