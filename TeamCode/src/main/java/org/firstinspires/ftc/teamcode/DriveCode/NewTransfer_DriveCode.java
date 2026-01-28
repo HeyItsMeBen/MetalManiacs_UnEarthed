@@ -191,30 +191,35 @@ public class NewTransfer_DriveCode extends OpMode {
         }
 
         // Toggle rotation mode with right stick click
-        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
             useSnapRotation = !useSnapRotation;
         }
 
         // Toggle drive mode with left stick click
-        if (driver.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             useFieldCentricDrive = !useFieldCentricDrive;
         }
 
 
         // Speed multiplier adjustable via right and left triggers
         // Can be reset by pressing Y
-        speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.2;
-        speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) * 0.2;
-        if (driver.getButton(GamepadKeys.Button.A)) {
-            speedMultiplier = 0.5;
+//        speedMultiplier += driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) * 0.2;
+//        speedMultiplier -= driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) * 0.2;
+
+        if (driver.getButton(GamepadKeys.Button.DPAD_UP)){
+            speedMultiplier += 0.5;
         }
+        if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)){
+            speedMultiplier -= 0.5;
+        }
+
         // Max speed is 1
         if (speedMultiplier > 1) {
             speedMultiplier = 1;
         }
         // Min speed is 0.25
-        if (speedMultiplier < 0.25) {
-            speedMultiplier = 0.25;
+        if (speedMultiplier < 0) {
+            speedMultiplier = 0.1;
         }
 
         // Get stick inputs
@@ -225,7 +230,7 @@ public class NewTransfer_DriveCode extends OpMode {
 
         // Calculate rotation control
         double rotate;
-        boolean visionAssistEnabled = driver.getButton(GamepadKeys.Button.DPAD_UP);
+//        boolean visionAssistEnabled = driver.getButton(GamepadKeys.Button.DPAD_UP);
 
         telemetry.addLine("-----Robot Information-----");
         telemetry.addLine("Driver");
@@ -263,11 +268,11 @@ public class NewTransfer_DriveCode extends OpMode {
             telemetry.addLine("MODE: Normal Rotation");
 
             // Combine driver rotation + vision assist
-            double visionTurn = visionAssist.getTurnCorrection(visionAssistEnabled);
-            rotate += visionTurn;
+//            double visionTurn = visionAssist.getTurnCorrection(visionAssistEnabled);
+//            rotate += visionTurn;
 
-            telemetry.addData("Vision Assist", visionAssistEnabled);
-            telemetry.addData("Vision Turn", visionTurn);
+//            telemetry.addData("Vision Assist", visionAssistEnabled);
+//            telemetry.addData("Vision Turn", visionTurn);
         }
 
         // Choose drive mode based on toggle
@@ -316,7 +321,7 @@ public class NewTransfer_DriveCode extends OpMode {
             }
         }
 
-        if (operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
+        if (driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1) {
             // Trigger is being held - run launch sequence
 
             switch (launchState) {
@@ -422,39 +427,44 @@ public class NewTransfer_DriveCode extends OpMode {
             }
 
         }
-
-        if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
-            extraOuttakeSpeed += 25;    //0.466666667
-        } else if (operator.wasJustPressed((GamepadKeys.Button.LEFT_BUMPER))) {
-            extraOuttakeSpeed -= 25;
-        } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
-            outtakeSpeed = 2350;
-            extraOuttakeSpeed = 0;
-        }
+//
+//        if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
+//            extraOuttakeSpeed += 25;    //0.466666667
+//        } else if (operator.wasJustPressed((GamepadKeys.Button.LEFT_BUMPER))) {
+//            extraOuttakeSpeed -= 25;
+//        } else if (operator.wasJustPressed((GamepadKeys.Button.A))) {
+//            outtakeSpeed = 2350;
+//            extraOuttakeSpeed = 0;
+//        }
 
         //clamps speed to bounds
-        if (outtakeSpeed > 6000) {
-            outtakeSpeed = 6000;
-        } else if (outtakeSpeed < 2300) {
-            outtakeSpeed = 2300;
-        }
+//        if (outtakeSpeed > 6000) {
+//            outtakeSpeed = 6000;
+//        } else if (outtakeSpeed < 2300) {
+//            outtakeSpeed = 2300;
+//        }
 
         //Auto-aims and moves the turret
         scanForTags();
-        if (operator.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)){
+        if (driver.wasJustPressed(GamepadKeys.Button.A)){
             shouldAutoAim = !shouldAutoAim;
         }
 
-        if(operator.wasJustPressed(GamepadKeys.Button.Y)){
+        if(driver.wasJustPressed(GamepadKeys.Button.X)){
             turret.resetInitial();
         }
 
 
         if (!shouldAutoAim){
-            turret.setMotorPower(-operator.getLeftX()*0.5);
+            if (driver.wasJustPressed(GamepadKeys.Button.START)){
+                turret.setMotorPower(0.5);
+            }
+            if (driver.wasJustPressed(GamepadKeys.Button.BACK)){
+                turret.setMotorPower(-0.5);
+            }
+//            turret.setMotorPower(-operator.getLeftX()*0.5);
             isCorrectingBoundary = false;
             wasTargetFoundLastFrame = false; // Reset tracking when manual control
-
 
         } else {
             if (targetFound) {
