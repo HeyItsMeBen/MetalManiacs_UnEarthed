@@ -19,6 +19,11 @@ public class Lights {
     private String lastSequence = ""; // Track what's currently displayed
     private boolean isInitialized = false;
 
+    // Track previous states to avoid unnecessary updates
+    private boolean lastTargetFound = false;
+    private boolean lastIntakeOn = false;
+    private boolean isFirstUpdate = true;
+
     public Lights(HardwareMap hardwareMap){
         try {
             prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
@@ -34,64 +39,59 @@ public class Lights {
         return isInitialized && debounceTimer.seconds() >= DEBOUNCE_TIME;
     }
 
-//    public void Light_Green(){
-//        if (!canUpdate() || lastSequence.equals("GREEN")) return;
-//
-//        try {
-//            // Instead of clearing, just overwrite layer 0 with full strip
-//            PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN, 0, TOTAL_LEDS - 1);
-//            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, green);
-//
-//            lastSequence = "GREEN";
-//            debounceTimer.reset();
-//        } catch (Exception e) {
-//            isInitialized = false; // Mark as broken
-//        }
-//    }
-
-//    public void Light_Red(){
-//        PrismAnimations.Solid red = new PrismAnimations.Solid(Color.RED, 0, TOTAL_LEDS - 1);
-//        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, red);
-//    }
-    public void Light_Red(){
-        if (!canUpdate() || lastSequence.equals("RED")) return;
+    // First half of LEDs (0-11) for April Tag status
+    public void setAprilTagStatus(boolean targetFound){
+        if (!isInitialized) return;
 
         try {
-            PrismAnimations.Solid red = new PrismAnimations.Solid(Color.RED, 0, TOTAL_LEDS - 1);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, red);
-
-            lastSequence = "RED";
-            debounceTimer.reset();
+            Color color = targetFound ? Color.GREEN : Color.RED;
+            PrismAnimations.Solid status = new PrismAnimations.Solid(color, 0, TOTAL_LEDS/2 - 1);
+            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, status);
         } catch (Exception e) {
             isInitialized = false;
         }
     }
 
-//    public void Light_Green(){
-//        PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN, 0, TOTAL_LEDS - 1);
-//        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, green);
-//    }
-    public void Light_Green(){
-        if (!canUpdate() || lastSequence.equals("GREEN")) return;
+    // Second half of LEDs (12-23) for Intake status
+    public void setIntakeStatus(boolean intakeOn){
+        if (!isInitialized) return;
 
         try {
-            PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN, 0, TOTAL_LEDS - 1);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, green);
-
-            lastSequence = "GREEN";
-            debounceTimer.reset();
+            Color color = intakeOn ? Color.BLUE : Color.PURPLE;
+            PrismAnimations.Solid status = new PrismAnimations.Solid(color, TOTAL_LEDS/2, TOTAL_LEDS - 1);
+            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, status);
         } catch (Exception e) {
             isInitialized = false;
         }
     }
-    public void Light_Purple(){
-        if (!canUpdate() || lastSequence.equals("PURPLE")) return;
+
+    // Update both LED sections at once - USE THIS ONE!
+    public void updateStatus(boolean targetFound, boolean intakeOn){
+        // Check if state has actually changed
+        if (!isFirstUpdate && targetFound == lastTargetFound && intakeOn == lastIntakeOn) {
+            return; // No change - skip update
+        }
+
+        if (!canUpdate()) return;
 
         try {
-            PrismAnimations.Solid purple = new PrismAnimations.Solid(Color.PURPLE, 0, TOTAL_LEDS - 1);
-            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, purple);
+            // First half - April Tag status (Green = found, Red = not found)
+            Color aprilTagColor = targetFound ? Color.GREEN : Color.RED;
+            PrismAnimations.Solid aprilTag = new PrismAnimations.Solid(aprilTagColor, 0, TOTAL_LEDS/2 - 1);
+            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, aprilTag);
 
-            lastSequence = "PURPLE";
+            // Second half - Intake status (Blue = on, Purple = off)
+            Color intakeColor = intakeOn ? Color.BLUE : Color.PURPLE;
+            PrismAnimations.Solid intake = new PrismAnimations.Solid(intakeColor, TOTAL_LEDS/2, TOTAL_LEDS - 1);
+            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, intake);
+
+            // Update state tracking
+            lastTargetFound = targetFound;
+            lastIntakeOn = intakeOn;
+            isFirstUpdate = false;
+
+            String newSequence = (targetFound ? "G" : "R") + (intakeOn ? "B" : "P");
+            lastSequence = newSequence;
             debounceTimer.reset();
         } catch (Exception e) {
             isInitialized = false;

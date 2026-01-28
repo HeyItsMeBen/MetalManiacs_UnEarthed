@@ -57,6 +57,7 @@ public class Competition_DriveCode extends OpMode {
 
     ElapsedTime timer;
     ElapsedTime intakeTimer;
+    ElapsedTime loopTimer;
 
     //set up variables
     private int intakePower = 0;
@@ -169,7 +170,17 @@ public class Competition_DriveCode extends OpMode {
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        telemetry.addData("Status", "IMU Calibrating... Do NOT move robot!");
+        telemetry.update();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            // Handle exception
+        }
+
         timer = new ElapsedTime();  //creates timer object. Used for measuring time
+        loopTimer = new ElapsedTime();  //creates timer for loop timing (needed for slew rate)
 
         // Initialize target heading to current heading
         targetHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
@@ -237,7 +248,7 @@ public class Competition_DriveCode extends OpMode {
 //        boolean visionAssistEnabled = driver.getButton(GamepadKeys.Button.DPAD_UP);
 
         telemetry.addLine("-----Robot Information-----");
-        telemetry.addLine("Driver");
+        telemetry.addLine("Movement");
         telemetry.addData("Speed multiplier", speedMultiplier);
 
         if (useSnapRotation) {
@@ -294,7 +305,7 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addData("Current Heading", Math.toDegrees(currentHeading));
 
         telemetry.addLine();
-        telemetry.addLine("Operator");
+        telemetry.addLine("Turret");
         telemetry.addData("Auto aiming", shouldAutoAim);
         telemetry.addData("Sees april tag", targetFound);
         telemetry.addData("Turret rotation", turret.getTurretPosition());
@@ -338,8 +349,8 @@ public class Competition_DriveCode extends OpMode {
             switch (launchState) {
                 case IDLE:
                     // Start the launch sequence
-                    drive(0, 0, 0, 0);
-                    turret.setMotorPower(0);
+//                    drive(0, 0, 0, 0);
+//                    turret.setMotorPower(0);
                     if (targetFound) {
                         targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
                     } else {
@@ -353,8 +364,8 @@ public class Competition_DriveCode extends OpMode {
 
                 case SPINNING_UP:
                     // Wait for flywheels to reach target speed
-                    drive(0, 0, 0, 0);  // Keep stopping the drive
-                    turret.setMotorPower(0);  // Keep turret stopped
+//                    drive(0, 0, 0, 0);  // Keep stopping the drive
+//                    turret.setMotorPower(0);  // Keep turret stopped
 
                     if (flywheels.getFlywheelVelocity() >= targetRPM * 0.9) {
                         // Flywheels are ready!
@@ -369,8 +380,8 @@ public class Competition_DriveCode extends OpMode {
 
                 case WAITING_AFTER_SPINUP:
                     // 500ms stabilization period
-                    drive(0, 0, 0, 0);
-                    turret.setMotorPower(0);
+//                    drive(0, 0, 0, 0);
+//                    turret.setMotorPower(0);
 
                     if (launchTimer.milliseconds() > 500) {
                         // Start feeding first ball
@@ -386,8 +397,8 @@ public class Competition_DriveCode extends OpMode {
 
                 case FEEDING_BALL:
                     // Feed ball and detect when it launches
-                    drive(0, 0, 0, 0);
-                    turret.setMotorPower(0);
+//                    drive(0, 0, 0, 0);
+//                    turret.setMotorPower(0);
 
                     if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 100) {
                         // Ball detected! Stop transfer and wait
@@ -412,10 +423,10 @@ public class Competition_DriveCode extends OpMode {
 
                 case WAITING_BETWEEN_BALLS:
                     // 1500ms delay between balls
-                    drive(0, 0, 0, 0);
-                    turret.setMotorPower(0);
+//                    drive(0, 0, 0, 0);
+//                    turret.setMotorPower(0);
 
-                    if (launchTimer.milliseconds() > 1500) {
+                    if (launchTimer.milliseconds() > 500) { // Originally 1500
                         // Ready for next ball
                         outtakeSpeedBeforeDrop = flywheels.getCurrentWheelVelocity("");
                         intake.setIntakePower(1);
@@ -436,6 +447,7 @@ public class Competition_DriveCode extends OpMode {
             flywheels.setFlywheelSpeed(maintainOuttakeSpeed);
         }
         // Add telemetry to see what's happening
+        telemetry.addLine();
         telemetry.addLine("-----LAUNCH STATUS-----");
         telemetry.addData("State", launchState);
         telemetry.addData("Balls Fed", ballsFed);
@@ -474,9 +486,10 @@ public class Competition_DriveCode extends OpMode {
         if (!shouldAutoAim){
             if (driver.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
                 turret.setMotorPower(0.5);
-            }
-            if (driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
+            } else if (driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
                 turret.setMotorPower(-0.5);
+            } else {
+                turret.setMotorPower(0);
             }
 //            turret.setMotorPower(-operator.getLeftX()*0.5);
             isCorrectingBoundary = false;
@@ -520,30 +533,35 @@ public class Competition_DriveCode extends OpMode {
             }
         }
 
-        if (targetFound) {
-            lights.Light_Green();
-        } else {
-            lights.Light_Red();
-        }
+        // LEDS
+        boolean intakeOn = (intake.getIntakePower() != 0);
+        lights.updateStatus(targetFound, intakeOn);
 
         //Telemetry
         telemetry.addLine("-----HOW TO DRIVE FOR DUMMIES*-----");
         telemetry.addLine("*No offense ;D");
         telemetry.addLine("");
         telemetry.addLine("-----Driver Controls-----");
+        telemetry.addLine("[MOVEMENT]");
         telemetry.addLine("Y = reset Yaw");
+        telemetry.addLine("LEFT STICK = translation");
+        telemetry.addLine("RIGHT STICK = rotation");
+        telemetry.addLine("LEFT STICK DOWN = toggle field/robot centric drive mode");
         telemetry.addLine("RIGHT STICK DOWN = toggle snap/relative rotation mode");
-        telemetry.addLine("X = toggle outtake forward");
-        telemetry.addLine("RIGHT BUMPER = intake");
+        telemetry.addLine("DPAD UP = movement speed up");
+        telemetry.addLine("DPAD DOWN = movement speed down");
+        telemetry.addLine();
+        telemetry.addLine("[INTAKE]");
         telemetry.addLine("LEFT BUMPER = reverse intake");
-        telemetry.addLine("LEFT SICK = translation, RIGHT STICK = rotation");
+        telemetry.addLine("RIGHT BUMPER = intake");
+        telemetry.addLine();
+        telemetry.addLine("[OUTTAKE]");
+        telemetry.addLine("RIGHT TRIGGER (hold) = charges up flywheels and launches");
+        telemetry.addLine("DPAD LEFT = turret left");
+        telemetry.addLine("DPAD RIGHT = turret right");
+        telemetry.addLine("X = reset turret position (reset at middle)");
+        telemetry.addLine("A = auto aim");
         telemetry.addLine("");
-        telemetry.addLine("-----Operator Controls-----");
-        telemetry.addLine("Y = set initial turret position to current turret position");
-        telemetry.addLine("LEFT STICK DOWN = toggle auto/manual turret aim");
-        telemetry.addLine("RIGHT BUMPER (hold) = charges up flywheels and launches");
-        telemetry.addLine("LEFT BUMPER (hold) = manually opens trapdoor");
-        telemetry.addLine("LEFT STICK = manually adjust turret rotation");
 
         driver.readButtons();
         operator.readButtons();
@@ -553,6 +571,15 @@ public class Competition_DriveCode extends OpMode {
     public void stop() { //when we stop the program with the driver station, this method runs. It's a built-in method, similar to and init() and loop()
         opModeIsActive = false;   //tells the rest of the code that the program has been stopped. We use it as a conditional in while() loops, to make sure these loops stop running immediately when the we end the program. We don't want the arm to keep moving after we press stop, for example.
         lights.Light_Off();
+    }
+
+    // Safe motor power setter to prevent floodgate cutout issues
+    void setSafePower(DcMotor motor, double targetPower) {
+        final double SLEW_RATE = 0.2;
+        double currentPower = motor.getPower();
+        double desiredChange = targetPower - currentPower;
+        double limitedChange = Math.max(-SLEW_RATE, Math.min(desiredChange, SLEW_RATE));
+        motor.setPower(currentPower + limitedChange);
     }
 
     // Calculates rotation angle based on the initial set yaw angle
@@ -596,7 +623,7 @@ public class Competition_DriveCode extends OpMode {
         drive(newForward, newRight, rotate, speedMultiplier);
     }
 
-    // Robot-relative drive method
+    // Robot-relative drive method - NOW USES SAFE POWER SETTING
     public void drive(double forward, double right, double rotate, double speedMultiplier) {
         double frontLeftPower = forward + right + rotate;
         double frontRightPower = forward - right - rotate;
@@ -611,10 +638,11 @@ public class Competition_DriveCode extends OpMode {
         maxPower = Math.max(maxPower, Math.abs(backRightPower));
         maxPower = Math.max(maxPower, Math.abs(backLeftPower));
 
-        frontLeftDrive.setPower(maxSpeed * (frontLeftPower / maxPower));
-        frontRightDrive.setPower(maxSpeed * (frontRightPower / maxPower));
-        backLeftDrive.setPower(maxSpeed * (backLeftPower / maxPower));
-        backRightDrive.setPower(maxSpeed * (backRightPower / maxPower));
+        // Use setSafePower instead of direct setPower to prevent floodgate cutout
+        setSafePower(frontLeftDrive, maxSpeed * (frontLeftPower / maxPower));
+        setSafePower(frontRightDrive, maxSpeed * (frontRightPower / maxPower));
+        setSafePower(backLeftDrive, maxSpeed * (backLeftPower / maxPower));
+        setSafePower(backRightDrive, maxSpeed * (backRightPower / maxPower));
     }
     //auto-aim methods
     public void scanForTags(){  //Checks if april tags are on screen, and if so, it sets the desiredTag object to that tag

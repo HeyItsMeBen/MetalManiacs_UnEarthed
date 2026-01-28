@@ -7,11 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
-@Disabled
+//@Disabled
 @TeleOp (name="Outtake Tester", group="test")
 public class OuttakeTest extends LinearOpMode{
     public GamepadEx gamepad;
@@ -19,6 +20,7 @@ public class OuttakeTest extends LinearOpMode{
     public Turret turret;
     public Transfer transfer;
     public Intake intake;
+    public Lights lights;
 
     public int intakePower;
     public int distance = 6;
@@ -34,6 +36,7 @@ public class OuttakeTest extends LinearOpMode{
         turret = new Turret(hardwareMap);
         transfer = new Transfer(hardwareMap);
         intake = new Intake(hardwareMap);
+        lights = new Lights(hardwareMap);
 //        hood = new OuttakeHood(hardwareMap);
 
         gamepad = new GamepadEx(gamepad1);
@@ -42,6 +45,7 @@ public class OuttakeTest extends LinearOpMode{
 
         //executing
         while (opModeIsActive()) {
+
             if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
                 telemetry.addData("Optimal Launch Speed",flywheel.getRPMFromDistance(distance));
             }else{

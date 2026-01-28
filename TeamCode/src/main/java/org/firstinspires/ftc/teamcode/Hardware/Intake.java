@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.Hardware;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,6 +14,9 @@ public class Intake {
     public void setIntakePower(double dblPower){
 
         intakeWheels.setPower(dblPower);
+    }
+    public double getIntakePower(){
+        return intakeWheels.getPower();
     }
 
     public void runIntakeFullPower(){

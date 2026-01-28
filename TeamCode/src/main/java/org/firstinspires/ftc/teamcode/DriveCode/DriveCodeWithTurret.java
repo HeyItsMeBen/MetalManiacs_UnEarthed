@@ -415,11 +415,11 @@ public class DriveCodeWithTurret extends OpMode {
 //            hood.setAngle(Math.toRadians(50));
 //        }
 
-        if(targetFound){
-            lights.Light_Green();
-        }else{
-            lights.Light_Red();
-        }
+//        if(targetFound){
+//            lights.Light_Green();
+//        }else{
+//            lights.Light_Red();
+//        }
 
         //Auto-aims and moves the turret
         scanForTags();
