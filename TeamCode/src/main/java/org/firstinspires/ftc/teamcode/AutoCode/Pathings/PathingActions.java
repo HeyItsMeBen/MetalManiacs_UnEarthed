@@ -151,7 +151,7 @@ public class PathingActions {
                 }
                 transfer.setTransferPower(1);
                 long startTime = System.currentTimeMillis();
-                long timeout = 1000;
+                long timeout = 2000;
                 while (true) {
                     if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 150) {
                         break;
@@ -162,7 +162,7 @@ public class PathingActions {
                 }
                 transfer.setTransferPower(0);
                 try {
-                    sleep(500);
+                    sleep(250);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

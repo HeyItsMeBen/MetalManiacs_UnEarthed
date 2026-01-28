@@ -66,7 +66,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.park(drive, drive.localizer.getPose(), flywheels, intake)
+                        PathingTrajectoriesBlue.LongRangePark(drive, drive.localizer.getPose(), flywheels, intake)
                 )
         );
     }
