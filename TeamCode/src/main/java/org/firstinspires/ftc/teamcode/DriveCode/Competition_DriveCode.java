@@ -420,8 +420,7 @@ public class Competition_DriveCode extends OpMode {
                 intake.setIntakePower(0);
                 launchState = LaunchState.IDLE;
             }
-            //Uncomment below for full stop at idle OR keep commented for low speed
-            flywheels.setFlywheelPower(maintainOuttakeSpeed);
+            //flywheels.setFlywheelPower(maintainOuttakeSpeed);
         }
         // Add telemetry to see what's happening
         telemetry.addLine("-----LAUNCH STATUS-----");
