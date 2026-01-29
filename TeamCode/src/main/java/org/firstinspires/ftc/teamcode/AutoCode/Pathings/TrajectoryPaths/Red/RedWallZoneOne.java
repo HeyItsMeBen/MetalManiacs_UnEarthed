@@ -72,9 +72,9 @@ public class RedWallZoneOne extends LinearOpMode {
                         PathingTrajectoriesRed.initialFiringFromWallZoneOne(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
-        scanForTags();
         turretTimer = new ElapsedTime();
         while (turretTimer.milliseconds()<1000) {
+            scanForTags();
             if (targetFound) {
                 autoAim.calculateEverything(desiredTag);
                 turret.setMotorPower(autoAim.turn);
