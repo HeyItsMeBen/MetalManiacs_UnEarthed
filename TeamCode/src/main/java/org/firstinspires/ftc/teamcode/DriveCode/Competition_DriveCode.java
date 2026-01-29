@@ -194,11 +194,6 @@ public class Competition_DriveCode extends OpMode {
     @Override
     public void loop() {
 
-        // Toggles if outtake is forward
-        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-            outtakeForward = !outtakeForward;
-        }
-
         // Reset yaw with Y button
         if (driver.getButton(GamepadKeys.Button.Y)) {
             imu.resetYaw();
@@ -447,6 +442,14 @@ public class Competition_DriveCode extends OpMode {
                 launchState = LaunchState.IDLE;
             }
             flywheels.setFlywheelSpeedRaw(maintainOuttakeSpeed);
+        }
+        if (driver.isDown(GamepadKeys.Button.B) && driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
+            extraOuttakeSpeed-=25;
+        } else if (driver.isDown(GamepadKeys.Button.B) && driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+            extraOuttakeSpeed+=25;
+        } else if (driver.isDown(GamepadKeys.Button.B) && driver.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
+            extraOuttakeSpeed=0;
+            maintainOuttakeSpeed=750;
         }
         // Add telemetry to see what's happening
         telemetry.addLine();
