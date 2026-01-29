@@ -411,7 +411,7 @@ public class Competition_DriveCode extends OpMode {
                             // All balls fed - done!
                             launchState = LaunchState.IDLE;
                         }
-                    } else if (launchTimer.milliseconds() > 10000) {
+                    } else if (launchTimer.milliseconds() > 1800) {
                         // Timeout - no ball detected, abort
                         transferWheels.setTransferPower(0);
                         intake.setIntakePower(0);
