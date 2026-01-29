@@ -84,7 +84,7 @@ public class Competition_DriveCode extends OpMode {
     public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
     private double extraOuttakeSpeed=0;
 
-    private double maintainOuttakeSpeed=1000;
+    private double maintainOuttakeSpeed=750;
 
 
     //autoAim stuff
