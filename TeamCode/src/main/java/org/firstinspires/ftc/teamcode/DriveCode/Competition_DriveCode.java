@@ -349,7 +349,7 @@ public class Competition_DriveCode extends OpMode {
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
                     if (targetFound) {
-                        targetSpeed = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
+                        targetSpeed = flywheels.launchFromDistance(toInches(autoAim.distanceToTagTelemetry), extraOuttakeSpeed);
                     } else {
                         targetSpeed = maintainOuttakeSpeed;
                         flywheels.setFlywheelSpeedRaw(maintainOuttakeSpeed);
@@ -735,8 +735,8 @@ public class Competition_DriveCode extends OpMode {
             gainControl.setGain(gain);
         }
     }
-    private double toInches(double inches){
-        return inches*39.3700787;
+    private double toInches(double meters){
+        return meters*39.3700787;
     }
     private double toFeet(double inches){
         return inches / 12;
