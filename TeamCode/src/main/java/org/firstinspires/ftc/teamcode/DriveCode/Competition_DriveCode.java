@@ -396,6 +396,7 @@ public class Competition_DriveCode extends OpMode {
                     // Feed ball and detect when it launches
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
+                    transferWheels.setTransferPower(1);
 
                     if (flywheels.getFlywheelRPM() < outtakeSpeedBeforeDrop - 100) {
                         // Ball detected! Stop transfer and wait
@@ -410,7 +411,7 @@ public class Competition_DriveCode extends OpMode {
                             // All balls fed - done!
                             launchState = LaunchState.IDLE;
                         }
-                    } else if (launchTimer.milliseconds() > 1800) {
+                    } else if (launchTimer.milliseconds() > 10000) {
                         // Timeout - no ball detected, abort
                         transferWheels.setTransferPower(0);
                         intake.setIntakePower(0);
@@ -422,14 +423,14 @@ public class Competition_DriveCode extends OpMode {
                     // 1500ms delay between balls
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
-
+                    // Wait 500 milliseconds for outtake to speed up
                     if (launchTimer.milliseconds() > 500) { // Originally 1500
                         // Ready for next ball
                         outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
                         intake.setIntakePower(1);
                         transferWheels.setTransferPower(1);
-                        launchTimer.reset();
                         launchState = LaunchState.FEEDING_BALL;
+                        launchTimer.reset();
                     }
                     break;
             }
