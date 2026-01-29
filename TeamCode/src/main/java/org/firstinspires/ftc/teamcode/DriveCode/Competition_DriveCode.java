@@ -449,7 +449,11 @@ public class Competition_DriveCode extends OpMode {
             extraOuttakeSpeed+=25;
         } else if (driver.isDown(GamepadKeys.Button.B) && driver.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
             extraOuttakeSpeed=0;
-            maintainOuttakeSpeed=750;
+        }
+        if (!shouldAutoAim){
+            maintainOuttakeSpeed=1000;  //if not auto-aiming, set the default to higher
+        } else {
+            maintainOuttakeSpeed=750;   //if auto-aiming, set the default to the normal value
         }
         // Add telemetry to see what's happening
         telemetry.addLine();
