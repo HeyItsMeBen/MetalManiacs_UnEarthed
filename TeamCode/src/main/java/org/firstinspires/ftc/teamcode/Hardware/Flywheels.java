@@ -20,7 +20,7 @@ public class Flywheels {
     public double p = 100;
     //rpm = m * distance + b
     double m = 6.68363;
-    double b = 922.48777;
+    double b = 922.48777+100;
 
     //Outtake subsystem
     public Flywheels(HardwareMap hMap) {
