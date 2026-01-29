@@ -53,13 +53,13 @@ public class Flywheels {
 
 
     public double launchFromDistance(double distance, double extraSpeed){ //distance in feet from goal
-        double optimalSpeed = b+ (m * distance);
+        double optimalSpeed = b+ (m * distance * 12);
         setFlywheelSpeedRaw(optimalSpeed +extraSpeed);
         return optimalSpeed; //return the optimal ticksPerSecond for telemetry debugging...
         //return optimalSpeed*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
     }
     public double launchFromDistance(double distance){ //distance in feet from goal
-        double optimalSpeed = b+ (m * distance);
+        double optimalSpeed = b+ (m * distance * 12);
         setFlywheelSpeedRaw(optimalSpeed);
         return optimalSpeed; //return the optimal ticksPerSecond for telemetry debugging...
         //return optimalSpeed*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
