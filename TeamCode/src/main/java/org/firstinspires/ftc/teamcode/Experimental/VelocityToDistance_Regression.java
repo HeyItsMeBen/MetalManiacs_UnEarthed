@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.Experimental;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -27,8 +29,10 @@ Configurations:
 2: frontRight
 3: backRight
  */
+
+@Disabled
 @Config
-@Autonomous(name = "hoodToDistance_Regression", group = "Linear OpMode")
+@Autonomous(name = "VelocityToDistance_Regression", group = "Linear OpMode")
 public class VelocityToDistance_Regression extends LinearOpMode {
     Flywheels flywheel;
     OuttakeHood hood;
@@ -84,6 +88,7 @@ public class VelocityToDistance_Regression extends LinearOpMode {
                 telemetry.addData("Distance to GoalCenter (inches)", toInches(autoAim.launchPointToGoalCenterX_Distance));
                 telemetry.update();
             }
+
         }
     }
 
