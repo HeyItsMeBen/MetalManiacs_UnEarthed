@@ -6,18 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 //See if this sends through
 
@@ -82,7 +76,7 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelVelocity(0);
+            flywheels.setFlywheelSpeedRaw(0);
             return false;
         }
     }
@@ -103,7 +97,7 @@ public class PathingActions {
         private long lastShotTime = 0;
         private long spinUpStartTime = 0;
         private final long spinUpTimeout = 3000; // max 3 seconds to reach speed
-        private double targetRPM = 0;
+        private double targetSpeed = 0;
         private int timeBetweenLaunches = 525;
         private double launchDistance = 6; // in feet
 
@@ -120,7 +114,7 @@ public class PathingActions {
 
             if (!initialized) {
                 launchDistance = (zone == 1) ? 6.2 : 12.6;
-                targetRPM = flywheels.launchFromDistance(launchDistance);
+                targetSpeed = flywheels.launchFromDistance(launchDistance);
 
                 spinUpStartTime = System.currentTimeMillis();
                 lastShotTime = spinUpStartTime;
@@ -130,18 +124,18 @@ public class PathingActions {
             flywheelIsReady=false;
 
 //            autoAim.calculateEverything(desiredTag);
-            double targetRPM = flywheels.launchFromDistance(launchDistance); //Use auto-aim to calculate and set the flywheel velocity.
+            targetSpeed = flywheels.launchFromDistance(launchDistance); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
             ElapsedTime transferTimer= new ElapsedTime();
             while (!flywheelIsReady) {
-                if (flywheels.getCurrentWheelVelocity("") >= targetRPM * 0.85) {
+                if (flywheels.getFlywheelSpeedRaw() >= targetSpeed * 0.9) {
                     flywheelIsReady = true;
                 } else if (transferTimer.milliseconds()>1000) {
                     flywheelIsReady = true;
                 }
             }
-            double outtakeSpeedBeforeDrop = flywheels.getCurrentWheelVelocity("");
+            double outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
 
             //send the balls into the flywheel to launch
 
@@ -153,7 +147,7 @@ public class PathingActions {
                 long startTime = System.currentTimeMillis();
                 long timeout = 2000;
                 while (true) {
-                    if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 150) {
+                    if (flywheels.getFlywheelRPM() < outtakeSpeedBeforeDrop - 150) {
                         break;
                     }
                     if (System.currentTimeMillis() - startTime > timeout) {
@@ -187,7 +181,7 @@ public class PathingActions {
 //        private final int zone;
 //
 //        private boolean initialized = false;
-//        private double targetRPM = 0;
+//        private double targetSpeed = 0;
 //
 //        private int shotsFired = 0;
 //        private long lastShotTime = 0;
@@ -206,13 +200,13 @@ public class PathingActions {
 //            if (!initialized) {
 //                int launchDistance = (zone == 1) ? 48 : 1000;
 //                flywheels.launchFromDistance(launchDistance);
-//                targetRPM = flywheels.getRPMFromDistance(launchDistance);
+//                targetSpeed = flywheels.getRPMFromDistance(launchDistance);
 //
 //                initialized = true;
 //            }
 //
 //            // Wait for flywheels to reach speed
-//            if (flywheels.getFlywheelVelocity() < targetRPM) {
+//            if (flywheels.getFlywheelVelocity() < targetSpeed) {
 //                intake.stopIntake();
 //                belt.stopBelt();
 //                return true;   // keep waiting

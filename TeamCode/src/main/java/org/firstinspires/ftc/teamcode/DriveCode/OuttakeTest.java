@@ -49,7 +49,7 @@ public class OuttakeTest extends LinearOpMode{
             if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
                 telemetry.addData("Optimal Launch Speed",flywheel.getRPMFromDistance(distance));
             }else{
-                flywheel.setFlywheelSpeed(0);
+                flywheel.setFlywheelSpeedRaw(0);
             }
 
             if (gamepad.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))) {
@@ -98,7 +98,7 @@ public class OuttakeTest extends LinearOpMode{
 
             telemetry.addData("distance", distance);
 //            telemetry.addData("rpm",rpm);
-            telemetry.addData("velo",flywheel.getFlywheelVelocity());
+            telemetry.addData("velo",flywheel.getFlywheelRPM());
             telemetry.addLine();
             telemetry.addData("Y (RPM)", rpm);
             telemetry.addData("M (Slope)", slope);

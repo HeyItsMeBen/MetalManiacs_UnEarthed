@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -34,6 +35,8 @@ public class RedWallZoneOne extends LinearOpMode {
     Turret turret;
     AutoAim autoAim;
 
+    ElapsedTime turretTimer;
+
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static final int DESIRED_TAG_ID = 24;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private static final int DESIRED_TAG_ID2 = 20;     // Choose the tag you want to approach or set to -1 for ANY tag.
@@ -46,7 +49,7 @@ public class RedWallZoneOne extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the Apriltag Detection process
-        //initAprilTag();
+        initAprilTag();
 
         Pose2d startPose = new Pose2d(15, -60, Math.toRadians(0)); // x, y, heading in radians
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
@@ -58,9 +61,9 @@ public class RedWallZoneOne extends LinearOpMode {
         autoAim = new AutoAim(Math.toRadians(15));
 
         //April tag stuff
-//        if (USE_WEBCAM) {
-//            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-//        }
+        if (USE_WEBCAM) {
+            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        }
 
         waitForStart();
 
@@ -69,13 +72,17 @@ public class RedWallZoneOne extends LinearOpMode {
                         PathingTrajectoriesRed.initialFiringFromWallZoneOne(drive, startPose, intake, flywheels, transfer, telemetry)
                 )
         );
-//        scanForTags();
-//        if (targetFound){
-//            autoAim.calculateEverything(desiredTag);
-//            turret.setMotorPower(autoAim.turn);
-//        } else {
-//            turret.setMotorPower(0);
-//        }
+        scanForTags();
+        turretTimer = new ElapsedTime();
+        while (turretTimer.milliseconds()<1000) {
+            if (targetFound) {
+                autoAim.calculateEverything(desiredTag);
+                turret.setMotorPower(autoAim.turn);
+            } else {
+                turret.setMotorPower(0);
+            }
+        }
+        turret.setMotorPower(0);
 
         Actions.runBlocking(
                 new SequentialAction(

@@ -40,20 +40,20 @@ public class OuttakeFlywheelTestFile extends LinearOpMode {
         //executing
         while (opModeIsActive()) {
             if (gamepad.getButton(GamepadKeys.Button.A)) {
-                outtake.setFlywheelVelocity(2350);
+                outtake.setFlywheelRPM(2350);
             }
             else if (gamepad.getButton(GamepadKeys.Button.B)) {
-                outtake.setFlywheelVelocity(0);
+                outtake.setFlywheelRPM(0);
             }
 
             //Send data to FTC dashbaord. The dashboard will graph it in real-time
             TelemetryPacket packet = new TelemetryPacket();
-            packet.put("Left Motor Velocity", outtake.getCurrentWheelRawVelocity("left"));
-            packet.put("Right Motor Velocity", outtake.getCurrentWheelRawVelocity("right"));
+            packet.put("Left Motor Velocity", outtake.getFlywheelRPM());
+            packet.put("Right Motor Velocity", outtake.getFlywheelRPM());
             dashboard.sendTelemetryPacket(packet);
 
             //Sends data to the driver station as quantitative values
-            logHistory.add("Velocities: " + (int) Math.round(outtake.getCurrentWheelRawVelocity("left")) + " , " + (int) Math.round(outtake.getCurrentWheelRawVelocity("right")));
+            logHistory.add("Velocities: " + (int) Math.round(outtake.getFlywheelRPM()) + " , " + (int) Math.round(outtake.getFlywheelRPM()));
             int maxLines = 8; // Display the last few entries (so it doesn’t overflow)
             int start = Math.max(0, logHistory.size() - maxLines);
             for (int i = start; i < logHistory.size(); i++) {

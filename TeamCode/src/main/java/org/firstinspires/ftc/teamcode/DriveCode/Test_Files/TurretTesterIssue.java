@@ -1,24 +1,13 @@
 package org.firstinspires.ftc.teamcode.DriveCode.Test_Files;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
-import org.firstinspires.ftc.teamcode.Hardware.Lights;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @TeleOp (name="Test Issue", group="test")
 public class TurretTesterIssue extends LinearOpMode {
@@ -63,7 +52,7 @@ public class TurretTesterIssue extends LinearOpMode {
                     initialized = true;
                 }
 
-                double currentRPM = flywheels.getFlywheelVelocity();
+                double currentRPM = flywheels.getFlywheelSpeedRaw();
 
                 telemetry.addData("Current RPM", currentRPM);
                 telemetry.addData("Target RPM", targetRPM);
@@ -97,7 +86,7 @@ public class TurretTesterIssue extends LinearOpMode {
                 }
 
                 if (artifactsLaunched > 3) {
-                    flywheels.setFlywheelSpeed(targetRPM / 2);
+                    flywheels.setFlywheelSpeedRaw(targetRPM / 2);
                     transfer.stopTransfer();
                     telemetry.addData("Status", "Finished");
                     telemetry.update();
@@ -112,7 +101,7 @@ public class TurretTesterIssue extends LinearOpMode {
                 flywheelIsReady = false;
                 artifactsLaunched = 0;
                 transfer.stopTransfer();
-                flywheels.setFlywheelSpeed(0);
+                flywheels.setFlywheelSpeedRaw(0);
             }
         }
     }

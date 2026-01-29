@@ -274,7 +274,7 @@ public class OldCompetition_DriveCode extends OpMode {
         telemetry.addData("Auto aiming", shouldAutoAim);
         telemetry.addData("Sees april tag", targetFound);
         telemetry.addData("Turret rotation", turret.getTurretPosition());
-        telemetry.addData("Active flywheel speed", flywheels.getCurrentWheelRawVelocity(":)"));
+        telemetry.addData("Active flywheel speed", flywheels.getFlywheelSpeedRaw());
 
         //practically irrelevant data
         telemetry.addLine("");
@@ -328,7 +328,7 @@ public class OldCompetition_DriveCode extends OpMode {
         }else if(operator.isDown(GamepadKeys.Button.LEFT_BUMPER)){  //open only the trapdoor
             trapdoor.trapdoorOpen();
         }else{  //resets everything and sets transfer/intake power
-            flywheels.setFlywheelVelocity(0);
+            flywheels.setFlywheelRPM(0);
             trapdoor.trapdoorClose();
             intake.setIntakePower(intakePower);
             belt.setTransferPower(intakePower);

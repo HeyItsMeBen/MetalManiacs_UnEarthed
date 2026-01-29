@@ -123,7 +123,7 @@ public class Competition_DriveCode extends OpMode {
     private ElapsedTime launchTimer = new ElapsedTime();
     private int ballsFed = 0;
     private double outtakeSpeedBeforeDrop = 0;
-    private double targetRPM = 0;
+    private double targetSpeed = 0;
     private ElapsedTime targetLostTimer = new ElapsedTime();
     private boolean wasTargetFoundLastFrame = false;
     private static final double TARGET_LOST_DELAY = 1.0; // 1 second delay in seconds
@@ -309,7 +309,7 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addData("Auto aiming", shouldAutoAim);
         telemetry.addData("Sees april tag", targetFound);
         telemetry.addData("Turret rotation", turret.getTurretPosition());
-        telemetry.addData("Active flywheel speed", flywheels.getFlywheelVelocity());
+        telemetry.addData("Active flywheel speed (t/s)", flywheels.getFlywheelSpeedRaw());
 
         //practically irrelevant data
         telemetry.addLine("");
@@ -340,6 +340,8 @@ public class Competition_DriveCode extends OpMode {
         }
         if (intakePower==1 && intakeTimer.milliseconds()>1000 && intake.getVelocityRPM()<500){
             intakePower = 0;
+        } else if (intakePower==0) {
+            transferWheels.setTransferPower(0);
         }
         intake.setIntakePower(intakePower);
 
@@ -352,10 +354,10 @@ public class Competition_DriveCode extends OpMode {
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
                     if (targetFound) {
-                        targetRPM = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
+                        targetSpeed = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
                     } else {
-                        targetRPM = maintainOuttakeSpeed;
-                        flywheels.setFlywheelSpeed(maintainOuttakeSpeed);
+                        targetSpeed = maintainOuttakeSpeed;
+                        flywheels.setFlywheelSpeedRaw(maintainOuttakeSpeed);
                     }
                     launchTimer.reset();
                     launchState = LaunchState.SPINNING_UP;
@@ -367,7 +369,7 @@ public class Competition_DriveCode extends OpMode {
 //                    drive(0, 0, 0, 0);  // Keep stopping the drive
 //                    turret.setMotorPower(0);  // Keep turret stopped
 
-                    if (flywheels.getFlywheelVelocity() >= targetRPM * 0.9) {
+                    if (flywheels.getFlywheelSpeedRaw() >= targetSpeed * 0.9) {
                         // Flywheels are ready!
                         launchTimer.reset();
                         launchState = LaunchState.WAITING_AFTER_SPINUP;
@@ -385,7 +387,7 @@ public class Competition_DriveCode extends OpMode {
 
                     if (launchTimer.milliseconds() > 500) {
                         // Start feeding first ball
-                        outtakeSpeedBeforeDrop = flywheels.getCurrentWheelVelocity("");
+                        outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
                         if (ballsFed > 0) {
                             intake.setIntakePower(1);
                         }
@@ -400,7 +402,7 @@ public class Competition_DriveCode extends OpMode {
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
 
-                    if (flywheels.getCurrentWheelVelocity("") < outtakeSpeedBeforeDrop - 100) {
+                    if (flywheels.getFlywheelRPM() < outtakeSpeedBeforeDrop - 100) {
                         // Ball detected! Stop transfer and wait
                         transferWheels.setTransferPower(0);
                         intake.setIntakePower(0);
@@ -428,7 +430,7 @@ public class Competition_DriveCode extends OpMode {
 
                     if (launchTimer.milliseconds() > 500) { // Originally 1500
                         // Ready for next ball
-                        outtakeSpeedBeforeDrop = flywheels.getCurrentWheelVelocity("");
+                        outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
                         intake.setIntakePower(1);
                         transferWheels.setTransferPower(1);
                         launchTimer.reset();
@@ -444,7 +446,7 @@ public class Competition_DriveCode extends OpMode {
                 intake.setIntakePower(0);
                 launchState = LaunchState.IDLE;
             }
-            flywheels.setFlywheelSpeed(maintainOuttakeSpeed);
+            flywheels.setFlywheelSpeedRaw(maintainOuttakeSpeed);
         }
         // Add telemetry to see what's happening
         telemetry.addLine();
@@ -452,8 +454,8 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addData("State", launchState);
         telemetry.addData("Balls Fed", ballsFed);
         telemetry.addData("Timer (ms)", launchTimer.milliseconds());
-        telemetry.addData("Current Speed (ticks per second)", flywheels.getCurrentWheelVelocity(""));
-        telemetry.addData("Target Speed (t/s)", targetRPM);
+        telemetry.addData("Current Speed (t/s)", flywheels.getFlywheelSpeedRaw());
+        telemetry.addData("Target Speed (t/s)", targetSpeed);
         telemetry.addLine();
 //
 //        if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
