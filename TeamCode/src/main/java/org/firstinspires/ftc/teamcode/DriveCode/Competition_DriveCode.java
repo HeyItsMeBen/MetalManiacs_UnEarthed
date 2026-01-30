@@ -67,6 +67,7 @@ public class Competition_DriveCode extends OpMode {
     private float outtakeSpeed = 3000;
 
     boolean opModeIsActive = true;
+    public String teamColor = "Red";
 
     // IMU for getting robot heading
     IMU imu;
@@ -194,6 +195,10 @@ public class Competition_DriveCode extends OpMode {
     @Override
     public void loop() {
 
+        if (driver.wasJustPressed(GamepadKeys.Button.START)){
+            teamColor = teamColor.equals("Red") ? "Blue" : teamColor.equals("Blue") ? "Red" : teamColor;
+        }
+
         // Reset yaw with Y button
         if (driver.getButton(GamepadKeys.Button.Y)) {
             imu.resetYaw();
@@ -305,6 +310,7 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addData("Sees april tag", targetFound);
         telemetry.addData("Turret rotation", turret.getTurretPosition());
         telemetry.addData("Active flywheel speed (t/s)", flywheels.getFlywheelSpeedRaw());
+        telemetry.addData("Goal distance", toFeet(toInches(autoAim.distanceToTagTelemetry)));
 
         //practically irrelevant data
         telemetry.addLine("");
@@ -429,13 +435,23 @@ public class Competition_DriveCode extends OpMode {
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
                     // Wait 500 milliseconds for outtake to speed up
-                    if (launchTimer.milliseconds() > 500) { // Originally 1500
+                    if (toFeet(toInches(autoAim.distanceToTagTelemetry)) > 8.0){
+                        if (launchTimer.milliseconds() > 1000) { // Originally 1500
+                            // Ready for next ball
+                            outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
+                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*.9;
+                            launchState = LaunchState.FEEDING_BALL;
+                            launchTimer.reset();
+                        }
+                    }else if (launchTimer.milliseconds() > 500) { // Originally 1500
                         // Ready for next ball
                         outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
                         maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*.9;
                         launchState = LaunchState.FEEDING_BALL;
                         launchTimer.reset();
+
                     }
+
                     break;
             }
 
@@ -548,8 +564,8 @@ public class Competition_DriveCode extends OpMode {
         }
 
         // LEDS
-        boolean intakeOn = (intake.getIntakePower() != 0);
-        lights.updateStatus(targetFound, intakeOn);
+//        boolean intakeOn = (intake.getIntakePower() >= 0.5);
+//        lights.updateStatus(targetFound, intakeOn, teamColor);
 
         //Telemetry
         telemetry.addLine("-----HOW TO DRIVE FOR DUMMIES*-----");

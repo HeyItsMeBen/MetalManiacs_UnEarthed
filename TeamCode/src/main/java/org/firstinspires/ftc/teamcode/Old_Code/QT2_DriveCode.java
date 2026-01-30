@@ -452,7 +452,7 @@ public class QT2_DriveCode extends OpMode {
 
         // LEDS
         boolean intakeOn = (intake.getIntakePower() != 0);
-        lights.updateStatus(targetFound, intakeOn);
+//        lights.updateStatus(targetFound, intakeOn);
 
         //Telemetry
         telemetry.addLine("-----HOW TO DRIVE FOR DUMMIES*-----");

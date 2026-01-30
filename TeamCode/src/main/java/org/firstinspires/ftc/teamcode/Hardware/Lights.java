@@ -7,11 +7,20 @@ import org.firstinspires.ftc.teamcode.Prism.Color;
 import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
 import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 
+import java.util.Objects;
+
 public class Lights {
     GoBildaPrismDriver prism;
     private static final int LEDS_PER_STRIP = 12;
     private static final int NUM_STRIPS = 2;
     private static final int TOTAL_LEDS = LEDS_PER_STRIP * NUM_STRIPS;
+
+    // New LED strips for team color (2 strips of 6 LEDs each)
+    private static final int TEAM_COLOR_LEDS_PER_STRIP = 6;
+    private static final int TEAM_COLOR_NUM_STRIPS = 2;
+    private static final int TEAM_COLOR_TOTAL_LEDS = TEAM_COLOR_LEDS_PER_STRIP * TEAM_COLOR_NUM_STRIPS;
+    private static final int TEAM_COLOR_START_LED = TOTAL_LEDS; // Starts after the main LEDs (LED 24)
+    private static final int TOTAL_ALL_LEDS = TOTAL_LEDS + TEAM_COLOR_TOTAL_LEDS;
 
     private ElapsedTime debounceTimer = new ElapsedTime();
     private static final double DEBOUNCE_TIME = 0.2; // 200ms between commands
@@ -22,12 +31,13 @@ public class Lights {
     // Track previous states to avoid unnecessary updates
     private boolean lastTargetFound = false;
     private boolean lastIntakeOn = false;
+    private String lastTeamColor = "";
     private boolean isFirstUpdate = true;
 
     public Lights(HardwareMap hardwareMap){
         try {
             prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
-            prism.setStripLength(TOTAL_LEDS);
+            prism.setStripLength(TOTAL_ALL_LEDS); // Set to total including team color LEDs
             isInitialized = true;
             debounceTimer.reset();
         } catch (Exception e) {
@@ -66,17 +76,18 @@ public class Lights {
     }
 
     // Update both LED sections at once - USE THIS ONE!
-    public void updateStatus(boolean targetFound, boolean intakeOn){
+    public void updateStatus(boolean targetFound, boolean intakeOn, String teamColor){
         // Check if state has actually changed
-        if (!isFirstUpdate && targetFound == lastTargetFound && intakeOn == lastIntakeOn) {
+        if (!isFirstUpdate && targetFound == lastTargetFound &&
+                intakeOn == lastIntakeOn && teamColor.equals(lastTeamColor)) {
             return; // No change - skip update
         }
 
         if (!canUpdate()) return;
 
         try {
-            // First half - April Tag status (Green = found, Red = not found)
-            Color aprilTagColor = targetFound ? Color.GREEN : Color.RED;
+            // First half - April Tag status (Green = found, Pink = not found)
+            Color aprilTagColor = targetFound ? Color.GREEN : new Color(239, 151, 216);
             PrismAnimations.Solid aprilTag = new PrismAnimations.Solid(aprilTagColor, 0, TOTAL_LEDS/2 - 1);
             prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, aprilTag);
 
@@ -85,12 +96,28 @@ public class Lights {
             PrismAnimations.Solid intake = new PrismAnimations.Solid(intakeColor, TOTAL_LEDS/2, TOTAL_LEDS - 1);
             prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, intake);
 
+            // Team color LEDs (LEDs 24-35) - displays team color
+            Color teamColorDisplay = Color.RED; // Default
+            if (teamColor.equals("Red")) {
+                teamColorDisplay = Color.RED;
+            } else if (teamColor.equals("Blue")) {
+                teamColorDisplay = Color.BLUE;
+            }
+
+            PrismAnimations.Solid teamColorAnimation = new PrismAnimations.Solid(
+                    teamColorDisplay,
+                    TEAM_COLOR_START_LED,
+                    TEAM_COLOR_START_LED + TEAM_COLOR_TOTAL_LEDS - 1
+            );
+            prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_2, teamColorAnimation);
+
             // Update state tracking
             lastTargetFound = targetFound;
             lastIntakeOn = intakeOn;
+            lastTeamColor = teamColor;
             isFirstUpdate = false;
 
-            String newSequence = (targetFound ? "G" : "R") + (intakeOn ? "B" : "P");
+            String newSequence = (targetFound ? "G" : "R") + (intakeOn ? "B" : "P") + teamColor.substring(0, 1);
             lastSequence = newSequence;
             debounceTimer.reset();
         } catch (Exception e) {
