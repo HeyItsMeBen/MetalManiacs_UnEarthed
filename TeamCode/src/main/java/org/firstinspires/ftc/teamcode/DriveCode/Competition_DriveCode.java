@@ -60,7 +60,7 @@ public class Competition_DriveCode extends OpMode {
     ElapsedTime loopTimer;
 
     //set up variables
-    private int intakePower = 0;
+    private float intakePower = 0;
     boolean outtakeOn = false;
     private double outtakePower = 0;
     private boolean flyWheelOn = false;
@@ -84,7 +84,7 @@ public class Competition_DriveCode extends OpMode {
     public boolean outtakeForward = false;  //determines which side the controller treats as the front of the bot
     private double extraOuttakeSpeed=0;
 
-    private double maintainOuttakeSpeed=750;
+    private double maintainOuttakeSpeed=1386;    //750
 
 
     //autoAim stuff
@@ -320,6 +320,7 @@ public class Competition_DriveCode extends OpMode {
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
+                transferWheels.setTransferPower(0);
             } else {
                 intakePower = 1;
                 intakeTimer.reset();
@@ -334,9 +335,7 @@ public class Competition_DriveCode extends OpMode {
             }
         }
         if (intakePower==1 && intakeTimer.milliseconds()>1000 && intake.getVelocityRPM()<500){
-            intakePower = 0;
-        } else if (intakePower==0) {
-            transferWheels.setTransferPower(0);
+            intakePower = 0.25f;
         }
         intake.setIntakePower(intakePower);
 
@@ -349,7 +348,7 @@ public class Competition_DriveCode extends OpMode {
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
                     if (targetFound) {
-                        targetSpeed = flywheels.launchFromDistance(toInches(autoAim.distanceToTagTelemetry), extraOuttakeSpeed);
+                        targetSpeed = flywheels.launchFromDistance(toFeet(toInches(autoAim.distanceToTagTelemetry)), extraOuttakeSpeed);
                     } else {
                         targetSpeed = maintainOuttakeSpeed;
                         flywheels.setFlywheelSpeedRaw(maintainOuttakeSpeed);
@@ -383,10 +382,11 @@ public class Competition_DriveCode extends OpMode {
                     if (launchTimer.milliseconds() > 500) {
                         // Start feeding first ball
                         outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
-                        if (ballsFed > 0) {
-                            intake.setIntakePower(1);
-                        }
-                        transferWheels.setTransferPower(1);
+                        maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*.9;
+//                            if (ballsFed > 0) {
+//                                intake.setIntakePower(1);
+//                            }
+//                            transferWheels.setTransferPower(1);
                         launchTimer.reset();
                         launchState = LaunchState.FEEDING_BALL;
                     }
@@ -396,6 +396,11 @@ public class Competition_DriveCode extends OpMode {
                     // Feed ball and detect when it launches
 //                    drive(0, 0, 0, 0);
 //                    turret.setMotorPower(0);
+                    if (ballsFed>0){
+                        intake.setIntakePower(1);
+                    } else {
+                        intake.setIntakePower(0);
+                    }
                     transferWheels.setTransferPower(1);
 
                     if (flywheels.getFlywheelRPM() < outtakeSpeedBeforeDrop - 100) {
@@ -427,8 +432,7 @@ public class Competition_DriveCode extends OpMode {
                     if (launchTimer.milliseconds() > 500) { // Originally 1500
                         // Ready for next ball
                         outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
-                        intake.setIntakePower(1);
-                        transferWheels.setTransferPower(1);
+                        maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*.9;
                         launchState = LaunchState.FEEDING_BALL;
                         launchTimer.reset();
                     }
@@ -452,9 +456,9 @@ public class Competition_DriveCode extends OpMode {
             extraOuttakeSpeed=0;
         }
         if (!shouldAutoAim){
-            maintainOuttakeSpeed=1000;  //if not auto-aiming, set the default to higher
+            maintainOuttakeSpeed=1540;  //if not auto-aiming, set the default to higher
         } else {
-            maintainOuttakeSpeed=750;   //if auto-aiming, set the default to the normal value
+            //maintainOuttakeSpeed=750;   //if auto-aiming, set the default to the normal value
         }
         // Add telemetry to see what's happening
         telemetry.addLine();
