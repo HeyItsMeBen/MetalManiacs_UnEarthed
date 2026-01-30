@@ -80,8 +80,8 @@ public class Lights {
             PrismAnimations.Solid aprilTag = new PrismAnimations.Solid(aprilTagColor, 0, TOTAL_LEDS/2 - 1);
             prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, aprilTag);
 
-            // Second half - Intake status (Blue = on, Purple = off)
-            Color intakeColor = intakeOn ? Color.BLUE : Color.PURPLE;
+            // Second half - Intake status (YELLOW = on, Purple = off)
+            Color intakeColor = intakeOn ? Color.YELLOW : Color.PURPLE;
             PrismAnimations.Solid intake = new PrismAnimations.Solid(intakeColor, TOTAL_LEDS/2, TOTAL_LEDS - 1);
             prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, intake);
 
