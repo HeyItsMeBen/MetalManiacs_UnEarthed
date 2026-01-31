@@ -58,6 +58,7 @@ public class Competition_DriveCode extends OpMode {
     ElapsedTime timer;
     ElapsedTime intakeTimer;
     ElapsedTime loopTimer;
+    ElapsedTime lightTimer;
 
     //set up variables
     private float intakePower = 0;
@@ -158,6 +159,7 @@ public class Competition_DriveCode extends OpMode {
         autoAim = new AutoAim(Math.toRadians(15));
         visionAssist = new VisionAssistLimelight(hardwareMap, 3);
         intakeTimer = new ElapsedTime();
+        lightTimer = new ElapsedTime();
 
         //setup
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -388,7 +390,11 @@ public class Competition_DriveCode extends OpMode {
                     if (launchTimer.milliseconds() > 500) {
                         // Start feeding first ball
                         outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
-                        maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*.9;
+                        if (toFeet(toInches(autoAim.distanceToTagTelemetry)) > 8.0){
+                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw() * 1;
+                        } else {
+                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw() * .9;
+                        }
 //                            if (ballsFed > 0) {
 //                                intake.setIntakePower(1);
 //                            }
@@ -439,7 +445,7 @@ public class Competition_DriveCode extends OpMode {
                         if (launchTimer.milliseconds() > 1000) { // Originally 1500
                             // Ready for next ball
                             outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
-                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*.9;
+                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*1;
                             launchState = LaunchState.FEEDING_BALL;
                             launchTimer.reset();
                         }
@@ -564,8 +570,11 @@ public class Competition_DriveCode extends OpMode {
         }
 
         // LEDS
-//        boolean intakeOn = (intake.getIntakePower() >= 0.5);
-//        lights.updateStatus(targetFound, intakeOn, teamColor);
+        boolean intakeOn = (intake.getIntakePower() >= 0.5);
+        if (lightTimer.milliseconds()>500){
+            lightTimer.reset();
+            lights.updateStatus(targetFound, intakeOn, teamColor);
+        }
 
         //Telemetry
         telemetry.addLine("-----HOW TO DRIVE FOR DUMMIES*-----");
