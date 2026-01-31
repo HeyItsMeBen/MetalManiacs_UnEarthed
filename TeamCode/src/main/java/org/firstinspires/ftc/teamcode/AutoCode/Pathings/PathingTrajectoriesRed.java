@@ -14,7 +14,7 @@ import java.lang.Math;
 
 public class PathingTrajectoriesRed {
 
-    static double defaultVelocity = 60.0;
+    static double defaultVelocity = 80.0;
 
     static double defaultAngVelocity = Math.PI;
 
@@ -33,7 +33,7 @@ public class PathingTrajectoriesRed {
 
                 .stopAndAdd(new PathingActions.maintainIntake(intake))
 
-                .splineToLinearHeading(new Pose2d(18, 25, Math.toRadians(0)), Math.toRadians(45), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(18, 35, Math.toRadians(0)), Math.toRadians(45), maxSpeedConstraint)
 
                 .build();
 
@@ -57,7 +57,7 @@ public class PathingTrajectoriesRed {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225), maxSpeedConstraint)
 
-                .splineToSplineHeading(new Pose2d(18, 25, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
+                .splineToSplineHeading(new Pose2d(18, 35, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, distance))
 
@@ -128,7 +128,7 @@ public class PathingTrajectoriesRed {
                         .splineTo(new Vector2d(58, 12), Math.toRadians(0),
                                 new MinVelConstraint(
                                 java.util.Arrays.asList(
-                                        new TranslationalVelConstraint(20),
+                                        new TranslationalVelConstraint(30),
                                         new AngularVelConstraint(defaultAngVelocity)
                                 )
                         ))
@@ -145,7 +145,7 @@ public class PathingTrajectoriesRed {
                         .splineToLinearHeading(new Pose2d(58, -10, Math.toRadians(0)), Math.toRadians(0),
                                 new MinVelConstraint(
                                         java.util.Arrays.asList(
-                                                new TranslationalVelConstraint(20),
+                                                new TranslationalVelConstraint(30),
                                                 new AngularVelConstraint(defaultAngVelocity)
                                         )
                                 )
@@ -161,7 +161,7 @@ public class PathingTrajectoriesRed {
                         .stopAndAdd(new PathingActions.runIntake(intake))
                         .splineToLinearHeading(new Pose2d(58, -36, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
                                         java.util.Arrays.asList(
-                                                new TranslationalVelConstraint(20),
+                                                new TranslationalVelConstraint(30),
                                                 new AngularVelConstraint(defaultAngVelocity)
                                         )
                                 )
