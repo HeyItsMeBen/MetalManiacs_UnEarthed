@@ -34,7 +34,7 @@ public class AutoPathSimShortRangeBlue {
                                 // Pose X mirrored, heading +180 = 180
                                 // Tangent 45° → (0–180) → +90 → 135
                                 .splineToLinearHeading(
-                                        new Pose2d(-20, 20, Math.toRadians(180)),
+                                        new Pose2d(-20, 35, Math.toRadians(180)),
                                         Math.toRadians(135)
                                 )
 
@@ -47,7 +47,8 @@ public class AutoPathSimShortRangeBlue {
 
                                 // pattern collection close
                                 .setReversed(false)
-                                .splineTo(new Vector2d(-55, 12), Math.toRadians(180))
+                                .splineToConstantHeading(new Vector2d(-18, 20), Math.toRadians(270))
+                                .splineToLinearHeading(new Pose2d(-55, 12, Math.toRadians(180)), Math.toRadians(180))
                                 .setReversed(true)
 
                                 // open channel

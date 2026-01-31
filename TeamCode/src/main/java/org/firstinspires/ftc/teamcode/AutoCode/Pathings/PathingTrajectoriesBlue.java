@@ -152,10 +152,10 @@ public class PathingTrajectoriesBlue {
 
                 return drive.actionBuilder(currentPose)
 
-                        .stopAndAdd(new PathingActions.runIntake(intake))
-
                         .setReversed(false)
-                        .splineTo(new Vector2d(-50, 12), Math.toRadians(180),
+                        .splineToConstantHeading(new Vector2d(-18, 20), Math.toRadians(270))
+                        .stopAndAdd(new PathingActions.runIntake(intake))
+                        .splineToLinearHeading(new Pose2d(-50, 12, Math.toRadians(180)), Math.toRadians(180),
                                 new MinVelConstraint(
                                 java.util.Arrays.asList(
                                         new TranslationalVelConstraint(30),
@@ -170,7 +170,7 @@ public class PathingTrajectoriesBlue {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(-18, -7), Math.toRadians(270), maxSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(-18, -5), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
                         .splineToLinearHeading(new Pose2d(-50, -10, Math.toRadians(180)), Math.toRadians(180),
                                 new MinVelConstraint(
@@ -187,7 +187,7 @@ public class PathingTrajectoriesBlue {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(-18, -30), Math.toRadians(270), maxSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(-18, -25), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
                         .splineToLinearHeading(new Pose2d(-50, -38, Math.toRadians(180)), Math.toRadians(180), new MinVelConstraint(
                                         java.util.Arrays.asList(
