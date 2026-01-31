@@ -155,7 +155,7 @@ public class PathingTrajectoriesBlue {
                         .stopAndAdd(new PathingActions.runIntake(intake))
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(-58, 12), Math.toRadians(180),
+                        .splineTo(new Vector2d(-50, 12), Math.toRadians(180),
                                 new MinVelConstraint(
                                 java.util.Arrays.asList(
                                         new TranslationalVelConstraint(30),
@@ -172,7 +172,7 @@ public class PathingTrajectoriesBlue {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(-18, -7), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(-58, -10, Math.toRadians(180)), Math.toRadians(180),
+                        .splineToLinearHeading(new Pose2d(-50, -10, Math.toRadians(180)), Math.toRadians(180),
                                 new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
@@ -189,7 +189,7 @@ public class PathingTrajectoriesBlue {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(-18, -30), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(-58, -38, Math.toRadians(180)), Math.toRadians(180), new MinVelConstraint(
+                        .splineToLinearHeading(new Pose2d(-50, -38, Math.toRadians(180)), Math.toRadians(180), new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
                                                 new AngularVelConstraint(defaultAngVelocity)

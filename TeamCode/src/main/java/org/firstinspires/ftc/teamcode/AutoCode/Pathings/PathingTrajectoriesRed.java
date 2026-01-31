@@ -39,7 +39,7 @@ public class PathingTrajectoriesRed {
 
     }
 
-    public static Action initialFiringFromGoalZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
+    public static Action initialMovementFromGoalZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
@@ -125,7 +125,7 @@ public class PathingTrajectoriesRed {
                         .stopAndAdd(new PathingActions.runIntake(intake))
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(54, 12), Math.toRadians(0),
+                        .splineTo(new Vector2d(50, 12), Math.toRadians(0),
                                 new MinVelConstraint(
                                 java.util.Arrays.asList(
                                         new TranslationalVelConstraint(30),
@@ -142,7 +142,7 @@ public class PathingTrajectoriesRed {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(18, -5), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(54, -10, Math.toRadians(0)), Math.toRadians(0),
+                        .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(0)), Math.toRadians(0),
                                 new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
@@ -159,7 +159,7 @@ public class PathingTrajectoriesRed {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(54, -38, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
+                        .splineToLinearHeading(new Pose2d(50, -38, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
                                                 new AngularVelConstraint(defaultAngVelocity)

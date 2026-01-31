@@ -147,7 +147,7 @@ public class PathingActions {
 
             //send the balls into the flywheel to launch
 
-            for (int i = 0; i<4; i++) {
+            for (int i = 0; i<5; i++) {
                 if (i>0){
                     intake.setIntakePower(1);
                 }
@@ -165,7 +165,7 @@ public class PathingActions {
                 }
                 transfer.setTransferPower(0.2);
                 try {
-                    sleep(250);
+                    sleep(300);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
