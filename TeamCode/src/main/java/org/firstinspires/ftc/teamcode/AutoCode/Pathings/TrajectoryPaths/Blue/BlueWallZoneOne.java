@@ -36,7 +36,7 @@ public class BlueWallZoneOne extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(-15, -60, Math.toRadians(180)); // x, y, heading in radians //180
+        Pose2d startPose = new Pose2d(-18, -60, Math.toRadians(180)); // x, y, heading in radians //180
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
