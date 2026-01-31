@@ -15,12 +15,12 @@ import java.lang.Math;
 
 public class PathingTrajectoriesBlue {
 
-    static double defaultVelocity = 60.0;
+    static double defaultVelocity = 75.0;
 
     static double defaultAngVelocity = Math.PI;
 
     //done
-    public static Action initialFiringFromWallZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Telemetry telemetry) {
+    public static Action initialMovementFromWallZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, Telemetry telemetry) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
@@ -33,12 +33,31 @@ public class PathingTrajectoriesBlue {
 
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 1))
 
-                .splineToLinearHeading(new Pose2d(-18, 27, Math.toRadians(180)), Math.toRadians(135), maxSpeedConstraint)
+                .stopAndAdd(new PathingActions.maintainIntake(intake))
+
+                .splineToLinearHeading(new Pose2d(-18, 30, Math.toRadians(180)), Math.toRadians(135), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
                 .build();
 
+    }
+
+    public static Action firstLaunch(
+            MecanumDrive drive,
+            Pose2d currentPose,
+            Intake intake,
+            Flywheels flywheel,
+            Transfer wheels,
+            Telemetry telemetry
+    ) {
+        return new PathingActions.firingSequence(
+                intake,
+                flywheel,
+                wheels,
+                1,
+                telemetry
+        );
     }
 
     //done
@@ -54,6 +73,8 @@ public class PathingTrajectoriesBlue {
         return drive.actionBuilder(currentPose)
 
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 1))
+
+                .stopAndAdd(new PathingActions.maintainIntake(intake))
 
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(-30, 50), Math.toRadians(315), maxSpeedConstraint)
@@ -79,6 +100,8 @@ public class PathingTrajectoriesBlue {
 
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 2))
 
+                .stopAndAdd(new PathingActions.maintainIntake(intake))
+
                 .splineToLinearHeading(new Pose2d(-15, -47, Math.toRadians(150)), Math.toRadians(90), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 2, telemetry))
@@ -99,11 +122,11 @@ public class PathingTrajectoriesBlue {
 
         return drive.actionBuilder(currentPose)
 
-                .stopAndAdd(new PathingActions.stopIntake(intake))
+                .stopAndAdd(new PathingActions.maintainIntake(intake))
                 .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel, 1))
 
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(-18, 30, Math.toRadians(180)), Math.toRadians(90), maxSpeedConstraint)
+                .splineToLinearHeading(new Pose2d(-18, 35, Math.toRadians(180)), Math.toRadians(90), maxSpeedConstraint)
 
                 .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, 1, telemetry))
 
@@ -137,7 +160,7 @@ public class PathingTrajectoriesBlue {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
-                        new TranslationalVelConstraint(50),
+                        new TranslationalVelConstraint(60),
                         new AngularVelConstraint(defaultAngVelocity)
                 )
         );
@@ -166,7 +189,7 @@ public class PathingTrajectoriesBlue {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(-18, -5), Math.toRadians(270), maxSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(-18, -7), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
                         .splineToLinearHeading(new Pose2d(-58, -10, Math.toRadians(180)), Math.toRadians(180),
                                 new MinVelConstraint(
@@ -183,7 +206,7 @@ public class PathingTrajectoriesBlue {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(-18, -25), Math.toRadians(270), maxSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(-18, -28), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
                         .splineToLinearHeading(new Pose2d(-58, -36, Math.toRadians(180)), Math.toRadians(180), new MinVelConstraint(
                                         java.util.Arrays.asList(
@@ -287,23 +310,4 @@ public class PathingTrajectoriesBlue {
 
                 .build();
     }
-
-    public static Action grabThree(MecanumDrive drive, Pose2d currentPose, Intake intake) {
-
-        MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
-                java.util.Arrays.asList(
-                        new TranslationalVelConstraint(defaultVelocity),
-                        new AngularVelConstraint(defaultAngVelocity)
-                )
-        );
-
-        return drive.actionBuilder(currentPose)
-
-                .stopAndAdd(new PathingActions.runIntake(intake))
-
-                .splineTo(new Vector2d(-58, -33), Math.toRadians(0), maxSpeedConstraint)
-
-                .build();
-    }
-
 }

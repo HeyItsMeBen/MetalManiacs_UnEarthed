@@ -33,6 +33,22 @@ public class PathingActions {
         }
     }
 
+    public static class maintainIntake implements Action {
+        private final Intake intake;
+
+        public maintainIntake(Intake intake) {
+
+            this.intake = intake;
+
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            intake.setIntakePower(0.25);
+            return false;
+        }
+    }
+
     public static class stopIntake implements Action {
         private final Intake intake;
 
@@ -81,8 +97,6 @@ public class PathingActions {
         }
     }
 
-
-
     public static class firingSequence implements Action {
 
         private final Intake intake;
@@ -99,7 +113,7 @@ public class PathingActions {
         private final long spinUpTimeout = 3000; // max 3 seconds to reach speed
         private double targetSpeed = 0;
         private int timeBetweenLaunches = 525;
-        private double launchDistance = 6; // in feet
+        private double launchDistance = 62; // in inches
 
         public firingSequence(Intake intake, Flywheels flywheels, Transfer transfer, int launchZone, Telemetry telemetry) {
             this.intake = intake;
@@ -113,7 +127,7 @@ public class PathingActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
             if (!initialized) {
-                launchDistance = (zone == 1) ? 6.2 : 12.6;
+                launchDistance = (zone == 1) ? 62 : 114;
                 targetSpeed = flywheels.launchFromDistance(launchDistance);
 
                 spinUpStartTime = System.currentTimeMillis();
@@ -168,124 +182,5 @@ public class PathingActions {
 
         }
     }
-
-    // ---------------------------------------------------------------------------------------------
-
-//    @Deprecated
-//    public static class firingSequenceWithTrapdoorAndBelt implements Action {
-//
-//        private final Intake intake;
-//        private final Transfer belt;
-//        private final Flywheels flywheels;
-//        private final Transfer trapdoor;
-//        private final int zone;
-//
-//        private boolean initialized = false;
-//        private double targetSpeed = 0;
-//
-//        private int shotsFired = 0;
-//        private long lastShotTime = 0;
-//
-//        public firingSequenceWithTrapdoorAndBelt(Intake intake, Flywheels flywheels, Transfer belt, Transfer trapdoor, int launchZone) {
-//            this.intake = intake;
-//            this.flywheels = flywheels;
-//            this.belt = belt;
-//            this.trapdoor = trapdoor;
-//            this.zone = launchZone;
-//        }
-//
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-//
-//            if (!initialized) {
-//                int launchDistance = (zone == 1) ? 48 : 1000;
-//                flywheels.launchFromDistance(launchDistance);
-//                targetSpeed = flywheels.getRPMFromDistance(launchDistance);
-//
-//                initialized = true;
-//            }
-//
-//            // Wait for flywheels to reach speed
-//            if (flywheels.getFlywheelVelocity() < targetSpeed) {
-//                intake.stopIntake();
-//                belt.stopBelt();
-//                return true;   // keep waiting
-//            }
-//
-//            // Fire 4 shots, one every 300ms
-//            long now = System.currentTimeMillis();
-//            if (shotsFired < 4 && now - lastShotTime > 250) {
-//                intake.runIntakeFullPower();
-//                belt.runBelt();
-//                shotsFired++;
-//                lastShotTime = now;
-//            } else {
-//                intake.stopIntake();
-//                belt.stopBelt();
-//            }
-//
-//            // When done, shut everything down
-//            if (shotsFired >= 4) {
-//                flywheels.stopFlywheel();
-//                return false;   // Action finished
-//            }
-//
-//            //closes trapdoor
-//            //trapdoor.trapdoorClose();
-//
-//            return false;
-//        }
-//    }
-//
-//    @Deprecated
-//    public static class runIntakeAndTransfer implements Action {
-//        private final Intake intake;
-//
-//        private final Transfer belt;
-//
-//        public runIntakeAndTransfer(Intake intake, Transfer belt) {
-//
-//            this.intake = intake;
-//            this.belt = belt;
-//
-//        }
-//
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-//            try {
-//                Thread.sleep(250);
-//            } catch (InterruptedException e) {
-//            }
-//            intake.setIntakePower(1);
-//            belt.setTransferPower(1);
-//            return false;
-//        }
-//    }
-//
-//    @Deprecated
-//    public static class stopIntakeAndTransfer implements Action {
-//        private final Intake intake;
-//
-//        private final Transfer belt;
-//
-//        public stopIntakeAndTransfer(Intake intake, Transfer belt) {
-//
-//            this.intake = intake;
-//            this.belt = belt;
-//
-//        }
-//
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-//            try {
-//                Thread.sleep(250);
-//            } catch (InterruptedException e) {
-//            }
-//            intake.setIntakePower(0);
-//            belt.setTransferPower(0);
-//            return false;
-//        }
-//    }
-
 }
 

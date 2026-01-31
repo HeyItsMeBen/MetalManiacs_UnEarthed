@@ -73,6 +73,9 @@ public class Competition_DriveCode extends OpMode {
     // IMU for getting robot heading
     IMU imu;
 
+
+    double oldTime;
+
     //Variables for field-centric rotation control
     private double targetHeading = 0;  // The direction we want to face (in radians)
     private boolean useSnapRotation = true;  // Toggle between snap-to-heading and normal rotation
@@ -174,6 +177,8 @@ public class Competition_DriveCode extends OpMode {
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        ElapsedTime timer = new ElapsedTime();
+
         telemetry.addData("Status", "IMU Calibrating... Do NOT move robot!");
         telemetry.update();
         try {
@@ -252,7 +257,6 @@ public class Competition_DriveCode extends OpMode {
         telemetry.addLine("-----Robot Information-----");
         telemetry.addLine("Movement");
         telemetry.addData("Speed multiplier", speedMultiplier);
-
         if (useSnapRotation) {
             // SNAP-TO-HEADING MODE
             // Check if right stick is being pushed (outside deadzone)
@@ -604,7 +608,20 @@ public class Competition_DriveCode extends OpMode {
 
         driver.readButtons();
         operator.readButtons();
+        //telemetry.update();
+
+        // Frequency
+
+        double newTime = getRuntime();
+        double loopTime = newTime - oldTime;
+        double frequency = 1/loopTime;
+        oldTime = newTime;
+
+        telemetry.addData("LoopTime:", frequency);
         telemetry.update();
+
+        // Frequency
+
     }
 
     public void stop() { //when we stop the program with the driver station, this method runs. It's a built-in method, similar to and init() and loop()
