@@ -59,7 +59,7 @@ public class PathingTrajectoriesRed {
 
                 .splineToSplineHeading(new Pose2d(18, 35, Math.toRadians(0)), Math.toRadians(270), maxSpeedConstraint)
 
-                .stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, distance))
+                //.stopAndAdd(new PathingActions.firingSequence(intake, flywheel, wheels, distance))
 
                 .build();
 
