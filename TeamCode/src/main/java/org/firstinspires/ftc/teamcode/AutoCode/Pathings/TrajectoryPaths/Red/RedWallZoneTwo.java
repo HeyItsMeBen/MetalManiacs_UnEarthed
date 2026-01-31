@@ -69,7 +69,7 @@ public class RedWallZoneTwo extends LinearOpMode {
         aprilTagTurretAim.stopTurret();
 
         Actions.runBlocking(
-                PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
         );
 
         Actions.runBlocking(
