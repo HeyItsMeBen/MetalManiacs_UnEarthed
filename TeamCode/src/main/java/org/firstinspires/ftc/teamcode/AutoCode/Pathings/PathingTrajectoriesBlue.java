@@ -92,10 +92,6 @@ public class PathingTrajectoriesBlue {
 
     }
 
-    public static Action fire(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
-        return new PathingActions.firingSequence(intake, flywheel, wheels, distance);
-    }
-
     //done
     public static Action firingPositionZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel) {
 
@@ -134,6 +130,10 @@ public class PathingTrajectoriesBlue {
                 .strafeToLinearHeading(new Vector2d(-15, -47), Math.toRadians(150), maxSpeedConstraint)
 
                 .build();
+    }
+
+    public static Action fire(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
+        return new PathingActions.firingSequence(intake, flywheel, wheels, distance);
     }
 
     //done
