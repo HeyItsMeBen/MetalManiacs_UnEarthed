@@ -221,7 +221,8 @@ public class Competition_DriveCode extends OpMode {
 
         //April tag stuff
         if (USE_WEBCAM) {
-            //setManualExposure(6, 50);  // Use low exposure time to reduce motion blur
+            //NOTE: gain is 50 for comp field, but 200 for practice field
+            setManualExposure(6, 50);  // Use low exposure time to reduce motion blur
         }
 
         // Bulk reading for Optimization
@@ -428,11 +429,7 @@ public class Competition_DriveCode extends OpMode {
                     if (launchTimer.milliseconds() > 500) {
                         // Start feeding first ball
                         outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
-                        if (toFeet(toInches(autoAim.distanceToTagTelemetry)) > 8.0){
-                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw() * 1;
-                        } else {
-                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw() * .9;
-                        }
+                        maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw();
 //                            if (ballsFed > 0) {
 //                                intake.setIntakePower(1);
 //                            }
@@ -483,14 +480,14 @@ public class Competition_DriveCode extends OpMode {
                         if (launchTimer.milliseconds() > 1000) { // Originally 1500
                             // Ready for next ball
                             outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
-                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*1;
+                            maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw();
                             launchState = LaunchState.FEEDING_BALL;
                             launchTimer.reset();
                         }
                     }else if (launchTimer.milliseconds() > 500) { // Originally 1500
                         // Ready for next ball
                         outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
-                        maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw()*.9;
+                        maintainOuttakeSpeed = flywheels.getFlywheelSpeedRaw();
                         launchState = LaunchState.FEEDING_BALL;
                         launchTimer.reset();
 
