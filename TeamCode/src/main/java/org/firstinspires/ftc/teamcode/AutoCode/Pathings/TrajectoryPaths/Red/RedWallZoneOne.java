@@ -82,8 +82,24 @@ public class RedWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(
-                                drive, drive.localizer.getPose(), "PPG", intake
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake
+                        )
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
+                        )
+                )
+        );
+
+        Actions.runBlocking(
+                PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PGP", intake
                         )
                 )
         );
@@ -101,27 +117,7 @@ public class RedWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(
-                                drive, drive.localizer.getPose(), "PGP", intake
-                        )
-                )
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
-                        )
-                )
-        );
-
-        Actions.runBlocking(
-                PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(
-                                drive, drive.localizer.getPose(), "GPP", intake
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake
                         )
                 )
         );
