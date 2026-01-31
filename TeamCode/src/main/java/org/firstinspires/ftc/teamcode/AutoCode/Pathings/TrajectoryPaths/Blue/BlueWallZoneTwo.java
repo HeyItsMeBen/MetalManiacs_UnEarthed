@@ -61,7 +61,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
         while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
             distanceFromGoal = aprilTagTurretAim.update();
             if (distanceFromGoal == 0) {
-                distanceFromGoal = 2500;
+                distanceFromGoal = 1800;
             }
         }
         distanceFromGoal += 50;

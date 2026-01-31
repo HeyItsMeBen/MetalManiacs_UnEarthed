@@ -14,7 +14,7 @@ import java.lang.Math;
 
 public class PathingTrajectoriesBlue {
 
-    static double defaultVelocity = 90.0;
+    static double defaultVelocity = 100.0;
 
     static double defaultAngVelocity = Math.PI;
 
@@ -104,7 +104,7 @@ public class PathingTrajectoriesBlue {
 
                 .stopAndAdd(new PathingActions.stopIntake(intake))
 
-                .strafeToLinearHeading(new Vector2d(-15, -60), Math.toRadians(90), maxSpeedConstraint)
+                .strafeToLinearHeading(new Vector2d(-15, -55), Math.toRadians(90), maxSpeedConstraint)
 
                 .build();
     }
@@ -198,10 +198,8 @@ public class PathingTrajectoriesBlue {
 
         return drive.actionBuilder(currentPose)
 
-                .turnTo(180)
-                .turnTo(190)
                 .stopAndAdd(new PathingActions.runIntake(intake))
-                .strafeTo(new Vector2d(-65, -60), maxSpeedConstraint)
+                .splineTo(new Vector2d(-63, -58), Math.toRadians(180), maxSpeedConstraint)
 
                 .build();
     }
