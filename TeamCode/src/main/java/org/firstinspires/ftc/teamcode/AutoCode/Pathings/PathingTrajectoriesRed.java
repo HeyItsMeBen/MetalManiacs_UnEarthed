@@ -125,7 +125,7 @@ public class PathingTrajectoriesRed {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(18, 20), Math.toRadians(270))
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(50, 12, Math.toRadians(180)), Math.toRadians(180),
+                        .splineToLinearHeading(new Pose2d(48, 12, Math.toRadians(0)), Math.toRadians(0),
                                 new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
@@ -142,7 +142,7 @@ public class PathingTrajectoriesRed {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(18, -5), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(0)), Math.toRadians(0),
+                        .splineToLinearHeading(new Pose2d(48, -10, Math.toRadians(0)), Math.toRadians(0),
                                 new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
@@ -159,7 +159,7 @@ public class PathingTrajectoriesRed {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(50, -38, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
+                        .splineToLinearHeading(new Pose2d(48, -38, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
                                                 new AngularVelConstraint(defaultAngVelocity)
@@ -235,7 +235,7 @@ public class PathingTrajectoriesRed {
                 .stopAndAdd(new PathingActions.stopIntake(intake))
 
                 .setReversed(false)
-                .strafeTo(new Vector2d(30, -60), maxSpeedConstraint)
+                .strafeTo(new Vector2d(35, -60), maxSpeedConstraint)
 
                 .build();
     }

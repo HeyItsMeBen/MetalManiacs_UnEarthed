@@ -92,6 +92,12 @@ public class BlueGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
                         PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
@@ -104,6 +110,12 @@ public class BlueGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
                         PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
@@ -111,6 +123,12 @@ public class BlueGoalZoneOne extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         PathingTrajectoriesBlue.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
                 )
         );
 

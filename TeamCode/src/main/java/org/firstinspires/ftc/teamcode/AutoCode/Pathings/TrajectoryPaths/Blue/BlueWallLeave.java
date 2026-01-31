@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "[Competition] [Blue] Start at Blue Wall, Shoot from Zone One", group = "Autonomous")
+@Autonomous(name = "[Competition] [Blue] Start at Blue Wall, Leave", group = "Autonomous")
 public class BlueWallLeave extends LinearOpMode {
 
     Intake intake;

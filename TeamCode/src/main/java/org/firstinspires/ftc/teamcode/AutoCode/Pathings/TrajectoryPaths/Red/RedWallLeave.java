@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.AprilTagTurretAim;
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesBlue;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "[Competition] [Red] Start at Red Wall, Shoot from Zone One", group = "Autonomous")
+@Autonomous(name = "[Competition] [Red] Start at Red Wall, Leave", group = "Autonomous")
 public class RedWallLeave extends LinearOpMode {
 
     Intake intake;

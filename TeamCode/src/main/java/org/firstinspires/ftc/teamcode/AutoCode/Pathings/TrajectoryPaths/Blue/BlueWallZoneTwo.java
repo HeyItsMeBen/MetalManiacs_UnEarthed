@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.AprilTagTurretAim;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesBlue;
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;

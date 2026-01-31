@@ -12,7 +12,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.AprilTagTurretAim;
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesBlue;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
@@ -103,6 +102,13 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
+                        )
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
                         PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
@@ -115,6 +121,13 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
+                        )
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
                         PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
@@ -122,6 +135,13 @@ public class RedGoalZoneOne extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
+                        )
                 )
         );
 
