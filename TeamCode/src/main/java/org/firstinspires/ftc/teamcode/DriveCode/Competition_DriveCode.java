@@ -4,6 +4,7 @@ import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -197,10 +198,25 @@ public class Competition_DriveCode extends OpMode {
         if (USE_WEBCAM) {
             setManualExposure(6, 200);  // Use low exposure time to reduce motion blur
         }
+
+        // Bulk reading for Optimization
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+        // Bulk reading for Optimization
+
     }
 
     @Override
     public void loop() {
+
+        // Bulk reading for Optimization
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+        // Bulk reading for Optimization
 
         if (driver.wasJustPressed(GamepadKeys.Button.START)){
             teamColor = teamColor.equals("Red") ? "Blue" : teamColor.equals("Blue") ? "Red" : teamColor;
@@ -575,40 +591,13 @@ public class Competition_DriveCode extends OpMode {
 
         // LEDS
         boolean intakeOn = (intake.getIntakePower() >= 0.5);
-        if (lightTimer.milliseconds()>500){
+        if (lightTimer.milliseconds()>500) {
             lightTimer.reset();
             lights.updateStatus(targetFound, intakeOn, teamColor);
         }
 
-        //Telemetry
-        telemetry.addLine("-----HOW TO DRIVE FOR DUMMIES*-----");
-        telemetry.addLine("*No offense ;D");
-        telemetry.addLine("");
-        telemetry.addLine("-----Driver Controls-----");
-        telemetry.addLine("[MOVEMENT]");
-        telemetry.addLine("Y = reset Yaw");
-        telemetry.addLine("LEFT STICK = translation");
-        telemetry.addLine("RIGHT STICK = rotation");
-        telemetry.addLine("LEFT STICK DOWN = toggle field/robot centric drive mode");
-        telemetry.addLine("RIGHT STICK DOWN = toggle snap/relative rotation mode");
-        telemetry.addLine("DPAD UP = movement speed up");
-        telemetry.addLine("DPAD DOWN = movement speed down");
-        telemetry.addLine();
-        telemetry.addLine("[INTAKE]");
-        telemetry.addLine("LEFT BUMPER = reverse intake");
-        telemetry.addLine("RIGHT BUMPER = intake");
-        telemetry.addLine();
-        telemetry.addLine("[OUTTAKE]");
-        telemetry.addLine("RIGHT TRIGGER (hold) = charges up flywheels and launches");
-        telemetry.addLine("DPAD LEFT = turret left");
-        telemetry.addLine("DPAD RIGHT = turret right");
-        telemetry.addLine("X = reset turret position (reset at middle)");
-        telemetry.addLine("A = auto aim");
-        telemetry.addLine("");
-
         driver.readButtons();
         operator.readButtons();
-        //telemetry.update();
 
         // Frequency
 

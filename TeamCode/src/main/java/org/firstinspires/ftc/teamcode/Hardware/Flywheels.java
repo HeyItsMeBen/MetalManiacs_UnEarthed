@@ -65,6 +65,12 @@ public class Flywheels {
         //return optimalSpeed*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
     }
 
+    public double setFlywheelSpeedFromDistanceInInches(double distance){ //distance in feet from goal
+        double optimalSpeed = b + (m * distance);
+        setFlywheelSpeedRaw(optimalSpeed);
+        return optimalSpeed;
+        //return optimalSpeed*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
+    }
     public void stopFlywheel(){
         flywheel.setPower(0);
     }

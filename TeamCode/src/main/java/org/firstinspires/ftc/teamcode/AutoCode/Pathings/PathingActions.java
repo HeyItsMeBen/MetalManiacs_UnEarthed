@@ -67,17 +67,14 @@ public class PathingActions {
 
     public static class powerUpFlywheels implements Action {
         private final Flywheels flywheels;
-        private final int zone;
 
-        public powerUpFlywheels(Flywheels flywheels, int zone) {
+        public powerUpFlywheels(Flywheels flywheels) {
             this.flywheels = flywheels;
-            this.zone = zone;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            double launchDistance = (zone == 1) ? 4.9 : 12.8;
-            flywheels.launchFromDistance(launchDistance);
+            flywheels.setFlywheelSpeedRaw(1500);
             return false;
         }
     }
@@ -102,8 +99,7 @@ public class PathingActions {
         private final Intake intake;
         private final Transfer transfer;
         private final Flywheels flywheels;
-        private final int zone;
-        private final Telemetry telemetry;
+        private final double distance;
 
         private boolean initialized = false;
         private boolean flywheelIsReady = false;
@@ -115,20 +111,19 @@ public class PathingActions {
         private int timeBetweenLaunches = 525;
         private double launchDistance = 62; // in inches
 
-        public firingSequence(Intake intake, Flywheels flywheels, Transfer transfer, int launchZone, Telemetry telemetry) {
+        public firingSequence(Intake intake, Flywheels flywheels, Transfer transfer, double goalDistance) {
             this.intake = intake;
             this.flywheels = flywheels;
             this.transfer = transfer;
-            this.zone = launchZone;
-            this.telemetry = telemetry;
+            this.distance = goalDistance;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
             if (!initialized) {
-                launchDistance = (zone == 1) ? 62 : 114;
-                targetSpeed = flywheels.launchFromDistance(launchDistance);
+
+                targetSpeed = flywheels.setFlywheelSpeedFromDistanceInInches(distance);
 
                 spinUpStartTime = System.currentTimeMillis();
                 lastShotTime = spinUpStartTime;
@@ -137,8 +132,7 @@ public class PathingActions {
 
             flywheelIsReady=false;
 
-//            autoAim.calculateEverything(desiredTag);
-            targetSpeed = flywheels.launchFromDistance(launchDistance); //Use auto-aim to calculate and set the flywheel velocity.
+            flywheels.setFlywheelSpeedFromDistanceInInches(launchDistance); //Use auto-aim to calculate and set the flywheel velocity.
 
             //wait 1 second to startup flywheels
             ElapsedTime transferTimer= new ElapsedTime();
@@ -149,7 +143,7 @@ public class PathingActions {
                     flywheelIsReady = true;
                 }
             }
-            double outtakeSpeedBeforeDrop = flywheels.getFlywheelRPM();
+            double outtakeSpeedBeforeDrop = flywheels.getFlywheelSpeedRaw();
 
             //send the balls into the flywheel to launch
 
@@ -159,9 +153,10 @@ public class PathingActions {
                 }
                 transfer.setTransferPower(1);
                 long startTime = System.currentTimeMillis();
-                long timeout = 2000;
+                long timeout = 3000;
+
                 while (true) {
-                    if (flywheels.getFlywheelRPM() < outtakeSpeedBeforeDrop - 150) {
+                    if (flywheels.getFlywheelSpeedRaw() < outtakeSpeedBeforeDrop - 150) {
                         break;
                     }
                     if (System.currentTimeMillis() - startTime > timeout) {

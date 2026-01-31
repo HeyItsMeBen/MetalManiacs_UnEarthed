@@ -30,7 +30,6 @@ Configurations:
 3: backRight
  */
 
-@Disabled
 @Config
 @Autonomous(name = "VelocityToDistance_Regression", group = "Linear OpMode")
 public class VelocityToDistance_Regression extends LinearOpMode {

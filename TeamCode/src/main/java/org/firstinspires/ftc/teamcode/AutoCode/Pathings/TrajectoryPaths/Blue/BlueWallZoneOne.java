@@ -29,10 +29,12 @@ public class BlueWallZoneOne extends LinearOpMode {
     AprilTagTurretAim aprilTagTurretAim;
     ElapsedTime turretTimer;
 
+    public double distanceFromGoal = 1650;
+
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(-15, -60, Math.toRadians(180)); // x, y, heading in radians
+        Pose2d startPose = new Pose2d(-15, -60, Math.toRadians(180)); // x, y, heading in radians //180
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -53,18 +55,21 @@ public class BlueWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.initialMovementFromWallZoneOne(drive, startPose, intake, flywheels, transfer, telemetry)
+                        PathingTrajectoriesBlue.initialMovementFromWallZoneOne(drive, startPose, intake, flywheels)
                 )
         );
 
         turretTimer = new ElapsedTime();
         while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
-            aprilTagTurretAim.update();
+            distanceFromGoal = aprilTagTurretAim.update();
+            if (distanceFromGoal == 0) {
+                distanceFromGoal = 1650;
+            }
         }
         aprilTagTurretAim.stopTurret();
 
         Actions.runBlocking(
-                PathingTrajectoriesBlue.firstLaunch(drive, drive.localizer.getPose(), intake, flywheels, transfer, telemetry)
+                PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
         );
 
         Actions.runBlocking(
@@ -75,8 +80,12 @@ public class BlueWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, transfer, telemetry)
+                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
                 )
+        );
+
+        Actions.runBlocking(
+                PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
         );
 
         Actions.runBlocking(
@@ -87,8 +96,12 @@ public class BlueWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, transfer, telemetry)
+                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
                 )
+        );
+
+        Actions.runBlocking(
+                PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
         );
 
         Actions.runBlocking(
@@ -99,8 +112,12 @@ public class BlueWallZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels, transfer, telemetry)
+                        PathingTrajectoriesBlue.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
                 )
+        );
+
+        Actions.runBlocking(
+                PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
         );
 
         Actions.runBlocking(
