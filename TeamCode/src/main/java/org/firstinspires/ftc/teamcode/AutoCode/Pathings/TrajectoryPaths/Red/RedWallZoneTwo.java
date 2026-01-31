@@ -87,20 +87,32 @@ public class RedWallZoneTwo extends LinearOpMode {
 
 //        Actions.runBlocking(
 //                new SequentialAction(
-//                        PathingTrajectoriesRed.grabThree(drive, drive.localizer.getPose(), intake)
+//                        PathingTrajectoriesRed.collectArtifactsZoneTwo(drive, startPose, intake)
 //                )
 //        );
 //
 //        Actions.runBlocking(
 //                new SequentialAction(
-//                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
+//                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
 //                )
 //        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose(), flywheels, intake)
-                )
-        );
-    }
-}
+//
+////        Actions.runBlocking(
+////                new SequentialAction(
+////                        PathingTrajectoriesRed.grabThree(drive, drive.localizer.getPose(), intake)
+////                )
+////        );
+////
+////        Actions.runBlocking(
+////                new SequentialAction(
+////                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, startPose, intake, flywheels, transfer, telemetry)
+////                )
+////        );
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose(), flywheels, intake)
+//                )
+//        );
+//    }
+//}
