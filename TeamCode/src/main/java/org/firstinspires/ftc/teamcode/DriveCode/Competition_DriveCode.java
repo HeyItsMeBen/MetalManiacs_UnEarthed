@@ -630,8 +630,7 @@ public class Competition_DriveCode extends OpMode {
         double loopTime = newTime - oldTime;
         double frequency = 1/loopTime;
         oldTime = newTime;
-
-//        telemetry.addData("LoopTime:", frequency);
+        telemetry.addData("LoopTime:", frequency);
         telemetry.update();
 
         // Frequency

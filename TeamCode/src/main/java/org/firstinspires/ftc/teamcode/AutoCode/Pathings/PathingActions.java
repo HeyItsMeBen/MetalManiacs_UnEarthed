@@ -171,7 +171,6 @@ public class PathingActions {
                 }
             }
 
-            intake.stopIntake();
             transfer.stopTransfer();
             return false;
 
