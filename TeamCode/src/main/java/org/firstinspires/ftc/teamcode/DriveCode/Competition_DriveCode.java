@@ -1,3 +1,28 @@
+/**
+<DRIVER MANUAL FOR DUMMIES>
+*No offense ;)
+--DRIVER CONTROLS--
+[MOVEMENT]
+Y = reset Yaw
+LEFT STICK = translation
+RIGHT STICK = rotation
+LEFT STICK DOWN = toggle field/robot centric drive mode
+RIGHT STICK DOWN = toggle snap/relative rotation mode
+DPAD UP = movement speed up
+DPAD DOWN = movement speed down
+
+[INTAKE]
+LEFT BUMPER = reverse intake
+RIGHT BUMPER = intake
+
+[OUTTAKE]
+RIGHT TRIGGER (hold) = charges up flywheels and launches
+DPAD LEFT = turret left
+DPAD RIGHT = turret right
+X = reset turret position (reset at middle)
+A = auto aim
+ */
+
 package org.firstinspires.ftc.teamcode.DriveCode;
 
 import static java.lang.Thread.sleep;
@@ -271,7 +296,7 @@ public class Competition_DriveCode extends OpMode {
 //        boolean visionAssistEnabled = driver.getButton(GamepadKeys.Button.DPAD_UP);
 
         telemetry.addLine("-----Robot Information-----");
-        telemetry.addLine("Movement");
+//        telemetry.addLine("Movement");
         telemetry.addData("Speed multiplier", speedMultiplier);
         if (useSnapRotation) {
             // SNAP-TO-HEADING MODE
@@ -323,23 +348,23 @@ public class Competition_DriveCode extends OpMode {
             telemetry.addLine("DRIVE: Robot-Relative");
         }
         // Display current heading
-        double currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        telemetry.addData("Current Heading", Math.toDegrees(currentHeading));
+//        double currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        telemetry.addData("Current Heading", Math.toDegrees(currentHeading));
 
-        telemetry.addLine();
-        telemetry.addLine("Turret");
+//        telemetry.addLine();
+//        telemetry.addLine("Turret");
         telemetry.addData("Auto aiming", shouldAutoAim);
         telemetry.addData("Sees april tag", targetFound);
-        telemetry.addData("Turret rotation", turret.getTurretPosition());
-        telemetry.addData("Active flywheel speed (t/s)", flywheels.getFlywheelSpeedRaw());
+//        telemetry.addData("Turret rotation", turret.getTurretPosition());
+//        telemetry.addData("Active flywheel speed (t/s)", flywheels.getFlywheelSpeedRaw());
         telemetry.addData("Goal distance", toFeet(toInches(autoAim.distanceToTagTelemetry)));
 
         //practically irrelevant data
-        telemetry.addLine("");
-        telemetry.addLine("Extra:");
-        telemetry.addData("Extra outtake speed", extraOuttakeSpeed);
-        telemetry.addData("Outtake forward", outtakeForward);
-        telemetry.addLine("");
+//        telemetry.addLine("");
+//        telemetry.addLine("Extra:");
+//        telemetry.addData("Extra outtake speed", extraOuttakeSpeed);
+//        telemetry.addData("Outtake forward", outtakeForward);
+//        telemetry.addLine("");
 
 
         // Listen for button presses
@@ -503,14 +528,14 @@ public class Competition_DriveCode extends OpMode {
             //maintainOuttakeSpeed=750;   //if auto-aiming, set the default to the normal value
         }
         // Add telemetry to see what's happening
-        telemetry.addLine();
-        telemetry.addLine("-----LAUNCH STATUS-----");
-        telemetry.addData("State", launchState);
-        telemetry.addData("Balls Fed", ballsFed);
-        telemetry.addData("Timer (ms)", launchTimer.milliseconds());
-        telemetry.addData("Current Speed (t/s)", flywheels.getFlywheelSpeedRaw());
-        telemetry.addData("Target Speed (t/s)", targetSpeed);
-        telemetry.addLine();
+//        telemetry.addLine();
+//        telemetry.addLine("-----LAUNCH STATUS-----");
+//        telemetry.addData("State", launchState);
+//        telemetry.addData("Balls Fed", ballsFed);
+//        telemetry.addData("Timer (ms)", launchTimer.milliseconds());
+//        telemetry.addData("Current Speed (t/s)", flywheels.getFlywheelSpeedRaw());
+//        telemetry.addData("Target Speed (t/s)", targetSpeed);
+//        telemetry.addLine();
 //
 //        if (operator.wasJustPressed((GamepadKeys.Button.RIGHT_BUMPER))) {
 //            extraOuttakeSpeed += 25;    //0.466666667
@@ -556,7 +581,7 @@ public class Competition_DriveCode extends OpMode {
                 autoAim.calculateEverything(desiredTag);
                 isCorrectingBoundary = false;
                 turret.setMotorPower(autoAim.turn);
-                telemetry.addLine();
+//                telemetry.addLine();
 
                 // Reset the timer whenever we see the target
                 if (!wasTargetFoundLastFrame) {
@@ -583,8 +608,8 @@ public class Competition_DriveCode extends OpMode {
                 } else {
                     // Still within wait period - hold position
                     turret.setMotorPower(0);
-                    telemetry.addData("Target lost, waiting", "%.1f seconds",
-                            TARGET_LOST_DELAY - targetLostTimer.seconds());
+//                    telemetry.addData("Target lost, waiting", "%.1f seconds",
+//                            TARGET_LOST_DELAY - targetLostTimer.seconds());
                 }
             }
         }
@@ -606,7 +631,7 @@ public class Competition_DriveCode extends OpMode {
         double frequency = 1/loopTime;
         oldTime = newTime;
 
-        telemetry.addData("LoopTime:", frequency);
+//        telemetry.addData("LoopTime:", frequency);
         telemetry.update();
 
         // Frequency
@@ -707,11 +732,11 @@ public class Competition_DriveCode extends OpMode {
                     break;  // don't look any further.
                 } else {
                     // This tag is in the library, but we do not want to track it right now.
-                    telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+//                    telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
                 }
             } else {
                 // This tag is NOT in the library, so we don't have enough information to track to it.
-                telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+//                telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
             }
         }
     }
