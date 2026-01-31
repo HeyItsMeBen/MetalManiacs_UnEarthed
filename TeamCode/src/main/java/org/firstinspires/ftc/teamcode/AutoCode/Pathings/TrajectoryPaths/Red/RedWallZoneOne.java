@@ -8,12 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesBlue;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.AprilTagTurretAim;
@@ -27,6 +29,7 @@ public class RedWallZoneOne extends LinearOpMode {
     Transfer transfer;
     Turret turret;
     AutoAim autoAim;
+    Lights lights;
 
     AprilTagTurretAim aprilTagTurretAim;
     ElapsedTime turretTimer;
@@ -44,8 +47,9 @@ public class RedWallZoneOne extends LinearOpMode {
         transfer = new Transfer(hardwareMap);
         turret = new Turret(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
+        lights = new Lights(hardwareMap);
 
-        aprilTagTurretAim = new AprilTagTurretAim(this, turret, autoAim, true, 24, 20);
+        aprilTagTurretAim = new AprilTagTurretAim(this, turret, autoAim, true, 24, 20, lights);
 
         aprilTagTurretAim.init();
 
@@ -71,6 +75,7 @@ public class RedWallZoneOne extends LinearOpMode {
             }
         }
         aprilTagTurretAim.stopTurret();
+        lights.setAprilTagStatus(false);
 
         Actions.runBlocking(
                 PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)

@@ -187,9 +187,9 @@ public class PathingTrajectoriesBlue {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(-18, -28), Math.toRadians(270), maxSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(-18, -30), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(-58, -36, Math.toRadians(180)), Math.toRadians(180), new MinVelConstraint(
+                        .splineToLinearHeading(new Pose2d(-58, -38, Math.toRadians(180)), Math.toRadians(180), new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
                                                 new AngularVelConstraint(defaultAngVelocity)

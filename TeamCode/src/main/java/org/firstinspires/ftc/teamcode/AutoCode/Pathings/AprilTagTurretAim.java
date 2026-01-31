@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -20,6 +21,7 @@ public class AprilTagTurretAim {
     private final LinearOpMode opMode;
     private final Turret turret;
     private final AutoAim autoAim;
+    private final Lights light;
 
     private VisionPortal visionPortal;
     private AprilTagProcessor aprilTag;
@@ -31,13 +33,15 @@ public class AprilTagTurretAim {
     private final int tag1;
     private final int tag2;
 
-    public AprilTagTurretAim( LinearOpMode opMode, Turret turret, AutoAim autoAim, boolean useWebcam, int tag1, int tag2) {
+    public AprilTagTurretAim(LinearOpMode opMode, Turret turret, AutoAim autoAim, boolean useWebcam, int tag1, int tag2, Lights lights) {
         this.opMode = opMode;
         this.turret = turret;
         this.autoAim = autoAim;
+        this.light = lights;
         this.useWebcam = useWebcam;
         this.tag1 = tag1;
         this.tag2 = tag2;
+
     }
 
     public void init() {
@@ -90,6 +94,7 @@ public class AprilTagTurretAim {
         if (targetFound) {
             autoAim.calculateEverything(desiredTag);
             turret.setMotorPower(autoAim.turn);
+            light.setAprilTagStatus(true);
             return toInches(autoAim.launchPointToGoalCenterX_Distance);
         } else {
             turret.setMotorPower(0);

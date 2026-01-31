@@ -159,7 +159,7 @@ public class PathingTrajectoriesRed {
                         .setReversed(false)
                         .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270), maxSpeedConstraint)
                         .stopAndAdd(new PathingActions.runIntake(intake))
-                        .splineToLinearHeading(new Pose2d(58, -36, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
+                        .splineToLinearHeading(new Pose2d(58, -38, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
                                         java.util.Arrays.asList(
                                                 new TranslationalVelConstraint(30),
                                                 new AngularVelConstraint(defaultAngVelocity)
