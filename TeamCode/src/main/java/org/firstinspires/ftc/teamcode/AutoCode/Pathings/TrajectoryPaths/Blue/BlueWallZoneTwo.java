@@ -64,6 +64,15 @@ public class BlueWallZoneTwo extends LinearOpMode {
                 )
         );
 
+        turretTimer = new ElapsedTime();
+        while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
+            distanceFromGoal = aprilTagTurretAim.update();
+            if (distanceFromGoal == 0) {
+                distanceFromGoal = 1650;
+            }
+        }
+        aprilTagTurretAim.stopTurret();
+
         Actions.runBlocking(
                 new SequentialAction(
                         PathingTrajectoriesBlue.collectArtifactsZoneTwo(drive, startPose, intake)

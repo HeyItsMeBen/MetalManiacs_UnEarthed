@@ -74,6 +74,15 @@ public class RedGoalZoneOne extends LinearOpMode {
                 )
         );
 
+        turretTimer = new ElapsedTime();
+        while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
+            distanceFromGoal = aprilTagTurretAim.update();
+            if (distanceFromGoal == 0) {
+                distanceFromGoal = 1650;
+            }
+        }
+        aprilTagTurretAim.stopTurret();
+
         Actions.runBlocking(
                 new SequentialAction(
                         PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake)
