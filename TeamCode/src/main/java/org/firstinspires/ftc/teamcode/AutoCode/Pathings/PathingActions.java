@@ -147,13 +147,13 @@ public class PathingActions {
 
             //send the balls into the flywheel to launch
 
-            for (int i = 0; i<5; i++) {
+            for (int i = 0; i<4; i++) {
                 if (i>0){
                     intake.setIntakePower(1);
                 }
                 transfer.setTransferPower(1);
                 long startTime = System.currentTimeMillis();
-                long timeout = 3000;
+                long timeout = 1500;
 
                 while (true) {
                     if (flywheels.getFlywheelSpeedRaw() < outtakeSpeedBeforeDrop - 150) {
@@ -165,7 +165,7 @@ public class PathingActions {
                 }
                 transfer.setTransferPower(0.2);
                 try {
-                    sleep(300);
+                    sleep(250);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

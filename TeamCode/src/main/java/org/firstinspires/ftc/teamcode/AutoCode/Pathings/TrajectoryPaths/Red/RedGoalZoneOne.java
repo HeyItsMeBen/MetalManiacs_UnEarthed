@@ -41,7 +41,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
     AprilTagTurretAim aprilTagTurretAim;
     ElapsedTime turretTimer;
-    public double distanceFromGoal = 1650;
+    public double distanceFromGoal = 1750;
 
     @Override
     public void runOpMode() {
@@ -78,7 +78,7 @@ public class RedGoalZoneOne extends LinearOpMode {
         while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
             distanceFromGoal = aprilTagTurretAim.update();
             if (distanceFromGoal == 0) {
-                distanceFromGoal = 1650;
+                distanceFromGoal = 1750;
             }
         }
         aprilTagTurretAim.stopTurret();
