@@ -20,7 +20,7 @@ public class Flywheels {
     public double p = 100;
     //rpm = m * distance + b
     double m = 6.68363;
-    double b = 922.48777+100;
+    double b = 922.48777+115;
 
     //Outtake subsystem
     public Flywheels(HardwareMap hMap) {
@@ -35,13 +35,13 @@ public class Flywheels {
 
     }
     public void setFlywheelSpeedRaw(double ticksPerSecond){
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
-        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+//        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
+//        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         flywheel.setVelocity(ticksPerSecond);
     }
     public void setFlywheelRPM(double givenRPM){
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
-        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+//        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
+//        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         flywheel.setVelocity(tickPerRevolution*(givenRPM/60));
     }
     public double getFlywheelSpeedRaw(){
@@ -54,7 +54,7 @@ public class Flywheels {
 
     public double launchFromDistance(double distance, double extraSpeed){ //distance in feet from goal
         double optimalSpeed = b+ (m * distance * 12);
-        
+
         if (distance > 8.0){
             optimalSpeed += 50;
         }

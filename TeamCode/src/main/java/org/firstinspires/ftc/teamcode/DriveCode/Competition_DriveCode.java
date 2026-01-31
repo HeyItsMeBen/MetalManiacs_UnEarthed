@@ -236,13 +236,6 @@ public class Competition_DriveCode extends OpMode {
     @Override
     public void loop() {
 
-        // Bulk reading for Optimization
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs) {
-            hub.clearBulkCache();
-        }
-        // Bulk reading for Optimization
-
         if (driver.wasJustPressed(GamepadKeys.Button.START)){
             teamColor = teamColor.equals("Red") ? "Blue" : teamColor.equals("Blue") ? "Red" : teamColor;
         }
@@ -630,10 +623,18 @@ public class Competition_DriveCode extends OpMode {
         double loopTime = newTime - oldTime;
         double frequency = 1/loopTime;
         oldTime = newTime;
+
         telemetry.addData("LoopTime:", frequency);
         telemetry.update();
 
         // Frequency
+
+        // Bulk reading for Optimization
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+        // Bulk reading for Optimization
 
     }
 
@@ -644,7 +645,7 @@ public class Competition_DriveCode extends OpMode {
 
     // Safe motor power setter to prevent floodgate cutout issues
     void setSafePower(DcMotor motor, double targetPower) {
-        final double SLEW_RATE = 0.2;
+        final double SLEW_RATE = 0.5;
         double currentPower = motor.getPower();
         double desiredChange = targetPower - currentPower;
         double limitedChange = Math.max(-SLEW_RATE, Math.min(desiredChange, SLEW_RATE));
