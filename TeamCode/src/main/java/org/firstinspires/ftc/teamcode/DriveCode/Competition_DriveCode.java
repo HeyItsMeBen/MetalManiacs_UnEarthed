@@ -221,7 +221,7 @@ public class Competition_DriveCode extends OpMode {
 
         //April tag stuff
         if (USE_WEBCAM) {
-            setManualExposure(6, 50);  // Use low exposure time to reduce motion blur
+            //setManualExposure(6, 50);  // Use low exposure time to reduce motion blur
         }
 
         // Bulk reading for Optimization
