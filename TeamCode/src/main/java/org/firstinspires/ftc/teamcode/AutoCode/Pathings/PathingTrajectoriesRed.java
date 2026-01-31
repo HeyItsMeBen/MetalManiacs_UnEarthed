@@ -14,7 +14,7 @@ import java.lang.Math;
 
 public class PathingTrajectoriesRed {
 
-    static double defaultVelocity = 80.0;
+    static double defaultVelocity = 90.0;
 
     static double defaultAngVelocity = Math.PI;
 
@@ -39,7 +39,7 @@ public class PathingTrajectoriesRed {
 
     }
 
-    public static Action initialMovementFromGoalZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
+    public static Action initialMovementFromGoalZoneOne(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel) {
 
         MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
                 java.util.Arrays.asList(
@@ -98,7 +98,7 @@ public class PathingTrajectoriesRed {
 
                 .stopAndAdd(new PathingActions.maintainIntake(intake))
 
-                .strafeToLinearHeading(new Vector2d(15, -47), Math.toRadians(30), maxSpeedConstraint)
+                .strafeToLinearHeading(new Vector2d(15, -60), Math.toRadians(90), maxSpeedConstraint)
 
                 .build();
     }
@@ -190,8 +190,10 @@ public class PathingTrajectoriesRed {
 
         return drive.actionBuilder(currentPose)
 
+                .turnTo(0)
+                .turnTo(350)
                 .stopAndAdd(new PathingActions.runIntake(intake))
-                .strafeToLinearHeading(new Vector2d(65, -55), Math.toRadians(350), maxSpeedConstraint)
+                .strafeTo(new Vector2d(65, -60), maxSpeedConstraint)
 
                 .build();
     }
@@ -233,7 +235,7 @@ public class PathingTrajectoriesRed {
                 .stopAndAdd(new PathingActions.stopIntake(intake))
 
                 .setReversed(false)
-                .splineTo(new Vector2d(20, -35), Math.toRadians(270), maxSpeedConstraint)
+                .strafeTo(new Vector2d(30, -60), maxSpeedConstraint)
 
                 .build();
     }
@@ -253,7 +255,7 @@ public class PathingTrajectoriesRed {
                 .stopAndAdd(new PathingActions.stopIntake(intake))
 
                 .setReversed(false)
-                .strafeToLinearHeading(new Vector2d(20, -35), Math.toRadians(0), maxSpeedConstraint)
+                .strafeTo(new Vector2d(30, -60), maxSpeedConstraint)
 
                 .build();
     }

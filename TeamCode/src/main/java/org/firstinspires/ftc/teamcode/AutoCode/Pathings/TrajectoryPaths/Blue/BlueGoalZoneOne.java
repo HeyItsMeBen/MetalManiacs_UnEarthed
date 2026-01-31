@@ -59,7 +59,7 @@ public class BlueGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                        PathingTrajectoriesBlue.initialMovementFromGoalZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
                 )
         );
 
@@ -71,6 +71,12 @@ public class BlueGoalZoneOne extends LinearOpMode {
             }
         }
         aprilTagTurretAim.stopTurret();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                )
+        );
 
         Actions.runBlocking(
                 new SequentialAction(

@@ -70,7 +70,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                        PathingTrajectoriesRed.initialMovementFromGoalZoneOne(drive, drive.localizer.getPose(), intake, flywheels)
                 )
         );
 
@@ -82,6 +82,12 @@ public class RedGoalZoneOne extends LinearOpMode {
             }
         }
         aprilTagTurretAim.stopTurret();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                )
+        );
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -97,7 +103,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
 
@@ -109,7 +115,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
 
@@ -121,7 +127,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
 
