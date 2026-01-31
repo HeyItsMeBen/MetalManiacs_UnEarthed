@@ -61,10 +61,9 @@ public class RedWallZoneTwo extends LinearOpMode {
         while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
             distanceFromGoal = aprilTagTurretAim.update();
             if (distanceFromGoal == 0) {
-                distanceFromGoal = 1800;
+                distanceFromGoal = 23;
             }
         }
-        distanceFromGoal += 50;
         aprilTagTurretAim.stopTurret();
 
         Actions.runBlocking(

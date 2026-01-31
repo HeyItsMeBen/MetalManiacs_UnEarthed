@@ -352,6 +352,7 @@ public class Competition_DriveCode extends OpMode {
 //        telemetry.addData("Turret rotation", turret.getTurretPosition());
 //        telemetry.addData("Active flywheel speed (t/s)", flywheels.getFlywheelSpeedRaw());
         telemetry.addData("Goal distance", toFeet(toInches(autoAim.distanceToTagTelemetry)));
+        telemetry.addData("Target Speed (t/s)", flywheels.getFlywheelSpeedRaw());
 
         //practically irrelevant data
 //        telemetry.addLine("");

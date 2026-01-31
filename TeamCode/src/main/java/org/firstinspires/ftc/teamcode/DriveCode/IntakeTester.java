@@ -6,21 +6,21 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
-@Disabled
-@TeleOp (name="Intake Tester", group="test")
+@TeleOp (name="New Flywheel Tester", group="test")
 public class IntakeTester extends LinearOpMode {
 
     public GamepadEx gamepad;
 
     Intake intake;
 
-    public DcMotor transfer = null;
+    public DcMotorEx transfer = null;
     public Servo trapdoor = null;
     public int rpm = 3000;
     public double speed = 0.5;
@@ -34,8 +34,9 @@ public class IntakeTester extends LinearOpMode {
 
 //        DcMotor Motor = hardwareMap.get(DcMotor.class, "Intake");
 
-        transfer = hardwareMap.get(DcMotor.class, "transfer");
-        trapdoor = hardwareMap.get(Servo.class, "trapdoor");
+        transfer = hardwareMap.get(DcMotorEx.class, "flywheel");
+//        trapdoor = hardwareMap.get(Servo.class, "trapdoor");
+        transfer.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intake = new Intake(hardwareMap);
 
@@ -48,15 +49,7 @@ public class IntakeTester extends LinearOpMode {
 
         //executing
         while (opModeIsActive()) {
-            if (gamepad.getLeftY() > 0) {
-                intake.runIntakeFullPower();
-                transfer.setPower(1);
-            } else if (gamepad.getLeftY() < 0) {
-                intake.reverseIntake();
-                transfer.setPower(-1);
-            }
-            intake.stopIntake();
-            transfer.setPower(0);
+            transfer.setVelocity(50);
 
 //
 //            if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
@@ -70,11 +63,11 @@ public class IntakeTester extends LinearOpMode {
                 flywheel.stopFlywheel();
             }
 
-            if (gamepad.getButton(GamepadKeys.Button.A)){
-                trapdoor.setPosition(0.3);
-            }else{
-                trapdoor.setPosition(.1);
-            }
+//            if (gamepad.getButton(GamepadKeys.Button.A)){
+//                trapdoor.setPosition(0.3);
+//            }else{
+//                trapdoor.setPosition(.1);
+//            }
 
 
 //            rpm += (int) (gamepad.getRightY()*10);
