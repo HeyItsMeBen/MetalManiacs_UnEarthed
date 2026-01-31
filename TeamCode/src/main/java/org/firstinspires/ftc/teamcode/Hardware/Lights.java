@@ -125,6 +125,21 @@ public class Lights {
         }
     }
 
+    public void Light_Team_Color(String color){
+        // Team color LEDs (LEDs 24-35) - displays team color
+        Color teamColorDisplay = Color.RED; // Default
+        if (color.equals("Blue")) {
+            teamColorDisplay = Color.BLUE;
+        }
+
+        PrismAnimations.Solid teamColorAnimation = new PrismAnimations.Solid(
+                teamColorDisplay,
+                TEAM_COLOR_START_LED,
+                TEAM_COLOR_START_LED + TEAM_COLOR_TOTAL_LEDS - 1
+        );
+        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_2, teamColorAnimation);
+    }
+
     public void Light_Sequence(String sequence){
         if (!canUpdate() || sequence.equals(lastSequence)) return; // Skip if already showing
 

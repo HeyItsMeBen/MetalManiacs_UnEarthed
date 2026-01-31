@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
@@ -26,6 +27,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
     Transfer transfer;
     Turret turret;
     AutoAim autoAim;
+    Lights lights;
 
     AprilTagTurretAim aprilTagTurretAim;
     ElapsedTime turretTimer;
@@ -43,8 +45,9 @@ public class BlueWallZoneTwo extends LinearOpMode {
         transfer = new Transfer(hardwareMap);
         turret = new Turret(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
+        lights = new Lights(hardwareMap);
 
-        aprilTagTurretAim = new AprilTagTurretAim(this, turret, autoAim, true, 24, 20);
+        aprilTagTurretAim = new AprilTagTurretAim(this, turret, autoAim, true, 24, 20,lights);
 
         aprilTagTurretAim.init();
 
@@ -53,8 +56,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
 
         aprilTagTurretAim.waitForStreaming();
         aprilTagTurretAim.setManualExposure(6, 250);
-
-        waitForStart();
+        lights.Light_Team_Color("Blue");
 
         Actions.runBlocking(
                 new SequentialAction(

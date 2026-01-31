@@ -58,6 +58,7 @@ public class RedWallZoneOne extends LinearOpMode {
 
         aprilTagTurretAim.waitForStreaming();
         aprilTagTurretAim.setManualExposure(6, 250);
+        lights.Light_Team_Color("Red");
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -75,11 +76,12 @@ public class RedWallZoneOne extends LinearOpMode {
             }
         }
         aprilTagTurretAim.stopTurret();
-        lights.setAprilTagStatus(false);
 
         Actions.runBlocking(
                 PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
         );
+//        lights.setAprilTagStatus(false);
+
 
         Actions.runBlocking(
                 new SequentialAction(
