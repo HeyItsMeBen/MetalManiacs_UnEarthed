@@ -256,7 +256,7 @@ public class PathingTrajectoriesRed {
                 .stopAndAdd(new PathingActions.stopIntake(intake))
 
                 .setReversed(false)
-                .strafeTo(new Vector2d(33, -60), maxSpeedConstraint)
+                .strafeTo(new Vector2d(35, -60), maxSpeedConstraint)
 
                 .build();
     }

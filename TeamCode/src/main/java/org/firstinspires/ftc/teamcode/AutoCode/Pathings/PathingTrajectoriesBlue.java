@@ -112,6 +112,9 @@ public class PathingTrajectoriesBlue {
     public static Action fire(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
         return new PathingActions.firingSequence(intake, flywheel, wheels, distance);
     }
+    public static Action fireFar(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
+        return new PathingActions.firingSequenceFar(intake, flywheel, wheels, distance);
+    }
 
     //done
     public static Action PatternCollection(MecanumDrive drive, Pose2d currentPose, String Pattern, Intake intake) {
@@ -264,7 +267,7 @@ public class PathingTrajectoriesBlue {
                 .stopAndAdd(new PathingActions.stopIntake(intake))
 
                 .setReversed(false)
-                .strafeTo(new Vector2d(-30, -60), maxSpeedConstraint)
+                .strafeTo(new Vector2d(-35, -60), maxSpeedConstraint)
 
                 .build();
     }

@@ -69,7 +69,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                        PathingTrajectoriesBlue.fireFar(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
 
@@ -88,7 +88,7 @@ public class BlueWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+                        PathingTrajectoriesBlue.fireFar(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
                 )
         );
 
@@ -104,24 +104,24 @@ public class BlueWallZoneTwo extends LinearOpMode {
 //                )
 //        );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesBlue.collectArtifactsZoneTwo(drive, startPose, intake)
-                )
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesBlue.firingPositionZoneTwo(drive, drive.localizer.getPose(), intake, flywheels
-                        )
-                )
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesBlue.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
-                )
-        );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesBlue.collectArtifactsZoneTwo(drive, startPose, intake)
+//                )
+//        );
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesBlue.firingPositionZoneTwo(drive, drive.localizer.getPose(), intake, flywheels
+//                        )
+//                )
+//        );
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        PathingTrajectoriesBlue.fireFar(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
+//                )
+//        );
 
         Actions.runBlocking(
                 new SequentialAction(

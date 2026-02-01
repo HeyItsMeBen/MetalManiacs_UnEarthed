@@ -190,7 +190,7 @@ public class PathingActions {
         private long lastShotTime = 0;
         private long spinUpStartTime = 0;
         private final long spinUpTimeout = 3000; // max 3 seconds to reach speed
-        private double targetSpeed =2000;
+        private double targetSpeed =1920;
         private int timeBetweenLaunches = 525;
         private double launchDistance = 62; // in inches
 
@@ -207,7 +207,7 @@ public class PathingActions {
             if (!initialized) {
 
                 //targetSpeed = flywheels.setFlywheelSpeedFromDistanceInInches(distance);
-                targetSpeed=2000;
+                targetSpeed=1920;
                 flywheels.setFlywheelSpeedRaw(targetSpeed);
 
 
@@ -219,19 +219,19 @@ public class PathingActions {
             flywheelIsReady=false;
 
             //flywheels.setFlywheelSpeedFromDistanceInInches(launchDistance); //Use auto-aim to calculate and set the flywheel velocity.
-            targetSpeed=2000;
+            targetSpeed=1920;
             flywheels.setFlywheelSpeedRaw(targetSpeed);
 
             //wait 1 second to startup flywheels
             ElapsedTime transferTimer= new ElapsedTime();
             while (!flywheelIsReady) {
                 if (flywheels.getFlywheelSpeedRaw() >= targetSpeed * 0.9) {
-                    flywheelIsReady = true;
                     try {
                         sleep(1000);
                     } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                        throw new RuntimeException(e);
                     }
+                    flywheelIsReady = true;
                 } else if (transferTimer.milliseconds()>1000) {
                     flywheelIsReady = true;
                 }
