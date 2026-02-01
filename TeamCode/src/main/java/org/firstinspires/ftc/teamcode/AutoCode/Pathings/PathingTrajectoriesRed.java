@@ -106,6 +106,9 @@ public class PathingTrajectoriesRed {
     public static Action fire(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
         return new PathingActions.firingSequence(intake, flywheel, wheels, distance);
     }
+    public static Action fireFar(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
+        return new PathingActions.firingSequenceFar(intake, flywheel, wheels, distance);
+    }
 
     public static Action PatternCollection(MecanumDrive drive, Pose2d currentPose, String Pattern, Intake intake) {
 
