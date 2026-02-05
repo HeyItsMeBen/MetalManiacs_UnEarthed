@@ -77,6 +77,8 @@ public class CompetitionDriveCode_Split extends OpMode {
             teamColor = teamColor.equals("Red") ? "Blue" : "Red";
         }
 
+
+        // Drive Controls
         double forward = -driver.getLeftY();
         double right = -driver.getLeftX();
         double rightStickX = -driver.getRightX();
@@ -114,7 +116,7 @@ public class CompetitionDriveCode_Split extends OpMode {
         driveController.drive(forward, right, rotate);
 
 
-
+        // Autoaim and Turret
         if (driver.wasJustPressed(GamepadKeys.Button.A)) {
             autoAimController.toggleAutoAim();
         }
@@ -129,7 +131,7 @@ public class CompetitionDriveCode_Split extends OpMode {
         );
 
 
-
+        // Intake
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             intakeController.toggleIntake();
         }
@@ -141,6 +143,7 @@ public class CompetitionDriveCode_Split extends OpMode {
         intakeController.update();
 
 
+        // Flywheels
         boolean triggerPressed =
                 driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1;
 
@@ -170,7 +173,7 @@ public class CompetitionDriveCode_Split extends OpMode {
                 flywheels.getFlywheelSpeedRaw());
 
 
-        // LED update
+        // LED
         lightsController.update(
                 autoAimController.isTargetFound(),
                 intakeController.isIntakeRunning(),
