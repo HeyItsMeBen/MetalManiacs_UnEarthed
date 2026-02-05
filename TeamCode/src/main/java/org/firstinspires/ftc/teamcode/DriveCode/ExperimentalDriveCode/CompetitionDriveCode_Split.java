@@ -1,0 +1,205 @@
+package org.firstinspires.ftc.teamcode.DriveCode.ExperimentalDriveCode;
+
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
+
+import java.util.List;
+
+@TeleOp(name = "DriveCode - Split", group = "Robot")
+public class CompetitionDriveCode_Split extends OpMode {
+
+    public GamepadEx driver;
+    public GamepadEx operator;
+
+    // Mechanisms
+    Intake intake;
+    Flywheels flywheels;
+    Transfer transferWheels;
+    Transfer trapdoor;
+    Lights lights;
+    OuttakeHood hood;
+
+    // Controllers
+    DriveChassisController driveController;
+    AutoAimTurretController autoAimController;
+    FlywheelController launcherController;
+    IntakeController intakeController;
+    LightsController lightsController;
+
+    public String teamColor = "Red";
+
+    double oldTime;
+
+    @Override
+    public void init() {
+
+        driver = new GamepadEx(gamepad1);
+        operator = new GamepadEx(gamepad2);
+
+        intake = new Intake(hardwareMap);
+        flywheels = new Flywheels(hardwareMap);
+        transferWheels = new Transfer(hardwareMap);
+        lights = new Lights(hardwareMap);
+        //hood = new OuttakeHood(hardwareMap);
+
+        driveController = new DriveChassisController(hardwareMap);
+        autoAimController = new AutoAimTurretController(hardwareMap);
+        launcherController = new FlywheelController(flywheels, transferWheels, intake);
+        intakeController = new IntakeController(intake, transferWheels);
+        lightsController = new LightsController(lights);
+
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // Bulk read optimization
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+    }
+
+    @Override
+    public void loop() {
+
+        // Team color toggle
+        if (driver.wasJustPressed(GamepadKeys.Button.START)){
+            teamColor = teamColor.equals("Red") ? "Blue" : "Red";
+        }
+
+        double forward = -driver.getLeftY();
+        double right = -driver.getLeftX();
+        double rightStickX = -driver.getRightX();
+        double rightStickY = -driver.getRightY();
+        double rotate;
+
+        if (driver.getButton(GamepadKeys.Button.Y)) {
+            driveController.resetYaw();
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
+            driveController.toggleSnapRotation();
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
+            driveController.toggleFieldCentric();
+        }
+
+        if (driver.getButton(GamepadKeys.Button.DPAD_UP)) {
+            driveController.changeSpeedMultiplier(0.5);
+        }
+
+        if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
+            driveController.changeSpeedMultiplier(-0.5);
+        }
+
+        if (driveController.isSnapRotation()) {
+            rotate = driveController.calculateSnapRotation(
+                    rightStickX, rightStickY, false
+            );
+        } else {
+            rotate = rightStickX;
+        }
+
+        driveController.drive(forward, right, rotate);
+
+
+
+        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+            autoAimController.toggleAutoAim();
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
+            autoAimController.resetTurret();
+        }
+
+        autoAimController.update(
+                driver.getButton(GamepadKeys.Button.DPAD_LEFT),
+                driver.getButton(GamepadKeys.Button.DPAD_RIGHT)
+        );
+
+
+
+        if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            intakeController.toggleIntake();
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            intakeController.toggleReverse();
+        }
+
+        intakeController.update();
+
+
+        boolean triggerPressed =
+                driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1;
+
+        launcherController.update(
+                triggerPressed,
+                autoAimController.getDistanceToTag(),
+                autoAimController.isTargetFound()
+        );
+
+
+        telemetry.addData("Auto aiming",
+                autoAimController.isAutoAiming());
+
+        telemetry.addData("Sees april tag",
+                autoAimController.isTargetFound());
+
+        telemetry.addData("Goal distance",
+                autoAimController.getDistanceToTag());
+
+        telemetry.addData("Launcher State",
+                launcherController.getState());
+
+        telemetry.addData("Target RPM",
+                launcherController.getTargetSpeed());
+
+        telemetry.addData("Current RPM",
+                flywheels.getFlywheelSpeedRaw());
+
+
+        // LED update
+        lightsController.update(
+                autoAimController.isTargetFound(),
+                intakeController.isIntakeRunning(),
+                teamColor
+        );
+
+
+        driver.readButtons();
+        operator.readButtons();
+
+        double newTime = getRuntime();
+        double loopTime = newTime - oldTime;
+        double frequency = 1 / loopTime;
+        oldTime = newTime;
+
+        telemetry.addData("LoopTime (Hz):", frequency);
+        telemetry.update();
+
+        // Bulk read optimization
+        List<LynxModule> allHubs =
+                hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+    }
+
+    @Override
+    public void stop() {
+        lightsController.turnOff();
+    }
+}
