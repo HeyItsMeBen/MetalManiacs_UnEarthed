@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Experimental.Limelight;
 
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,16 +11,18 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.List;
 
-@TeleOp(name = "[OLD ROBOT] TeleOp Vision Assist Mecanum")
+@Config
+@Autonomous(name = "[OLD ROBOT] Limelight Auto Attempt One")
 //@Disabled
-public class TeleOpVisionAssistMecanum extends LinearOpMode {
+public class LimelightAutoTest extends LinearOpMode {
 
     // Drive motors
-    DcMotorEx frontLeft, frontRight, backLeft, backRight;
+    DcMotorEx frontLeft, frontRight, backLeft, backRight, motor;
 
     // Limelight
     Limelight3A limelight;
@@ -29,7 +32,10 @@ public class TeleOpVisionAssistMecanum extends LinearOpMode {
     public static double LimelightkP = 0.015;
     public static double maxVisionTurn = 8;
     public static double toleranceDeg = 1.5;
+
+    boolean visionEnabled = true;
     // ==================
+
 
     @Override
     public void runOpMode() {
@@ -39,6 +45,7 @@ public class TeleOpVisionAssistMecanum extends LinearOpMode {
         backLeft   = hardwareMap.get(DcMotorEx.class, "backLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backRight  = hardwareMap.get(DcMotorEx.class, "backRight");
+        motor = hardwareMap.get(DcMotorEx.class, "intake");
 
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -58,52 +65,52 @@ public class TeleOpVisionAssistMecanum extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Driver input
-            double forward = -gamepad2.left_stick_y;
-            double strafe  =  gamepad2.left_stick_x;
-            double rotate  =  gamepad2.right_stick_x;
-
-            boolean visionEnabled = gamepad2.right_bumper;
+            double forward = -0.25;
+            double strafe  =  0;
+            double rotate  = 0;
 
             double visionTurn = 0;
 
-           // if (visionEnabled) {
+            // if (visionEnabled) {
 
-                LLResult result = limelight.getLatestResult();
+            LLResult result = limelight.getLatestResult();
 
-                if (result != null && result.isValid()) {
+            if (result != null && result.isValid()) {
 
-                    List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
+                List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
 
-                    LLResultTypes.DetectorResult bestTarget = null;
-                    double largestArea = 0;
+                LLResultTypes.DetectorResult bestTarget = null;
+                double largestArea = 0;
 
-                    for (LLResultTypes.DetectorResult det : detections) {
-                        if (det.getClassName().equals("g") || det.getClassName().equals("p")) {
+                for (LLResultTypes.DetectorResult det : detections) {
+                    if (det.getClassName().equals("g") || det.getClassName().equals("p")) {
 
-                            double area = det.getTargetArea();
-                            if (area > largestArea) {
-                                largestArea = area;
-                                bestTarget = det;
-                            }
+                        double area = det.getTargetArea();
+                        if (area > largestArea) {
+                            largestArea = area;
+                            bestTarget = det;
                         }
-                    }
-
-                    if (bestTarget != null) {
-
-                        double tx = bestTarget.getTargetXDegrees();
-
-                        if (Math.abs(tx) > toleranceDeg) {
-                            visionTurn = LimelightkP * -tx;
-                            visionTurn = Math.max(-maxVisionTurn,
-                                    Math.min(maxVisionTurn, visionTurn));
-                        }
-                        telemetry.addData("tx", tx);
                     }
                 }
-           // }
+
+                if (bestTarget != null) {
+
+                    double tx = bestTarget.getTargetXDegrees();
+
+                    if (Math.abs(tx) > toleranceDeg) {
+                        visionTurn = LimelightkP * -tx;
+                        visionTurn = Math.max(-maxVisionTurn,
+                                Math.min(maxVisionTurn, visionTurn));
+                    }
+                    telemetry.addData("tx", tx);
+                }
+            }
+            // }
             if (!visionEnabled){
                 visionTurn = 0;
             }
+
+            motor.setPower(1);
 
             // Combine driver + vision
             double finalRotate = rotate + visionTurn;
