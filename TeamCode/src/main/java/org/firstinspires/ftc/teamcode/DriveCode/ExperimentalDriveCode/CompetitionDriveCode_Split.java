@@ -1,3 +1,28 @@
+/**
+ <DRIVER MANUAL FOR DUMMIES>
+ *No offense ;)
+ --DRIVER CONTROLS--
+ [MOVEMENT]
+ Y = reset Yaw
+ LEFT STICK = translation
+ RIGHT STICK = rotation
+ LEFT STICK DOWN = toggle field/robot centric drive mode
+ RIGHT STICK DOWN = toggle snap/relative rotation mode
+ DPAD UP = movement speed up
+ DPAD DOWN = movement speed down
+
+ [INTAKE]
+ LEFT BUMPER = reverse intake
+ RIGHT BUMPER = intake
+
+ [OUTTAKE]
+ RIGHT TRIGGER (hold) = charges up flywheels and launches
+ DPAD LEFT = turret left
+ DPAD RIGHT = turret right
+ X = reset turret position (reset at middle)
+ A = auto aim
+ */
+
 package org.firstinspires.ftc.teamcode.DriveCode.ExperimentalDriveCode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -57,7 +82,6 @@ public class CompetitionDriveCode_Split extends OpMode {
         launcherController = new FlywheelController(flywheels, transferWheels, intake);
         intakeController = new IntakeController(intake, transferWheels);
         lightsController = new LightsController(lights);
-
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();

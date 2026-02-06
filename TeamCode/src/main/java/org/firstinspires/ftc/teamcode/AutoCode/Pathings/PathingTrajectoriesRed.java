@@ -14,7 +14,7 @@ import java.lang.Math;
 
 public class PathingTrajectoriesRed {
 
-    static double defaultVelocity = 100.0;
+    static double defaultVelocity = 10.0; //100
 
     static double defaultAngVelocity = Math.PI;
 
