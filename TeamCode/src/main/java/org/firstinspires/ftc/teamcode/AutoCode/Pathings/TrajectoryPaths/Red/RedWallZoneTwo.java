@@ -78,7 +78,7 @@ public class RedWallZoneTwo extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, drive.localizer.getPose(), intake, flywheels
+                        PathingTrajectoriesRed.firingPositionZoneTwo(drive, drive.localizer.getPose(), intake
                         )
                 )
         );
