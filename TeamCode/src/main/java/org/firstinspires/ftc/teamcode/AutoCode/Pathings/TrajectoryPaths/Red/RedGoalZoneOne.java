@@ -84,77 +84,31 @@ public class RedGoalZoneOne extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
-                )
-        );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake)
-                )
-        );
+                        PathingTrajectoriesRed.fire(intake, flywheels, transfer, distanceFromGoal),
 
-//        Actions.runBlocking(
-//                new SequentialAction(
-//                        PathingTrajectoriesRed.openChannel(drive, drive.localizer.getPose(), intake)
-//                )
-//        );
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG", intake),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
-                        )
-                )
-        );
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
-                )
-        );
+                        PathingTrajectoriesRed.fire(intake, flywheels, transfer, distanceFromGoal),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PGP", intake)
-                )
-        );
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PGP", intake),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
-                        )
-                )
-        );
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
-                )
-        );
+                        PathingTrajectoriesRed.fire(intake, flywheels, transfer, distanceFromGoal),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake)
-                )
-        );
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "GPP", intake),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels
-                        )
-                )
-        );
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose(), intake, flywheels),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.fire(drive, drive.localizer.getPose(), intake, flywheels, transfer, distanceFromGoal)
-                )
-        );
+                        PathingTrajectoriesRed.fire(intake, flywheels, transfer, distanceFromGoal),
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        PathingTrajectoriesRed.park(drive, drive.localizer.getPose(), flywheels, intake)
+                        PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose(), flywheels, intake)
+
                 )
+
         );
     }
 }

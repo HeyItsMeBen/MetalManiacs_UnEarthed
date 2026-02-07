@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.DriveCode.Test_Files.Prism;
+package org.firstinspires.ftc.teamcode.DriveCode.PrismTest;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;

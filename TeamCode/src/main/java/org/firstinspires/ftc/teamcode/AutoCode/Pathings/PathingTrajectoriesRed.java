@@ -103,7 +103,7 @@ public class PathingTrajectoriesRed {
                 .build();
     }
 
-    public static Action fire(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
+    public static Action fire(Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
         return new PathingActions.firingSequence(intake, flywheel, wheels, distance);
     }
     public static Action fireFar(MecanumDrive drive, Pose2d currentPose, Intake intake, Flywheels flywheel, Transfer wheels, double distance) {
@@ -260,4 +260,5 @@ public class PathingTrajectoriesRed {
 
                 .build();
     }
+
 }
