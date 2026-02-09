@@ -23,15 +23,19 @@
  A = auto aim
  */
 
-package org.firstinspires.ftc.teamcode.DriveCode.ExperimentalDriveCode;
+package org.firstinspires.ftc.teamcode.DriveCode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.AutoAimTurretController;
+import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.DriveChassisController;
+import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.FlywheelController;
+import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.IntakeController;
+import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.LightsController;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
@@ -40,8 +44,8 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 
 import java.util.List;
 
-@TeleOp(name = "DriveCode - Split", group = "Robot")
-public class CompetitionDriveCode_Split extends OpMode {
+@TeleOp(name = "[Use Me!] Competition DriveCode v4.0.0", group = "Robot")
+public class CompetitionDriveCode extends OpMode {
 
     public GamepadEx driver;
     public GamepadEx operator;

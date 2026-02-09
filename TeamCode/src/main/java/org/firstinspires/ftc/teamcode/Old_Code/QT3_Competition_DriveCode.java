@@ -23,7 +23,7 @@ X = reset turret position (reset at middle)
 A = auto aim
  */
 
-package org.firstinspires.ftc.teamcode.DriveCode;
+package org.firstinspires.ftc.teamcode.Old_Code;
 
 import static java.lang.Thread.sleep;
 
@@ -31,6 +31,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -56,9 +57,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
+@Disabled
 @TeleOp(name = "[Competition] DriveCode - Use this drive code", group = "Robot")
-public class Competition_DriveCode extends OpMode {
+public class QT3_Competition_DriveCode extends OpMode {
 
     // Driver Code
     public GamepadEx driver;
