@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.DriveCode.Test_Files;
+package org.firstinspires.ftc.teamcode.DriveCode.Debug;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,7 +14,7 @@ public class GetServoPositions extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Servo Servo = hardwareMap.get(Servo.class, "trapdoor");
+        Servo servo = hardwareMap.get(Servo.class, "trapdoor");
 
         gamepad = new GamepadEx(gamepad1);
 
@@ -31,7 +31,7 @@ public class GetServoPositions extends LinearOpMode {
 
         waitForStart();
 
-        Servo.setPosition(position);
+        servo.setPosition(position);
 
         //executing
         while (opModeIsActive()) {
@@ -39,23 +39,23 @@ public class GetServoPositions extends LinearOpMode {
                 position += interval;
                 telemetry.addData("Current Servo Position: ", position);
                 telemetry.update();
-                Servo.setPosition(position);
+                servo.setPosition(position);
             }
             else if (gamepad.getButton(GamepadKeys.Button.DPAD_DOWN)) {
                 position -= interval;
                 telemetry.addData("Current Servo Position: ", position);
                 telemetry.update();
-                Servo.setPosition(position);
+                servo.setPosition(position);
             }
             else if (gamepad.getButton(GamepadKeys.Button.X)) {
-                telemetry.addData("Current Servo Position: ", Servo.getPosition());
+                telemetry.addData("Current Servo Position: ", servo.getPosition());
                 telemetry.update();
             }
             else if (gamepad.getButton(GamepadKeys.Button.Y)) {
                 position = 0;
                 telemetry.addData("Reset Servos to position ", position);
                 telemetry.update();
-                Servo.setPosition(position);
+                servo.setPosition(position);
             }
 
             sleep(100);

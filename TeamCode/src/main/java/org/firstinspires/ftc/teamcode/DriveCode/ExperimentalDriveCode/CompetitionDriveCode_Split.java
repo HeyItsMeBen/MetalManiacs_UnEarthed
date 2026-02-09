@@ -208,12 +208,13 @@ public class CompetitionDriveCode_Split extends OpMode {
         driver.readButtons();
         operator.readButtons();
 
+        // Frequency check
         double newTime = getRuntime();
         double loopTime = newTime - oldTime;
         double frequency = 1 / loopTime;
         oldTime = newTime;
-
         telemetry.addData("LoopTime (Hz):", frequency);
+        telemetry.addData("Loop Time (ms): ", loopTime * 1000);
         telemetry.update();
 
         // Bulk read optimization

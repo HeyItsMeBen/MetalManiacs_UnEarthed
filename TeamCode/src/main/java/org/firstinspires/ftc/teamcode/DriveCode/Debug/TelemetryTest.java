@@ -1,13 +1,10 @@
-package org.firstinspires.ftc.teamcode.DriveCode.Test_Files;
+package org.firstinspires.ftc.teamcode.DriveCode.Debug;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Disabled
-//The purpose of this file is to determine how the telemetry functions. This will be important for logging the flywheel velocities
 @TeleOp (name="Telemetry Test", group="test")
 public class TelemetryTest extends LinearOpMode {
 

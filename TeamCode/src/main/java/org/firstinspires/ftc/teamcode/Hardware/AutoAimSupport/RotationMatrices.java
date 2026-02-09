@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Testing;
+package org.firstinspires.ftc.teamcode.Hardware.AutoAimSupport;
+
+//Note: This file has been moved from autocode ---> testing to prevent accidental deletion or confusion
 
 public class RotationMatrices {
     public RotationMatrices(){
