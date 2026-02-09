@@ -36,6 +36,7 @@ import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.DriveChassisCon
 import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.FlywheelController;
 import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.IntakeController;
 import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.LightsController;
+import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.RumbleController;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
@@ -49,7 +50,7 @@ public class CompetitionDriveCode extends OpMode {
 
     public GamepadEx driver;
     public GamepadEx operator;
-
+    public RumbleController controller;
     // Mechanisms
     Intake intake;
     Flywheels flywheels;
@@ -74,6 +75,7 @@ public class CompetitionDriveCode extends OpMode {
 
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
+        controller = new RumbleController(gamepad1);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
