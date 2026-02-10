@@ -25,56 +25,107 @@ public class AutoPathSimShortRangeRed {
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
 
                 //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(0)))
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(315)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(40)))
+//Bernies pathing
+                        .setReversed(true)
+
+                        //shoots as it drives backwards
+                        .splineToConstantHeading(new Vector2d(18, 7), Math.toRadians(270))
+//                        .waitSeconds(0.5f)
+
+                        //picks up from middle row of balls
+                        .splineToSplineHeading(new Pose2d(30,-12, Math.toRadians(0)), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0))
+                        .waitSeconds(0.25f)
+
+                        //get in position to shoot
+                        .splineToConstantHeading(new Vector2d(15, 2), Math.toRadians(180))
+                        .waitSeconds(0.5f)
+                        .setReversed(false)
+                        //get balls from gate
+                        .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0))
+                        .waitSeconds(0.5f)
+                        .setReversed(true)
+
+                        //get in position to shoot
+                        .splineToConstantHeading(new Vector2d(15, 12), Math.toRadians(90))
+                        .waitSeconds(0.5f)
+                        .setReversed(false)
+
+                        //picks up balls from the top
+                        .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0))
+                        .waitSeconds(0.25f)
+                        .setReversed(true)
+
+                        //get in position to shoot
+                        .splineToConstantHeading(new Vector2d(15, 12), Math.toRadians(0))
+                        .waitSeconds(0.5f)
+                        .setReversed(false)
+
+                        //pick up balls from the bottom
+                        .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0))
+                        .setReversed(true)
+
+                        //get in position to shoot
+                        .splineToConstantHeading(new Vector2d(15, 6), Math.toRadians(90))
+                        .waitSeconds(0.5f)
+                        .setReversed(false)
+
+                        //park
+                        .splineToLinearHeading(new Pose2d(45,6, Math.toRadians(0)), Math.toRadians(0))
+                        .waitSeconds(2f)
+
+
 
                         //initialFiringFromWallZoneOne
                         //.splineToLinearHeading(new Pose2d(18, 30, Math.toRadians(0)), Math.toRadians(45))
 
                         //initialFiringFromGoalZoneOne
-                        .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225))
-                        .splineToSplineHeading(new Pose2d(18, 30, Math.toRadians(0)), Math.toRadians(270))
-
-                        //pattern collection close
-                        .setReversed(false)
-                        .splineTo(new Vector2d(55,12), Math.toRadians(0))
-                        .setReversed(true)
-
-                        //open channel
+//                        .setReversed(true)
+//                        .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225))
+//                        .splineToSplineHeading(new Pose2d(18, 30, Math.toRadians(0)), Math.toRadians(270))
+//
+//                        //pattern collection close
 //                        .setReversed(false)
-//                        .strafeTo(new Vector2d(45,8))
-//                        .splineToConstantHeading(new Vector2d(58,5), Math.toRadians(0))
-
+//                        .splineTo(new Vector2d(55,12), Math.toRadians(0))
+//                        .setReversed(true)
+//
+//                        //open channel
+////                        .setReversed(false)
+////                        .strafeTo(new Vector2d(45,8))
+////                        .splineToConstantHeading(new Vector2d(58,5), Math.toRadians(0))
+//
+////                        //firing position
+//                        .setReversed(true)
+//                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
+//                        .setReversed(false)
+//
+//                        //pattern collection middle
+//                        .setReversed(false)
+//                        .splineToConstantHeading(new Vector2d(18, 0), Math.toRadians(270))
+//                        .splineToLinearHeading(new Pose2d(55, -12, Math.toRadians(0)), Math.toRadians(0))
+//                        .setReversed(true)
+//
 //                        //firing position
-                        .setReversed(true)
-                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
-                        .setReversed(false)
-
-                        //pattern collection middle
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(18, 0), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(55, -12, Math.toRadians(0)), Math.toRadians(0))
-                        .setReversed(true)
-
-                        //firing position
-                        .setReversed(true)
-                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
-                        .setReversed(false)
-
-                        //pattern collection far
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(55, -35, Math.toRadians(0)), Math.toRadians(0))
-
-                        //.splineTo(new Vector2d(55,-35), Math.toRadians(0))
-                        .setReversed(true)
-
-                        //firing position
-                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
-                        .setReversed(false)
-
-                        //park
-                        .splineTo(new Vector2d(20, -35), Math.toRadians(270))
+//                        .setReversed(true)
+//                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
+//                        .setReversed(false)
+//
+//                        //pattern collection far
+//                        .setReversed(false)
+//                        .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270))
+//                        .splineToLinearHeading(new Pose2d(55, -35, Math.toRadians(0)), Math.toRadians(0))
+//
+//                        //.splineTo(new Vector2d(55,-35), Math.toRadians(0))
+//                        .setReversed(true)
+//
+//                        //firing position
+//                        .splineToLinearHeading(new Pose2d(18, 18, Math.toRadians(0)), Math.toRadians(90))
+//                        .setReversed(false)
+//
+//                        //park
+//                        .splineTo(new Vector2d(20, -35), Math.toRadians(270))
 
                         .build());
 
