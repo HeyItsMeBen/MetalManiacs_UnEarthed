@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.Red;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.AprilTagTurretAim;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
@@ -40,6 +43,7 @@ public class RedGoalZoneOne extends LinearOpMode {
 
     AprilTagTurretAim aprilTagTurretAim;
     ElapsedTime turretTimer;
+    MecanumDrive drive;
     public double distanceFromGoal = 1750;
 
     @Override
@@ -47,7 +51,7 @@ public class RedGoalZoneOne extends LinearOpMode {
         // Initialize the Apriltag Detection process
 
         Pose2d startPose = new Pose2d(52, 52, Math.toRadians(315));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
@@ -61,6 +65,7 @@ public class RedGoalZoneOne extends LinearOpMode {
         aprilTagTurretAim.init();
 
         waitForStart();
+
         if (isStopRequested()) return;
 
         aprilTagTurretAim.waitForStreaming();
