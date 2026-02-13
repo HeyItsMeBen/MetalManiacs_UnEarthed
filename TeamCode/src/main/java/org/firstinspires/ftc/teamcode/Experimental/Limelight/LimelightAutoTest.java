@@ -13,11 +13,12 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
 
 @Config
-@Autonomous(name = "[OLD ROBOT] Limelight Auto Attempt One")
+@Autonomous(name = "[OLD ROBOT] Limelight Auto Attempt Two")
 //@Disabled
 public class LimelightAutoTest extends LinearOpMode {
 
@@ -28,12 +29,18 @@ public class LimelightAutoTest extends LinearOpMode {
     Limelight3A limelight;
 
     // ===== CONFIG =====
-    static final String TARGET_CLASS_NAME = "g"; // change to your NN class
-    public static double LimelightkP = 0.015;
-    public static double maxVisionTurn = 8;
-    public static double toleranceDeg = 1.5;
+    public static double LimelightkP = 0.012;
+    public static double maxVisionTurn = 10;
+    public static double toleranceDeg = 2;
+
+    public static String artifactHolding = "xxx";
+    public static boolean artifactLastSeen = false;
+
+    public static String lastArtifact = "x";
 
     boolean visionEnabled = true;
+
+    private ElapsedTime limelightTimer = new ElapsedTime();
     // ==================
 
 
@@ -60,12 +67,15 @@ public class LimelightAutoTest extends LinearOpMode {
         telemetry.addLine("Robot Ready");
         telemetry.update();
 
+        artifactHolding = "xxx";
+
         waitForStart();
+        limelightTimer.reset();
 
         while (opModeIsActive()) {
 
             // Driver input
-            double forward = -0.25;
+            double forward = -0.25; // set to just move forward
             double strafe  =  0;
             double rotate  = 0;
 
@@ -80,13 +90,14 @@ public class LimelightAutoTest extends LinearOpMode {
                 List<LLResultTypes.DetectorResult> detections = result.getDetectorResults();
 
                 LLResultTypes.DetectorResult bestTarget = null;
-                double largestArea = 0;
+                double largestArea = 5000;
 
                 for (LLResultTypes.DetectorResult det : detections) {
-                    if (det.getClassName().equals("g") || det.getClassName().equals("p")) {
+                    if (det.getClassName().equals("g") || det.getClassName().equals("p")) { //check for purple or green artifacts
 
-                        double area = det.getTargetArea();
-                        if (area > largestArea) {
+                       // double area = det.getTargetArea();
+                        double area = det.getTargetYDegrees();
+                        if (area < largestArea) {
                             largestArea = area;
                             bestTarget = det;
                         }
@@ -96,21 +107,61 @@ public class LimelightAutoTest extends LinearOpMode {
                 if (bestTarget != null) {
 
                     double tx = bestTarget.getTargetXDegrees();
+                    double ty = bestTarget.getTargetYDegrees();
 
                     if (Math.abs(tx) > toleranceDeg) {
                         visionTurn = LimelightkP * -tx;
                         visionTurn = Math.max(-maxVisionTurn,
                                 Math.min(maxVisionTurn, visionTurn));
                     }
+
+                    // check to see if artifact was collected
+                    if(ty < -16 && limelightTimer.milliseconds() > 500 ){
+                        artifactLastSeen = true;
+                        lastArtifact = bestTarget.getClassName();
+                        String temp = "";
+                        boolean found = false;
+                        //tracker for artifacts the robot is currently holding
+                        for(int x = 0; x < 3; x++){
+                            if(!found && artifactHolding.substring(x, x+1).equals("x")){
+                                found = true;
+                                temp = temp + lastArtifact;
+
+                            }else{
+                                temp = temp + artifactHolding.substring(x, x+1);
+                            }
+                        }
+                        limelightTimer.reset();
+                        artifactHolding = temp;
+                    }else {
+                        artifactLastSeen = false;
+                        lastArtifact = "x";
+                    }
                     telemetry.addData("tx", tx);
-                }
+                } /*else if (artifactLastSeen) {
+                    String temp = "";
+                    boolean found = false;
+                    //tracker for artifacts the robot is currently holding
+                    for(int x = 0; x < 3; x++){
+                        if(!found && artifactHolding.substring(x, x+1).equals("x")){
+                            found = true;
+                            temp = temp + lastArtifact;
+
+                        }else{
+                            temp = temp + artifactHolding.substring(x, x+1);
+                        }
+                    }
+                    artifactHolding = temp;
+
+
+                }*/
             }
             // }
             if (!visionEnabled){
                 visionTurn = 0;
             }
 
-            motor.setPower(1);
+            motor.setPower(1); //runs intake on leDog
 
             // Combine driver + vision
             double finalRotate = rotate + visionTurn;
@@ -120,6 +171,8 @@ public class LimelightAutoTest extends LinearOpMode {
             telemetry.addData("Vision Assist", visionEnabled);
             telemetry.addData("Vision Turn", visionTurn);
             telemetry.addData("Rotate Total", finalRotate);
+            telemetry.addData("Current artifacts", artifactHolding);
+            telemetry.addData("Currently tracking", lastArtifact);
             telemetry.update();
         }
     }
