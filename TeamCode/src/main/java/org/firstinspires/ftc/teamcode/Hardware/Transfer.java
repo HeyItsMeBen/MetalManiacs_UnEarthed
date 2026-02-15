@@ -16,7 +16,7 @@ public class Transfer {
 
     public Transfer(HardwareMap hMap) {
         kickServo = hMap.get(Servo.class, "kickServo");
-        kickWheels = hMap.get(DcMotor.class, "kickWheels");
+        kickWheels = hMap.get(DcMotor.class, "kickWheel");
         kickWheels.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
