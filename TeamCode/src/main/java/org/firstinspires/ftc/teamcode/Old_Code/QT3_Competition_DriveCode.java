@@ -369,7 +369,7 @@ public class QT3_Competition_DriveCode extends OpMode {
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
-                transferWheels.setTransferPower(0);
+                transferWheels.runKickWheels(0);
             } else {
                 intakePower = 1;
                 intakeTimer.reset();
@@ -377,10 +377,10 @@ public class QT3_Competition_DriveCode extends OpMode {
         } else if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             if (Math.abs(intakePower) == 1) {
                 intakePower = 0;
-                transferWheels.setTransferPower(0);
+                transferWheels.runKickWheels(0);
             } else {
                 intakePower = -1;
-                transferWheels.setTransferPower(-1);
+                transferWheels.runKickWheels(-1);
             }
         }
         if (intakePower==1 && intakeTimer.milliseconds()>1000 && intake.getVelocityRPM()<500){
@@ -450,11 +450,11 @@ public class QT3_Competition_DriveCode extends OpMode {
                     } else {
                         intake.setIntakePower(0);
                     }
-                    transferWheels.setTransferPower(1);
+                    transferWheels.runKickWheels(1);
 
                     if (flywheels.getFlywheelRPM() < outtakeSpeedBeforeDrop - 100) {
                         // Ball detected! Stop transfer and wait
-                        transferWheels.setTransferPower(0);
+                        transferWheels.runKickWheels(0);
                         intake.setIntakePower(0);
                         ballsFed++;
                         launchTimer.reset();
@@ -467,7 +467,7 @@ public class QT3_Competition_DriveCode extends OpMode {
                         }
                     } else if (launchTimer.milliseconds() > 1800) {
                         // Timeout - no ball detected, abort
-                        transferWheels.setTransferPower(0);
+                        transferWheels.runKickWheels(0);
                         intake.setIntakePower(0);
                         launchState = LaunchState.IDLE;
                     }
@@ -501,7 +501,7 @@ public class QT3_Competition_DriveCode extends OpMode {
         } else {
             // Trigger released - reset to idle if we were launching
             if (launchState != LaunchState.IDLE) {
-                transferWheels.setTransferPower(0);
+                transferWheels.runKickWheels(0);
                 intake.setIntakePower(0);
                 launchState = LaunchState.IDLE;
             }

@@ -7,76 +7,42 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Transfer {
 
-    private Servo trapdoor = null;
-    private DcMotor transfer = null;
+    private Servo kickServo = null;
+    private DcMotor kickWheels = null;
 //0.41(open), 0.2 (close)
-    public float openTrapdoorPosition = 0.41f; //0.24
+    public float kickServoUp = 0.41f; //0.24
 
-    public float closeTrapdoorPosition = 0.2f; // Get New Values
+    public float kickServoDown = 0.2f; // Get New Values
 
     public Transfer(HardwareMap hMap) {
-        trapdoor = hMap.get(Servo.class, "trapdoor");
-        transfer = hMap.get(DcMotor.class, "transfer");
-        transfer.setDirection(DcMotorEx.Direction.REVERSE);
+        kickServo = hMap.get(Servo.class, "kickServo");
+        kickWheels = hMap.get(DcMotor.class, "kickWheels");
+        kickWheels.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
-    public void setTransferPower(double power){
-        transfer.setPower(power);
+    public void runKickWheels(double power){
+        kickWheels.setPower(power);
     }
-    public void runTransfer() {
-        transfer.setPower(1.0);
-    }
-
-    public void stopTransfer() {
-        transfer.setPower(0);
+    public void stopKickWheels() {
+        kickWheels.setPower(0);
     }
 
-
-
-    @Deprecated
-    public void trapdoorOpen() {
-        trapdoor.setPosition(openTrapdoorPosition);
+    public void setKickServoUp() {
+        kickServo.setPosition(kickServoUp);
     }
 
-    @Deprecated
-    public void trapdoorClose() {
-        trapdoor.setPosition(closeTrapdoorPosition);
+    public void setKickServoDown() {
+        kickServo.setPosition(kickServoDown);
     }
 
-    @Deprecated
-    public double getCurrentHingePosition () {
-        return trapdoor.getPosition();
+    public double getCurrentKickServoPosition () {
+        return kickServo.getPosition();
     }
 
-    @Deprecated
-    public void changeTrapdoorPosition (double increment) {
-        double position = trapdoor.getPosition();
+    public void changeKickServoPositionManual (double increment) {
+        double position = kickServo.getPosition();
         position += increment;
-        trapdoor.setPosition(position);
+        kickServo.setPosition(position);
     }
 
-    @Deprecated
-    public void maintainConveyorMotor() {
-        transfer.setPower(0.5);
-    }
-
-    @Deprecated
-    public void stopBelt() {
-        transfer.setPower(0);
-    }
-
-    @Deprecated
-    public void runBelt() {
-        transfer.setPower(1);
-    }
-
-    @Deprecated
-    public void reverseBelt() {
-        transfer.setPower(-1.0);
-    }
-
-    @Deprecated
-    public void changeHingePosition(double v) {
-        trapdoor.setPosition(trapdoor.getPosition()+v);
-    }
 }

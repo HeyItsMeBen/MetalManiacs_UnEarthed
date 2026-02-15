@@ -8,7 +8,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
@@ -151,7 +150,7 @@ public class PathingActions {
                 if (i>0){
                     intake.setIntakePower(1);
                 }
-                transfer.setTransferPower(1);
+                transfer.runKickWheels(1);
                 long startTime = System.currentTimeMillis();
                 long timeout = 1500;
 
@@ -163,7 +162,7 @@ public class PathingActions {
                         break;
                     }
                 }
-                transfer.setTransferPower(0.2);
+                transfer.runKickWheels(0.2);
                 try {
                     sleep(250);
                 } catch (InterruptedException e) {
@@ -171,7 +170,7 @@ public class PathingActions {
                 }
             }
 
-            transfer.stopTransfer();
+            transfer.stopKickWheels();
             return false;
 
         }
@@ -244,7 +243,7 @@ public class PathingActions {
                 if (i>0){
                     intake.setIntakePower(1);
                 }
-                transfer.setTransferPower(1);
+                transfer.runKickWheels(1);
                 long startTime = System.currentTimeMillis();
                 long timeout = 1500;
 
@@ -256,7 +255,7 @@ public class PathingActions {
                         break;
                     }
                 }
-                transfer.setTransferPower(0.2);
+                transfer.runKickWheels(0.2);
                 try {
                     sleep(500);
                 } catch (InterruptedException e) {
@@ -264,7 +263,7 @@ public class PathingActions {
                 }
             }
 
-            transfer.stopTransfer();
+            transfer.stopKickWheels();
             return false;
 
         }

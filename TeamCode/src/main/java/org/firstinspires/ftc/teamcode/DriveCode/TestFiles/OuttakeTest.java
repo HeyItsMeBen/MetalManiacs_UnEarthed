@@ -65,7 +65,7 @@ public class OuttakeTest extends LinearOpMode{
                 }
             }
         intake.setIntakePower(intakePower);
-        transfer.setTransferPower(intakePower);
+        transfer.runKickWheels(intakePower);
 
         telemetry.addData("Intake speed", intakePower);
 

@@ -31,7 +31,7 @@ public class IntakeController {
 
         if (Math.abs(intakePower) == 1) {
             intakePower = 0;
-            transfer.setTransferPower(0);
+            transfer.runKickWheels(0);
 
         } else {
             intakePower = 1;
@@ -43,11 +43,11 @@ public class IntakeController {
 
         if (Math.abs(intakePower) == 1) {
             intakePower = 0;
-            transfer.setTransferPower(0);
+            transfer.runKickWheels(0);
 
         } else {
             intakePower = -1;
-            transfer.setTransferPower(-1);
+            transfer.runKickWheels(-1);
         }
     }
 
@@ -67,6 +67,6 @@ public class IntakeController {
     public void stopAll() {
         intakePower = 0;
         intake.setIntakePower(0);
-        transfer.setTransferPower(0);
+        transfer.runKickWheels(0);
     }
 }
