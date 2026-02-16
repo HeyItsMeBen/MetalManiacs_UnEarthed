@@ -29,9 +29,9 @@ public class PathingTrajectoriesRed {
 
         return drive.actionBuilder(currentPose)
 
-                .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel))
+                //.stopAndAdd(new PathingActions.powerUpFlywheels(flywheel))
 
-                .stopAndAdd(new PathingActions.maintainIntake(intake))
+                //.stopAndAdd(new PathingActions.maintainIntake(intake))
 
                 .splineToLinearHeading(new Pose2d(18, 35, Math.toRadians(0)), Math.toRadians(45), defaultSpeedConstraint)
 
@@ -43,9 +43,9 @@ public class PathingTrajectoriesRed {
 
         return drive.actionBuilder(currentPose)
 
-                .stopAndAdd(new PathingActions.powerUpFlywheels(flywheel))
+                //.stopAndAdd(new PathingActions.powerUpFlywheels(flywheel))
 
-                .stopAndAdd(new PathingActions.maintainIntake(intake))
+                //.stopAndAdd(new PathingActions.maintainIntake(intake))
 
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(30, 50), Math.toRadians(225), defaultSpeedConstraint)

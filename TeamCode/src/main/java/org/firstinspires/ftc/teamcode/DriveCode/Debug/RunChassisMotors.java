@@ -7,10 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-@TeleOp(name = "[Old] Drive Code", group = "Debug File")
+@TeleOp(name = "Chassis Motor Debugger", group = "Debug File")
 
 public class RunChassisMotors extends LinearOpMode {
 
@@ -38,12 +39,12 @@ public class RunChassisMotors extends LinearOpMode {
         backLeft   = hardwareMap.get(DcMotor.class, "backLeft");
         backRight  = hardwareMap.get(DcMotor.class, "backRight");
 
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        currentMotor = frontLeft;
+        currentMotor = frontRight;
 
         waitForStart();
         runtime.reset();
@@ -82,15 +83,22 @@ public class RunChassisMotors extends LinearOpMode {
 
             //run individual wheels
             telemetry.addData("Use joystick to run robot centric drive ", "");
-            telemetry.addData("", "");
+            telemetry.addData(" ", "");
             telemetry.addData("Press A: ", " Set motor to frontLeft");
             telemetry.addData("Press B: ", " Set motor to frontRight");
             telemetry.addData("Press X: ", " Set motor to backLeft");
             telemetry.addData("Press Y: ", " Set Motor to backRight");
             telemetry.addData("Press D PAD Up/Down: ", " Run set motor forward/reverse");
+            telemetry.addData(" ", "");
+            telemetry.addData("Current Set Motor: ", currentMotor);
+
+            telemetry.addData("A pressed?", driver.getButton(GamepadKeys.Button.A));
+            telemetry.addData("B pressed?", driver.getButton(GamepadKeys.Button.B));
+            telemetry.addData("X pressed?", driver.getButton(GamepadKeys.Button.X));
+            telemetry.addData("Y pressed?", driver.getButton(GamepadKeys.Button.Y));
 
             telemetry.update();
-            
+
             if (driver.wasJustPressed(GamepadKeys.Button.A)) {
                 currentMotor = frontLeft;
             } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
@@ -101,13 +109,16 @@ public class RunChassisMotors extends LinearOpMode {
                 currentMotor = backRight;
             }
 
-            while (driver.getButton(GamepadKeys.Button.DPAD_UP)){
+            if (driver.getButton(GamepadKeys.Button.DPAD_UP)) {
                 currentMotor.setPower(1.0);
             }
-
-            while (driver.getButton(GamepadKeys.Button.DPAD_DOWN)){
+            else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
                 currentMotor.setPower(-1.0);
             }
+            else {
+                currentMotor.setPower(0);   // stop motor when not pressing
+            }
+            driver.readButtons();
         }
         //Run OpMode
     }
