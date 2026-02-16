@@ -3,14 +3,17 @@ package org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 public class FlywheelController {
 
     private Flywheels flywheels;
-    private Transfer transfer;
+    private Transfer kickWheel;
+    private Transfer kickServo;
     private Intake intake;
+    private OuttakeHood hood;
 
     private ElapsedTime launchTimer = new ElapsedTime();
 
@@ -33,12 +36,14 @@ public class FlywheelController {
     private LaunchState launchState = LaunchState.IDLE;
 
     public FlywheelController(Flywheels flywheels,
-                              Transfer transfer,
-                              Intake intake) {
+                              Transfer kickWheel, Transfer kickServo,
+                              Intake intake, OuttakeHood hood) {
 
         this.flywheels = flywheels;
-        this.transfer = transfer;
+        this.kickWheel = kickWheel;
+        this.kickServo = kickServo;
         this.intake = intake;
+        this.hood = hood;
     }
 
     public LaunchState getState() {
@@ -124,12 +129,12 @@ public class FlywheelController {
                         intake.setIntakePower(1);
                     }
 
-                    transfer.runKickWheels(1);
+                    kickWheel.runKickWheels(1);
 
                     if (flywheels.getFlywheelRPM()
                             < outtakeSpeedBeforeDrop - 100) {
 
-                        transfer.runKickWheels(0);
+                        kickWheel.runKickWheels(0);
                         intake.setIntakePower(0);
 
                         ballsFed++;
@@ -144,7 +149,7 @@ public class FlywheelController {
 
                     } else if (launchTimer.milliseconds() > 1800) {
 
-                        transfer.runKickWheels(0);
+                        kickWheel.runKickWheels(0);
                         intake.setIntakePower(0);
                         launchState = LaunchState.IDLE;
                     }
@@ -172,7 +177,7 @@ public class FlywheelController {
 
             if (launchState != LaunchState.IDLE) {
 
-                transfer.runKickWheels(0);
+                kickWheel.runKickWheels(0);
                 intake.setIntakePower(0);
 
                 launchState = LaunchState.IDLE;

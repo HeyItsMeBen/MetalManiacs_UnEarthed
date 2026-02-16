@@ -54,15 +54,15 @@ public class CompetitionDriveCode extends OpMode {
     // Mechanisms
     Intake intake;
     Flywheels flywheels;
-    Transfer transferWheels;
-    Transfer trapdoor;
+    Transfer kickWheel;
+    Transfer kickServo;
     Lights lights;
     OuttakeHood hood;
 
     // Controllers
     DriveChassisController driveController;
     AutoAimTurretController autoAimController;
-    FlywheelController launcherController;
+    FlywheelController flywheelController;
     IntakeController intakeController;
     LightsController lightsController;
 
@@ -79,14 +79,15 @@ public class CompetitionDriveCode extends OpMode {
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        transferWheels = new Transfer(hardwareMap);
+        kickWheel = new Transfer(hardwareMap);
+        kickServo = new Transfer(hardwareMap);
         lights = new Lights(hardwareMap);
-        //hood = new OuttakeHood(hardwareMap);
+        hood = new OuttakeHood(hardwareMap);
 
         driveController = new DriveChassisController(hardwareMap);
         autoAimController = new AutoAimTurretController(hardwareMap);
-        launcherController = new FlywheelController(flywheels, transferWheels, intake);
-        intakeController = new IntakeController(intake, transferWheels);
+        flywheelController = new FlywheelController(flywheels, kickWheel, kickServo, intake, hood);
+        intakeController = new IntakeController(intake, kickWheel, kickServo);
         lightsController = new LightsController(lights);
 
         telemetry.addData("Status", "Initialized");
@@ -177,7 +178,7 @@ public class CompetitionDriveCode extends OpMode {
         boolean triggerPressed =
                 driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1;
 
-        launcherController.update(
+        flywheelController.update(
                 triggerPressed,
                 autoAimController.getDistanceToTag(),
                 autoAimController.isTargetFound()
@@ -194,10 +195,10 @@ public class CompetitionDriveCode extends OpMode {
                 autoAimController.getDistanceToTag());
 
         telemetry.addData("Launcher State",
-                launcherController.getState());
+                flywheelController.getState());
 
         telemetry.addData("Target RPM",
-                launcherController.getTargetSpeed());
+                flywheelController.getTargetSpeed());
 
         telemetry.addData("Current RPM",
                 flywheels.getFlywheelSpeedRaw());

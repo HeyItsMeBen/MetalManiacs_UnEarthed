@@ -8,15 +8,17 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 public class IntakeController {
 
     private Intake intake;
-    private Transfer transfer;
+    private Transfer kickWheel;
+    private Transfer kickServo;
 
     private float intakePower = 0;
 
     private ElapsedTime intakeTimer = new ElapsedTime();
 
-    public IntakeController(Intake intake, Transfer transfer) {
+    public IntakeController(Intake intake, Transfer kickWheel, Transfer kickServo) {
         this.intake = intake;
-        this.transfer = transfer;
+        this.kickWheel = kickWheel;
+        this.kickServo = kickServo;
     }
 
     public boolean isIntakeRunning() {
@@ -31,7 +33,7 @@ public class IntakeController {
 
         if (Math.abs(intakePower) == 1) {
             intakePower = 0;
-            transfer.runKickWheels(0);
+            kickWheel.runKickWheels(0);
 
         } else {
             intakePower = 1;
@@ -43,11 +45,11 @@ public class IntakeController {
 
         if (Math.abs(intakePower) == 1) {
             intakePower = 0;
-            transfer.runKickWheels(0);
+            kickWheel.runKickWheels(0);
 
         } else {
             intakePower = -1;
-            transfer.runKickWheels(-1);
+            kickWheel.runKickWheels(-1);
         }
     }
 
@@ -67,6 +69,6 @@ public class IntakeController {
     public void stopAll() {
         intakePower = 0;
         intake.setIntakePower(0);
-        transfer.runKickWheels(0);
+        kickWheel.runKickWheels(0);
     }
 }
