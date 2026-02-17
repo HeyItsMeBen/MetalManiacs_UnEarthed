@@ -98,7 +98,7 @@ public class OuttakeTest extends LinearOpMode{
 
             telemetry.addData("distance", distance);
 //            telemetry.addData("rpm",rpm);
-            telemetry.addData("velo",flywheel.getFlywheelRPM());
+            telemetry.addData("velo",flywheel.getFlywheelVelocity());
             telemetry.addLine();
             telemetry.addData("Y (RPM)", rpm);
             telemetry.addData("M (Slope)", slope);

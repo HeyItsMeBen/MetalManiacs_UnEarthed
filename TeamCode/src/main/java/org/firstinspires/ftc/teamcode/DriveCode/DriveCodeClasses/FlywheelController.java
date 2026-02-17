@@ -112,7 +112,7 @@ public class FlywheelController {
                     if (launchTimer.milliseconds() > 500) {
 
                         outtakeSpeedBeforeDrop =
-                                flywheels.getFlywheelRPM();
+                                flywheels.getFlywheelVelocity();
 
                         maintainOuttakeSpeed =
                                 flywheels.getFlywheelVelocity();
@@ -131,7 +131,7 @@ public class FlywheelController {
 
                     kickWheel.runKickWheels(1);
 
-                    if (flywheels.getFlywheelRPM()
+                    if (flywheels.getFlywheelVelocity()
                             < outtakeSpeedBeforeDrop - 100) {
 
                         kickWheel.runKickWheels(0);
@@ -160,7 +160,7 @@ public class FlywheelController {
                     if (launchTimer.milliseconds() > 1000) {
 
                         outtakeSpeedBeforeDrop =
-                                flywheels.getFlywheelRPM();
+                                flywheels.getFlywheelVelocity();
 
                         maintainOuttakeSpeed =
                                 flywheels.getFlywheelVelocity();
