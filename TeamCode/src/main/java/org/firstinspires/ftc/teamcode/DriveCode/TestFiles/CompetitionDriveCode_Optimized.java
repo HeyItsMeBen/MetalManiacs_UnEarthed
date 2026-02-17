@@ -180,7 +180,7 @@ public class CompetitionDriveCode_Optimized extends OpMode {
 
         flywheelController.update(
                 triggerPressed,
-                autoAimController.getDistanceToTag(),
+                autoAimController.getDistanceToTagInches(),
                 autoAimController.isTargetFound()
         );
 
@@ -192,7 +192,7 @@ public class CompetitionDriveCode_Optimized extends OpMode {
                 autoAimController.isTargetFound());
 
         telemetry.addData("Goal distance",
-                autoAimController.getDistanceToTag());
+                autoAimController.getDistanceToTagInches());
 
         telemetry.addData("Launcher State",
                 flywheelController.getState());
@@ -201,7 +201,7 @@ public class CompetitionDriveCode_Optimized extends OpMode {
                 flywheelController.getTargetSpeed());
 
         telemetry.addData("Current RPM",
-                flywheels.getFlywheelSpeedRaw());
+                flywheels.getFlywheelVelocity());
 
 
         // LED

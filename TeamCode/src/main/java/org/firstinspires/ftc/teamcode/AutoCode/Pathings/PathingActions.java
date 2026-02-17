@@ -73,7 +73,7 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelSpeedRaw(1500);
+            flywheels.setFlywheelVelocity(1500);
             return false;
         }
     }
@@ -88,7 +88,7 @@ public class PathingActions {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelSpeedRaw(0);
+            flywheels.setFlywheelVelocity(0);
             return false;
         }
     }
@@ -120,57 +120,7 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            if (!initialized) {
 
-                targetSpeed = flywheels.setFlywheelSpeedFromDistanceInInches(distance);
-
-                spinUpStartTime = System.currentTimeMillis();
-                lastShotTime = spinUpStartTime;
-                initialized = true;
-            }
-
-            flywheelIsReady=false;
-
-            flywheels.setFlywheelSpeedFromDistanceInInches(distance); //Use auto-aim to calculate and set the flywheel velocity.
-
-            //wait 1 second to startup flywheels
-            ElapsedTime transferTimer= new ElapsedTime();
-            while (!flywheelIsReady) {
-                if (flywheels.getFlywheelSpeedRaw() >= targetSpeed * 0.9) {
-                    flywheelIsReady = true;
-                } else if (transferTimer.milliseconds()>1000) {
-                    flywheelIsReady = true;
-                }
-            }
-            double outtakeSpeedBeforeDrop = flywheels.getFlywheelSpeedRaw();
-
-            //send the balls into the flywheel to launch
-
-            for (int i = 0; i<4; i++) {
-                if (i>0){
-                    intake.setIntakePower(1);
-                }
-                transfer.runKickWheels(1);
-                long startTime = System.currentTimeMillis();
-                long timeout = 1500;
-
-                while (true) {
-                    if (flywheels.getFlywheelSpeedRaw() < outtakeSpeedBeforeDrop - 150) {
-                        break;
-                    }
-                    if (System.currentTimeMillis() - startTime > timeout) {
-                        break;
-                    }
-                }
-                transfer.runKickWheels(0.2);
-                try {
-                    sleep(250);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            transfer.stopKickWheels();
             return false;
 
         }
@@ -203,67 +153,7 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
 
-            if (!initialized) {
 
-                //targetSpeed = flywheels.setFlywheelSpeedFromDistanceInInches(distance);
-                targetSpeed=1920;
-                flywheels.setFlywheelSpeedRaw(targetSpeed);
-
-
-                spinUpStartTime = System.currentTimeMillis();
-                lastShotTime = spinUpStartTime;
-                initialized = true;
-            }
-
-            flywheelIsReady=false;
-
-            //flywheels.setFlywheelSpeedFromDistanceInInches(launchDistance); //Use auto-aim to calculate and set the flywheel velocity.
-            targetSpeed=1920;
-            flywheels.setFlywheelSpeedRaw(targetSpeed);
-
-            //wait 1 second to startup flywheels
-            ElapsedTime transferTimer= new ElapsedTime();
-            while (!flywheelIsReady) {
-                if (flywheels.getFlywheelSpeedRaw() >= targetSpeed * 0.9) {
-                    try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    flywheelIsReady = true;
-                } else if (transferTimer.milliseconds()>1000) {
-                    flywheelIsReady = true;
-                }
-            }
-            double outtakeSpeedBeforeDrop = flywheels.getFlywheelSpeedRaw();
-
-            //send the balls into the flywheel to launch
-
-            for (int i = 0; i<4; i++) {
-                if (i>0){
-                    intake.setIntakePower(1);
-                }
-                transfer.runKickWheels(1);
-                long startTime = System.currentTimeMillis();
-                long timeout = 1500;
-
-                while (true) {
-                    if (flywheels.getFlywheelSpeedRaw() < outtakeSpeedBeforeDrop - 150) {
-                        break;
-                    }
-                    if (System.currentTimeMillis() - startTime > timeout) {
-                        break;
-                    }
-                }
-                transfer.runKickWheels(0.2);
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            transfer.stopKickWheels();
             return false;
 
         }

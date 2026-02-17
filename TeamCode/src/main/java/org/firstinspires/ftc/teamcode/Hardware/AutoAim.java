@@ -20,7 +20,9 @@ public class AutoAim {
 
     //public variables (outputs. The stuff that we calculate)
     public double turn = 0;
-    public double launchPointToGoalCenterX_Distance=0;  //Vertical distance from the shooting mechanism to the goal center.
+
+    public double launchPointToGoalCenterX_Distance_Meters =0;  //Vertical distance from the shooting mechanism to the goal center.
+    public double launchPointToGoalCenterX_Distance_Inches =0;  //Vertical distance from the shooting mechanism to the goal center.
     public double angleDeviation=0; //The angle that the robot needs to turn away from the tag, in order to point towards the goal center. See NewTransfer_DriveCode for example usage.
     public double distanceToTagTelemetry=0;
     public double yawTelemetry=0;
@@ -31,15 +33,17 @@ public class AutoAim {
     private double toMeters(double inches){
         return inches/39.3700787;
     }
+
     public void calculateEverything(AprilTagDetection desiredTag){
-        launchPointToGoalCenterX_Distance = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
+        launchPointToGoalCenterX_Distance_Meters = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
+        launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
         double  headingError    = (desiredTag.ftcPose.bearing+Math.toDegrees(angleDeviation));
         turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
     }
     public double getCorrectDistance2(double givenX, double tagYaw, double tagPitch, double tagElevation){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
         //REMINDER: Use rotation matrices for yaw translation
         double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;   //robotBaseX is horizontal distance from the center of the robot to the tag.
-        distanceToTagTelemetry=robotBaseX;
+        distanceToTagTelemetry=robotBaseX*12;
         double [] actualTagYaw=rotationMatrices.getActualYaw(tagYaw, tagPitch, 0, cameraPitch); //uses rotation matrices to find the tag's actual yaw rotation.
         yawTelemetry=actualTagYaw[0];
         double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-actualTagYaw[0]));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter

@@ -80,7 +80,7 @@ public class FlywheelController {
                                 );
                     } else {
                         targetSpeed = maintainOuttakeSpeed;
-                        flywheels.setFlywheelSpeedRaw(
+                        flywheels.setFlywheelVelocity(
                                 maintainOuttakeSpeed
                         );
                     }
@@ -92,7 +92,7 @@ public class FlywheelController {
 
                 case SPINNING_UP:
 
-                    if (flywheels.getFlywheelSpeedRaw()
+                    if (flywheels.getFlywheelVelocity()
                             >= targetSpeed * 0.9) {
 
                         launchTimer.reset();
@@ -115,7 +115,7 @@ public class FlywheelController {
                                 flywheels.getFlywheelRPM();
 
                         maintainOuttakeSpeed =
-                                flywheels.getFlywheelSpeedRaw();
+                                flywheels.getFlywheelVelocity();
 
                         launchTimer.reset();
                         launchState =
@@ -163,7 +163,7 @@ public class FlywheelController {
                                 flywheels.getFlywheelRPM();
 
                         maintainOuttakeSpeed =
-                                flywheels.getFlywheelSpeedRaw();
+                                flywheels.getFlywheelVelocity();
 
                         launchState =
                                 LaunchState.FEEDING_BALL;
@@ -183,7 +183,7 @@ public class FlywheelController {
                 launchState = LaunchState.IDLE;
             }
 
-            flywheels.setFlywheelSpeedRaw(maintainOuttakeSpeed);
+            flywheels.setFlywheelVelocity(maintainOuttakeSpeed);
         }
     }
 }

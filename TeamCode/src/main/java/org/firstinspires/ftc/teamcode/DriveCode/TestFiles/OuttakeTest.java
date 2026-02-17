@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.DriveCode.TestFiles;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
-//@Disabled
+@Disabled
 @TeleOp (name="Outtake Tester", group="test")
 public class OuttakeTest extends LinearOpMode{
     public GamepadEx gamepad;
@@ -46,9 +47,9 @@ public class OuttakeTest extends LinearOpMode{
         while (opModeIsActive()) {
 
             if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
-                telemetry.addData("Optimal Launch Speed",flywheel.getRPMFromDistance(distance));
+                telemetry.addData("Optimal Launch Speed","");
             }else{
-                flywheel.setFlywheelSpeedRaw(0);
+                flywheel.setFlywheelVelocity(0);
             }
 
             if (gamepad.wasJustPressed((GamepadKeys.Button.DPAD_RIGHT))) {

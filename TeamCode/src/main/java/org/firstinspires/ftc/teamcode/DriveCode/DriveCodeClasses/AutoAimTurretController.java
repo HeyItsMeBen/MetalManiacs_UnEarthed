@@ -62,8 +62,12 @@ public class AutoAimTurretController {
         return targetFound;
     }
 
-    public double getDistanceToTag() {
-        return autoAim.distanceToTagTelemetry;
+    public double getDistanceToTagInches() {
+        return autoAim.launchPointToGoalCenterX_Distance_Inches;
+    }
+
+    public double getDistanceToTagMeters() {
+        return autoAim.launchPointToGoalCenterX_Distance_Meters;
     }
 
     public void resetTurret() {

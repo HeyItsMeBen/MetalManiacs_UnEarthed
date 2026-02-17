@@ -180,7 +180,7 @@ public class CompetitionDriveCode extends OpMode {
 
         flywheelController.update(
                 triggerPressed,
-                autoAimController.getDistanceToTag(),
+                autoAimController.getDistanceToTagInches(),
                 autoAimController.isTargetFound()
         );
 
@@ -191,8 +191,8 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("Sees april tag",
                 autoAimController.isTargetFound());
 
-        telemetry.addData("Goal distance",
-                autoAimController.getDistanceToTag());
+        telemetry.addData("Goal distance (inches)",
+                autoAimController.getDistanceToTagInches());
 
         telemetry.addData("Launcher State",
                 flywheelController.getState());
@@ -201,7 +201,7 @@ public class CompetitionDriveCode extends OpMode {
                 flywheelController.getTargetSpeed());
 
         telemetry.addData("Current RPM",
-                flywheels.getFlywheelSpeedRaw());
+                flywheels.getFlywheelVelocity());
 
 
         // LED

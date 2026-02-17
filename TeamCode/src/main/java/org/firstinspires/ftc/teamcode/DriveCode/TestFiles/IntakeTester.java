@@ -81,7 +81,7 @@ public class IntakeTester extends LinearOpMode {
             }else if (speed > 1){
                 speed = 1;
             }
-            telemetry.addData("velocity",flywheel.getFlywheelSpeedRaw());
+            telemetry.addData("velocity",flywheel.getFlywheelVelocity());
             telemetry.addData("rpm",rpm);
             telemetry.addData("speed", speed);
             telemetry.update();

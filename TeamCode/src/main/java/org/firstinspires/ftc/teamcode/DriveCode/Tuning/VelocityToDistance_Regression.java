@@ -77,12 +77,13 @@ public class VelocityToDistance_Regression extends LinearOpMode {
             scanForTags();
             if (targetFound) {
                 autoAim.calculateEverything(desiredTag);
-                flywheel.setFlywheelSpeedRaw(targetVelocity);
+                flywheel.setFlywheelVelocity(targetVelocity);
                 sleep(3000);
                 belt.runKickWheels(1);
                 telemetry.addData("Target Velocity (ticks per second)", targetVelocity);
-                telemetry.addData("Current Velocity", flywheel.getFlywheelSpeedRaw());
-                telemetry.addData("Distance to GoalCenter (inches)", toInches(autoAim.launchPointToGoalCenterX_Distance));
+                telemetry.addData("Current Velocity", flywheel.getFlywheelVelocity());
+                telemetry.addData("Distance to GoalCenter (meters)", autoAim.launchPointToGoalCenterX_Distance_Meters);
+                telemetry.addData("Distance to GoalCenter (inches)", autoAim.launchPointToGoalCenterX_Distance_Inches);
                 telemetry.update();
             }
 
@@ -185,8 +186,5 @@ public class VelocityToDistance_Regression extends LinearOpMode {
             gainControl.setGain(gain);
             //sleep1(20);
         }
-    }
-    private double toInches(double inches){
-        return inches*39.3700787;
     }
 }

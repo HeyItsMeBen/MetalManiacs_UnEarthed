@@ -78,13 +78,13 @@ public class AngleToDistance_Regression extends LinearOpMode {
             if (targetFound) {
                 autoAim.calculateEverything(desiredTag);
                 hood.setAngle(hoodAngle);
-                flywheel.setFlywheelSpeedRaw(targetVelocity);
+                flywheel.setFlywheelVelocity(targetVelocity);
                 sleep(3000);
                 belt.runKickWheels(1);
-                telemetry.addData("Distance to GoalCenter (inches)", toInches(autoAim.launchPointToGoalCenterX_Distance));
+                telemetry.addData("Distance to GoalCenter (inches)", autoAim.launchPointToGoalCenterX_Distance_Inches);
                 telemetry.addData("", "");
                 telemetry.addData("Target Velocity (ticks per second)", targetVelocity);
-                telemetry.addData("Current Velocity", flywheel.getFlywheelSpeedRaw());
+                telemetry.addData("Current Velocity", flywheel.getFlywheelVelocity());
                 telemetry.addData("", "");
                 telemetry.addData("Current Hood Position", hood.getServoPosition());
                 telemetry.addData("Current Hood Angle", hood.getAngle());
@@ -191,8 +191,4 @@ public class AngleToDistance_Regression extends LinearOpMode {
             //sleep1(20);
         }
     }
-    private double toInches(double inches){
-        return inches*39.3700787;
-    }
-
 }

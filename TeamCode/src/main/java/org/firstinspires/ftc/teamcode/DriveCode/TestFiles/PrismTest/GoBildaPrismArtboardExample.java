@@ -20,7 +20,7 @@
  *   SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.DriveCode.PrismTest;
+package org.firstinspires.ftc.teamcode.DriveCode.TestFiles.PrismTest;
 
 
 import static org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver.Artboard;

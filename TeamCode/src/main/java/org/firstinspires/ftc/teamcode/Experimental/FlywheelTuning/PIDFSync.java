@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Experimental.FlywheelTuning;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.acmerobotics.dashboard.config.Config;
 
+@Disabled
 @Config
 public class PIDFSync {
 

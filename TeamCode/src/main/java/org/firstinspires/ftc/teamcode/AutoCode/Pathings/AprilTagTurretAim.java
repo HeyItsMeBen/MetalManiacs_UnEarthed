@@ -95,7 +95,7 @@ public class AprilTagTurretAim {
             autoAim.calculateEverything(desiredTag);
             turret.setMotorPower(autoAim.turn);
             light.setAprilTagStatus(true);
-            return toInches(autoAim.launchPointToGoalCenterX_Distance)/12;
+            return autoAim.launchPointToGoalCenterX_Distance_Inches;
 
         } else {
             turret.setMotorPower(0);
@@ -121,10 +121,6 @@ public class AprilTagTurretAim {
                 break;
             }
         }
-    }
-
-    private double toInches(double inches){
-        return inches*39.3700787;
     }
 
 }

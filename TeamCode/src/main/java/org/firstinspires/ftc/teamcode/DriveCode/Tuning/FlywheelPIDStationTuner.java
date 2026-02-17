@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @Disabled
-@TeleOp(name = "Flywheel PID Tuner", group = "Tuning")
-public class FlywheelTuner extends OpMode {
+@TeleOp(name = "Flywheel PID Station Tuner", group = "Tuning")
+public class FlywheelPIDStationTuner extends OpMode {
     public DcMotorEx flywheel;
 
     public double highVelo = 2100;

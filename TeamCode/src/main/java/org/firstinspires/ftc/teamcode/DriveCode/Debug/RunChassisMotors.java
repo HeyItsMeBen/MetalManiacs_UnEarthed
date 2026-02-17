@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
+@Disabled
 @Config
 @TeleOp(name = "Chassis Motor Debugger", group = "Debug File")
 

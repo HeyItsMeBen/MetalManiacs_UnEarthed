@@ -34,59 +34,43 @@ public class Flywheels {
         flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
     }
-    public void setFlywheelSpeedRaw(double ticksPerSecond){
+    public void setFlywheelVelocity(double ticksPerSecond){
 //        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
 //        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         flywheel.setVelocity(ticksPerSecond);
     }
-    public void setFlywheelRPM(double givenRPM){
+
+    public double getFlywheelVelocity(){
+        return flywheel.getVelocity();
+    }
+
+    public void setFlywheelRPM(double ticksPerSecond){
 //        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
 //        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        flywheel.setVelocity(tickPerRevolution*(givenRPM/60));
-    }
-    public double getFlywheelSpeedRaw(){
-        return flywheel.getVelocity();
+        flywheel.setVelocity(ticksPerSecond*tickPerRevolution/60);
     }
     public double getFlywheelRPM(){
         return flywheel.getVelocity()*60/tickPerRevolution;
     }
 
-
     public double launchFromDistance(double distance, double extraSpeed){ //distance in feet from goal
-        double optimalSpeed = b+ (m * distance * 12);
+        double optimalSpeed = b+ (m * distance);
 
         if (distance > 8.0){
             optimalSpeed += 50;
         }
 
-        setFlywheelSpeedRaw(optimalSpeed +extraSpeed);
-        return optimalSpeed; //return the optimal ticksPerSecond for telemetry debugging...
-        //return optimalSpeed*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
-    }
-    public double launchFromDistance(double distance){ //distance in feet from goal
-        double optimalSpeed = b+ (m * distance * 12);
-
-        if (distance > 8.0){
-            optimalSpeed += 50;
-        }
-        setFlywheelSpeedRaw(optimalSpeed);
+        setFlywheelVelocity(optimalSpeed);
         return optimalSpeed; //return the optimal ticksPerSecond for telemetry debugging...
         //return optimalSpeed*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
     }
 
-    public double setFlywheelSpeedFromDistanceInInches(double distance){ //distance in feet from goal
-        double optimalSpeed = b + (m * distance);
-        setFlywheelSpeedRaw(optimalSpeed);
-        return optimalSpeed;
-        //return optimalSpeed*60/tickPerRevolution; //return the optimal rpm for telemetry debugging...
-    }
     public void stopFlywheel(){
         flywheel.setPower(0);
     }
 
-    public double getRPMFromDistance(double distance){
+    public double getVelocityFromDistance(double distance){
         return b+ (m * distance);  //return the optimal rpm for telemetry debugging...
-
     }
 
     public void setFlywheelPower(double power) {
@@ -95,18 +79,5 @@ public class Flywheels {
         } else {
             flywheel.setPower(power);
         }
-    }
-
-    @Deprecated
-    public void runOptimalFlywheelVelocity() {
-        flywheel.setVelocity(tickPerRevolution*(optimalVelocity/60));
-
-//        leftFlyWheel.setVelocity(tickPerRevolution*(optimalVelocity/60));
-//        rightFlyWheel.setVelocity(tickPerRevolution*(optimalVelocity/60));
-    }
-
-    @Deprecated
-    public double returnOptimalFlywheelVelocity() {
-        return optimalVelocity;
     }
 }
