@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses;
+package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
@@ -50,6 +51,22 @@ public class AutoAimTurretController {
                 .build();
     }
 
+//    public void init() {
+//        aprilTag = new AprilTagProcessor.Builder().build();
+//        aprilTag.setDecimation(2);
+//
+//        VisionPortal.Builder builder = new VisionPortal.Builder()
+//                .addProcessor(aprilTag);
+//
+//        if (useWebcam) {
+//            builder.setCamera(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"));
+//        } else {
+//            builder.setCamera(BuiltinCameraDirection.BACK);
+//        }
+//
+//        visionPortal = builder.build();
+//    }
+
     public void toggleAutoAim() {
         shouldAutoAim = !shouldAutoAim;
     }
@@ -62,11 +79,11 @@ public class AutoAimTurretController {
         return targetFound;
     }
 
-    public double getDistanceToTagInches() {
+    public double getDistanceToGoalInches() {
         return autoAim.launchPointToGoalCenterX_Distance_Inches;
     }
 
-    public double getDistanceToTagMeters() {
+    public double getDistanceToGoalMeters() {
         return autoAim.launchPointToGoalCenterX_Distance_Meters;
     }
 
@@ -147,5 +164,9 @@ public class AutoAimTurretController {
                 }
             }
         }
+    }
+
+    public void stopTurret() {
+        turret.setMotorPower(0);
     }
 }

@@ -6,157 +6,103 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.acmerobotics.roadrunner.Actions;
 
-import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
-import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
+import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
+import org.firstinspires.ftc.teamcode.Controllers.LightsController;
+
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 //See if this sends through
 
 public class PathingActions {
 
-    public static class runIntake implements Action {
-        private final Intake intake;
+    public static class AutoAimAction implements Action {
 
-        public runIntake(Intake intake) {
+        private final AutoAimTurretController aprilTagTurretAim;
+        private final LightsController lightsController;
+        private final IntakeController intakeController;
+        private String teamColor;
 
-            this.intake = intake;
+        private double startTime;
+        private boolean initialized = false;
 
+        public AutoAimAction(
+                AutoAimTurretController aprilTagTurretAim,
+                LightsController lightsController,
+                IntakeController intakeController,
+                String teamColor
+        ) {
+            this.aprilTagTurretAim = aprilTagTurretAim;
+            this.lightsController = lightsController;
+            this.intakeController = intakeController;
+            this.teamColor = teamColor;
         }
 
         @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.runIntakeFullPower();
-            return false;
+        public boolean run(@NonNull TelemetryPacket packet) {
+
+            if (!initialized) {
+                startTime = Actions.now();  // Road Runner time in seconds
+                initialized = true;
+            }
+
+            double elapsed = Actions.now() - startTime;
+
+            if (!aprilTagTurretAim.isTargetFound() || elapsed < 3.0) {
+                aprilTagTurretAim.update(false, false);
+                return false;
+            }
+
+            // Time finished — execute once
+            aprilTagTurretAim.stopTurret();
+
+            lightsController.update(
+                    aprilTagTurretAim.isTargetFound(),
+                    intakeController.isIntakeRunning(),
+                    teamColor
+            );
+
+            return true; // action complete
         }
     }
 
-    public static class maintainIntake implements Action {
-        private final Intake intake;
+    public static class FlywheelSequenceAction implements Action {
 
-        public maintainIntake(Intake intake) {
-
-            this.intake = intake;
-
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.setIntakePower(0.25);
-            return false;
-        }
-    }
-
-    public static class stopIntake implements Action {
-        private final Intake intake;
-
-        public stopIntake(Intake intake) {
-
-            this.intake = intake;
-
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            intake.stopIntake();
-            return false;
-        }
-    }
-
-    public static class powerUpFlywheels implements Action {
-        private final Flywheels flywheels;
-
-        public powerUpFlywheels(Flywheels flywheels) {
-            this.flywheels = flywheels;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelVelocity(1500);
-            return false;
-        }
-    }
-
-    public static class stopFlywheels implements Action {
-        private final Flywheels flywheels;
-
-        public stopFlywheels(Flywheels flywheels) {
-            this.flywheels = flywheels;
-
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flywheels.setFlywheelVelocity(0);
-            return false;
-        }
-    }
-
-    public static class firingSequence implements Action {
-
-        private final Intake intake;
-        private final Transfer transfer;
-        private final Flywheels flywheels;
-        private final double distance;
+        private final FlywheelController flywheel;
+        private final DoubleSupplier distanceSupplier;
+        private final BooleanSupplier targetFoundSupplier;
 
         private boolean initialized = false;
-        private boolean flywheelIsReady = false;
-        private int artifactsLaunched = 0;
-        private long lastShotTime = 0;
-        private long spinUpStartTime = 0;
-        private final long spinUpTimeout = 3000; // max 3 seconds to reach speed
-        private double targetSpeed = 0;
-        private int timeBetweenLaunches = 525;
-        private double launchDistance = 62; // in inches
 
-        public firingSequence(Intake intake, Flywheels flywheels, Transfer transfer, double goalDistance) {
-            this.intake = intake;
-            this.flywheels = flywheels;
-            this.transfer = transfer;
-            this.distance = goalDistance;
+        public FlywheelSequenceAction(FlywheelController flywheel,
+                                      DoubleSupplier distanceSupplier,
+                                      BooleanSupplier targetFoundSupplier) {
+            this.flywheel = flywheel;
+            this.distanceSupplier = distanceSupplier;
+            this.targetFoundSupplier = targetFoundSupplier;
         }
 
         @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+        public boolean run(@NonNull TelemetryPacket packet) {
+            double distance = distanceSupplier.getAsDouble();
+            boolean tagVisible = targetFoundSupplier.getAsBoolean();
 
+            if (!initialized) {
+                flywheel.update(true, distance, tagVisible); // trigger once
+                initialized = true;
+            } else {
+                flywheel.update(true, distance, tagVisible); // continue running
+            }
 
-            return false;
-
+            return (flywheel.getState() == FlywheelController.LaunchState.IDLE);
         }
     }
 
-    public static class firingSequenceFar implements Action {
-
-        private final Intake intake;
-        private final Transfer transfer;
-        private final Flywheels flywheels;
-        private final double distance;
-
-        private boolean initialized = false;
-        private boolean flywheelIsReady = false;
-        private int artifactsLaunched = 0;
-        private long lastShotTime = 0;
-        private long spinUpStartTime = 0;
-        private final long spinUpTimeout = 3000; // max 3 seconds to reach speed
-        private double targetSpeed =1920;
-        private int timeBetweenLaunches = 525;
-        private double launchDistance = 62; // in inches
-
-        public firingSequenceFar(Intake intake, Flywheels flywheels, Transfer transfer, double goalDistance) {
-            this.intake = intake;
-            this.flywheels = flywheels;
-            this.transfer = transfer;
-            this.distance = goalDistance;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-
-            return false;
-
-        }
-    }
 }
+
+
 

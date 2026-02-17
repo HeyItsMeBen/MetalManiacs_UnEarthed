@@ -31,12 +31,12 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.AutoAimTurretController;
-import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.DriveChassisController;
-import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.FlywheelController;
-import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.IntakeController;
-import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.LightsController;
-import org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses.RumbleController;
+import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
+import org.firstinspires.ftc.teamcode.Controllers.DriveChassisController;
+import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
+import org.firstinspires.ftc.teamcode.Controllers.LightsController;
+import org.firstinspires.ftc.teamcode.Controllers.RumbleController;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
@@ -180,7 +180,7 @@ public class CompetitionDriveCode_Optimized extends OpMode {
 
         flywheelController.update(
                 triggerPressed,
-                autoAimController.getDistanceToTagInches(),
+                autoAimController.getDistanceToGoalInches(),
                 autoAimController.isTargetFound()
         );
 
@@ -192,7 +192,7 @@ public class CompetitionDriveCode_Optimized extends OpMode {
                 autoAimController.isTargetFound());
 
         telemetry.addData("Goal distance",
-                autoAimController.getDistanceToTagInches());
+                autoAimController.getDistanceToGoalInches());
 
         telemetry.addData("Launcher State",
                 flywheelController.getState());

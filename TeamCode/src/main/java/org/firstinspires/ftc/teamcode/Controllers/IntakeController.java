@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses;
+package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -70,5 +70,9 @@ public class IntakeController {
         intakePower = 0;
         intake.setIntakePower(0);
         kickWheel.runKickWheels(0);
+    }
+
+    public void setIntakePower() {
+        intake.setIntakePower(0.8);
     }
 }

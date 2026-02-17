@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.DriveCode.DriveCodeClasses;
+package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,6 +24,8 @@ public class FlywheelController {
 
     private double targetSpeed = 0;
     private double outtakeSpeedBeforeDrop = 0;
+
+    private static double MINIMUM_SPEED = 1500;
 
     public enum LaunchState {
         IDLE,
@@ -61,6 +63,11 @@ public class FlywheelController {
     public void setExtraSpeed(double extra) {
         extraOuttakeSpeed = extra;
     }
+
+    public void powerUpToSpeed() {
+        flywheels.setFlywheelVelocity(MINIMUM_SPEED);
+    }
+
 
     public void update(boolean triggerPressed,
                        double distanceToTag,
