@@ -65,9 +65,11 @@ public class FlywheelController {
     }
 
     public void powerUpToSpeed() {
-        flywheels.setFlywheelVelocity(MINIMUM_SPEED);
+        double kRamp = 0.09; // 9% per loop
+        double currentVelocity = flywheels.getFlywheelVelocity();
+        double newVelocity = currentVelocity + (MINIMUM_SPEED - currentVelocity) * kRamp;
+        flywheels.setFlywheelVelocity(newVelocity);
     }
-
 
     public void update(boolean triggerPressed,
                        double distanceToTag,
