@@ -18,7 +18,7 @@ public class Turret {
     double ticksPerTurretRevolution=6320;
     public static double p=0, i=0, d=0, f=0;
     private PIDController controller;
-    double halfRange=750;
+    double halfRange=183;
     double middlePosition=0;
 
     public Turret(HardwareMap hMap) {

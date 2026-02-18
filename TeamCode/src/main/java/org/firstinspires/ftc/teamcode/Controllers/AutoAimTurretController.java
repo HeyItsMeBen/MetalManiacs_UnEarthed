@@ -43,7 +43,7 @@ public class AutoAimTurretController {
     public AutoAimTurretController(HardwareMap hardwareMap) {
 
         turret = new Turret(hardwareMap);
-        autoAim = new AutoAim(Math.toRadians(15));
+        autoAim = new AutoAim(Math.toRadians(0));
 
         initAprilTag(hardwareMap);
 
@@ -166,7 +166,6 @@ public class AutoAimTurretController {
         if (!localized){
             scanForTags();
             if (targetFound) {
-
                 autoAim.calculateEverything(desiredTag);
                 odo.setPosition(new Pose2D(DistanceUnit.INCH, 75-autoAim.xpos, 78-autoAim.ypos, AngleUnit.RADIANS,autoAim.botAngleThing+Math.toRadians(desiredTag.ftcPose.bearing)));
 
@@ -191,6 +190,7 @@ public class AutoAimTurretController {
             double turretAngle = Math.atan((78 - autoAim.ypos) / (75 - autoAim.xpos)) - heading;
 
             turret.runTowardsTargetAngle(turretAngle);
+            //turret.setMotorPower(0.5);
         }
     }
 
