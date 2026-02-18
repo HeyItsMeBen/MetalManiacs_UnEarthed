@@ -84,8 +84,7 @@ public class FlywheelController {
                     if (tagVisible) {
                         targetSpeed =
                                 flywheels.launchFromDistance(
-                                        distanceToTag,
-                                        extraOuttakeSpeed
+                                        distanceToTag
                                 );
                     } else {
                         targetSpeed = maintainOuttakeSpeed;

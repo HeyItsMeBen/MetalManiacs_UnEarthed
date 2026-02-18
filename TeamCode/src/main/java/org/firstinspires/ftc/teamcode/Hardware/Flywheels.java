@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class Flywheels {
 
     private DcMotorEx flywheel = null;
-    //    private DcMotorEx leftFlyWheel = null;
-//    private DcMotorEx rightFlyWheel = null;
     final double tickPerRevolution = 28;
 
     public double f = 14.12;
@@ -37,14 +35,7 @@ public class Flywheels {
         return flywheel.getVelocity();
     }
 
-    public void setFlywheelRPM(double rpm){
-        flywheel.setVelocity(rpm*tickPerRevolution/60);
-    }
-    public double getFlywheelRPM(){
-        return flywheel.getVelocity()*60/tickPerRevolution;
-    }
-
-    public double launchFromDistance(double distance, double extraSpeed){ //distance in feet from goal
+    public double launchFromDistance(double distance){ //distance in feet from goal
         double optimalSpeed = b+ (m * distance);
 
         if (distance > 8.0){
@@ -67,6 +58,16 @@ public class Flywheels {
     public void setFlywheelPower(double power){
         power = Math.max(-1, Math.min(1, power));
         flywheel.setPower(power);
+    }
+
+    @Deprecated
+    public void setFlywheelRPM(double rpm){
+        flywheel.setVelocity(rpm*tickPerRevolution/60);
+    }
+
+    @Deprecated
+    public double getFlywheelRPM(){
+        return flywheel.getVelocity()*60/tickPerRevolution;
     }
 
 }

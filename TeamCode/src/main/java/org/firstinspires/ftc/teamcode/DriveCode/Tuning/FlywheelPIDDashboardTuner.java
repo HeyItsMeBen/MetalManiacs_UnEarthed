@@ -5,8 +5,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 
 @Config
 @TeleOp(name = "Flywheel PID Dashboard Tuner", group = "Tuning")
@@ -19,14 +23,17 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
     public static double F = 14.12;
 
     // Target velocity (RPM), editable live
-    public static double targetVelocity = 2000;
+    public static double targetVelocity = 3000;
 
     // Maximum velocity change per loop for smooth ramping
-    public static double maxAccelPerLoop = 50.0; // RPM per loop
+    public static double MINIMUM_SPEED = 50.0; // RPM per loop
 
     // Motor
     private DcMotorEx flywheel;
     private FtcDashboard dashboard;
+
+    public DcMotor intake;
+    public DcMotor transferWheels;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,9 +44,10 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
         flywheel.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        // Initialize PIDF on the motor
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, I, D, F);
-        flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        intake.setDirection(DcMotorEx.Direction.FORWARD);
+        transferWheels = hardwareMap.get(DcMotorEx.class, "kickWheel");
+        transferWheels.setDirection(DcMotorSimple.Direction.REVERSE);
 
         dashboard = FtcDashboard.getInstance();
 
@@ -57,15 +65,19 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
             flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, updatedCoeffs);
 
             // --- Ramp target velocity smoothly ---
+            double kRamp = 0.09; // 9% per loop
             double currentVel = flywheel.getVelocity();
-            if (currentVel < targetVelocity) {
-                rampedTarget = Math.min(currentVel + maxAccelPerLoop, targetVelocity);
-            } else if (currentVel > targetVelocity) {
-                rampedTarget = Math.max(currentVel - maxAccelPerLoop, targetVelocity);
-            }
+            double newVelocity = currentVel + (targetVelocity - currentVel) * kRamp;
+
+            flywheel.setVelocity(newVelocity);
+
+            //flywheel.setPower(1);
+
+//            intake.setPower(0.8);
+//            transferWheels.setPower(0.8);
 
             // Set motor velocity
-            flywheel.setVelocity(rampedTarget);
+            //flywheel.setVelocity(rampedTarget);
 
             // --- Dashboard telemetry ---
             TelemetryPacket packet = new TelemetryPacket();

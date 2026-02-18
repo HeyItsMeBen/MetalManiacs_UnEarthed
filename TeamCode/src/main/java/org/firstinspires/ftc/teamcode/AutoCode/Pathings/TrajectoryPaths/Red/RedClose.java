@@ -88,7 +88,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.setIntakePower()),
+                                new InstantAction(() -> intakeController.setIntakePower(0.8)),
                                 new InstantAction(() -> flywheelController.powerUpToSpeed()),
                                 initialMovement.build()
                     )

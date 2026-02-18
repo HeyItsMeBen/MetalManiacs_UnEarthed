@@ -72,7 +72,11 @@ public class IntakeController {
         kickWheel.runKickWheels(0);
     }
 
-    public void setIntakePower() {
-        intake.setIntakePower(0.8);
+    public void setIntakePower(double power) {
+        intake.setIntakePower(power);
     }
+    public void setKickWheelPower(double power) {
+        intake.setIntakePower(power);
+    }
+
 }
