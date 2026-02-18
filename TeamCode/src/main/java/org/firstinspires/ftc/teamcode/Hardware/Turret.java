@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Hardware;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,7 +15,15 @@ public class Turret {
     private boolean isInPositionMode = false;
     private int manualTargetPosition = CENTER_POSITION; // Track target for manual positioning
 
+    double ticksPerTurretRevolution=6320;
+    public static double p=0, i=0, d=0, f=0;
+    private PIDController controller;
+    double halfRange=750;
+    double middlePosition=0;
+
     public Turret(HardwareMap hMap) {
+        controller = new PIDController(p, i, d);
+
         turretMotor = hMap.get(DcMotorEx.class, "turret");
         turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -144,5 +153,20 @@ public class Turret {
      */
     public boolean isInPositionMode() {
         return isInPositionMode;
+    }
+    public void runTowardsTargetAngle(double turretAngle){
+        double turretPos=ticksPerTurretRevolution*turretAngle/(2*Math.PI);
+        if (turretMotor.getCurrentPosition()>middlePosition-halfRange || turretMotor.getCurrentPosition()<middlePosition+halfRange) {
+            runTowardTargetDistance(turretPos);
+        } else {
+            runTowardTargetDistance(middlePosition);
+        }
+    }
+    public void runTowardTargetDistance(double ticks) {
+        controller.setPID(p, i, d);
+        int armPos = turretMotor.getCurrentPosition();
+        double power = controller.calculate(armPos, ticks);
+
+        turretMotor.setPower(power);
     }
 }

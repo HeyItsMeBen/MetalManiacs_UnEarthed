@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -20,6 +24,7 @@ public class AutoAimTurretController {
     private AprilTagProcessor aprilTag;
 
     private AprilTagDetection desiredTag = null;
+    private GoBildaPinpointDriver odo;
 
     private boolean targetFound = false;
     private boolean shouldAutoAim = true;
@@ -32,12 +37,25 @@ public class AutoAimTurretController {
     private static final int DESIRED_TAG_ID = 24;
     private static final int DESIRED_TAG_ID2 = 20;
 
+    boolean localized=false;
+    double lastLocalized =0;
+
     public AutoAimTurretController(HardwareMap hardwareMap) {
 
         turret = new Turret(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
 
         initAprilTag(hardwareMap);
+
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+
+        odo.setOffsets(82.55, 0, DistanceUnit.INCH);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+
+        odo.resetPosAndIMU();
+        Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
+        odo.setPosition(startingPosition);
     }
 
     private void initAprilTag(HardwareMap hardwareMap) {
@@ -141,6 +159,38 @@ public class AutoAimTurretController {
             } else {
                 turret.setMotorPower(0);
             }
+        }
+    }
+    public void relocalize(boolean manualLeft, boolean manualRight) {
+        //scans every 0.5 seconds or so
+        if (!localized){
+            scanForTags();
+            if (targetFound) {
+
+                autoAim.calculateEverything(desiredTag);
+                odo.setPosition(new Pose2D(DistanceUnit.INCH, 75-autoAim.xpos, 78-autoAim.ypos, AngleUnit.RADIANS,autoAim.botAngleThing+Math.toRadians(desiredTag.ftcPose.bearing)));
+
+                wasTargetFoundLastFrame = true;
+
+            }
+            localized=true;
+            lastLocalized =System.currentTimeMillis();
+        } else if (System.currentTimeMillis()- lastLocalized >500) {
+            localized=false;
+        }
+
+        //turret control
+        if (!shouldAutoAim) {
+            manualControl(manualLeft, manualRight);
+            wasTargetFoundLastFrame = false;
+            return;
+        } else {
+            Pose2D pos = odo.getPosition();
+            double heading = pos.getHeading(AngleUnit.RADIANS);
+            double newX = Math.sqrt(Math.pow((75 - autoAim.xpos), 2) + Math.pow((78 - autoAim.ypos), 2));
+            double turretAngle = Math.atan((78 - autoAim.ypos) / (75 - autoAim.xpos)) - heading;
+
+            turret.runTowardsTargetAngle(turretAngle);
         }
     }
 

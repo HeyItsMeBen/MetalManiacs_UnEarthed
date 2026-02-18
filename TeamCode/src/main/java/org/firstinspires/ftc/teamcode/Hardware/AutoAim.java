@@ -26,6 +26,10 @@ public class AutoAim {
     public double angleDeviation=0; //The angle that the robot needs to turn away from the tag, in order to point towards the goal center. See NewTransfer_DriveCode for example usage.
     public double distanceToTagTelemetry=0;
     public double yawTelemetry=0;
+
+    public double xpos;
+    public double ypos;
+    public double botAngleThing;
     public AutoAim(double cameraAngleOfElevation){  //input the camera's angle when creating the autoAim object. So if it's tilted up by 15 degrees, input Math.toRadians(15).
         cameraPitch=cameraAngleOfElevation;
         rotationMatrices = new RotationMatrices();
@@ -38,7 +42,13 @@ public class AutoAim {
         launchPointToGoalCenterX_Distance_Meters = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
         launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
         double  headingError    = (desiredTag.ftcPose.bearing+Math.toDegrees(angleDeviation));
-        turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+        turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+        //botAngleThing=Math.PI/2-(Math.toRadians(90-35)+(Math.PI-((Math.PI-yawTelemetry)+angleDeviation)));
+        //xpos=launchPointToGoalCenterX_Distance*Math.cos(botAngleThing);
+        //ypos=launchPointToGoalCenterX_Distance*Math.sin(botAngleThing);
+        botAngleThing=Math.PI/2-(Math.toRadians(90-35)+yawTelemetry);
+        xpos=distanceToTagTelemetry*Math.cos(botAngleThing);
+        ypos=distanceToTagTelemetry*Math.sin(botAngleThing);
     }
     public double getCorrectDistance2(double givenX, double tagYaw, double tagPitch, double tagElevation){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
         //REMINDER: Use rotation matrices for yaw translation
