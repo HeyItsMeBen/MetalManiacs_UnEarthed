@@ -15,13 +15,13 @@ import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.LightsController;
-import org.firstinspires.ftc.teamcode.Controllers.Hardware.AutoAim;
-import org.firstinspires.ftc.teamcode.Controllers.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Controllers.Hardware.Intake;
-import org.firstinspires.ftc.teamcode.Controllers.Hardware.Lights;
-import org.firstinspires.ftc.teamcode.Controllers.Hardware.OuttakeHood;
-import org.firstinspires.ftc.teamcode.Controllers.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Controllers.Hardware.Turret;
+import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
+import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
+import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
 @Autonomous(name = "Red Close New", group = "Autonomous")
