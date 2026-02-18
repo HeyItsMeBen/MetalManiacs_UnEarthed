@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.Red;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
@@ -25,9 +26,10 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
+@Disabled
 @Config
-@Autonomous(name = "Red Close Original", group = "Autonomous")
-public class RedCloseoriginal extends LinearOpMode {
+@Autonomous(name = "Red Close", group = "Autonomous")
+public class RedClose extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -64,15 +66,9 @@ public class RedCloseoriginal extends LinearOpMode {
 
         aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
 
-        //aprilTagTurretAim = new AutoAimTurretController(this, turret, autoAim, true, 24, 20, lights);
-
-        //aprilTagTurretAim.init();
-
         waitForStart();
         if (isStopRequested()) return;
 
-//        aprilTagTurretAim.waitForStreaming();
-//        aprilTagTurretAim.setManualExposure(6, 250);
         lightsController.update(false, false, "Red");
 
         TrajectoryActionBuilder initialMovement = drive.actionBuilder(startPose)
@@ -86,23 +82,7 @@ public class RedCloseoriginal extends LinearOpMode {
                                 new InstantAction(() -> intakeController.setIntakePower(0.8)),
                                 new InstantAction(() -> flywheelController.powerUpToSpeed()),
                                 initialMovement.build()
-                    )
-            )
-        );
-
-//        turretTimer = new ElapsedTime();
-//        while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
-//            distanceFromGoal = aprilTagTurretAim.getDistanceToGoalInches();
-//            if (distanceFromGoal == 0) {
-//                distanceFromGoal = 1750;
-//            }
-//        }
-//        aprilTagTurretAim.stopTurret();
-//        lightsController.update(aprilTagTurretAim.isTargetFound(), intakeController.isIntakeRunning(), "Red");
-
-
-        Actions.runBlocking(
-                new SequentialAction(
+                        ),
 
                         new PathingActions.AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                         new PathingActions.FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
@@ -114,9 +94,7 @@ public class RedCloseoriginal extends LinearOpMode {
                         new PathingActions.FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
                         PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose())
-
                 )
-
         );
     }
 

@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
 @Autonomous(name = "Red Close New", group = "Autonomous")
-public class RedClose extends LinearOpMode {
+public class RedCloseNew extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -73,18 +73,25 @@ public class RedClose extends LinearOpMode {
 //        aprilTagTurretAim.setManualExposure(6, 250);
         lightsController.update(false, false, "Red");
 
+
         TrajectoryActionBuilder initialMovement = drive.actionBuilder(startPose)
 
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 10, Math.toRadians(0)), Math.toRadians(90));
-        
+
+        TrajectoryActionBuilder secondMovement = initialMovement.endTrajectory().fresh() //updates again
+
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(18, 10, Math.toRadians(0)), Math.toRadians(90));
+
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.setIntakePower(0.8)),
                                 new InstantAction(() -> flywheelController.powerUpToSpeed()),
                                 initialMovement.build()
-                        )
+                        ),
+                        secondMovement.build()
                 )
         );
     }
