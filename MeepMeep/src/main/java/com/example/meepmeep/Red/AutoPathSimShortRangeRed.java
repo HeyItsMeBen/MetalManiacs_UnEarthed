@@ -27,9 +27,9 @@ public class AutoPathSimShortRangeRed {
                 //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(0)))
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(40)))
 //Bernies pathing
-                        .setReversed(true)
 
                         //shoots as it drives backwards
+                        .setReversed(true)
                         .splineToConstantHeading(new Vector2d(18, 7), Math.toRadians(270))
 //                        .waitSeconds(0.5f)
 
@@ -41,38 +41,39 @@ public class AutoPathSimShortRangeRed {
                         //get in position to shoot
                         .splineToConstantHeading(new Vector2d(15, 2), Math.toRadians(180))
                         .waitSeconds(0.5f)
-                        .setReversed(false)
+
                         //get balls from gate
+                        .setReversed(false)
                         .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0))
                         .waitSeconds(0.5f)
-                        .setReversed(true)
 
                         //get in position to shoot
+                        .setReversed(true)
                         .splineToConstantHeading(new Vector2d(15, 12), Math.toRadians(90))
                         .waitSeconds(0.5f)
-                        .setReversed(false)
 
                         //picks up balls from the top
+                        .setReversed(false)
                         .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(0.25f)
-                        .setReversed(true)
 
                         //get in position to shoot
+                        .setReversed(true)
                         .splineToConstantHeading(new Vector2d(15, 12), Math.toRadians(0))
                         .waitSeconds(0.5f)
-                        .setReversed(false)
 
                         //pick up balls from the bottom
+                        .setReversed(false)
                         .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0))
                         .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0))
-                        .setReversed(true)
 
                         //get in position to shoot
+                        .setReversed(true)
                         .splineToConstantHeading(new Vector2d(15, 6), Math.toRadians(90))
                         .waitSeconds(0.5f)
-                        .setReversed(false)
 
                         //park
+                        .setReversed(false)
                         .splineToLinearHeading(new Pose2d(45,6, Math.toRadians(0)), Math.toRadians(0))
                         .waitSeconds(2f)
 

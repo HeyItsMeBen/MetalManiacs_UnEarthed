@@ -69,15 +69,12 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
             double currentVel = flywheel.getVelocity();
             double newVelocity = currentVel + (targetVelocity - currentVel) * kRamp;
 
-            flywheel.setVelocity(newVelocity);
+            //flywheel.setVelocity(newVelocity);
 
-            //flywheel.setPower(1);
+            flywheel.setPower(1);
 
-//            intake.setPower(0.8);
-//            transferWheels.setPower(0.8);
-
-            // Set motor velocity
-            //flywheel.setVelocity(rampedTarget);
+            intake.setPower(0.8);
+            transferWheels.setPower(0.8);
 
             // --- Dashboard telemetry ---
             TelemetryPacket packet = new TelemetryPacket();

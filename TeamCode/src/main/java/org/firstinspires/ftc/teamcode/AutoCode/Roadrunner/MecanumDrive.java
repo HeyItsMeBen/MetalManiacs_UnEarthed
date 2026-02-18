@@ -44,6 +44,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -71,7 +72,7 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
 
-        public double inPerTick = 0.00205585081; //0.00200116735
+        public double inPerTick = 0.00199700449 + 0.00118110236 + 0.00198741305; //0.00200116735
         public double lateralInPerTick = 0.001418668880834119;
         public double trackWidthTicks = 7872.577741970743;
 
@@ -248,15 +249,14 @@ public final class MecanumDrive {
 
         // TODO: reverse motor directions if needed
         //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        //frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+//        frontRight.setDirection(DcMotor.Direction.REVERSE);
+//        backLeft.setDirection(DcMotor.Direction.REVERSE);
+//        backRight.setDirection(DcMotor.Direction.REVERSE);
         
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
         lazyImu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));

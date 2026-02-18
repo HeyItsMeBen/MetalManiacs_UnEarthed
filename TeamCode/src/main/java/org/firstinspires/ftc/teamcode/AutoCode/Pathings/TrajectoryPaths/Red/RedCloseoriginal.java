@@ -10,6 +10,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -24,8 +26,8 @@ import org.firstinspires.ftc.teamcode.Controllers.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Controllers.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Red Close New", group = "Autonomous")
-public class RedClose extends LinearOpMode {
+@Autonomous(name = "Red Close Original", group = "Autonomous")
+public class RedCloseoriginal extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -77,15 +79,49 @@ public class RedClose extends LinearOpMode {
 
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(18, 10, Math.toRadians(0)), Math.toRadians(90));
-        
+
+        TrajectoryActionBuilder moveToFiringPosition = drive.actionBuilder(startPose)
+
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(18, 10, Math.toRadians(0)), Math.toRadians(90));
+
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.setIntakePower(0.8)),
                                 new InstantAction(() -> flywheelController.powerUpToSpeed()),
                                 initialMovement.build()
-                        )
+                    )
+            )
+        );
+
+//        turretTimer = new ElapsedTime();
+//        while (opModeIsActive() && turretTimer.milliseconds() < 1000) {
+//            distanceFromGoal = aprilTagTurretAim.getDistanceToGoalInches();
+//            if (distanceFromGoal == 0) {
+//                distanceFromGoal = 1750;
+//            }
+//        }
+//        aprilTagTurretAim.stopTurret();
+//        lightsController.update(aprilTagTurretAim.isTargetFound(), intakeController.isIntakeRunning(), "Red");
+
+
+        Actions.runBlocking(
+                new SequentialAction(
+
+                        new PathingActions.AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                        new PathingActions.FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+
+                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG"),
+
+                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose()),
+                        new PathingActions.AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                        new PathingActions.FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+
+                        PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose())
+
                 )
+
         );
     }
 

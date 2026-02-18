@@ -6,10 +6,6 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 import com.acmerobotics.roadrunner.Pose2d;
 
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
-import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-
 import java.lang.Math;
 
 public class PathingTrajectoriesRed {
