@@ -28,10 +28,7 @@ public class Flywheels {
 
     }
     public void setFlywheelVelocity(double ticksPerSecond){
-        double kRamp = 0.09; // 9% per loop
-        double currentVel = flywheel.getVelocity();
-        double newVelocity = currentVel + (ticksPerSecond - currentVel) * kRamp;
-        flywheel.setVelocity(newVelocity);
+        flywheel.setVelocity(ticksPerSecond);
     }
 
     public double getFlywheelVelocity(){

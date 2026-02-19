@@ -27,11 +27,11 @@ public class Transfer {
         transferDrum.setPower(0);
     }
 
-    public void setKickServoUp() {
+    public void setTransferKickUp() {
         transferKick.setPosition(kickServoUp);
     }
 
-    public void setKickServoDown() {
+    public void setTransferKickDown() {
         transferKick.setPosition(kickServoDown);
     }
 
