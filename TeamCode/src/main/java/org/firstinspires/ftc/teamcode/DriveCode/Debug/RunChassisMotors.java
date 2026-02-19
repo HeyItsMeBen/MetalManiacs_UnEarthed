@@ -27,6 +27,8 @@ public class RunChassisMotors extends LinearOpMode {
 
     DcMotor currentMotor;
 
+    String currentSetMotor;
+
     // Note: pushing stick forward gives negative value
     @Override
     public void runOpMode() {
@@ -47,6 +49,7 @@ public class RunChassisMotors extends LinearOpMode {
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         currentMotor = frontRight;
+        currentSetMotor = "Front Right";
 
         waitForStart();
         runtime.reset();
@@ -92,23 +95,22 @@ public class RunChassisMotors extends LinearOpMode {
             telemetry.addData("Press Y: ", " Set Motor to backRight");
             telemetry.addData("Press D PAD Up/Down: ", " Run set motor forward/reverse");
             telemetry.addData(" ", "");
-            telemetry.addData("Current Set Motor: ", currentMotor);
-
-            telemetry.addData("A pressed?", driver.getButton(GamepadKeys.Button.A));
-            telemetry.addData("B pressed?", driver.getButton(GamepadKeys.Button.B));
-            telemetry.addData("X pressed?", driver.getButton(GamepadKeys.Button.X));
-            telemetry.addData("Y pressed?", driver.getButton(GamepadKeys.Button.Y));
+            telemetry.addData("Current Set Motor: ", currentSetMotor);
 
             telemetry.update();
 
             if (driver.wasJustPressed(GamepadKeys.Button.A)) {
                 currentMotor = frontLeft;
+                currentSetMotor = "Front Left";
             } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
                 currentMotor = frontRight;
+                currentSetMotor = "Front Right";
             } else if (driver.wasJustPressed(GamepadKeys.Button.X)) {
                 currentMotor = backLeft;
+                currentSetMotor = "Back Left";
             } else if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
                 currentMotor = backRight;
+                currentSetMotor = "Back Right";
             }
 
             if (driver.getButton(GamepadKeys.Button.DPAD_UP)) {

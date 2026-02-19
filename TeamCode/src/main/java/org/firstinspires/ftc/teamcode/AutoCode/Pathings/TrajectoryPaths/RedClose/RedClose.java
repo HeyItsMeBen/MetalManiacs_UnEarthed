@@ -104,34 +104,34 @@ public class RedClose extends LinearOpMode {
                         ),
                         new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
-                        openChannel(drive, drive.localizer.getPose()),
+                        openChannel(drive, drive.localizer.getPose()) //,
 
-                        new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
-
-                        collectPattern(drive, drive.localizer.getPose(), "PPG"),
-
-                        new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
-
-                        collectPattern(drive, drive.localizer.getPose(), "GPP"),
-
-                        new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
-
-                        new ParallelAction(
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                park(drive, drive.localizer.getPose())
-                        )
+//                        new ParallelAction(
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        ),
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+//
+//                        collectPattern(drive, drive.localizer.getPose(), "PPG"),
+//
+//                        new ParallelAction(
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        ),
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+//
+//                        collectPattern(drive, drive.localizer.getPose(), "GPP"),
+//
+//                        new ParallelAction(
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        ),
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+//
+//                        new ParallelAction(
+//                                new InstantAction(() -> intakeController.toggleIntake()),
+//                                park(drive, drive.localizer.getPose())
+//                        )
                 )
         );
     }
