@@ -63,7 +63,7 @@ public class IntakeController {
             intakePower = 0.25f;
         }
 
-        intake.setIntakePower(intakePower);
+        intake.setIntakePower(intakePower*(System.currentTimeMillis()/0.5));    //should take 0.5 seconds to speed up.
     }
 
     public void stopAll() {
