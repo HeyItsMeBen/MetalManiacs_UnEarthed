@@ -28,6 +28,7 @@ package org.firstinspires.ftc.teamcode.DriveCode.TestFiles;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -45,6 +46,7 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 
 import java.util.List;
 
+@Disabled
 @TeleOp(name = "Optimized Drive Code Test", group = "Robot")
 public class CompetitionDriveCode_Optimized extends OpMode {
 

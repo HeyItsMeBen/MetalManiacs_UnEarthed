@@ -1,5 +1,18 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose;
 
+// Paths
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.initialMoveToPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.collectPattern;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.firingPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.openChannel;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.park;
+// Paths
+
+// Actions
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.AutoAimAction;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.FlywheelSequenceAction;
+// Actions
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -12,7 +25,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingTrajectoriesRed;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -28,7 +41,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Disabled
 @Config
-@Autonomous(name = "Red Close", group = "Autonomous")
+@Autonomous(name = "Red Close", group = "Autonomous - Red")
 public class RedClose extends LinearOpMode {
 
     Intake intake;
@@ -71,29 +84,55 @@ public class RedClose extends LinearOpMode {
 
         lightsController.update(false, false, "Red");
 
-        TrajectoryActionBuilder initialMovement = drive.actionBuilder(startPose)
-
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(18, 10, Math.toRadians(0)), Math.toRadians(90));
-
         Actions.runBlocking(
                 new SequentialAction(
+
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.setIntakePower(0.8)),
+                                new InstantAction(() -> intakeController.toggleIntake()),
+                                new InstantAction(() -> intakeController.update()),
                                 new InstantAction(() -> flywheelController.powerUpToSpeed()),
-                                initialMovement.build()
+                                initialMoveToPosition(drive, drive.localizer.getPose())
                         ),
 
-                        new PathingActions.AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                        new PathingActions.FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
-                        PathingTrajectoriesRed.PatternCollection(drive, drive.localizer.getPose(), "PPG"),
+                        collectPattern(drive, drive.localizer.getPose(), "PGP"),
 
-                        PathingTrajectoriesRed.firingPositionZoneOne(drive, drive.localizer.getPose()),
-                        new PathingActions.AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                        new PathingActions.FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        new ParallelAction(
+                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                firingPosition(drive, drive.localizer.getPose())
+                        ),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
-                        PathingTrajectoriesRed.LongRangePark(drive, drive.localizer.getPose())
+                        openChannel(drive, drive.localizer.getPose()),
+
+                        new ParallelAction(
+                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                firingPosition(drive, drive.localizer.getPose())
+                        ),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+
+                        collectPattern(drive, drive.localizer.getPose(), "PPG"),
+
+                        new ParallelAction(
+                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                firingPosition(drive, drive.localizer.getPose())
+                        ),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+
+                        collectPattern(drive, drive.localizer.getPose(), "GPP"),
+
+                        new ParallelAction(
+                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                firingPosition(drive, drive.localizer.getPose())
+                        ),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+
+                        new ParallelAction(
+                                new InstantAction(() -> intakeController.toggleIntake()),
+                                park(drive, drive.localizer.getPose())
+                        )
                 )
         );
     }

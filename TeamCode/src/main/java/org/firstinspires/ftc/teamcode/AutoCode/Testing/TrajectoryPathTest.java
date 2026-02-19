@@ -13,7 +13,7 @@
 //import org.firstinspires.ftc.teamcode.Old_Code.Intake;
 //
 //@Config
-//@Autonomous(name = "Trajectory Path Tester", group = "Autonomous")
+//@Autonomous(name = "Trajectory Path Tester", group = "Testing")
 //public class TrajectoryPathTest extends LinearOpMode {
 //
 //    Intake intake;

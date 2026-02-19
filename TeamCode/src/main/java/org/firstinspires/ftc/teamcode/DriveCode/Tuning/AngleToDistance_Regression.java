@@ -29,7 +29,7 @@ Configurations:
  */
 
 @Config
-@Autonomous(name = "Hood Angle To Distance Regression", group = "Linear OpMode")
+@Autonomous(name = "Hood Angle To Distance Regression", group = "Tuning")
 public class AngleToDistance_Regression extends LinearOpMode {
     Flywheels flywheel;
     OuttakeHood hood;

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp (name="Voltage Drop Checker", group="test")
+@TeleOp (name="Voltage Drop Checker", group="Debug")
 public class VoltageDropAcrossMotors extends LinearOpMode {
 
     public GamepadEx gamepad;

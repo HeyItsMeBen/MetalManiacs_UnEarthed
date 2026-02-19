@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Disabled
 @Config
-@TeleOp(name = "Chassis Motor Debugger", group = "Debug File")
+@TeleOp(name = "Chassis Motor Debugger", group = "Debug")
 
 public class RunChassisMotors extends LinearOpMode {
 

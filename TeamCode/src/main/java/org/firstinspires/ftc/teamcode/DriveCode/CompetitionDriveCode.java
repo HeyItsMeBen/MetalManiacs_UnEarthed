@@ -45,7 +45,7 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 
 import java.util.List;
 
-@TeleOp(name = "[Use Me!] Competition DriveCode v4.0.0", group = "Robot")
+@TeleOp(name = "[Use Me!] Competition DriveCode v4.0.0", group = "TeleOP")
 public class CompetitionDriveCode extends OpMode {
 
     public GamepadEx driver;

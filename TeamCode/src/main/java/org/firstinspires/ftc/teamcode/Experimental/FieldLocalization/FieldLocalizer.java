@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.Drawing;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 @Config
-@TeleOp(name = "Field Localizer", group = "Autonomous")
+@TeleOp(name = "Field Localizer", group = "Localizer")
 public class FieldLocalizer extends LinearOpMode {
 
     @Override

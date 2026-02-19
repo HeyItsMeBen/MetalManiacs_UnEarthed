@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp (name="Motor Debugger", group="test")
+@TeleOp (name="Motor Debugger", group="Debug")
 public class RunMotorPower extends LinearOpMode {
 
     public GamepadEx gamepad;

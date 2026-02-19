@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.List;
 
 @TeleOp(name = "[OLD ROBOT] TeleOp Vision Assist Mecanum")
-//@Disabled
+@Disabled
 public class TeleOpVisionAssistMecanum extends LinearOpMode {
 
     // Drive motors

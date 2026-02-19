@@ -73,8 +73,8 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
 
             flywheel.setPower(1);
 
-            intake.setPower(0.8);
-            transferWheels.setPower(0.8);
+            intake.setPower(0.3);
+            transferWheels.setPower(0.3);
 
             // --- Dashboard telemetry ---
             TelemetryPacket packet = new TelemetryPacket();

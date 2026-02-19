@@ -39,7 +39,8 @@ public class AutoPathSimShortRangeRed {
                         .waitSeconds(0.25f)
 
                         //get in position to shoot
-                        .splineToConstantHeading(new Vector2d(15, 2), Math.toRadians(180))
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //get balls from gate
@@ -49,7 +50,7 @@ public class AutoPathSimShortRangeRed {
 
                         //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(15, 12), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //picks up balls from the top
@@ -59,7 +60,7 @@ public class AutoPathSimShortRangeRed {
 
                         //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(15, 12), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //pick up balls from the bottom
@@ -69,12 +70,12 @@ public class AutoPathSimShortRangeRed {
 
                         //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(15, 6), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //park
                         .setReversed(false)
-                        .splineToLinearHeading(new Pose2d(45,6, Math.toRadians(0)), Math.toRadians(0))
+                        .splineTo(new Vector2d(45,6), Math.toRadians(0))
                         .waitSeconds(2f)
 
 

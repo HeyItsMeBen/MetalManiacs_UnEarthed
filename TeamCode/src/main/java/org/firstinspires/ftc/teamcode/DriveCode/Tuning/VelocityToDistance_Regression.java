@@ -29,7 +29,7 @@ Configurations:
  */
 
 @Config
-@Autonomous(name = "VelocityToDistance_Regression", group = "Linear OpMode")
+@Autonomous(name = "VelocityToDistance_Regression", group = "Tuning")
 public class VelocityToDistance_Regression extends LinearOpMode {
     Flywheels flywheel;
     OuttakeHood hood;

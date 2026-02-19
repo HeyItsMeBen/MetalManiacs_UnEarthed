@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @Disabled
-@TeleOp (name="Telemetry Test", group="test")
+@TeleOp (name="Telemetry Test", group="Test")
 public class TelemetryTest extends LinearOpMode {
 
     public GamepadEx gamepad;

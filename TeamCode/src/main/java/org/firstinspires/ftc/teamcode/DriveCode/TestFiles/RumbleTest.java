@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.DriveCode.TestFiles;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@Disabled
 @TeleOp(name = "[Immersive] Rumble Test", group = "Robot")
 public class RumbleTest extends OpMode {
     public GamepadEx driver;

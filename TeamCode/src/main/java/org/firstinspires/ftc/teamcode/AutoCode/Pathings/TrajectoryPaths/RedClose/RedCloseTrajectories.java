@@ -14,6 +14,11 @@ public class RedCloseTrajectories {
 
     static double defaultAngVelocity = Math.PI;
 
+    static double patternCollectionVelocity = 10.0;
+
+    static double patternCollectionAngVelocity = Math.PI;
+
+
     static MinVelConstraint defaultSpeedConstraint = new MinVelConstraint(
             java.util.Arrays.asList(
                     new TranslationalVelConstraint(defaultVelocity),
@@ -21,7 +26,15 @@ public class RedCloseTrajectories {
             )
     );
 
-    public static Action firingPositionZoneOne(MecanumDrive drive, Pose2d currentPose) {
+    static MinVelConstraint patternCollectionConstraint = new MinVelConstraint(
+            java.util.Arrays.asList(
+                    new TranslationalVelConstraint(patternCollectionVelocity),
+                    new AngularVelConstraint(patternCollectionAngVelocity)
+            )
+    );
+
+
+    public static Action initialMoveToPosition(MecanumDrive drive, Pose2d currentPose) {
 
         return drive.actionBuilder(currentPose)
 
@@ -31,23 +44,7 @@ public class RedCloseTrajectories {
                 .build();
     }
 
-    public static Action firingPositionZoneTwo(MecanumDrive drive, Pose2d currentPose) {
-
-        MinVelConstraint maxSpeedConstraint = new MinVelConstraint(
-                java.util.Arrays.asList(
-                        new TranslationalVelConstraint(25),
-                        new AngularVelConstraint(defaultAngVelocity)
-                )
-        );
-
-        return drive.actionBuilder(currentPose)
-
-                .strafeToLinearHeading(new Vector2d(15, -55), Math.toRadians(90), maxSpeedConstraint)
-
-                .build();
-    }
-
-    public static Action PatternCollection(MecanumDrive drive, Pose2d currentPose, String Pattern) {
+    public static Action collectPattern(MecanumDrive drive, Pose2d currentPose, String Pattern) {
 
         switch (Pattern) {
 
@@ -56,14 +53,7 @@ public class RedCloseTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(18, 20), Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(48, 10, Math.toRadians(0)), Math.toRadians(0),
-                                new MinVelConstraint(
-                                        java.util.Arrays.asList(
-                                                new TranslationalVelConstraint(30),
-                                                new AngularVelConstraint(defaultAngVelocity)
-                                        )
-                                ))
+                        .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint)
 
                         .build();
 
@@ -71,16 +61,10 @@ public class RedCloseTrajectories {
 
                 return drive.actionBuilder(currentPose)
 
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(18, -5), Math.toRadians(270), defaultSpeedConstraint)
-                        .splineToLinearHeading(new Pose2d(48, -14, Math.toRadians(0)), Math.toRadians(0),
-                                new MinVelConstraint(
-                                        java.util.Arrays.asList(
-                                                new TranslationalVelConstraint(30),
-                                                new AngularVelConstraint(defaultAngVelocity)
-                                        )
-                                )
-                        )
+                        .setReversed(true)
+                        .splineToSplineHeading(new Pose2d(30,-12, Math.toRadians(0)), Math.toRadians(0), defaultSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0), patternCollectionConstraint)
+
                         .build();
 
             case "GPP":
@@ -88,14 +72,9 @@ public class RedCloseTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(18, -25), Math.toRadians(270), defaultSpeedConstraint)
-                        .splineToLinearHeading(new Pose2d(48, -38, Math.toRadians(0)), Math.toRadians(0), new MinVelConstraint(
-                                        java.util.Arrays.asList(
-                                                new TranslationalVelConstraint(30),
-                                                new AngularVelConstraint(defaultAngVelocity)
-                                        )
-                                )
-                        )
+                        .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0), patternCollectionConstraint)
+                        .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0), defaultSpeedConstraint)
+
                         .build();
 
             default:
@@ -103,18 +82,18 @@ public class RedCloseTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(20, -35), Math.toRadians(270), defaultSpeedConstraint)
+                        .splineTo(new Vector2d(45,6), Math.toRadians(0))
 
                         .build();
         }
     }
 
-    public static Action collectArtifactsZoneTwo(MecanumDrive drive, Pose2d currentPose) {
-
+    public static Action firingPosition(MecanumDrive drive, Pose2d currentPose) {
 
         return drive.actionBuilder(currentPose)
 
-                .splineTo(new Vector2d(63, -58), Math.toRadians(0), defaultSpeedConstraint)
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90), defaultSpeedConstraint)
 
                 .build();
     }
@@ -124,10 +103,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .strafeTo(new Vector2d(45,8), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(67,4), Math.toRadians(0), defaultSpeedConstraint)
-
-                .waitSeconds(1)
+                .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0), defaultSpeedConstraint)
 
                 .build();
     }
@@ -137,17 +113,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .strafeTo(new Vector2d(35, -60), defaultSpeedConstraint)
-
-                .build();
-    }
-
-    public static Action LongRangePark(MecanumDrive drive, Pose2d currentPose) {
-
-        return drive.actionBuilder(currentPose)
-
-                .setReversed(false)
-                .strafeTo(new Vector2d(35, -60), defaultSpeedConstraint)
+                .splineTo(new Vector2d(45,6), Math.toRadians(0))
 
                 .build();
     }

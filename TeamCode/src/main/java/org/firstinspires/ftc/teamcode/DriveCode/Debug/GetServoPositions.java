@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp (name="Get Servo Positions", group="test")
+@TeleOp (name="Get Servo Positions", group="Debug")
 public class GetServoPositions extends LinearOpMode {
 
     public GamepadEx gamepad;
