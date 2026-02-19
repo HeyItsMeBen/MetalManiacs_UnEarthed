@@ -54,8 +54,8 @@ public class CompetitionDriveCode extends OpMode {
     // Mechanisms
     Intake intake;
     Flywheels flywheels;
-    Transfer kickWheel;
-    Transfer kickServo;
+    Transfer transferDrum;
+    Transfer transferServo;
     Lights lights;
     OuttakeHood hood;
 
@@ -79,15 +79,15 @@ public class CompetitionDriveCode extends OpMode {
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        kickWheel = new Transfer(hardwareMap);
-        kickServo = new Transfer(hardwareMap);
+        transferDrum = new Transfer(hardwareMap);
+        transferServo = new Transfer(hardwareMap);
         lights = new Lights(hardwareMap);
         hood = new OuttakeHood(hardwareMap);
 
         driveController = new DriveChassisController(hardwareMap);
         autoAimController = new AutoAimTurretController(hardwareMap);
-        flywheelController = new FlywheelController(flywheels, kickWheel, kickServo, intake, hood);
-        intakeController = new IntakeController(intake, kickWheel, kickServo);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferServo, intake, hood);
+        intakeController = new IntakeController(intake, transferDrum, transferServo);
         lightsController = new LightsController(lights);
 
         telemetry.addData("Status", "Initialized");

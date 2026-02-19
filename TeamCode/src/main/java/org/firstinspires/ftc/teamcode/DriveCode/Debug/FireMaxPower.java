@@ -35,7 +35,7 @@ public class FireMaxPower extends LinearOpMode {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorEx.Direction.FORWARD);
 
-        transferWheels = hardwareMap.get(CRServo.class, "servotest");
+        transferWheels = hardwareMap.get(CRServo.class, "transferDrum");
         transferWheels.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addLine("Init complete");

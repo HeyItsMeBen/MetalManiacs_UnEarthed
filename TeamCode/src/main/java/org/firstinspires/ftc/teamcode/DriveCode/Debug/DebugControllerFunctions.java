@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Disabled
 @TeleOp (name="Debug Controller Functions", group="Debug")
 public class DebugControllerFunctions extends LinearOpMode {
 

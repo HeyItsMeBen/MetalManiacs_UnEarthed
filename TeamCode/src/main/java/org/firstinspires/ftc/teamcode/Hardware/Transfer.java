@@ -2,47 +2,47 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Transfer {
 
-    private Servo kickServo = null;
-    private DcMotor kickWheels = null;
-//0.41(open), 0.2 (close)
-    public float kickServoUp = 0.41f; //0.24
+    private Servo transferKick = null;
+    private DcMotor transferDrum = null;
 
+    public float kickServoUp = 0.41f; //0.24
     public float kickServoDown = 0.2f; // Get New Values
 
     public Transfer(HardwareMap hMap) {
-        kickServo = hMap.get(Servo.class, "kickServo");
-        kickWheels = hMap.get(DcMotor.class, "kickWheel");
-        kickWheels.setDirection(DcMotorEx.Direction.REVERSE);
+        transferKick = hMap.get(Servo.class, "transferKick");
+        transferDrum = hMap.get(DcMotor.class, "transferDrum");
+        transferDrum.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
     public void runKickWheels(double power){
-        kickWheels.setPower(power);
+        transferDrum.setPower(power);
     }
     public void stopKickWheels() {
-        kickWheels.setPower(0);
+        transferDrum.setPower(0);
     }
 
     public void setKickServoUp() {
-        kickServo.setPosition(kickServoUp);
+        transferKick.setPosition(kickServoUp);
     }
 
     public void setKickServoDown() {
-        kickServo.setPosition(kickServoDown);
+        transferKick.setPosition(kickServoDown);
     }
 
     public double getCurrentKickServoPosition () {
-        return kickServo.getPosition();
+        return transferKick.getPosition();
     }
 
     public void changeKickServoPositionManual (double increment) {
-        double position = kickServo.getPosition();
+        double position = transferKick.getPosition();
         position += increment;
-        kickServo.setPosition(position);
+        transferKick.setPosition(position);
     }
 
 }

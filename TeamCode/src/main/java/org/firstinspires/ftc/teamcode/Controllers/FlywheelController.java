@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake;
 public class FlywheelController {
 
     private Flywheels flywheels;
-    private Transfer kickWheel;
-    private Transfer kickServo;
+    private Transfer transferDrum;
+    private Transfer transferKick;
     private Intake intake;
     private OuttakeHood hood;
 
@@ -38,12 +38,12 @@ public class FlywheelController {
     private LaunchState launchState = LaunchState.IDLE;
 
     public FlywheelController(Flywheels flywheels,
-                              Transfer kickWheel, Transfer kickServo,
+                              Transfer transferDrum, Transfer transferKick,
                               Intake intake, OuttakeHood hood) {
 
         this.flywheels = flywheels;
-        this.kickWheel = kickWheel;
-        this.kickServo = kickServo;
+        this.transferDrum = transferDrum;
+        this.transferKick = transferKick;
         this.intake = intake;
         this.hood = hood;
     }
@@ -137,12 +137,12 @@ public class FlywheelController {
                         intake.setIntakePower(1);
                     }
 
-                    kickWheel.runKickWheels(1);
+                    transferDrum.runKickWheels(1);
 
                     if (flywheels.getFlywheelVelocity()
                             < outtakeSpeedBeforeDrop - 100) {
 
-                        kickWheel.runKickWheels(0);
+                        transferDrum.runKickWheels(0);
                         intake.setIntakePower(0);
 
                         ballsFed++;
@@ -157,7 +157,7 @@ public class FlywheelController {
 
                     } else if (launchTimer.milliseconds() > 1800) {
 
-                        kickWheel.runKickWheels(0);
+                        transferDrum.runKickWheels(0);
                         intake.setIntakePower(0);
                         launchState = LaunchState.IDLE;
                     }
@@ -185,7 +185,7 @@ public class FlywheelController {
 
             if (launchState != LaunchState.IDLE) {
 
-                kickWheel.runKickWheels(0);
+                transferDrum.runKickWheels(0);
                 intake.setIntakePower(0);
 
                 launchState = LaunchState.IDLE;

@@ -7,6 +7,8 @@ public class Intake {
     private DcMotorEx intakeWheels;
     final double tickPerRevolution=28*5.2;
 
+    double MAX_POWER = 0.7;
+
     public Intake(HardwareMap hMap) {
         intakeWheels = hMap.get(DcMotorEx.class, "intake"); //added 7/24/24
         intakeWheels.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -20,21 +22,21 @@ public class Intake {
     }
 
     public void runIntakeFullPower(){
-        intakeWheels.setPower(1.0);
+        intakeWheels.setPower(MAX_POWER);
     }
 
     public void maintainIntakePower(){
-        intakeWheels.setPower(0.5);
+        intakeWheels.setPower(MAX_POWER/2);
     }
 
     public void reverseIntake(){
-        intakeWheels.setPower(-0.75);
+        intakeWheels.setPower(-MAX_POWER);
     }
 
     public void stopIntake() {
         intakeWheels.setPower(0);
     }
-    public double getVelocityRPM(){
+    public double getIntakeMotorRPM(){
         return intakeWheels.getVelocity()*60/tickPerRevolution;
     }
 }

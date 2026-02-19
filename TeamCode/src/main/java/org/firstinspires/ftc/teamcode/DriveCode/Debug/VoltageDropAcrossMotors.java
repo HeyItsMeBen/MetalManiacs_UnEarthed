@@ -29,9 +29,9 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
 
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
 
-        flywheelMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        flywheelMotor = hardwareMap.get(DcMotorEx.class, "flywheel");
 
-        turretMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         flywheelMotor.setDirection(DcMotorSimple.Direction.FORWARD);
