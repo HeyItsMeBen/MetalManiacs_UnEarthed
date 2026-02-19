@@ -193,6 +193,9 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("Goal distance (inches)",
                 autoAimController.getDistanceToGoalInches());
 
+        telemetry.addData("Target turret angle (degrees)",
+                Math.toDegrees(autoAimController.turretAngleTelemetry));
+
         telemetry.addData("Launcher State",
                 flywheelController.getState());
 

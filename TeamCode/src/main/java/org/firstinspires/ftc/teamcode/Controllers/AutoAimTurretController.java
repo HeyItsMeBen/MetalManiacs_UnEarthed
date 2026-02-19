@@ -40,6 +40,8 @@ public class AutoAimTurretController {
     boolean localized=false;
     double lastLocalized =0;
 
+    public double turretAngleTelemetry=0;
+
     public AutoAimTurretController(HardwareMap hardwareMap) {
 
         turret = new Turret(hardwareMap);
@@ -162,6 +164,14 @@ public class AutoAimTurretController {
         }
     }
     public void relocalize(boolean manualLeft, boolean manualRight) {
+
+        //turret control
+        if (!shouldAutoAim) {
+            manualControl(manualLeft, manualRight);
+            wasTargetFoundLastFrame = false;
+            return;
+        }
+
         //scans every 0.5 seconds or so
         if (!localized){
             scanForTags();
@@ -177,21 +187,14 @@ public class AutoAimTurretController {
         } else if (System.currentTimeMillis()- lastLocalized >500) {
             localized=false;
         }
+        Pose2D pos = odo.getPosition();
+        double heading = pos.getHeading(AngleUnit.RADIANS);
+        double newX = Math.sqrt(Math.pow((75 - autoAim.xpos), 2) + Math.pow((78 - autoAim.ypos), 2));
+        double turretAngle = Math.atan((78 - autoAim.ypos) / (75 - autoAim.xpos)) - heading;
+        turretAngleTelemetry=turretAngle;
 
-        //turret control
-        if (!shouldAutoAim) {
-            manualControl(manualLeft, manualRight);
-            wasTargetFoundLastFrame = false;
-            return;
-        } else {
-            Pose2D pos = odo.getPosition();
-            double heading = pos.getHeading(AngleUnit.RADIANS);
-            double newX = Math.sqrt(Math.pow((75 - autoAim.xpos), 2) + Math.pow((78 - autoAim.ypos), 2));
-            double turretAngle = Math.atan((78 - autoAim.ypos) / (75 - autoAim.xpos)) - heading;
-
-            turret.runTowardsTargetAngle(turretAngle);
-            //turret.setMotorPower(0.5);
-        }
+        turret.runTowardsTargetAngle(turretAngle);
+        //turret.setMotorPower(0.5);
     }
 
     private void scanForTags() {
