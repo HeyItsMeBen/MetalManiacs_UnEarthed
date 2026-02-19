@@ -5,9 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp (name="Flywheel Ramp-Up", group="Debug")
+@TeleOp (name="Flywheel Ramp-Up Test", group="Debug")
 public class RampFlywheelVelocity extends LinearOpMode {
 
     public GamepadEx gamepad;
@@ -24,7 +25,7 @@ public class RampFlywheelVelocity extends LinearOpMode {
         gamepad = new GamepadEx(gamepad1);
 
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        flywheel.setDirection(DcMotorEx.Direction.FORWARD);
+        flywheel.setDirection(DcMotorEx.Direction.REVERSE);
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         ElapsedTime timer = new ElapsedTime();

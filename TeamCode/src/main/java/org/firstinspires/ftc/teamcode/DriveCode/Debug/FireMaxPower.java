@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 
@@ -22,6 +23,11 @@ public class FireMaxPower extends LinearOpMode {
 
     public DcMotor intake;
     public CRServo transferWheels;
+
+    ElapsedTime flywheelTimer;
+
+    double targetPower = 1;
+    double rampSeconds = 5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,15 +47,20 @@ public class FireMaxPower extends LinearOpMode {
         telemetry.addLine("Init complete");
         telemetry.update();
 
+        ElapsedTime timer = new ElapsedTime();
+
         waitForStart();
 
         while (opModeIsActive()) {
 
             double power = 1;
 
-            double kRamp = 0.05; // 5% per loop
-            double currentPower = flywheel.getPower();
-            double newPower = currentPower + (power - currentPower) * kRamp;
+            double rampTime = rampSeconds;        // 5 seconds
+            double maxPower = targetPower;  // 2000 ticks per second
+            double elapsed = timer.seconds();
+            double progress = Math.min(elapsed / rampTime, 1.0);
+            double newPower = maxPower * progress;
+
             flywheel.setPower(newPower);
 
             intake.setPower(0.3);

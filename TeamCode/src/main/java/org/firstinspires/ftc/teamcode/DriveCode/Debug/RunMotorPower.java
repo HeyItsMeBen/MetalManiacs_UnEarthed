@@ -38,9 +38,8 @@ public class RunMotorPower extends LinearOpMode {
                 Motor.setPower(0);
             }
 
-
             telemetry.addData("Debug File: ", "Applies continuous power to a motor or continuous servo");
-            telemetry.addData("Use right joystick to apply power", "");
+            telemetry.addData("Use right joystick up/down to apply power", "");
             telemetry.update();
 
             idle();
