@@ -79,7 +79,7 @@ public class VelocityToDistance_Regression extends LinearOpMode {
                 autoAim.calculateEverything(desiredTag);
                 flywheel.setFlywheelVelocity(targetVelocity);
                 sleep(3000);
-                belt.runKickWheels(1);
+                belt.runTransferDrum(1);
                 telemetry.addData("Target Velocity (ticks per second)", targetVelocity);
                 telemetry.addData("Current Velocity", flywheel.getFlywheelVelocity());
                 telemetry.addData("Distance to GoalCenter (meters)", autoAim.launchPointToGoalCenterX_Distance_Meters);

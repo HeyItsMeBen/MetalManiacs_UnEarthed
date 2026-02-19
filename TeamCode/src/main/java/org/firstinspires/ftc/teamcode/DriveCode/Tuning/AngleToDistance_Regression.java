@@ -80,7 +80,7 @@ public class AngleToDistance_Regression extends LinearOpMode {
                 hood.setAngle(hoodAngle);
                 flywheel.setFlywheelVelocity(targetVelocity);
                 sleep(3000);
-                belt.runKickWheels(1);
+                belt.runTransferDrum(1);
                 telemetry.addData("Distance to GoalCenter (inches)", autoAim.launchPointToGoalCenterX_Distance_Inches);
                 telemetry.addData("", "");
                 telemetry.addData("Target Velocity (ticks per second)", targetVelocity);

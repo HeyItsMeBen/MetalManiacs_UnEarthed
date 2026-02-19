@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,10 +19,10 @@ public class Transfer {
         transferDrum.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
-    public void runKickWheels(double power){
+    public void runTransferDrum(double power){
         transferDrum.setPower(power);
     }
-    public void stopKickWheels() {
+    public void stopTransferDrum() {
         transferDrum.setPower(0);
     }
 
@@ -35,11 +34,11 @@ public class Transfer {
         transferKick.setPosition(kickServoDown);
     }
 
-    public double getCurrentKickServoPosition () {
+    public double getCurrentTransferKickPosition () {
         return transferKick.getPosition();
     }
 
-    public void changeKickServoPositionManual (double increment) {
+    public void changeTransferKickPositionManual (double increment) {
         double position = transferKick.getPosition();
         position += increment;
         transferKick.setPosition(position);

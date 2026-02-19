@@ -33,7 +33,7 @@ public class IntakeController {
 
         if (Math.abs(intakePower) == 1) {
             intakePower = 0;
-            transferDrum.runKickWheels(0);
+            transferDrum.runTransferDrum(0);
 
         } else {
             intakePower = 1;
@@ -45,11 +45,11 @@ public class IntakeController {
 
         if (Math.abs(intakePower) == 1) {
             intakePower = 0;
-            transferDrum.runKickWheels(0);
+            transferDrum.runTransferDrum(0);
 
         } else {
             intakePower = -1;
-            transferDrum.runKickWheels(-1);
+            transferDrum.runTransferDrum(-1);
         }
     }
 
@@ -69,7 +69,7 @@ public class IntakeController {
     public void stopAll() {
         intakePower = 0;
         intake.setIntakePower(0);
-        transferDrum.runKickWheels(0);
+        transferDrum.runTransferDrum(0);
     }
 
 }

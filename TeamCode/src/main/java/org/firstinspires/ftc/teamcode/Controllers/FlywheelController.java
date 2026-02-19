@@ -137,12 +137,12 @@ public class FlywheelController {
                         intake.setIntakePower(1);
                     }
 
-                    transferDrum.runKickWheels(1);
+                    transferDrum.runTransferDrum(1);
 
                     if (flywheels.getFlywheelVelocity()
                             < outtakeSpeedBeforeDrop - 100) {
 
-                        transferDrum.runKickWheels(0);
+                        transferDrum.runTransferDrum(0);
                         intake.setIntakePower(0);
 
                         ballsFed++;
@@ -157,7 +157,7 @@ public class FlywheelController {
 
                     } else if (launchTimer.milliseconds() > 1800) {
 
-                        transferDrum.runKickWheels(0);
+                        transferDrum.runTransferDrum(0);
                         intake.setIntakePower(0);
                         launchState = LaunchState.IDLE;
                     }
@@ -185,7 +185,7 @@ public class FlywheelController {
 
             if (launchState != LaunchState.IDLE) {
 
-                transferDrum.runKickWheels(0);
+                transferDrum.runTransferDrum(0);
                 intake.setIntakePower(0);
 
                 launchState = LaunchState.IDLE;
