@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.DriveCode.Debug;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,6 +19,8 @@ public class RampFlywheelVelocity extends LinearOpMode {
 
     double targetVelocity = 2000;
     double rampSeconds = 5;
+
+    boolean reversed;
 
     @Override
     public void runOpMode() {
@@ -44,8 +47,17 @@ public class RampFlywheelVelocity extends LinearOpMode {
 
                 flywheel.setVelocity(newVelocity);
 
+                if (gamepad.wasJustPressed(GamepadKeys.Button.Y)) {
+                    reversed = !reversed;
+                    flywheel.setDirection(
+                            reversed ? DcMotorSimple.Direction.REVERSE
+                                    : DcMotorSimple.Direction.FORWARD
+                    );
+                }
+
                 telemetry.addData("Target Velocity", targetVelocity);
                 telemetry.addData("Current Velocity", flywheel.getVelocity());
+                telemetry.addData("Press Y to reverse direction", "");
                 telemetry.update();
             }
         }

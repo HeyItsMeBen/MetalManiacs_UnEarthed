@@ -22,6 +22,8 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
 
     String currentSetMotor;
 
+    boolean reversed = false;
+
     @Override
     public void runOpMode() {
 
@@ -34,7 +36,9 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
         turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         flywheelMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         currentMotor = flywheelMotor;
@@ -49,6 +53,7 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
             telemetry.addData("Press A: ", " Set motor to intake motor");
             telemetry.addData("Press B: ", " Set motor to flywheel motor");
             telemetry.addData("Press X: ", " Set motor to turret motor");
+            telemetry.addData("Press Y: ", " Reverse current motor direction");
             telemetry.addData("Press D PAD Up/Down: ", " Run set motor forward/reverse");
             telemetry.addData(" ", "");
             telemetry.addData("Current Set Motor: ", currentSetMotor);
@@ -69,6 +74,14 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
                 currentMotor.setPower(1);
             } else {
                 currentMotor.setPower(0);
+            }
+
+            if (gamepad.wasJustPressed(GamepadKeys.Button.Y)) {
+                reversed = !reversed;
+                currentMotor.setDirection(
+                        reversed ? DcMotorSimple.Direction.REVERSE
+                                : DcMotorSimple.Direction.FORWARD
+                );
             }
 
             idle();
