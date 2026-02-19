@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.DriveCode.Debug;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,17 +13,16 @@ public class RunMotorPower extends LinearOpMode {
 
     public GamepadEx gamepad;
 
-    public DcMotor Motor;
+    public CRServo Motor;
 
     @Override
     public void runOpMode() {
 
         gamepad = new GamepadEx(gamepad1);
 
-        Motor = hardwareMap.get(DcMotorEx.class, "intake");
+        Motor = hardwareMap.get(CRServo.class, "servotest");
         Motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         waitForStart();
         //executing
         while (opModeIsActive()) {
@@ -39,7 +39,7 @@ public class RunMotorPower extends LinearOpMode {
             }
 
 
-            telemetry.addData("Debug File: ", "Applies continuous power to a motor");
+            telemetry.addData("Debug File: ", "Applies continuous power to a motor or continuous servo");
             telemetry.addData("Use right joystick to apply power", "");
             telemetry.update();
 

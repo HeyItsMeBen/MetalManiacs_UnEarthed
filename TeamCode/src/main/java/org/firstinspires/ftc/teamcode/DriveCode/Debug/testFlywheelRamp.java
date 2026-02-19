@@ -5,11 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp (name="Flywheel Debugger", group="Debug")
-public class RunFlywheelPower extends LinearOpMode {
+@TeleOp (name="Flywheel Ramp-Up", group="Debug")
+public class testFlywheelRamp extends LinearOpMode {
 
     public GamepadEx gamepad;
 

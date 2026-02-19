@@ -39,7 +39,6 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
-@Disabled
 @Config
 @Autonomous(name = "Red Close", group = "Autonomous - Red")
 public class RedClose extends LinearOpMode {

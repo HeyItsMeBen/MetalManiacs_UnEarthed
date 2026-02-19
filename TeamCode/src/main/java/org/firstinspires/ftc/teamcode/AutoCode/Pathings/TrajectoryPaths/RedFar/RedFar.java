@@ -1,11 +1,22 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.Red;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar;
+
+// Paths
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifacts;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.firingPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.park;
+// Paths
+
+// Actions
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.AutoAimAction;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.FlywheelSequenceAction;
+// Actions
+
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -24,8 +35,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Red Close New", group = "Autonomous")
-public class RedCloseNew extends LinearOpMode {
+@Autonomous(name = "Red Far", group = "Autonomous - Red")
+public class RedFar extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -62,37 +73,35 @@ public class RedCloseNew extends LinearOpMode {
 
         aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
 
-        //aprilTagTurretAim = new AutoAimTurretController(this, turret, autoAim, true, 24, 20, lights);
-
-        //aprilTagTurretAim.init();
-
         waitForStart();
         if (isStopRequested()) return;
 
-//        aprilTagTurretAim.waitForStreaming();
-//        aprilTagTurretAim.setManualExposure(6, 250);
         lightsController.update(false, false, "Red");
-
-
-        TrajectoryActionBuilder initialMovement = drive.actionBuilder(startPose)
-
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(18, 10, Math.toRadians(0)), Math.toRadians(90));
-
-        TrajectoryActionBuilder secondMovement = initialMovement.endTrajectory().fresh() //updates again
-
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(18, 10, Math.toRadians(0)), Math.toRadians(90));
 
         Actions.runBlocking(
                 new SequentialAction(
+
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 new InstantAction(() -> intakeController.update()),
-                                new InstantAction(() -> flywheelController.powerUpToSpeed()),
-                                initialMovement.build()
+                                new InstantAction(() -> flywheelController.powerUpToSpeed())
                         ),
-                        secondMovement.build()
+
+                        new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+
+                        collectArtifacts(drive, drive.localizer.getPose()),
+
+                        new ParallelAction(
+                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                firingPosition(drive, drive.localizer.getPose())
+                        ),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+
+                        new ParallelAction(
+                                new InstantAction(() -> intakeController.toggleIntake()),
+                                park(drive, drive.localizer.getPose())
+                        )
                 )
         );
     }

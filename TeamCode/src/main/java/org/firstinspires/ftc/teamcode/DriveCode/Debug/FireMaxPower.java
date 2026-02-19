@@ -5,10 +5,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 
@@ -19,7 +21,7 @@ public class FireMaxPower extends LinearOpMode {
     private DcMotorEx flywheel;
 
     public DcMotor intake;
-    public DcMotor transferWheels;
+    public CRServo transferWheels;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,7 +34,8 @@ public class FireMaxPower extends LinearOpMode {
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorEx.Direction.FORWARD);
-        transferWheels = hardwareMap.get(DcMotorEx.class, "kickWheel");
+
+        transferWheels = hardwareMap.get(CRServo.class, "servotest");
         transferWheels.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addLine("Init complete");
@@ -42,10 +45,15 @@ public class FireMaxPower extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            flywheel.setPower(1);
+            double power = 1;
+
+            double kRamp = 0.05; // 5% per loop
+            double currentPower = flywheel.getPower();
+            double newPower = currentPower + (power - currentPower) * kRamp;
+            flywheel.setPower(newPower);
 
             intake.setPower(0.3);
-            transferWheels.setPower(0.3);
+            transferWheels.setPower(1);
 
             // --- Driver Station telemetry ---
             telemetry.addData("Current Power", flywheel.getPower());
