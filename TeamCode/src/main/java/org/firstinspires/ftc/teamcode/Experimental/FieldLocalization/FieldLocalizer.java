@@ -16,8 +16,12 @@ public class FieldLocalizer extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d startPose = new Pose2d(15, -60, Math.toRadians(270)); // x, y, heading in radians
+
+        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0)); // x, y, heading in radians
+
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+
+        Pose2d currentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
 
         waitForStart();
 

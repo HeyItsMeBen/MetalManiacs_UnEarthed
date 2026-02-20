@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 public class RedFarTrajectories {
 
-    static double defaultVelocity = 10.0;
+    static double defaultVelocity = 20.0;
 
     static double defaultAngVelocity = Math.PI;
 
@@ -34,12 +34,19 @@ public class RedFarTrajectories {
             )
     );
 
+    public static Action initialMoveToPosition(MecanumDrive drive, Pose2d currentPose) {
+
+        return drive.actionBuilder(currentPose)
+                .strafeTo(new Vector2d(12, -35), defaultSpeedConstraint)
+                .build();
+    }
+
     public static Action firingPosition(MecanumDrive drive, Pose2d currentPose) {
 
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
 
                 .build();
     }
@@ -48,8 +55,7 @@ public class RedFarTrajectories {
 
         return drive.actionBuilder(currentPose)
 
-                .setReversed(true)
-                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90), defaultSpeedConstraint)
+                .splineTo(new Vector2d(60, -60), Math.toRadians(0), defaultSpeedConstraint)
 
                 .build();
     }
@@ -59,7 +65,7 @@ public class RedFarTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineTo(new Vector2d(45,6), Math.toRadians(0))
+                .splineTo(new Vector2d(35,-55), Math.toRadians(0), defaultSpeedConstraint)
 
                 .build();
     }

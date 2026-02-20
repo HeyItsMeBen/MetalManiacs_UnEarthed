@@ -26,7 +26,8 @@ public class AutoPathSimShortRangeRed {
 
                 //.followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(0)))
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(40)))
-//Bernies pathing
+
+                        //Bernies pathing
 
                         //shoots as it drives backwards
                         .setReversed(true)

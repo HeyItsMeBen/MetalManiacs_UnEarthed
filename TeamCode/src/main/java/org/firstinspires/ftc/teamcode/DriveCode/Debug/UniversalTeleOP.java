@@ -3,18 +3,19 @@ package org.firstinspires.ftc.teamcode.DriveCode.Debug;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Config
-@TeleOp(name = "Chassis Motor Debugger", group = "Debug")
+@TeleOp(name = "Universal TeleOP", group = "Debug")
 
-public class RunChassisMotors extends LinearOpMode {
+public class UniversalTeleOP extends LinearOpMode {
 
     // Driver Code
     public GamepadEx driver;
@@ -24,9 +25,18 @@ public class RunChassisMotors extends LinearOpMode {
     private DcMotor frontRight = null;
     private DcMotor backRight = null;
 
-    DcMotor currentMotor;
+    public DcMotor intakeMotor;
 
-    String currentSetMotor;
+    public DcMotorEx flywheelMotor;
+
+    public DcMotor turretMotor;
+
+    public CRServo drum;
+
+    double targetVelocity = 2500;
+    double rampSeconds = 5;
+
+    boolean turret_direction_reversed;
 
     // Note: pushing stick forward gives negative value
     @Override
@@ -35,6 +45,23 @@ public class RunChassisMotors extends LinearOpMode {
         driver = new GamepadEx(gamepad1);
 
         ElapsedTime runtime = new ElapsedTime();
+
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+
+        flywheelMotor = hardwareMap.get(DcMotorEx.class, "flywheel");
+
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
+
+        drum = hardwareMap.get(CRServo.class, "transferDrum");
+
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        flywheelMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        drum.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Driver Code
         frontLeft  = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -47,8 +74,8 @@ public class RunChassisMotors extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        currentMotor = frontRight;
-        currentSetMotor = "Front Right";
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
 
         waitForStart();
         runtime.reset();
@@ -85,45 +112,53 @@ public class RunChassisMotors extends LinearOpMode {
             backLeft.setPower(leftBackPower * 0.7);
             backRight.setPower(rightBackPower * 0.7);
 
-            //run individual wheels
+            telemetry.addData("Universal TeleOP to run all motors and CR servos", "");
+            telemetry.addData(" ", "");
             telemetry.addData("Use joysticks to run robot centric drive ", "");
             telemetry.addData(" ", "");
-            telemetry.addData("Press A: ", " Set motor to frontLeft");
-            telemetry.addData("Press B: ", " Set motor to frontRight");
-            telemetry.addData("Press X: ", " Set motor to backLeft");
-            telemetry.addData("Press Y: ", " Set Motor to backRight");
-            telemetry.addData("Press D PAD Up/Down: ", " Run set motor forward/reverse");
+            telemetry.addData("Press A: ", "Run intake, power 0.5");
+            telemetry.addData("Press B: ", "Run flywheels, target Velocity 2500");
+            telemetry.addData("Press X: ", "Run turret, power 0.3 (will cycle back and forth)");
+            telemetry.addData("Press Y: ", "Run transfer drum, power 1");
             telemetry.addData(" ", "");
-            telemetry.addData("Current Set Motor: ", currentSetMotor);
 
             telemetry.update();
 
             if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-                currentMotor = frontLeft;
-                currentSetMotor = "Front Left";
+                intakeMotor.setPower(0.5);
             } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-                currentMotor = frontRight;
-                currentSetMotor = "Front Right";
+                double rampTime = rampSeconds;        // 5 seconds
+                double maxVelocity = targetVelocity;  // 2000 ticks per second
+                double elapsed = timer.seconds();
+                double progress = Math.min(elapsed / rampTime, 1.0);
+                double newVelocity = maxVelocity * progress;
+                flywheelMotor.setVelocity(newVelocity);
+                telemetry.addData("Target Flywheel Velocity: ", targetVelocity);
+                telemetry.addData("Current Flywheel Velocity: ", flywheelMotor.getVelocity());
+                telemetry.update();
             } else if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-                currentMotor = backLeft;
-                currentSetMotor = "Back Left";
+                double elapsedst = timer.seconds();
+                while (driver.isDown(GamepadKeys.Button.X)) {
+                    turretMotor.setPower(0.3);
+                    if (elapsedst == 1) {
+                        turret_direction_reversed = !turret_direction_reversed;
+                        turretMotor.setDirection(
+                                turret_direction_reversed ? DcMotorSimple.Direction.REVERSE
+                                        : DcMotorSimple.Direction.FORWARD
+                        );
+                        elapsedst = 0;
+                    }
+                }
             } else if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
-                currentMotor = backRight;
-                currentSetMotor = "Back Right";
-            }
-
-            if (driver.getButton(GamepadKeys.Button.DPAD_UP)) {
-                currentMotor.setPower(1.0);
-            }
-            else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-                currentMotor.setPower(-1.0);
-            }
-            else {
-                currentMotor.setPower(0);   // stop motor when not pressing
+                drum.setPower(1);
+            } else {
+                intakeMotor.setPower(0);
+                flywheelMotor.setVelocity(0);
+                turretMotor.setPower(0);
+                drum.setPower(0);
             }
             driver.readButtons();
         }
-        //Run OpMode
     }
     //end
 }

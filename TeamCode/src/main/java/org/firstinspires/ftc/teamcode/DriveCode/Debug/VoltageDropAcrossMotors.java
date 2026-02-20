@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp (name="Voltage Drop Checker", group="Debug")
 public class VoltageDropAcrossMotors extends LinearOpMode {
@@ -23,6 +24,11 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
     String currentSetMotor;
 
     boolean reversed = false;
+
+    ElapsedTime flywheelTimer;
+
+    double targetPower = 1;
+    double rampSeconds = 5;
 
     @Override
     public void runOpMode() {
@@ -43,6 +49,9 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
 
         currentMotor = flywheelMotor;
 
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
         waitForStart();
         //executing
         while (opModeIsActive()) {
@@ -54,24 +63,29 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
             telemetry.addData("Press B: ", " Set motor to flywheel motor");
             telemetry.addData("Press X: ", " Set motor to turret motor");
             telemetry.addData("Press Y: ", " Reverse current motor direction");
-            telemetry.addData("Press D PAD Up/Down: ", " Run set motor forward/reverse");
+            telemetry.addData("Press D PAD Up: ", " Run set motor forward");
             telemetry.addData(" ", "");
             telemetry.addData("Current Set Motor: ", currentSetMotor);
             telemetry.update();
 
             if (gamepad.wasJustPressed(GamepadKeys.Button.A)) {
                 currentMotor = intakeMotor;
-                currentSetMotor = "Front Left";
+                currentSetMotor = "intake";
             } else if (gamepad.wasJustPressed(GamepadKeys.Button.B)) {
                 currentMotor = flywheelMotor;
-                currentSetMotor = "Front Right";
+                currentSetMotor = "flywheel";
             } else if (gamepad.wasJustPressed(GamepadKeys.Button.X)) {
                 currentMotor = turretMotor;
-                currentSetMotor = "Back Left";
+                currentSetMotor = "turret";
             }
 
             if (gamepad.isDown(GamepadKeys.Button.DPAD_UP)){
-                currentMotor.setPower(1);
+                double rampTime = rampSeconds;        // 5 seconds
+                double maxPower = targetPower;
+                double elapsed = timer.seconds();
+                double progress = Math.min(elapsed / rampTime, 1.0);
+                double newPower = maxPower * progress;
+                currentMotor.setPower(newPower);
             } else {
                 currentMotor.setPower(0);
             }
@@ -84,6 +98,7 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
                 );
             }
 
+            gamepad.readButtons();
             idle();
         }
     }

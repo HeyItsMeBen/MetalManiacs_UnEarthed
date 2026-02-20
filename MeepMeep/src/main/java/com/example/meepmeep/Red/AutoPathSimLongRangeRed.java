@@ -23,20 +23,29 @@ public class AutoPathSimLongRangeRed {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(15, -60, Math.toRadians(0)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(90)))
 
-                        .splineTo(new Vector2d(63, -60), Math.toRadians(0))
+                        .forward(15)
                         .waitSeconds(0.5f)
-                        .splineToSplineHeading(new Pose2d(15, -60, Math.toRadians(0)), Math.toRadians(0))
+
+                        .splineTo(new Vector2d(60, -60), Math.toRadians(0))
                         .waitSeconds(0.5f)
-                        .splineTo(new Vector2d(63, -60), Math.toRadians(0))
+
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
                         .waitSeconds(0.5f)
-                        .splineToSplineHeading(new Pose2d(15, -60, Math.toRadians(0)), Math.toRadians(0))
-                        .waitSeconds(0.5f)
-                        .splineTo(new Vector2d(63, -60), Math.toRadians(0))
-                        .waitSeconds(0.5f)
-                        .splineToSplineHeading(new Pose2d(15, -60, Math.toRadians(0)), Math.toRadians(0))
-                        .waitSeconds(0.5f)
+
+                        .setReversed(false)
+                        .splineTo(new Vector2d(35,-55), Math.toRadians(0))
+
+//                        .splineTo(new Vector2d(63, -60), Math.toRadians(0))
+//                        .waitSeconds(0.5f)
+//                        .splineToSplineHeading(new Pose2d(15, -60, Math.toRadians(0)), Math.toRadians(0))
+//                        .waitSeconds(0.5f)
+//                        .splineTo(new Vector2d(63, -60), Math.toRadians(0))
+//                        .waitSeconds(0.5f)
+//                        .splineToSplineHeading(new Pose2d(15, -60, Math.toRadians(0)), Math.toRadians(0))
+//                        .waitSeconds(0.5f)
 
 //                        .splineToLinearHeading(new endPos(15, -60), Math.toRadians(0))
 

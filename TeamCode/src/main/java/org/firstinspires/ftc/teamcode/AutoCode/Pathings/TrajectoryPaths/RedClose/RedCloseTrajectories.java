@@ -10,7 +10,7 @@ import java.lang.Math;
 
 public class RedCloseTrajectories {
 
-    static double defaultVelocity = 10.0;
+    static double defaultVelocity = 20.0;
 
     static double defaultAngVelocity = Math.PI;
 

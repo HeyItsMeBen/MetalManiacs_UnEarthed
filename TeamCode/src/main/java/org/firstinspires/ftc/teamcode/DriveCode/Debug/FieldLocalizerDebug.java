@@ -1,22 +1,21 @@
 package org.firstinspires.ftc.teamcode.DriveCode.Debug;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.Drawing;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 @Config
-@TeleOp(name = "Chassis Motor Debugger", group = "Debug")
+@TeleOp(name = "Field Localizer Debug", group = "Localizer")
+public class FieldLocalizerDebug extends LinearOpMode {
 
-public class RunChassisMotors extends LinearOpMode {
-
-    // Driver Code
     public GamepadEx driver;
 
     private DcMotor frontLeft = null;
@@ -24,19 +23,11 @@ public class RunChassisMotors extends LinearOpMode {
     private DcMotor frontRight = null;
     private DcMotor backRight = null;
 
-    DcMotor currentMotor;
-
-    String currentSetMotor;
-
-    // Note: pushing stick forward gives negative value
     @Override
     public void runOpMode() {
 
         driver = new GamepadEx(gamepad1);
 
-        ElapsedTime runtime = new ElapsedTime();
-
-        // Driver Code
         frontLeft  = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft   = hardwareMap.get(DcMotor.class, "backLeft");
@@ -47,14 +38,16 @@ public class RunChassisMotors extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        currentMotor = frontRight;
-        currentSetMotor = "Front Right";
-
+        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0)); // x, y, heading in radians
+        
+        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        
+        Pose2d initialEstimatedCurrentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
+        
         waitForStart();
-        runtime.reset();
 
         while (opModeIsActive()) {
-            // Drive Code
+
             double x = gamepad1.left_stick_x;
             double y = -gamepad1.left_stick_y;
             double turn = gamepad1.right_stick_x;
@@ -88,42 +81,32 @@ public class RunChassisMotors extends LinearOpMode {
             //run individual wheels
             telemetry.addData("Use joysticks to run robot centric drive ", "");
             telemetry.addData(" ", "");
-            telemetry.addData("Press A: ", " Set motor to frontLeft");
-            telemetry.addData("Press B: ", " Set motor to frontRight");
-            telemetry.addData("Press X: ", " Set motor to backLeft");
-            telemetry.addData("Press Y: ", " Set Motor to backRight");
-            telemetry.addData("Press D PAD Up/Down: ", " Run set motor forward/reverse");
+
+            drive.updatePoseEstimate();
+
+            Pose2d pose = drive.localizer.getPose();
+            telemetry.addData("Start Pose: ", startPose.position.x + ", " + startPose.position.y + ", " + Math.toRadians(startPose.heading.toDouble()));
+            telemetry.addData("Initial Estimated Pose: ", initialEstimatedCurrentPose.position.x + ", " + initialEstimatedCurrentPose.position.y + ", " + Math.toRadians(initialEstimatedCurrentPose.heading.toDouble()));
             telemetry.addData(" ", "");
-            telemetry.addData("Current Set Motor: ", currentSetMotor);
+            telemetry.addData("x", pose.position.x);
+            telemetry.addData("y", pose.position.y);
+            telemetry.addData("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
+            telemetry.addData("heading (rad)", Math.toRadians(pose.heading.toDouble()));
+            telemetry.addData(" ", "");
+            telemetry.addData("Current Pose2d (deg): ", pose.position.x + ", " + pose.position.y + ", " + Math.toDegrees(pose.heading.toDouble()));
+            telemetry.addData("Current Pose2d (rad): ", pose.position.x + ", " + pose.position.y + ", " + Math.toRadians(pose.heading.toDouble()));
 
             telemetry.update();
 
-            if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-                currentMotor = frontLeft;
-                currentSetMotor = "Front Left";
-            } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-                currentMotor = frontRight;
-                currentSetMotor = "Front Right";
-            } else if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-                currentMotor = backLeft;
-                currentSetMotor = "Back Left";
-            } else if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
-                currentMotor = backRight;
-                currentSetMotor = "Back Right";
-            }
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.fieldOverlay().setStroke("#3F51B5");
+            Drawing.drawRobot(packet.fieldOverlay(), pose);
+            FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
-            if (driver.getButton(GamepadKeys.Button.DPAD_UP)) {
-                currentMotor.setPower(1.0);
-            }
-            else if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-                currentMotor.setPower(-1.0);
-            }
-            else {
-                currentMotor.setPower(0);   // stop motor when not pressing
-            }
-            driver.readButtons();
+            idle();
+
         }
-        //Run OpMode
+
     }
-    //end
 }
+

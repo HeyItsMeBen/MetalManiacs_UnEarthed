@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.R
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.collectPattern;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.openChannel;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.park;
 // Paths
 
 // Actions
@@ -18,14 +17,10 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions;
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -45,8 +40,8 @@ public class RedClose extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
-    Transfer kickWheels;
-    Transfer kickServo;
+    Transfer transferDrum;
+    Transfer transferKick;
     Turret turret;
     AutoAim autoAim;
     OuttakeHood hood;
@@ -60,20 +55,20 @@ public class RedClose extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(18, -60, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(40));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        kickWheels = new Transfer(hardwareMap);
-        kickServo = new Transfer(hardwareMap);
-        hood = new OuttakeHood(hardwareMap);
         turret = new Turret(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
+        transferDrum = new Transfer(hardwareMap);
+        transferKick = new Transfer(hardwareMap);
+        hood = new OuttakeHood(hardwareMap);
         lights = new Lights(hardwareMap);
 
-        intakeController = new IntakeController(intake, kickWheels, kickServo);
-        flywheelController = new FlywheelController(flywheels, kickWheels, kickServo, intake, hood);
+        intakeController = new IntakeController(intake, transferDrum, transferKick);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
         aprilTagTurretAim = new AutoAimTurretController(hardwareMap);

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar;
 
 // Paths
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.initialMoveToPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifacts;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.park;
@@ -40,8 +41,8 @@ public class RedFar extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
-    Transfer kickWheels;
-    Transfer kickServo;
+    Transfer transferDrum;
+    Transfer transferKick;
     Turret turret;
     AutoAim autoAim;
     OuttakeHood hood;
@@ -55,20 +56,20 @@ public class RedFar extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(18, -60, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(12, -60, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        kickWheels = new Transfer(hardwareMap);
-        kickServo = new Transfer(hardwareMap);
-        hood = new OuttakeHood(hardwareMap);
         turret = new Turret(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
+        transferDrum = new Transfer(hardwareMap);
+        transferKick = new Transfer(hardwareMap);
+        hood = new OuttakeHood(hardwareMap);
         lights = new Lights(hardwareMap);
 
-        intakeController = new IntakeController(intake, kickWheels, kickServo);
-        flywheelController = new FlywheelController(flywheels, kickWheels, kickServo, intake, hood);
+        intakeController = new IntakeController(intake, transferDrum, transferKick);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
         aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
@@ -82,12 +83,13 @@ public class RedFar extends LinearOpMode {
                 new SequentialAction(
 
                         new ParallelAction(
+                                initialMoveToPosition(drive, drive.localizer.getPose()),
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 new InstantAction(() -> intakeController.update()),
-                                new InstantAction(() -> flywheelController.powerUpToSpeed())
+                                new InstantAction(() -> flywheelController.powerUpToSpeed()),
+                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red")
                         ),
 
-                        new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                         new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
                         collectArtifacts(drive, drive.localizer.getPose()),

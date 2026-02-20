@@ -37,11 +37,13 @@ import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.LightsController;
 import org.firstinspires.ftc.teamcode.Controllers.RumbleController;
+import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 import java.util.List;
 
@@ -49,13 +51,15 @@ import java.util.List;
 public class CompetitionDriveCode extends OpMode {
 
     public GamepadEx driver;
-    public GamepadEx operator;
-    public RumbleController controller;
+    public RumbleController controller_rumble;
+
     // Mechanisms
     Intake intake;
     Flywheels flywheels;
+    Turret turret;
+    AutoAim autoAim;
+    Transfer transferKick;
     Transfer transferDrum;
-    Transfer transferServo;
     Lights lights;
     OuttakeHood hood;
 
@@ -74,20 +78,21 @@ public class CompetitionDriveCode extends OpMode {
     public void init() {
 
         driver = new GamepadEx(gamepad1);
-        operator = new GamepadEx(gamepad2);
-        controller = new RumbleController(gamepad1);
+        controller_rumble = new RumbleController(gamepad1);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
+        //turret = new Turret(hardwareMap);
+        //autoAim = new AutoAim(Math.toRadians(15));
+        transferKick = new Transfer(hardwareMap);
         transferDrum = new Transfer(hardwareMap);
-        transferServo = new Transfer(hardwareMap);
-        lights = new Lights(hardwareMap);
         hood = new OuttakeHood(hardwareMap);
+        lights = new Lights(hardwareMap);
 
         driveController = new DriveChassisController(hardwareMap);
         autoAimController = new AutoAimTurretController(hardwareMap);
-        flywheelController = new FlywheelController(flywheels, transferDrum, transferServo, intake, hood);
-        intakeController = new IntakeController(intake, transferDrum, transferServo);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
+        intakeController = new IntakeController(intake, transferDrum, transferKick);
         lightsController = new LightsController(lights);
 
         telemetry.addData("Status", "Initialized");
@@ -215,7 +220,6 @@ public class CompetitionDriveCode extends OpMode {
 
 
         driver.readButtons();
-        operator.readButtons();
 
         // Frequency check
         double newTime = getRuntime();
