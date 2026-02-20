@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,7 +17,7 @@ public class Transfer {
     public Transfer(HardwareMap hMap) {
         transferKick = hMap.get(Servo.class, "transferKick");
         transferDrum = hMap.get(DcMotor.class, "transferDrum");
-        transferDrum.setDirection(DcMotorEx.Direction.FORWARD);
+        transferDrum.setDirection(DcMotor.Direction.FORWARD);
     }
 
     public void runTransferDrum(double power){

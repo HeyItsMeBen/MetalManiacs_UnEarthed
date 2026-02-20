@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,9 +39,9 @@ public class FieldLocalizerDebug extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0)); // x, y, heading in radians
+        Pose2d resetPose = new Pose2d(0, 0, Math.toRadians(0)); // x, y, heading in radians
         
-        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, resetPose);
         
         Pose2d initialEstimatedCurrentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
         
@@ -80,12 +81,13 @@ public class FieldLocalizerDebug extends LinearOpMode {
 
             //run individual wheels
             telemetry.addData("Use joysticks to run robot centric drive ", "");
+            telemetry.addData("Press A to reset pose ", "");
             telemetry.addData(" ", "");
 
             drive.updatePoseEstimate();
 
             Pose2d pose = drive.localizer.getPose();
-            telemetry.addData("Start Pose: ", startPose.position.x + ", " + startPose.position.y + ", " + Math.toRadians(startPose.heading.toDouble()));
+            //telemetry.addData("Start Pose: ", resetPose.position.x + ", " + resetPose.position.y + ", " + Math.toRadians(resetPose.heading.toDouble()));
             telemetry.addData("Initial Estimated Pose: ", initialEstimatedCurrentPose.position.x + ", " + initialEstimatedCurrentPose.position.y + ", " + Math.toRadians(initialEstimatedCurrentPose.heading.toDouble()));
             telemetry.addData(" ", "");
             telemetry.addData("x", pose.position.x);
@@ -97,6 +99,10 @@ public class FieldLocalizerDebug extends LinearOpMode {
             telemetry.addData("Current Pose2d (rad): ", pose.position.x + ", " + pose.position.y + ", " + Math.toRadians(pose.heading.toDouble()));
 
             telemetry.update();
+
+            if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+                pose = resetPose;
+            }
 
             TelemetryPacket packet = new TelemetryPacket();
             packet.fieldOverlay().setStroke("#3F51B5");

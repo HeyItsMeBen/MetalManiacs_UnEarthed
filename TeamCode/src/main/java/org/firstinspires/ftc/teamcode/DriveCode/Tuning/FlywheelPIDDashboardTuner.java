@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 
@@ -24,6 +25,9 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
 
     // Target velocity (RPM), editable live
     public static double targetVelocity = 3000;
+
+    ElapsedTime flywheelTimer;
+    double rampSeconds = 5;
 
     // Maximum velocity change per loop for smooth ramping
     public static double MINIMUM_SPEED = 50.0; // RPM per loop
@@ -54,6 +58,9 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
         telemetry.addLine("Init complete");
         telemetry.update();
 
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
         waitForStart();
 
         double rampedTarget = flywheel.getVelocity(); // start at current velocity
@@ -65,10 +72,11 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
             flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, updatedCoeffs);
 
             // --- Ramp target velocity smoothly ---
-            double kRamp = 0.09; // 9% per loop
-            double currentVel = flywheel.getVelocity();
-            double newVelocity = currentVel + (targetVelocity - currentVel) * kRamp;
-
+            double rampTime = rampSeconds;        // 5 seconds
+            double maxVelocity = targetVelocity;
+            double elapsed = timer.seconds();
+            double progress = Math.min(elapsed / rampTime, 1.0);
+            double newVelocity = maxVelocity * progress;
             flywheel.setVelocity(newVelocity);
 
             //intake.setPower(0.3);
@@ -78,15 +86,15 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("Target Velocity", targetVelocity);
             packet.put("Ramped Target", rampedTarget);
-            packet.put("Current Velocity", currentVel);
-            packet.put("Error", targetVelocity - currentVel);
+            packet.put("Current Velocity", flywheel.getVelocity());
+            packet.put("Error", targetVelocity - flywheel.getVelocity());
             dashboard.sendTelemetryPacket(packet);
 
             // --- Driver Station telemetry ---
             telemetry.addData("Target Velocity", targetVelocity);
             telemetry.addData("Ramped Target", rampedTarget);
-            telemetry.addData("Current Velocity", currentVel);
-            telemetry.addData("Error", targetVelocity - currentVel);
+            telemetry.addData("Current Velocity", flywheel.getVelocity());
+            telemetry.addData("Error", targetVelocity - flywheel.getVelocity());
             telemetry.addData("P", P);
             telemetry.addData("I", I);
             telemetry.addData("D", D);

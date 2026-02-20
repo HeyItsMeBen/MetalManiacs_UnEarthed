@@ -31,7 +31,7 @@ public class UniversalTeleOP extends LinearOpMode {
 
     public DcMotor turretMotor;
 
-    public CRServo drum;
+    public DcMotor drum;
 
     double targetVelocity = 2500;
     double rampSeconds = 5;
@@ -52,7 +52,7 @@ public class UniversalTeleOP extends LinearOpMode {
 
         turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
 
-        drum = hardwareMap.get(CRServo.class, "transferDrum");
+        drum = hardwareMap.get(DcMotor.class, "transferDrum");
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -61,7 +61,7 @@ public class UniversalTeleOP extends LinearOpMode {
 
         turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        drum.setDirection(DcMotorSimple.Direction.REVERSE);
+        drum.setDirection(DcMotor.Direction.REVERSE);
 
         // Driver Code
         frontLeft  = hardwareMap.get(DcMotor.class, "frontLeft");

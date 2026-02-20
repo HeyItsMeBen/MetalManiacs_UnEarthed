@@ -41,6 +41,7 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
         flywheelMotor = hardwareMap.get(DcMotorEx.class, "flywheel");
 
         turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
+
         transferMotor = hardwareMap.get(DcMotorEx.class, "transferDrum");
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -48,6 +49,8 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
         flywheelMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        transferMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         currentMotor = flywheelMotor;
 
@@ -64,7 +67,8 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
             telemetry.addData("Press A: ", " Set motor to intake motor");
             telemetry.addData("Press B: ", " Set motor to flywheel motor");
             telemetry.addData("Press X: ", " Set motor to turret motor");
-            telemetry.addData("Press Y: ", " Reverse current motor direction");
+            telemetry.addData("Press Y: ", " Set motor to transfer motor");
+            telemetry.addData("Press Right Bumper: ", " Reverse current motor direction");
             telemetry.addData("Press D PAD Up: ", " Run set motor forward");
             telemetry.addData(" ", "");
             telemetry.addData("Current Set Motor: ", currentSetMotor);
@@ -79,7 +83,7 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
             } else if (gamepad.wasJustPressed(GamepadKeys.Button.X)) {
                 currentMotor = turretMotor;
                 currentSetMotor = "turret";
-            } else if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+            } else if (gamepad.wasJustPressed(GamepadKeys.Button.Y)) {
                 currentMotor = transferMotor;
                 currentSetMotor = "transferMotor";
             }
@@ -95,7 +99,7 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
                 currentMotor.setPower(0);
             }
 
-            if (gamepad.wasJustPressed(GamepadKeys.Button.Y)) {
+            if (gamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 reversed = !reversed;
                 currentMotor.setDirection(
                         reversed ? DcMotorSimple.Direction.REVERSE

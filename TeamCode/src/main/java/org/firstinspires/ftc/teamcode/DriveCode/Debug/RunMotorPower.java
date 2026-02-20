@@ -13,15 +13,15 @@ public class RunMotorPower extends LinearOpMode {
 
     public GamepadEx gamepad;
 
-    public CRServo Motor;
+    public DcMotor Motor;
 
     @Override
     public void runOpMode() {
 
         gamepad = new GamepadEx(gamepad1);
 
-        Motor = hardwareMap.get(CRServo.class, "transferDrum");
-        Motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        Motor = hardwareMap.get(DcMotor.class, "transferDrum");
+        Motor.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();
         //executing

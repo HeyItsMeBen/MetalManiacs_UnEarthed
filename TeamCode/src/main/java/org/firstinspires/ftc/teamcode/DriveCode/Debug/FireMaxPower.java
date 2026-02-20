@@ -26,7 +26,7 @@ public class FireMaxPower extends LinearOpMode {
     public GamepadEx gamepad;
 
     public DcMotor intake;
-    public CRServo transferWheels;
+    public DcMotor transferWheels;
 
     ElapsedTime flywheelTimer;
 
@@ -47,7 +47,7 @@ public class FireMaxPower extends LinearOpMode {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorEx.Direction.FORWARD);
 
-        transferWheels = hardwareMap.get(CRServo.class, "transferDrum");
+        transferWheels = hardwareMap.get(DcMotor.class, "transferDrum");
         transferWheels.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addLine("Init complete");
