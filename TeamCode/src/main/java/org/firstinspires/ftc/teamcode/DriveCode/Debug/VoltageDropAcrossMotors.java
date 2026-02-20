@@ -19,6 +19,7 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
     public DcMotor flywheelMotor;
 
     public DcMotor turretMotor;
+    public DcMotor transferMotor;
     public DcMotor currentMotor;
 
     String currentSetMotor;
@@ -40,6 +41,7 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
         flywheelMotor = hardwareMap.get(DcMotorEx.class, "flywheel");
 
         turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
+        transferMotor = hardwareMap.get(DcMotorEx.class, "transferDrum");
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -77,6 +79,9 @@ public class VoltageDropAcrossMotors extends LinearOpMode {
             } else if (gamepad.wasJustPressed(GamepadKeys.Button.X)) {
                 currentMotor = turretMotor;
                 currentSetMotor = "turret";
+            } else if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                currentMotor = transferMotor;
+                currentSetMotor = "transferMotor";
             }
 
             if (gamepad.isDown(GamepadKeys.Button.DPAD_UP)){

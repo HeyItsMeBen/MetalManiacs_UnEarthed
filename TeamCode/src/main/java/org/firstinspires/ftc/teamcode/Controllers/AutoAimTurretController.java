@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AutoAimTurretController {
 
@@ -49,6 +52,9 @@ public class AutoAimTurretController {
     double turretStartTime=0;
     double turretStartPower=0;
 
+    public boolean opModeIsActive=true;
+    private static final boolean USE_WEBCAM =true;
+
     public AutoAimTurretController(HardwareMap hardwareMap) {
 
         turret = new Turret(hardwareMap);
@@ -65,6 +71,12 @@ public class AutoAimTurretController {
         odo.resetPosAndIMU();
         Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
         odo.setPosition(startingPosition);
+
+        //April tag stuff
+        if (USE_WEBCAM) {
+            //NOTE: gain is 50 for comp field, but 200 for practice field
+            setManualExposure(6, 50);  // Use low exposure time to reduce motion blur
+        }
     }
 
     private void initAprilTag(HardwareMap hardwareMap) {
@@ -246,6 +258,32 @@ public class AutoAimTurretController {
                     break;
                 }
             }
+        }
+    }
+    private void setManualExposure(int exposureMS, int gain) {   //not exactly sure what this does. It sets up the camera's setting or something
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            while (opModeIsActive && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                //sleep(20);
+            }
+        }
+
+        // Set camera controls unless we are stopping.
+        if (opModeIsActive)
+        {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
         }
     }
 
