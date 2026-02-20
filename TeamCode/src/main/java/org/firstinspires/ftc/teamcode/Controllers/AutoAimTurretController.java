@@ -51,6 +51,7 @@ public class AutoAimTurretController {
     private float rampUpSpeed = 0.5f; // how fast turret should ramp up to target speed (in seconds)
     double turretStartTime=0;
     double turretStartPower=0;
+    double currentTime = 0;
 
     public boolean opModeIsActive=true;
     private static final boolean USE_WEBCAM =true;
@@ -105,6 +106,28 @@ public class AutoAimTurretController {
 //
 //        visionPortal = builder.build();
 //    }
+
+    public double getCurrentTime(){
+        return currentTime;
+    }
+
+    public double getTurretPower(){
+        return turret.getTurretPower();
+    }
+
+    public float getNeededPower(){
+        //convert to milliseconds (variable named poorly but too lazy to change)
+        double targetSeconds= rampUpSpeed * 1000; //should take 0.5 seconds to speed up
+        currentTime=System.currentTimeMillis()-turretStartTime;
+//        currentTime=System.currentTimeMillis();
+        if (currentTime < targetSeconds){
+            turret.setMotorPower(turretStartPower*((targetSeconds-currentTime)/targetSeconds)+turretPower*(currentTime/targetSeconds));
+        }else{
+            turret.setMotorPower(turretPower);
+        }
+
+        return turretPower;
+    }
 
     public void toggleAutoAim() {
         shouldAutoAim = !shouldAutoAim;
@@ -199,11 +222,6 @@ public class AutoAimTurretController {
                 turretStartPower=turret.getTurretPower();
             }
         }
-
-        double targetSeconds=rampUpSpeed-rampUpSpeed*(turretStartPower/turretPower); //should take 0.5 seconds to speed up
-        double currentTime=System.currentTimeMillis()-turretStartTime;
-
-        turret.setMotorPower(turretStartPower*((targetSeconds-currentTime)/targetSeconds)+turretPower*(currentTime/targetSeconds));
     }
     public void relocalize(boolean manualLeft, boolean manualRight) {
 

@@ -19,6 +19,7 @@ public class IntakeController {
     private ElapsedTime intakeTimer = new ElapsedTime();
     double intakeStartTime=0;
     double intakeStartPower=0;
+    double currentTime = 0;
 
     public IntakeController(Intake intake, Transfer transferDrum, Transfer transferKick) {
         this.intake = intake;
@@ -30,8 +31,8 @@ public class IntakeController {
         return Math.abs(intakePower) > 0.1;
     }
 
-    public float getIntakePower() {
-        return intakePower;
+    public double getIntakePower() {
+        return intake.getIntakePower();
     }
 
     public void toggleIntake() {
@@ -39,6 +40,8 @@ public class IntakeController {
         if (Math.abs(intakePower) >= targetSpeed) {
             intakePower = 0;
             transferPower = 0;
+            intakeStartTime=System.currentTimeMillis();
+            intakeStartPower=intake.getIntakePower();
 //            transferDrum.runTransferDrum(0);
         } else {
             intakePower = targetSpeed;
@@ -55,6 +58,8 @@ public class IntakeController {
         if (Math.abs(intakePower) >= targetSpeed) {
             intakePower = 0;
             transferPower = 0;
+            intakeStartTime=System.currentTimeMillis();
+            intakeStartPower=intake.getIntakePower();
 //            transferDrum.runTransferDrum(0);
 
         } else {
@@ -66,11 +71,15 @@ public class IntakeController {
         }
     }
 
+    public double getCurrentTime(){
+        return currentTime;
+    }
+
     public void update() {
 
         // Jam detection / auto slow-down
         if (intakePower >= targetSpeed &&
-            intakeTimer.milliseconds() > 1000 &&
+            intakeTimer.milliseconds() > 5000 &&
             intake.getIntakeMotorRPM() < 500) {
 
             intakePower = 0.25f;
@@ -79,8 +88,11 @@ public class IntakeController {
         }
 
         //intake.setIntakePower(intakePower*(System.currentTimeMillis()/0.5));    //should take 0.5 seconds to speed up.
-        double targetSeconds=rampUpSpeed-rampUpSpeed*(intakeStartPower/intakePower); //should take 0.5 seconds to speed up
-        double currentTime=System.currentTimeMillis()-intakeStartTime;
+//        double targetSeconds=rampUpSpeed-rampUpSpeed*(intakeStartPower/intakePower); //should take 0.5 seconds to speed up
+
+        //   V poorly named but too lazy to change (is in milliseconds)
+        double targetSeconds = rampUpSpeed*1000; // convert rampUpSpeed to milliseconds
+        currentTime=System.currentTimeMillis()-intakeStartTime;
         if (currentTime<targetSeconds){
             intake.setIntakePower(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
             transferDrum.runTransferDrum(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));

@@ -210,6 +210,15 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("Current RPM",
                 flywheels.getFlywheelVelocity());
 
+        telemetry.addData("Current Turret Timer",
+                autoAimController.getCurrentTime());
+
+        telemetry.addData("Turret Power",
+                autoAimController.getTurretPower());
+
+        telemetry.addData("Turret Needed Power",
+                autoAimController.getNeededPower());
+
 
         // LED
         lightsController.update(
