@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -41,6 +42,12 @@ public class AutoAimTurretController {
     double lastLocalized =0;
 
     public double turretAngleTelemetry=0;
+
+    float turretPower = 0;
+    // Ramp up code
+    private float rampUpSpeed = 0.5f; // how fast turret should ramp up to target speed (in seconds)
+    double turretStartTime=0;
+    double turretStartPower=0;
 
     public AutoAimTurretController(HardwareMap hardwareMap) {
 
@@ -114,11 +121,20 @@ public class AutoAimTurretController {
     public void manualControl(boolean left, boolean right) {
 
         if (left) {
-            turret.setMotorPower(-0.5);
+            turretPower = -0.5f;
+            turretStartTime=System.currentTimeMillis();
+            turretStartPower=turret.getTurretPower();
+//            turret.setMotorPower(-0.5);
         } else if (right) {
-            turret.setMotorPower(0.5);
+            turretPower = 0.5f;
+            turretStartTime=System.currentTimeMillis();
+            turretStartPower=turret.getTurretPower();
+//            turret.setMotorPower(0.5);
         } else {
-            turret.setMotorPower(0);
+            turretPower = 0;
+            turretStartTime=System.currentTimeMillis();
+            turretStartPower=turret.getTurretPower();
+//            turret.setMotorPower(0);
         }
     }
 
@@ -136,7 +152,10 @@ public class AutoAimTurretController {
 
             autoAim.calculateEverything(desiredTag);
 
-            turret.setMotorPower(autoAim.turn);
+//            turret.setMotorPower(autoAim.turn);
+            turretPower = (float) autoAim.turn;
+            turretStartTime=System.currentTimeMillis();
+            turretStartPower=turret.getTurretPower();
 
             wasTargetFoundLastFrame = true;
 
@@ -155,13 +174,24 @@ public class AutoAimTurretController {
                 if (!turret.isAtTargetPosition(0)) {
                     turret.rotateTowardsTarget(0);
                 } else {
-                    turret.setMotorPower(0);
+                    turretPower = 0;
+//                    turret.setMotorPower(0);
+                    turretStartTime=System.currentTimeMillis();
+                    turretStartPower=turret.getTurretPower();
                 }
 
             } else {
-                turret.setMotorPower(0);
+                turretPower = 0;
+//                turret.setMotorPower(0);
+                turretStartTime=System.currentTimeMillis();
+                turretStartPower=turret.getTurretPower();
             }
         }
+
+        double targetSeconds=rampUpSpeed-rampUpSpeed*(turretStartPower/turretPower); //should take 0.5 seconds to speed up
+        double currentTime=System.currentTimeMillis()-turretStartTime;
+
+        turret.setMotorPower(turretStartPower*((targetSeconds-currentTime)/targetSeconds)+turretPower*(currentTime/targetSeconds));
     }
     public void relocalize(boolean manualLeft, boolean manualRight) {
 
@@ -220,6 +250,10 @@ public class AutoAimTurretController {
     }
 
     public void stopTurret() {
-        turret.setMotorPower(0);
+
+        turretPower = 0;
+        turretStartTime=System.currentTimeMillis();
+        turretStartPower=turret.getTurretPower();
+//        turret.setMotorPower(0);
     }
 }

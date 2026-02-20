@@ -39,31 +39,14 @@ public class Turret {
     public void setMotorPower(double dblPower){
         // Switch back to manual control mode if we were in position mode
         turretMotor.setPower(dblPower);
-//        if (isInPositionMode) {
-//            turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            isInPositionMode = false;
-//        }
-//
-//        int currentPos = turretMotor.getCurrentPosition();
-//
-//        // Add a small buffer zone (20 ticks) to make boundaries less sensitive
-//        final int BOUNDARY_BUFFER = 20;
-//
-//        // Enforce boundaries with buffer zone
-//        if (currentPos <= (MIN_POSITION + BOUNDARY_BUFFER) && dblPower < 0) {
-//            // Near left limit, don't allow further left movement
-//            turretMotor.setPower(0);
-//        } else if (currentPos >= (MAX_POSITION - BOUNDARY_BUFFER) && dblPower > 0) {
-//            // Near right limit, don't allow further right movement
-//            turretMotor.setPower(0);
-//        } else {
-//            // Within bounds, allow movement
-//            turretMotor.setPower(dblPower);
-//        }
     }
 
     public int getTurretPosition(){
         return turretMotor.getCurrentPosition();
+    }
+
+    public double getTurretPower(){
+        return turretMotor.getPower();
     }
 
     /**

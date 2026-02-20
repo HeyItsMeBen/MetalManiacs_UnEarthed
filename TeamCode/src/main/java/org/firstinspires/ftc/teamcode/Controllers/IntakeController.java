@@ -7,11 +7,14 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 public class IntakeController {
 
+    private float targetSpeed = 0.6f; // determines how fast the intake should run
+    private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
     private Intake intake;
     private Transfer transferDrum;
     private Transfer transferKick;
 
     private float intakePower = 0;
+    private float transferPower = 0;
 
     private ElapsedTime intakeTimer = new ElapsedTime();
     double intakeStartTime=0;
@@ -33,11 +36,14 @@ public class IntakeController {
 
     public void toggleIntake() {
 
-        if (Math.abs(intakePower) == 1) {
+        if (Math.abs(intakePower) >= targetSpeed) {
             intakePower = 0;
-            transferDrum.runTransferDrum(0);
+            transferPower = 0;
+//            transferDrum.runTransferDrum(0);
         } else {
-            intakePower = 1;
+            intakePower = targetSpeed;
+            transferPower = targetSpeed;
+
             intakeTimer.reset();
             intakeStartTime=System.currentTimeMillis();
             intakeStartPower=intake.getIntakePower();
@@ -46,12 +52,14 @@ public class IntakeController {
 
     public void toggleReverse() {
 
-        if (Math.abs(intakePower) == 1) {
+        if (Math.abs(intakePower) >= targetSpeed) {
             intakePower = 0;
-            transferDrum.runTransferDrum(0);
+            transferPower = 0;
+//            transferDrum.runTransferDrum(0);
 
         } else {
-            intakePower = -1;
+            intakePower = -targetSpeed;
+            transferPower = -targetSpeed;
             //transferDrum.runTransferDrum(-1);
             intakeStartTime=System.currentTimeMillis();
             intakeStartPower=intake.getIntakePower();
@@ -61,7 +69,7 @@ public class IntakeController {
     public void update() {
 
         // Jam detection / auto slow-down
-        if (intakePower == 1 &&
+        if (intakePower >= targetSpeed &&
             intakeTimer.milliseconds() > 1000 &&
             intake.getIntakeMotorRPM() < 500) {
 
@@ -71,12 +79,14 @@ public class IntakeController {
         }
 
         //intake.setIntakePower(intakePower*(System.currentTimeMillis()/0.5));    //should take 0.5 seconds to speed up.
-        double targetSeconds=0.5-0.5*(intakeStartPower/intakePower);
+        double targetSeconds=rampUpSpeed-rampUpSpeed*(intakeStartPower/intakePower); //should take 0.5 seconds to speed up
         double currentTime=System.currentTimeMillis()-intakeStartTime;
         if (currentTime<targetSeconds){
             intake.setIntakePower(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
+            transferDrum.runTransferDrum(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
         } else {
             intake.setIntakePower(intakePower);
+            transferDrum.runTransferDrum(intakePower);
         }
     }
 
