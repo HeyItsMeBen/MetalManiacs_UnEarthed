@@ -26,7 +26,10 @@ public class FlywheelController {
     private double outtakeSpeedBeforeDrop = 0;
 
     private ElapsedTime powerUpTimer = new ElapsedTime();
-    private static double rampSeconds = 5;
+    private float rampUpSeconds = 5;
+    double flywheelStartTime=0;
+
+    double currentTime = 0;
 
     public enum LaunchState {
         IDLE,
@@ -67,17 +70,13 @@ public class FlywheelController {
 
     public void rampUp() {
 
-        double newVelocity;
-        double elapsed = powerUpTimer.seconds();
-        double progress = Math.min(elapsed / rampSeconds, 1.0);
-
-        if (targetSpeed == 0) { //target speed is set to 0 initially, and the auto paths call this line of code before targetSpeed recives a value
-            newVelocity = maintainOuttakeSpeed * progress;
-        } else {
-            newVelocity = targetSpeed * progress;
-        }
-
-        flywheels.setFlywheelVelocity(newVelocity);
+//        double targetSeconds = rampUpSeconds *1000; // convert rampUpSpeed to milliseconds
+//        currentTime=System.currentTimeMillis()-intakeStartTime;
+//        if (currentTime<targetSeconds){
+//            flywheels.setFlywheelVelocity(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
+//        } else {
+//           flywheels.setFlywheelVelocity(targetSpeed);
+//        }
 
     }
 

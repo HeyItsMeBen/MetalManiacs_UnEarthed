@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 public class IntakeController {
 
     private float targetSpeed = 0.6f; // determines how fast the intake should run
-    private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
+    private float rampUpSeconds = 1; // how fast intake should ramp up to target speed (in seconds)
     private Intake intake;
     private Transfer transferDrum;
     private Transfer transferKick;
@@ -91,7 +91,7 @@ public class IntakeController {
 //        double targetSeconds=rampUpSpeed-rampUpSpeed*(intakeStartPower/intakePower); //should take 0.5 seconds to speed up
 
         //   V poorly named but too lazy to change (is in milliseconds)
-        double targetSeconds = rampUpSpeed*1000; // convert rampUpSpeed to milliseconds
+        double targetSeconds = rampUpSeconds *1000; // convert rampUpSpeed to milliseconds
         currentTime=System.currentTimeMillis()-intakeStartTime;
         if (currentTime<targetSeconds){
             intake.setIntakePower(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
