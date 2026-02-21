@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
+import static android.os.SystemClock.sleep;
+
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AutoAimTurretController {
-
+    private boolean cameraAvailable = false;
     private Turret turret;
     private AutoAim autoAim;
 
@@ -48,7 +50,7 @@ public class AutoAimTurretController {
 
     float turretPower = 0;
     // Ramp up code
-    private float rampUpSpeed = 0.5f; // how fast turret should ramp up to target speed (in seconds)
+    private float rampUpSpeed = 0.1f; // how fast turret should ramp up to target speed (in seconds)
     double turretStartTime=0;
     double turretStartPower=0;
     double currentTime = 0;
@@ -81,14 +83,26 @@ public class AutoAimTurretController {
     }
 
     private void initAprilTag(HardwareMap hardwareMap) {
+        try {
+            WebcamName webcam = hardwareMap.tryGet(WebcamName.class, "Webcam 1");
+            if (webcam == null) {
+                cameraAvailable = false;
+                return;
+            }
 
-        aprilTag = new AprilTagProcessor.Builder().build();
-        aprilTag.setDecimation(2);
+            aprilTag = new AprilTagProcessor.Builder().build();
+            aprilTag.setDecimation(2);
 
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .addProcessor(aprilTag)
-                .build();
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(webcam)
+                    .addProcessor(aprilTag)
+                    .build();
+
+            cameraAvailable = true;
+
+        } catch (Exception e) {
+            cameraAvailable = false;
+        }
     }
 
 //    public void init() {
@@ -116,16 +130,6 @@ public class AutoAimTurretController {
     }
 
     public float getNeededPower(){
-        //convert to milliseconds (variable named poorly but too lazy to change)
-        double targetSeconds= rampUpSpeed * 1000; //should take 0.5 seconds to speed up
-        currentTime=System.currentTimeMillis()-turretStartTime;
-//        currentTime=System.currentTimeMillis();
-        if (currentTime < targetSeconds){
-            turret.setMotorPower(turretStartPower*((targetSeconds-currentTime)/targetSeconds)+turretPower*(currentTime/targetSeconds));
-        }else{
-            turret.setMotorPower(turretPower);
-        }
-
         return turretPower;
     }
 
@@ -225,6 +229,16 @@ public class AutoAimTurretController {
     }
     public void relocalize(boolean manualLeft, boolean manualRight) {
 
+        //convert to milliseconds (variable named poorly but too lazy to change)
+        double targetSeconds= rampUpSpeed * 1000; //should take 0.5 seconds to speed up
+        currentTime=System.currentTimeMillis()-turretStartTime;
+//        currentTime=System.currentTimeMillis();
+        if (currentTime < targetSeconds){
+            turret.setMotorPower(turretStartPower*((targetSeconds-currentTime)/targetSeconds)+turretPower*(currentTime/targetSeconds));
+        }else{
+            turret.setMotorPower(turretPower);
+        }
+
         //turret control
         if (!shouldAutoAim) {
             manualControl(manualLeft, manualRight);
@@ -258,50 +272,65 @@ public class AutoAimTurretController {
     }
 
     private void scanForTags() {
-
-        targetFound = false;
-        desiredTag = null;
-
-        List<AprilTagDetection> detections = aprilTag.getDetections();
-
-        for (AprilTagDetection detection : detections) {
-
-            if (detection.metadata != null) {
-
-                if (detection.id == DESIRED_TAG_ID ||
-                    detection.id == DESIRED_TAG_ID2) {
-
-                    targetFound = true;
-                    desiredTag = detection;
-                    break;
-                }
-            }
-        }
-    }
-    private void setManualExposure(int exposureMS, int gain) {   //not exactly sure what this does. It sets up the camera's setting or something
-        // Wait for the camera to be open, then use the controls
-
-        if (visionPortal == null) {
+        if (!cameraAvailable || aprilTag == null) {
+            targetFound = false;
+            desiredTag = null;
             return;
         }
 
-        // Make sure camera is streaming before we try to set the exposure controls
+        try {
+            targetFound = false;
+            desiredTag = null;
+
+            List<AprilTagDetection> detections = aprilTag.getDetections();
+            for (AprilTagDetection detection : detections) {
+                if (detection.metadata != null) {
+                    if (detection.id == DESIRED_TAG_ID || detection.id == DESIRED_TAG_ID2) {
+                        targetFound = true;
+                        desiredTag = detection;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            cameraAvailable = false;
+            targetFound = false;
+            desiredTag = null;
+        }
+    }
+
+    public boolean isCameraAvailable() {
+        return cameraAvailable;
+    }
+    private void setManualExposure(int exposureMS, int gain) {
+        if (!cameraAvailable || visionPortal == null) return;
+
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            while (opModeIsActive && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                //sleep(20);
+            ElapsedTime cameraTimer = new ElapsedTime();
+            while (opModeIsActive &&
+                    visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING &&
+                    cameraTimer.seconds() < 5.0) {
+                sleep(20);
+            }
+            // If still not streaming after timeout, mark camera as unavailable
+            if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+                cameraAvailable = false;
+                return;
             }
         }
 
-        // Set camera controls unless we are stopping.
-        if (opModeIsActive)
-        {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
+        if (opModeIsActive) {
+            try {
+                ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+                if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                    exposureControl.setMode(ExposureControl.Mode.Manual);
+                }
+                exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
+                GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+                gainControl.setGain(gain);
+            } catch (Exception e) {
+                cameraAvailable = false;
             }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
         }
     }
 

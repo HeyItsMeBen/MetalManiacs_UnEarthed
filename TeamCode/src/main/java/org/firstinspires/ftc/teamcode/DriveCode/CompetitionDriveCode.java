@@ -188,6 +188,9 @@ public class CompetitionDriveCode extends OpMode {
                 autoAimController.isTargetFound()
         );
 
+        if (!autoAimController.isCameraAvailable()) {
+            telemetry.addData("⚠️ WARNING", "Camera disconnected - auto aim disabled");
+        }
 
         telemetry.addData("Auto aiming",
                 autoAimController.isAutoAiming());

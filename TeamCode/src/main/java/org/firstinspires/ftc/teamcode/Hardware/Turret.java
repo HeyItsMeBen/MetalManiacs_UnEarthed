@@ -25,7 +25,7 @@ public class Turret {
         controller = new PIDController(p, i, d);
 
         turretMotor = hMap.get(DcMotorEx.class, "turret");
-        turretMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
