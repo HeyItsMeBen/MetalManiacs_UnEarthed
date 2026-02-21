@@ -13,24 +13,27 @@ public class LightsController {
     private static final long UPDATE_INTERVAL_MS = 500;
 
     public LightsController(Lights lights) {
+
         this.lights = lights;
     }
 
     public void update(boolean targetVisible,
                        boolean intakeRunning,
-                       String teamColor) {
+                       String teamColor,
+                       String sequence
+    ) {
 
-        if (lightTimer.milliseconds() < UPDATE_INTERVAL_MS) {
-            return;
-        }
+//        if (lightTimer.milliseconds() < UPDATE_INTERVAL_MS) {
+//            return;
+//        }
 
-        lightTimer.reset();
-
-        lights.updateStatus(
-                targetVisible,
-                intakeRunning,
-                teamColor
-        );
+//        lightTimer.reset();
+        lights.updateLights(teamColor, intakeRunning, sequence, targetVisible);
+//        lights.updateStatus(
+//                targetVisible,
+//                intakeRunning,
+//                teamColor
+//        );
     }
 
     public void turnOff() {

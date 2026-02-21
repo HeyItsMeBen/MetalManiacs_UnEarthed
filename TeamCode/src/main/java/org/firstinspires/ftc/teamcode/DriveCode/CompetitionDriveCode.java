@@ -71,6 +71,7 @@ public class CompetitionDriveCode extends OpMode {
     LightsController lightsController;
 
     public String teamColor = "Red";
+    public String ballSequence = "XXX";
 
     double oldTime;
 
@@ -188,7 +189,7 @@ public class CompetitionDriveCode extends OpMode {
         );
 
         if (!autoAimController.isCameraAvailable()) {
-            telemetry.addData("⚠️ WARNING", "Camera disconnected - auto aim disabled");
+            telemetry.addData("WARNING", "Camera disconnected - auto aim disabled");
         }
 
         telemetry.addData("Auto aiming",
@@ -226,7 +227,8 @@ public class CompetitionDriveCode extends OpMode {
         lightsController.update(
                 autoAimController.isTargetFound(),
                 intakeController.isIntakeRunning(),
-                teamColor
+                teamColor,
+                ballSequence
         );
 
 
