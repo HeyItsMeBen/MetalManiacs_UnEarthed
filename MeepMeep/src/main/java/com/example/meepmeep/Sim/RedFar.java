@@ -1,4 +1,4 @@
-package com.example.meepmeep;
+package com.example.meepmeep.Sim;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -13,40 +13,43 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-// In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
-
-public class Auto_Path_Simulation_Cycle {
+public class RedFar {
     public static void main(String[] args) {
-
-        double firing_position_x = -15;
-        double firing_position_y = 15;
 
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-15, -60, Math.toRadians(270)))
 
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(0)))
 
+                        .strafeTo(new Vector2d(12, -45))
+                        .waitSeconds(0.5f)
+
+                        //collect artifacts
+                        .splineTo(new Vector2d(60, -60), Math.toRadians(0))
+                        .waitSeconds(0.5f)
+
+                        //move to firing position
                         .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
+                        .waitSeconds(0.5f)
 
-                        .splineTo(new Vector2d(firing_position_x, firing_position_y), Math.toRadians(130))
-
-
+                        //collect artifacts
                         .setReversed(false)
+                        .splineTo(new Vector2d(60, -55), Math.toRadians(0))
+                        .waitSeconds(0.5f)
 
-                        .lineTo(new Vector2d(firing_position_x, 8))
+                        //move to firing position
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
+                        .waitSeconds(0.5f)
 
-                        .strafeTo(new Vector2d(-63, 8))
-
-                        .setTangent(180)
-                        .splineToSplineHeading(new Pose2d(firing_position_x, firing_position_y, Math.toRadians(315)), Math.toRadians(225))
-
-
+                        //park
                         .setReversed(false)
+                        .splineTo(new Vector2d(35,-55), Math.toRadians(0))
+                        .waitSeconds(2f)
 
-                        .lineTo(new Vector2d(-25, -20))
                         .build());
 
         //This is the custom field setup. To see the field PNGs, there is a file in Meepmeep with images, called Field_Backgrounds

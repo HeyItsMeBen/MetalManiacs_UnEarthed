@@ -1,14 +1,15 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose;
 
-import com.acmerobotics.roadrunner.*;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.Vector2d;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
-import com.acmerobotics.roadrunner.Pose2d;
-
-import java.lang.Math;
-
-public class RedCloseTrajectories {
+public class BlueCloseTrajectories {
 
     static double defaultVelocity = 20.0;
 
@@ -39,7 +40,8 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(15, 10, Math.toRadians(0)), Math.toRadians(270), defaultSpeedConstraint)
+                .splineToSplineHeading(new Pose2d(-15, 10, Math.toRadians(180)), Math.toRadians(270), defaultSpeedConstraint)
+
                 .build();
     }
 
@@ -52,7 +54,7 @@ public class RedCloseTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint)
+                        .splineToSplineHeading(new Pose2d(-50,12, Math.toRadians(180)), Math.toRadians(180), patternCollectionConstraint)
 
                         .build();
 
@@ -61,8 +63,8 @@ public class RedCloseTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(30,-12), Math.toRadians(0), defaultSpeedConstraint)
-                        .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0), patternCollectionConstraint)
+                        .splineToConstantHeading(new Vector2d(-30,-12), Math.toRadians(180), defaultSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(-50, -12), Math.toRadians(180), patternCollectionConstraint)
 
                         .build();
 
@@ -71,8 +73,8 @@ public class RedCloseTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0), defaultSpeedConstraint)
-                        .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0), patternCollectionConstraint)
+                        .splineToConstantHeading(new Vector2d(-37, -35), Math.toRadians(180), defaultSpeedConstraint)
+                        .splineToConstantHeading(new Vector2d(-50, -35), Math.toRadians(180), patternCollectionConstraint)
 
                         .build();
 
@@ -81,7 +83,7 @@ public class RedCloseTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(45,6), Math.toRadians(0))
+                        .splineTo(new Vector2d(-45,6), Math.toRadians(180))
 
                         .build();
         }
@@ -92,7 +94,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-15, 10), Math.toRadians(90), defaultSpeedConstraint)
 
                 .build();
     }
@@ -102,7 +104,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0), defaultSpeedConstraint)
+                .splineToSplineHeading(new Pose2d(-58,-10, Math.toRadians(160)), Math.toRadians(180), defaultSpeedConstraint)
 
                 .build();
     }
@@ -112,7 +114,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineTo(new Vector2d(45,6), Math.toRadians(0))
+                .splineTo(new Vector2d(-45,6), Math.toRadians(180))
 
                 .build();
     }

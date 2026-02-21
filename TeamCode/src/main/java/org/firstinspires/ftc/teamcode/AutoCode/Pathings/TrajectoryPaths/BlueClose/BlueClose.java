@@ -1,20 +1,15 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose;
 
 // Paths
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.initialMoveToPosition;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifacts;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.firingPosition;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.park;
-// Paths
 
-// Actions
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.AutoAimAction;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.FlywheelSequenceAction;
-// Actions
-
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPattern;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.firingPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.initialMoveToPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.openChannel;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -37,8 +32,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Red Far", group = "Autonomous - Red")
-public class RedFar extends LinearOpMode {
+@Autonomous(name = "Blue Close", group = "Autonomous - Blue")
+public class BlueClose extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -57,7 +52,7 @@ public class RedFar extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(12, -60, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(40));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -75,8 +70,6 @@ public class RedFar extends LinearOpMode {
 
         aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
 
-        int visionOutputPosition = 0;
-
         waitForStart();
         if (isStopRequested()) return;
 
@@ -84,37 +77,18 @@ public class RedFar extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+
                         new ParallelAction(
-                                initialMoveToPosition(drive, drive.localizer.getPose()),
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 new InstantAction(() -> intakeController.update()),
                                 new InstantAction(() -> flywheelController.powerUpToSpeed()),
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red")
+                                initialMoveToPosition(drive, drive.localizer.getPose())
                         ),
 
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
-                        )
-        );
+                        new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
-        // Run limelight Recognition Code
-
-        // Limelight returns some position value:
-        visionOutputPosition = 1;
-
-        Action trajectoryActionChosen;
-        if (visionOutputPosition == 1) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Left");
-        } else if (visionOutputPosition == 2) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
-        } else if (visionOutputPosition == 3) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Right");
-        } else {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
-        }
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajectoryActionChosen,
+                        collectPattern(drive, drive.localizer.getPose(), "PGP"),
 
                         new ParallelAction(
                                 new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
@@ -122,10 +96,34 @@ public class RedFar extends LinearOpMode {
                         ),
                         new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
-                        new ParallelAction(
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                park(drive, drive.localizer.getPose())
-                        )
+                        openChannel(drive, drive.localizer.getPose()) //,
+
+//                        new ParallelAction(
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        ),
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+//
+//                        collectPattern(drive, drive.localizer.getPose(), "PPG"),
+//
+//                        new ParallelAction(
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        ),
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+//
+//                        collectPattern(drive, drive.localizer.getPose(), "GPP"),
+//
+//                        new ParallelAction(
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        ),
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+//
+//                        new ParallelAction(
+//                                new InstantAction(() -> intakeController.toggleIntake()),
+//                                park(drive, drive.localizer.getPose())
+//                        )
                 )
         );
     }

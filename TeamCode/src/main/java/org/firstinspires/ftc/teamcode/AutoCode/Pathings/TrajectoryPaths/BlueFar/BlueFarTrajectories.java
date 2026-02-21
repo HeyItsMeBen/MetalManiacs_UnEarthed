@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.AngularVelConstraint;
@@ -9,7 +9,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
-public class RedFarTrajectories {
+public class BlueFarTrajectories {
 
     static double defaultVelocity = 20.0;
 
@@ -37,7 +37,7 @@ public class RedFarTrajectories {
     public static Action initialMoveToPosition(MecanumDrive drive, Pose2d currentPose) {
 
         return drive.actionBuilder(currentPose)
-                .strafeTo(new Vector2d(12, -45), defaultSpeedConstraint)
+                .strafeTo(new Vector2d(-12, -45), defaultSpeedConstraint)
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class RedFarTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-12, -45), Math.toRadians(0))
 
                 .build();
     }
@@ -60,7 +60,7 @@ public class RedFarTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(60, -50), Math.toRadians(0), defaultSpeedConstraint)
+                        .splineTo(new Vector2d(-60, -50), Math.toRadians(180), defaultSpeedConstraint)
 
                         .build();
 
@@ -69,7 +69,7 @@ public class RedFarTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(60, -55), Math.toRadians(0), defaultSpeedConstraint)
+                        .splineTo(new Vector2d(-60, -55), Math.toRadians(180), defaultSpeedConstraint)
 
                         .build();
 
@@ -78,7 +78,7 @@ public class RedFarTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(60, -60), Math.toRadians(0), defaultSpeedConstraint)
+                        .splineTo(new Vector2d(-60, -60), Math.toRadians(180), defaultSpeedConstraint)
 
                         .build();
 
@@ -87,7 +87,7 @@ public class RedFarTrajectories {
                 return drive.actionBuilder(currentPose)
 
                         .setReversed(false)
-                        .splineTo(new Vector2d(60, -55), Math.toRadians(0), defaultSpeedConstraint)
+                        .splineTo(new Vector2d(-60, -55), Math.toRadians(180), defaultSpeedConstraint)
 
                         .build();
         }
@@ -98,7 +98,7 @@ public class RedFarTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineTo(new Vector2d(35,-55), Math.toRadians(0), defaultSpeedConstraint)
+                .splineTo(new Vector2d(-35,-55), Math.toRadians(180), defaultSpeedConstraint)
 
                 .build();
     }

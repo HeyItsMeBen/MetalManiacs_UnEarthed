@@ -102,6 +102,8 @@ public class FieldLocalizerDebug extends LinearOpMode {
 
             if (driver.wasJustPressed(GamepadKeys.Button.A)) {
                 pose = resetPose;
+                telemetry.addData("Reset Pose ", "");
+                telemetry.update();
             }
 
             TelemetryPacket packet = new TelemetryPacket();

@@ -1,4 +1,4 @@
-package com.example.meepmeep.Blue;
+package com.example.meepmeep.Sim;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -13,29 +13,37 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-// In this pathing, the robot goes from the goal to launch pre-stored balls, then cycles the ones still on the field
-
-public class AutoPathSimLongRangeBlue {
+public class BlueFar {
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-15, -60, Math.toRadians(180)))
 
-                        .splineToLinearHeading(new Pose2d(-15, -47, Math.toRadians(160)), Math.toRadians(90))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-12, -60, Math.toRadians(180)))
 
-                        .lineToLinearHeading(new Pose2d(-60, -55, Math.toRadians(185)))
+                        .strafeTo(new Vector2d(-12, -45))
+                        .waitSeconds(0.5f)
 
-                        .lineToLinearHeading(new Pose2d(-15, -47, Math.toRadians(175)))
+                        .splineTo(new Vector2d(-60, -60), Math.toRadians(180))
+                        .waitSeconds(0.5f)
 
-                        .splineTo(new Vector2d(-55, -33), Math.toRadians(180))
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(-12, -45), Math.toRadians(0))
+                        .waitSeconds(0.5f)
 
-                        .lineToLinearHeading(new Pose2d(-15, -47, Math.toRadians(175)))
+                        .setReversed(false)
+                        .splineTo(new Vector2d(-60, -55), Math.toRadians(180))
+                        .waitSeconds(0.5f)
 
-                        .lineToLinearHeading(new Pose2d(-20, -35, Math.toRadians(180)))
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(-12, -45), Math.toRadians(0))
+                        .waitSeconds(0.5f)
+
+                        .setReversed(false)
+                        .splineTo(new Vector2d(-35,-55), Math.toRadians(180))
+                        .waitSeconds(2f)
 
                         .build());
 
