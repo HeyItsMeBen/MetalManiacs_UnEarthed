@@ -341,4 +341,12 @@ public class AutoAimTurretController {
         turretStartPower=turret.getTurretPower();
 //        turret.setMotorPower(0);
     }
+
+    public void shutdown() {
+        opModeIsActive = false;
+        stopTurret();
+        if (visionPortal != null) {
+            visionPortal.close();  // This is the critical line
+        }
+    }
 }

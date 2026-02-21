@@ -253,7 +253,7 @@ public class CompetitionDriveCode extends OpMode {
 
     @Override
     public void stop() {
+        autoAimController.shutdown();
         lightsController.turnOff();
-        autoAimController.opModeIsActive=false;
     }
 }
