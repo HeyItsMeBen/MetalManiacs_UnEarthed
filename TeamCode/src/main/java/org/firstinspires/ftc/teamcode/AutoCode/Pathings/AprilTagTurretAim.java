@@ -94,7 +94,7 @@ public class AprilTagTurretAim {
         if (targetFound) {
             autoAim.calculateEverything(desiredTag);
             turret.setMotorPower(autoAim.turn);
-            light.setAprilTagStatus(true);
+//            light.setAprilTagStatus(true);
             return autoAim.launchPointToGoalCenterX_Distance_Inches;
 
         } else {

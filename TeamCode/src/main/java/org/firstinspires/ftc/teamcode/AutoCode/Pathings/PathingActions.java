@@ -29,6 +29,8 @@ public class PathingActions {
 
         private double startTime;
         private boolean initialized = false;
+        public String ballSequence = "XXX";
+
 
         public AutoAimAction(
                 AutoAimTurretController aprilTagTurretAim,
@@ -63,7 +65,8 @@ public class PathingActions {
             lightsController.update(
                     aprilTagTurretAim.isTargetFound(),
                     intakeController.isIntakeRunning(),
-                    teamColor
+                    teamColor,
+                    ballSequence
             );
 
             return true; // action complete

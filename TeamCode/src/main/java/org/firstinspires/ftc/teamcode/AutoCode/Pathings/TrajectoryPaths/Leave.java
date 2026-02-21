@@ -30,6 +30,8 @@ public class Leave extends LinearOpMode {
     Lights lights;
 
     LightsController lightsController;
+    public String ballSequence = "XXX";
+
 
     @Override
     public void runOpMode() {
@@ -43,7 +45,7 @@ public class Leave extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
-        lightsController.update(false, false, "Red");
+        lightsController.update(false, false, "Red",ballSequence);
 
         TrajectoryActionBuilder park = drive.actionBuilder(startPose)
 
