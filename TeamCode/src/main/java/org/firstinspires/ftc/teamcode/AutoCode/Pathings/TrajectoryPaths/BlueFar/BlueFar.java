@@ -84,7 +84,7 @@ public class BlueFar extends LinearOpMode {
                                 initialMoveToPosition(drive, drive.localizer.getPose()),
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 new InstantAction(() -> intakeController.update()),
-                                new InstantAction(() -> flywheelController.powerUpToSpeed()),
+                                new InstantAction(() -> flywheelController.rampUp()),
                                 new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red")
                         ),
 

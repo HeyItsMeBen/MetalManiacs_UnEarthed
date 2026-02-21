@@ -81,7 +81,7 @@ public class BlueClose extends LinearOpMode {
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 new InstantAction(() -> intakeController.update()),
-                                new InstantAction(() -> flywheelController.powerUpToSpeed()),
+                                new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, drive.localizer.getPose())
                         ),
 

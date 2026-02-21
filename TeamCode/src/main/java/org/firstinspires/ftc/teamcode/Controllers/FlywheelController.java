@@ -65,13 +65,13 @@ public class FlywheelController {
         extraOuttakeSpeed = extra;
     }
 
-    public void powerUpToSpeed() {
+    public void rampUp() {
 
         double newVelocity;
         double elapsed = powerUpTimer.seconds();
         double progress = Math.min(elapsed / rampSeconds, 1.0);
 
-        if (targetSpeed == 0) { //target speed is set to 0 initially, and the auto paths call this line of code before update
+        if (targetSpeed == 0) { //target speed is set to 0 initially, and the auto paths call this line of code before targetSpeed recives a value
             newVelocity = maintainOuttakeSpeed * progress;
         } else {
             newVelocity = targetSpeed * progress;
@@ -110,8 +110,18 @@ public class FlywheelController {
 
                 case SPINNING_UP:
 
-                    if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9 || powerUpTimer.seconds() > rampSeconds + 1) {
-                        // check if either the flywheels are at 90% speed or too much time has elapsed
+                    if (flywheels.getFlywheelVelocity() < targetSpeed * 0.9) {
+
+                        // Ramp up
+                        rampUp();
+
+                        // Safety timeout if ramp takes too long
+                        if (powerUpTimer.seconds() > rampSeconds + 1.5) {
+                            launchTimer.reset();
+                            launchState = LaunchState.WAITING_AFTER_SPINUP;
+                        }
+
+                    } else {    // Flywheels already at speed, skip ramp
 
                         launchTimer.reset();
                         launchState = LaunchState.WAITING_AFTER_SPINUP;
