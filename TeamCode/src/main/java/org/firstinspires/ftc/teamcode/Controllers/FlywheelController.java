@@ -25,7 +25,8 @@ public class FlywheelController {
     private double targetSpeed = 0;
     private double outtakeSpeedBeforeDrop = 0;
 
-    private static double MINIMUM_SPEED = 1500;
+    private ElapsedTime powerUpTimer = new ElapsedTime();
+    private static double rampSeconds = 5;
 
     public enum LaunchState {
         IDLE,
@@ -65,10 +66,19 @@ public class FlywheelController {
     }
 
     public void powerUpToSpeed() {
-        double kRamp = 0.09; // 9% per loop
-        double currentVelocity = flywheels.getFlywheelVelocity();
-        double newVelocity = currentVelocity + (MINIMUM_SPEED - currentVelocity) * kRamp;
+
+        double newVelocity;
+        double elapsed = powerUpTimer.seconds();
+        double progress = Math.min(elapsed / rampSeconds, 1.0);
+
+        if (targetSpeed == 0) { //target speed is set to 0 initially, and the auto paths call this line of code before update
+            newVelocity = maintainOuttakeSpeed * progress;
+        } else {
+            newVelocity = targetSpeed * progress;
+        }
+
         flywheels.setFlywheelVelocity(newVelocity);
+
     }
 
     public void update(boolean triggerPressed,
@@ -100,18 +110,11 @@ public class FlywheelController {
 
                 case SPINNING_UP:
 
-                    if (flywheels.getFlywheelVelocity()
-                            >= targetSpeed * 0.9) {
+                    if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9 || powerUpTimer.seconds() > rampSeconds + 1) {
+                        // check if either the flywheels are at 90% speed or too much time has elapsed
 
                         launchTimer.reset();
-                        launchState =
-                                LaunchState.WAITING_AFTER_SPINUP;
-
-                    } else if (launchTimer.milliseconds() > 1200) {
-
-                        launchTimer.reset();
-                        launchState =
-                                LaunchState.WAITING_AFTER_SPINUP;
+                        launchState = LaunchState.WAITING_AFTER_SPINUP;
                     }
                     break;
 

@@ -177,7 +177,6 @@ public class CompetitionDriveCode extends OpMode {
 
         intakeController.update();
 
-
         // Flywheels
         boolean triggerPressed =
                 driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1;
