@@ -49,6 +49,8 @@ public class BlueClose extends LinearOpMode {
     LightsController lightsController;
     AutoAimTurretController aprilTagTurretAim;
 
+    public String ballSequence = "XXX";
+
     @Override
     public void runOpMode() {
 
@@ -73,7 +75,7 @@ public class BlueClose extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
-        lightsController.update(false, false, "Red");
+        lightsController.update(false, false, "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(

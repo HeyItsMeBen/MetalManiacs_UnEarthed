@@ -33,7 +33,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Red Far", group = "Autonomous - Red")
+@Autonomous(name = "Blue Far", group = "Autonomous - Red")
 public class BlueFar extends LinearOpMode {
 
     Intake intake;
@@ -49,6 +49,8 @@ public class BlueFar extends LinearOpMode {
     FlywheelController flywheelController;
     LightsController lightsController;
     AutoAimTurretController aprilTagTurretAim;
+
+    public String ballSequence = "XXX";
 
     @Override
     public void runOpMode() {
@@ -76,7 +78,7 @@ public class BlueFar extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
-        lightsController.update(false, false, "Red");
+        lightsController.update(false, false, "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(

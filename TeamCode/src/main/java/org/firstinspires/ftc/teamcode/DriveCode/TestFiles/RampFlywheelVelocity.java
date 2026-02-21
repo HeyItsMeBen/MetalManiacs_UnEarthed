@@ -1,15 +1,13 @@
-package org.firstinspires.ftc.teamcode.DriveCode.Debug;
+package org.firstinspires.ftc.teamcode.DriveCode.TestFiles;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp (name="Flywheel Ramp-Up Test", group="Debug")
+@TeleOp (name="Flywheel Ramp-Up Test 4", group="Debug")
 public class RampFlywheelVelocity extends LinearOpMode {
 
     public GamepadEx gamepad;
@@ -28,8 +26,12 @@ public class RampFlywheelVelocity extends LinearOpMode {
         gamepad = new GamepadEx(gamepad1);
 
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        flywheel.setDirection(DcMotorEx.Direction.REVERSE);
+        flywheel.setDirection(DcMotorEx.Direction.FORWARD);
+        //flywheel.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //PIDFCoefficients pidfCoefficients = new PIDFCoefficients(10, 0, 0, 14.12);
+        //flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
@@ -39,21 +41,11 @@ public class RampFlywheelVelocity extends LinearOpMode {
         while (opModeIsActive()) {
             while (opModeIsActive()) {
 
-                double rampTime = rampSeconds;        // 5 seconds
-                double maxVelocity = targetVelocity;  // 2000 ticks per second
-                double elapsed = timer.seconds();
-                double progress = Math.min(elapsed / rampTime, 1.0);
-                double newVelocity = maxVelocity * progress;
 
-                flywheel.setVelocity(newVelocity);
+                flywheel.setVelocity(targetVelocity);
+                //flywheel.setPower(0.5);
 
-                if (gamepad.wasJustPressed(GamepadKeys.Button.Y)) {
-                    reversed = !reversed;
-                    flywheel.setDirection(
-                            reversed ? DcMotorSimple.Direction.REVERSE
-                                    : DcMotorSimple.Direction.FORWARD
-                    );
-                }
+
 
                 telemetry.addData("Target Velocity", targetVelocity);
                 telemetry.addData("Current Velocity", flywheel.getVelocity());

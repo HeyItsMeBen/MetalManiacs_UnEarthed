@@ -10,7 +10,7 @@ public class Flywheels {
     final double tickPerRevolution = 28;
 
     public double f = 14.12;
-    public double p = 100;
+    public double p = 10;
     //rpm = m * distance + b
     double m = 6.68363;
     double b = 922.48777+115;

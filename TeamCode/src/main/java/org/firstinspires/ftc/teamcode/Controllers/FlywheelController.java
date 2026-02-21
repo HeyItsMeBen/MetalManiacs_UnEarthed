@@ -71,7 +71,7 @@ public class FlywheelController {
     public void rampUp() {
 
 //        double targetSeconds = rampUpSeconds *1000; // convert rampUpSpeed to milliseconds
-//        currentTime=System.currentTimeMillis()-intakeStartTime;
+//        currentTime=System.currentTimeMillis()-flywheelStartTime;
 //        if (currentTime<targetSeconds){
 //            flywheels.setFlywheelVelocity(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
 //        } else {
@@ -115,10 +115,10 @@ public class FlywheelController {
                         rampUp();
 
                         // Safety timeout if ramp takes too long
-                        if (powerUpTimer.seconds() > rampSeconds + 1.5) {
-                            launchTimer.reset();
-                            launchState = LaunchState.WAITING_AFTER_SPINUP;
-                        }
+//                        if (powerUpTimer.seconds() > rampSeconds + 1.5) {
+//                            launchTimer.reset();
+//                            launchState = LaunchState.WAITING_AFTER_SPINUP;
+//                        }
 
                     } else {    // Flywheels already at speed, skip ramp
 
