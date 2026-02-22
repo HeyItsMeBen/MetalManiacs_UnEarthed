@@ -51,7 +51,7 @@ public class BlueFar extends LinearOpMode {
     AutoAimTurretController aprilTagTurretAim;
     public String ballSequence = "XXX";
 
-    public String ballSequence = "XXX";
+
 
     @Override
     public void runOpMode() {

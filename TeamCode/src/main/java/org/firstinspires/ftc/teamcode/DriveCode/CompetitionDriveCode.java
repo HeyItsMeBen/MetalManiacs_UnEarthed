@@ -119,10 +119,10 @@ public class CompetitionDriveCode extends OpMode {
 
 
         // Drive Controls
-        double forward = -driver.getLeftY();
-        double right = -driver.getLeftX();
-        double rightStickX = -driver.getRightX();
-        double rightStickY = -driver.getRightY();
+        double forward = driver.getLeftY();
+        double right = driver.getLeftX();
+        double rightStickX = driver.getRightX();
+        double rightStickY = driver.getRightY();
         double rotate;
 
         if (driver.getButton(GamepadKeys.Button.Y)) {
