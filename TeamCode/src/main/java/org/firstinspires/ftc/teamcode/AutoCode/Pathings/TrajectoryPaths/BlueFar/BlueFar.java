@@ -49,6 +49,7 @@ public class BlueFar extends LinearOpMode {
     FlywheelController flywheelController;
     LightsController lightsController;
     AutoAimTurretController aprilTagTurretAim;
+    public String ballSequence = "XXX";
 
     public String ballSequence = "XXX";
 

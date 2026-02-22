@@ -53,6 +53,8 @@ public class CompetitionDriveCode extends OpMode {
     public GamepadEx driver;
     public RumbleController controller_rumble;
 
+    List<LynxModule> allHubs;
+
     // Mechanisms
     Intake intake;
     Flywheels flywheels;
@@ -100,7 +102,7 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.update();
 
         // Bulk read optimization
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
@@ -108,6 +110,7 @@ public class CompetitionDriveCode extends OpMode {
 
     @Override
     public void loop() {
+        driver.readButtons();
 
         // Team color toggle
         if (driver.wasJustPressed(GamepadKeys.Button.START)){
@@ -201,26 +204,26 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("Goal distance (inches)",
                 autoAimController.getDistanceToGoalInches());
 
-        telemetry.addData("Target turret angle (degrees)",
-                Math.toDegrees(autoAimController.turretAngleTelemetry));
-
-        telemetry.addData("Launcher State",
-                flywheelController.getState());
-
-        telemetry.addData("Target RPM",
-                flywheelController.getTargetSpeed());
-
-        telemetry.addData("Current RPM",
-                flywheels.getFlywheelVelocity());
-
-        telemetry.addData("Current Turret Timer",
-                autoAimController.getCurrentTime());
-
-        telemetry.addData("Turret Power",
-                autoAimController.getTurretPower());
-
-        telemetry.addData("Turret Needed Power",
-                autoAimController.getNeededPower());
+//        telemetry.addData("Target turret angle (degrees)",
+//                Math.toDegrees(autoAimController.turretAngleTelemetry));
+//
+//        telemetry.addData("Launcher State",
+//                flywheelController.getState());
+//
+//        telemetry.addData("Target RPM",
+//                flywheelController.getTargetSpeed());
+//
+//        telemetry.addData("Current RPM",
+//                flywheels.getFlywheelVelocity());
+//
+//        telemetry.addData("Current Turret Timer",
+//                autoAimController.getCurrentTime());
+//
+//        telemetry.addData("Turret Power",
+//                autoAimController.getTurretPower());
+//
+//        telemetry.addData("Turret Needed Power",
+//                autoAimController.getNeededPower());
 
 
         // LED
@@ -231,9 +234,6 @@ public class CompetitionDriveCode extends OpMode {
                 ballSequence
         );
 
-
-        driver.readButtons();
-
         // Frequency check
         double newTime = getRuntime();
         double loopTime = newTime - oldTime;
@@ -242,10 +242,6 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("LoopTime (Hz):", frequency);
         telemetry.addData("Loop Time (ms): ", loopTime * 1000);
         telemetry.update();
-
-        // Bulk read optimization
-        List<LynxModule> allHubs =
-                hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();

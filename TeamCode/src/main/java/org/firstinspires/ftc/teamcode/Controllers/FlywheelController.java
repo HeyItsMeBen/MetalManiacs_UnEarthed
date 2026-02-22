@@ -25,11 +25,10 @@ public class FlywheelController {
     private double targetSpeed = 0;
     private double outtakeSpeedBeforeDrop = 0;
 
-    private ElapsedTime powerUpTimer = new ElapsedTime();
-    private float rampUpSeconds = 5;
-    double flywheelStartTime=0;
-
+    private float rampUpSpeed = 2;
     double currentTime = 0;
+    double flywheelStartTime=0;
+    double flywheelStartPower=0;
 
     public enum LaunchState {
         IDLE,
@@ -84,6 +83,14 @@ public class FlywheelController {
                        double distanceToTag,
                        boolean tagVisible) {
 
+        double targetSeconds = rampUpSpeed *1000; // convert rampUpSpeed to milliseconds
+        currentTime=System.currentTimeMillis()-flywheelStartTime;
+        if (currentTime<targetSeconds){
+            flywheels.setFlywheelVelocity(flywheelStartPower*((targetSeconds-currentTime)/targetSeconds)+targetSpeed*(currentTime/targetSeconds));
+        } else {
+            flywheels.setFlywheelVelocity(targetSpeed);
+        }
+
         if (triggerPressed) {
 
             switch (launchState) {
@@ -91,15 +98,13 @@ public class FlywheelController {
                 case IDLE:
 
                     if (tagVisible) {
-                        targetSpeed =
-                                flywheels.launchFromDistance(
-                                        distanceToTag
-                                );
+                        targetSpeed = flywheels.getVelocityFromDistance(distanceToTag);
+                        flywheelStartTime=System.currentTimeMillis();
+                        flywheelStartPower= flywheels.getFlywheelVelocity();
                     } else {
                         targetSpeed = maintainOuttakeSpeed;
-                        flywheels.setFlywheelVelocity(
-                                maintainOuttakeSpeed
-                        );
+                        flywheelStartTime=System.currentTimeMillis();
+                        flywheelStartPower= flywheels.getFlywheelVelocity();
                     }
 
                     launchTimer.reset();
@@ -203,7 +208,6 @@ public class FlywheelController {
                 launchState = LaunchState.IDLE;
             }
 
-            flywheels.setFlywheelVelocity(maintainOuttakeSpeed);
         }
     }
 }

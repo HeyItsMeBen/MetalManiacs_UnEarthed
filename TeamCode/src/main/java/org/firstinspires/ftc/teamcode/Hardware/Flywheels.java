@@ -48,7 +48,13 @@ public class Flywheels {
     }
 
     public double getVelocityFromDistance(double distance){
-        return b+ (m * distance);  //return the optimal rpm for telemetry debugging...
+        double optimalSpeed = b+ (m * distance);
+
+        if (distance > 8.0){
+            optimalSpeed += 50;
+        }
+
+        return optimalSpeed;
     }
 
     public void stopFlywheel(){
