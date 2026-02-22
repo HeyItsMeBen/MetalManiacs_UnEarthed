@@ -6,9 +6,11 @@ public class RumbleController {
     private long lastRumbleTime = 0;
 
     // Configurable rumble patterns
-    private double continuousIntensity = 0.5;
+    private double continuousIntensity = 0.015;  // 1.5% power for continuous rumble
     private int continuousInterval = 150;  // ms between pulses
     private int continuousDuration = 100;  // ms per pulse
+    private boolean continuosRumble = false;
+
 
     public RumbleController(Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -16,12 +18,24 @@ public class RumbleController {
 
     // ========== CONTINUOUS RUMBLE ==========
     public void continuousRumble() {
+        if (!continuosRumble){
+            continuosRumble = true;
+        }
+
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastRumbleTime > continuousInterval) {
             gamepad.rumble(continuousIntensity, continuousIntensity, continuousDuration);
             lastRumbleTime = currentTime;
         }
     }
+
+    public void stopContinuosRumbling() {
+        if (continuosRumble) {
+            gamepad.stopRumble();
+            continuosRumble = false;
+        }
+    }
+
 
     public void setContinuousIntensity(double intensity) {
         this.continuousIntensity = Math.max(0.0, Math.min(1.0, intensity));
@@ -41,11 +55,13 @@ public class RumbleController {
         gamepad.rumble(0.8, 0.8, 60);
     }
 
-    public void mediumPunch() {
+    public void ballLaunched() { // Ball launched
         gamepad.rumble(1.0, 1.0, 100);
     }
 
-    public void heavyKick() {
-        gamepad.rumble(1.0, 1.0, 200);
+    public void ballCollected() { // Ball collected
+        gamepad.rumble(1.0, 1.0, 150);
     }
+
+
 }
