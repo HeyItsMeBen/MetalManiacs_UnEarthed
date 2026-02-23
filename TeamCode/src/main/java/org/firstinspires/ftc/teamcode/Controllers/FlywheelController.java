@@ -14,7 +14,7 @@ public class FlywheelController {
     private Transfer transferKick;
     private Intake intake;
     private OuttakeHood hood;
-
+    public boolean shouldRumble = false;
     private ElapsedTime launchTimer = new ElapsedTime();
 
     private ElapsedTime powerUpTimer = new ElapsedTime();
@@ -31,7 +31,6 @@ public class FlywheelController {
     double currentTime = 0;
     double flywheelStartTime=0;
     double flywheelStartPower=0;
-
     public enum LaunchState {
         IDLE,
         SPINNING_UP,
@@ -149,6 +148,7 @@ public class FlywheelController {
                         intake.setIntakePower(0);
 
                         ballsFed++;
+                        shouldRumble = true;
                         launchTimer.reset();
 
                         if (ballsFed < 3) {
@@ -169,7 +169,6 @@ public class FlywheelController {
                 case WAITING_BETWEEN_BALLS:
 
                     if (launchTimer.milliseconds() > 1000) {
-
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 

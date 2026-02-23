@@ -71,6 +71,7 @@ public class CompetitionDriveCode extends OpMode {
     FlywheelController flywheelController;
     IntakeController intakeController;
     LightsController lightsController;
+    RumbleController rumbleController;
 
     public String teamColor = "Red";
     public String ballSequence = "XXX";
@@ -81,7 +82,7 @@ public class CompetitionDriveCode extends OpMode {
     public void init() {
 
         driver = new GamepadEx(gamepad1);
-        controller_rumble = new RumbleController(gamepad1);
+        rumbleController = new RumbleController(gamepad1);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
@@ -179,6 +180,15 @@ public class CompetitionDriveCode extends OpMode {
             intakeController.toggleReverse();
         }
 
+        if (intakeController.getIntakePower() >= 0.1) {
+            rumbleController.continuousRumble();
+        } else {
+            rumbleController.stopContinuosRumbling();
+        }
+
+        //When ball is collected call this rumble method
+        //rumbleController.ballCollected();
+
         intakeController.update();
 
         // Flywheels
@@ -190,6 +200,11 @@ public class CompetitionDriveCode extends OpMode {
                 autoAimController.getDistanceToGoalInches(),
                 autoAimController.isTargetFound()
         );
+
+        if (flywheelController.shouldRumble){
+            flywheelController.shouldRumble = false;
+            rumbleController.ballLaunched();
+        }
 
         if (!autoAimController.isCameraAvailable()) {
             telemetry.addData("WARNING", "Camera disconnected - auto aim disabled");
