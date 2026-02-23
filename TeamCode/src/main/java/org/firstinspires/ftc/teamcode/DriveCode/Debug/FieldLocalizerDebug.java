@@ -100,7 +100,7 @@ public class FieldLocalizerDebug extends LinearOpMode {
 
             telemetry.update();
 
-            if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+            if (driver.isDown(GamepadKeys.Button.A)) {
                 pose = resetPose;
                 telemetry.addData("Reset Pose ", "");
                 telemetry.update();
@@ -110,6 +110,8 @@ public class FieldLocalizerDebug extends LinearOpMode {
             packet.fieldOverlay().setStroke("#3F51B5");
             Drawing.drawRobot(packet.fieldOverlay(), pose);
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
+
+            driver.readButtons();
 
             idle();
 

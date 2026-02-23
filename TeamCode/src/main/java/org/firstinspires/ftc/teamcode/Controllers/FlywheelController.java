@@ -17,6 +17,8 @@ public class FlywheelController {
 
     private ElapsedTime launchTimer = new ElapsedTime();
 
+    private ElapsedTime powerUpTimer = new ElapsedTime();
+
     private double maintainOuttakeSpeed = 1386;
     private double extraOuttakeSpeed = 0;
 
@@ -69,20 +71,6 @@ public class FlywheelController {
 
     public void rampUp() {
 
-//        double targetSeconds = rampUpSeconds *1000; // convert rampUpSpeed to milliseconds
-//        currentTime=System.currentTimeMillis()-flywheelStartTime;
-//        if (currentTime<targetSeconds){
-//            flywheels.setFlywheelVelocity(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
-//        } else {
-//           flywheels.setFlywheelVelocity(targetSpeed);
-//        }
-
-    }
-
-    public void update(boolean triggerPressed,
-                       double distanceToTag,
-                       boolean tagVisible) {
-
         double targetSeconds = rampUpSpeed *1000; // convert rampUpSpeed to milliseconds
         currentTime=System.currentTimeMillis()-flywheelStartTime;
         if (currentTime<targetSeconds){
@@ -90,6 +78,12 @@ public class FlywheelController {
         } else {
             flywheels.setFlywheelVelocity(targetSpeed);
         }
+
+    }
+
+    public void update(boolean triggerPressed,
+                       double distanceToTag,
+                       boolean tagVisible) {
 
         if (triggerPressed) {
 
@@ -107,6 +101,7 @@ public class FlywheelController {
                         flywheelStartPower= flywheels.getFlywheelVelocity();
                     }
 
+                    powerUpTimer.reset();
                     launchTimer.reset();
                     launchState = LaunchState.SPINNING_UP;
                     ballsFed = 0;
@@ -114,18 +109,9 @@ public class FlywheelController {
 
                 case SPINNING_UP:
 
-                    if (flywheels.getFlywheelVelocity() < targetSpeed * 0.9) {
-
-                        // Ramp up
-                        rampUp();
-
-                        // Safety timeout if ramp takes too long
-//                        if (powerUpTimer.seconds() > rampSeconds + 1.5) {
-//                            launchTimer.reset();
-//                            launchState = LaunchState.WAITING_AFTER_SPINUP;
-//                        }
-
-                    } else {    // Flywheels already at speed, skip ramp
+                    rampUp();
+                    if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9
+                            || powerUpTimer.seconds() >= rampUpSpeed + 1.5) {
 
                         launchTimer.reset();
                         launchState = LaunchState.WAITING_AFTER_SPINUP;

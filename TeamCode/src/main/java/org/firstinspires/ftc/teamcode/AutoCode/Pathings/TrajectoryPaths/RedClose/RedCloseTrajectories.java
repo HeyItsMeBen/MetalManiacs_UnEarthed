@@ -1,120 +1,85 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose;
 
-import com.acmerobotics.roadrunner.*;
-
-import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
-
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
-
-import java.lang.Math;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.Vector2d;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 public class RedCloseTrajectories {
 
-    static double defaultVelocity = 20.0;
+    private MecanumDrive drive;
+    private Pose2d startPose;
 
-    static double defaultAngVelocity = Math.PI;
-
-    static double patternCollectionVelocity = 10.0;
-
-    static double patternCollectionAngVelocity = Math.PI;
-
+    // Default velocity constraints (can be tuned)
+    private static final double DEFAULT_VELOCITY = 30.0;
+    private static final double DEFAULT_ANG_VELOCITY = Math.PI;
+    private static final double PATTERN_COLLECTION_VELOCITY = 10.0;
+    private static final double PATTERN_COLLECTION_ANG_VELOCITY = Math.PI;
 
     static MinVelConstraint defaultSpeedConstraint = new MinVelConstraint(
             java.util.Arrays.asList(
-                    new TranslationalVelConstraint(defaultVelocity),
-                    new AngularVelConstraint(defaultAngVelocity)
+                    new TranslationalVelConstraint(DEFAULT_VELOCITY),
+                    new AngularVelConstraint(DEFAULT_ANG_VELOCITY)
             )
     );
 
     static MinVelConstraint patternCollectionConstraint = new MinVelConstraint(
             java.util.Arrays.asList(
-                    new TranslationalVelConstraint(patternCollectionVelocity),
-                    new AngularVelConstraint(patternCollectionAngVelocity)
+                    new TranslationalVelConstraint(PATTERN_COLLECTION_VELOCITY),
+                    new AngularVelConstraint(PATTERN_COLLECTION_ANG_VELOCITY)
             )
     );
 
+    public RedCloseTrajectories(MecanumDrive drive, Pose2d startPose) {
+        this.drive = drive;
+        this.startPose = startPose;
+    }
 
-    public static Action initialMoveToPosition(MecanumDrive drive, Pose2d currentPose) {
-
-        return drive.actionBuilder(currentPose)
-
+    public TrajectoryActionBuilder initialMoveToPosition() {
+        return drive.actionBuilder(startPose)
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(15, 10, Math.toRadians(0)), Math.toRadians(270), defaultSpeedConstraint)
-                .build();
+                .splineToSplineHeading(new Pose2d(15, 10, Math.toRadians(0)), Math.toRadians(270), defaultSpeedConstraint);
     }
 
-    public static Action collectPattern(MecanumDrive drive, Pose2d currentPose, String Pattern) {
 
-        switch (Pattern) {
-
-            case "PPG":
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint)
-
-                        .build();
-
-            case "PGP":
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(30,-12), Math.toRadians(0), defaultSpeedConstraint)
-                        .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0), patternCollectionConstraint)
-
-                        .build();
-
-            case "GPP":
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0), defaultSpeedConstraint)
-                        .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0), patternCollectionConstraint)
-
-                        .build();
-
-            default:
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineTo(new Vector2d(45,6), Math.toRadians(0))
-
-                        .build();
-        }
+    public TrajectoryActionBuilder collectPatternPPG(TrajectoryActionBuilder previousTrajectory) {
+        return previousTrajectory.endTrajectory().fresh()
+                .setReversed(false)
+                .splineToSplineHeading(new Pose2d(50, 12, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint);
     }
 
-    public static Action firingPosition(MecanumDrive drive, Pose2d currentPose) {
+    public TrajectoryActionBuilder collectPatternPGP(TrajectoryActionBuilder previousTrajectory) {
+        return previousTrajectory.endTrajectory().fresh()
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(0), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0), patternCollectionConstraint);
+    }
 
-        return drive.actionBuilder(currentPose)
+    public TrajectoryActionBuilder collectPatternGPP(TrajectoryActionBuilder previousTrajectory) {
+        return previousTrajectory.endTrajectory().fresh()
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0), patternCollectionConstraint);
+    }
 
+    public TrajectoryActionBuilder firingPosition(TrajectoryActionBuilder previousTrajectory) {
+        return previousTrajectory.endTrajectory().fresh()
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90), defaultSpeedConstraint)
-
-                .build();
+                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90), defaultSpeedConstraint);
     }
 
-    public static Action openChannel(MecanumDrive drive, Pose2d currentPose) {
-
-        return drive.actionBuilder(currentPose)
-
+    public TrajectoryActionBuilder openChannel(TrajectoryActionBuilder previousTrajectory) {
+        return previousTrajectory.endTrajectory().fresh()
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0), defaultSpeedConstraint)
-
-                .build();
+                .splineToSplineHeading(new Pose2d(58, -10, Math.toRadians(20)), Math.toRadians(0), defaultSpeedConstraint);
     }
 
-    public static Action park(MecanumDrive drive, Pose2d currentPose) {
-
-        return drive.actionBuilder(currentPose)
-
+    public TrajectoryActionBuilder park(TrajectoryActionBuilder previousTrajectory) {
+        return previousTrajectory.endTrajectory().fresh()
                 .setReversed(false)
-                .splineTo(new Vector2d(45,6), Math.toRadians(0))
-
-                .build();
+                .splineTo(new Vector2d(45, 6), Math.toRadians(0), defaultSpeedConstraint);
     }
-
 }

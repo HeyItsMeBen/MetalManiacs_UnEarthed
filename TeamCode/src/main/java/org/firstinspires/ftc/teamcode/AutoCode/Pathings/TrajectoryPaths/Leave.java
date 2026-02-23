@@ -52,6 +52,13 @@ public class Leave extends LinearOpMode {
                 .setReversed(true)
                 .strafeTo(new Vector2d((drive.localizer.getPose().position.x + 15), drive.localizer.getPose().position.y));
 
+
+        TrajectoryActionBuilder park2 = park.endTrajectory().fresh()
+
+                .setReversed(true)
+                .strafeTo(new Vector2d((drive.localizer.getPose().position.x + 15), drive.localizer.getPose().position.y));
+
+
         Actions.runBlocking(
                 new SequentialAction(
 

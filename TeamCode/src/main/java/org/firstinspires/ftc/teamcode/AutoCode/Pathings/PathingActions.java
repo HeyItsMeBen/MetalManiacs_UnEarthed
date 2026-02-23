@@ -7,7 +7,10 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Actions;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
@@ -102,6 +105,28 @@ public class PathingActions {
             }
 
             return (flywheel.getState() == FlywheelController.LaunchState.IDLE);
+        }
+    }
+
+    public static abstract class PoseLoggerAction implements Action {
+        MecanumDrive drive;
+        LinearOpMode opMode;
+
+        public PoseLoggerAction(MecanumDrive drive, LinearOpMode opMode) {
+            this.drive = drive;
+            this.opMode = opMode;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            Pose2d currentPose = drive.localizer.getPose();
+            opMode.telemetry.addData("Initial Estimated Pose: ", currentPose.position.y + ", " + currentPose.position.x + ", " + Math.toRadians(currentPose.heading.toDouble()));
+            opMode.telemetry.addData("X", currentPose.position.x);
+            opMode.telemetry.addData("Y", currentPose.position.y);
+            opMode.telemetry.addData("Heading (degrees)", Math.toDegrees(currentPose.heading.toDouble()));
+            opMode.telemetry.addData("Heading (radians)", Math.toRadians(currentPose.heading.toDouble()));
+            opMode.telemetry.update();
+            return false;
         }
     }
 

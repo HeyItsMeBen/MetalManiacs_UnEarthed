@@ -48,7 +48,7 @@ public class FireMaxPower extends LinearOpMode {
         intake.setDirection(DcMotorEx.Direction.FORWARD);
 
         transferWheels = hardwareMap.get(DcMotor.class, "transferDrum");
-        transferWheels.setDirection(DcMotorSimple.Direction.REVERSE);
+        transferWheels.setDirection(DcMotorSimple.Direction.FORWARD);
 
         telemetry.addLine("Init complete");
         telemetry.update();
@@ -58,8 +58,6 @@ public class FireMaxPower extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
-            double power = 1;
 
             double rampTime = rampSeconds;        // 5 seconds
             double maxPower = targetPower;  // 2000 ticks per second

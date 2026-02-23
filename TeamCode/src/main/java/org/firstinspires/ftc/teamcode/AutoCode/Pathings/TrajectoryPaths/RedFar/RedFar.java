@@ -19,6 +19,8 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,7 +39,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Red Far", group = "Autonomous - Red")
+@Autonomous(name = "Red Far 1", group = "Autonomous - Red")
 public class RedFar extends LinearOpMode {
 
     Intake intake;
@@ -84,52 +86,60 @@ public class RedFar extends LinearOpMode {
 
         lightsController.update(false, false, "Red", ballSequence);
 
+
+        TrajectoryActionBuilder initialMove = drive.actionBuilder(drive.localizer.getPose())
+
+                .strafeTo(new Vector2d(12, -45));
+
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                initialMoveToPosition(drive, drive.localizer.getPose()),
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                new InstantAction(() -> intakeController.update()),
-                                new InstantAction(() -> flywheelController.rampUp()),
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red")
-                        ),
 
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                        initialMove.build(),
+                        collectArtifacts(drive, drive.localizer.getPose(), "PGP")
+
+//                        new ParallelAction(
+//                                new InstantAction(() -> intakeController.toggleIntake()),
+//                                new InstantAction(() -> intakeController.update()),
+//                                new InstantAction(() -> flywheelController.rampUp()),
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red")
+//                        ),
+//
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                         )
         );
 
         // Run limelight Recognition Code
 
         // Limelight returns some position value:
-        visionOutputPosition = 1;
-
-        Action trajectoryActionChosen;
-        if (visionOutputPosition == 1) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Left");
-        } else if (visionOutputPosition == 2) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
-        } else if (visionOutputPosition == 3) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Right");
-        } else {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
-        }
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        trajectoryActionChosen,
-
-                        new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
-
-                        new ParallelAction(
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                park(drive, drive.localizer.getPose())
-                        )
-                )
-        );
+//        visionOutputPosition = 1;
+//
+//        Action trajectoryActionChosen;
+//        if (visionOutputPosition == 1) {
+//            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Left");
+//        } else if (visionOutputPosition == 2) {
+//            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
+//        } else if (visionOutputPosition == 3) {
+//            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Right");
+//        } else {
+//            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
+//        }
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        trajectoryActionChosen,
+//
+//                        new ParallelAction(
+//                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        ),
+//                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+//
+//                        new ParallelAction(
+//                                new InstantAction(() -> intakeController.toggleIntake()),
+//                                park(drive, drive.localizer.getPose())
+//                        )
+//                )
+//        );
     }
 
 }

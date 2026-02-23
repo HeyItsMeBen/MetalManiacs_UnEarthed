@@ -36,12 +36,16 @@ public class RedFarTrajectories {
 
     public static Action initialMoveToPosition(MecanumDrive drive, Pose2d currentPose) {
 
-        return drive.actionBuilder(currentPose)
+        Pose2d NewPose = drive.localizer.getPose();
+
+        return drive.actionBuilder(NewPose)
                 .strafeTo(new Vector2d(12, -45), defaultSpeedConstraint)
                 .build();
     }
 
     public static Action firingPosition(MecanumDrive drive, Pose2d currentPose) {
+
+        Pose2d NewPose = drive.localizer.getPose();
 
         return drive.actionBuilder(currentPose)
 
@@ -52,6 +56,8 @@ public class RedFarTrajectories {
     }
 
     public static Action collectArtifacts(MecanumDrive drive, Pose2d currentPose, String side) {
+
+        Pose2d NewPose = drive.localizer.getPose();
 
         switch (side){
 
@@ -95,6 +101,8 @@ public class RedFarTrajectories {
 
     public static Action park(MecanumDrive drive, Pose2d currentPose) {
 
+        Pose2d NewPose = drive.localizer.getPose();
+
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
@@ -102,5 +110,7 @@ public class RedFarTrajectories {
 
                 .build();
     }
+
+
 
 }
