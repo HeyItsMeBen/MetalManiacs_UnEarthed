@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Controllers.LightsController;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
 
 @Config
+@Disabled
 @Autonomous(name = "Red Close Test 5", group = "Autonomous - Red")
 public class RedCloseTest extends LinearOpMode {
 

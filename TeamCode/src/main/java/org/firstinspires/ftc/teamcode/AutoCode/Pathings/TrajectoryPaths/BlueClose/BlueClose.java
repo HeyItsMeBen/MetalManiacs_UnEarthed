@@ -4,7 +4,9 @@ package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClo
 
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.AutoAimAction;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.FlywheelSequenceAction;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPattern;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPatternPPG;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPatternPGP;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPatternGPP;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.initialMoveToPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.openChannel;
@@ -19,6 +21,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -72,7 +75,7 @@ public class BlueClose extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
+        //aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -81,51 +84,84 @@ public class BlueClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                new InstantAction(() -> intakeController.update()),
-                                new InstantAction(() -> flywheelController.rampUp()),
-                                initialMoveToPosition(drive, drive.localizer.getPose())
-                        ),
+                                //new InstantAction(() -> intakeController.toggleIntake()),
+                                //new InstantAction(() -> intakeController.update()),
+                                //new InstantAction(() -> flywheelController.rampUp()),
+                                initialMoveToPosition(drive, startPose)
+                        )
 
-                        new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
 
-                        collectPattern(drive, drive.localizer.getPose(), "PGP"),
+                )
+        );
 
+        Actions.runBlocking(
+                new SequentialAction(
+                        collectPatternPGP(drive, drive.localizer.getPose())
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
                         new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        )
+                )
+        );
 
-                        openChannel(drive, drive.localizer.getPose()),
+        Actions.runBlocking(
+                new SequentialAction(
+                        openChannel(drive, drive.localizer.getPose())
+                )
+        );
 
+        Actions.runBlocking(
+                new SequentialAction(
                         new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        )
+                )
+        );
 
-                        collectPattern(drive, drive.localizer.getPose(), "PPG"),
+        Actions.runBlocking(
+                new SequentialAction(
+                        collectPatternPPG(drive, drive.localizer.getPose())
+                )
+        );
 
+        Actions.runBlocking(
+                new SequentialAction(
                         new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        )
+                )
+        );
 
-                        collectPattern(drive, drive.localizer.getPose(), "GPP"),
 
+        Actions.runBlocking(
+                new SequentialAction(
+                        collectPatternGPP(drive, drive.localizer.getPose())
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
                         new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        )
+                )
+        );
 
+        Actions.runBlocking(
+                new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.toggleIntake()),
+                                //new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())
                         )
                 )

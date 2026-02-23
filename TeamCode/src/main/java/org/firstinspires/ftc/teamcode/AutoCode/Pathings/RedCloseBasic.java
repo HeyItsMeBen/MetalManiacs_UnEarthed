@@ -50,63 +50,61 @@ public class RedCloseBasic extends LinearOpMode {
         TrajectoryActionBuilder park = drive.actionBuilder(startPose)
 
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(15, 10, Math.toRadians(0)), Math.toRadians(270));
+                .splineToSplineHeading(new Pose2d(15, 10, Math.toRadians(0)), Math.toRadians(270))
+                .waitSeconds(0.5f)
 
                 //picks up from middle row of balls
-//                .setReversed(false)
-//                .splineToConstantHeading(new Vector2d(30,-12), Math.toRadians(0))
-//                .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0))
-//                .waitSeconds(0.25f)
-//
-//                //get in position to shoot
-//                .setReversed(true)
-//                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
-//                .waitSeconds(0.5f)
-//
-//                //get balls from gate
-//                .setReversed(false)
-//                .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0))
-//                .waitSeconds(0.5f)
-//
-//                //get in position to shoot
-//                .setReversed(true)
-//                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
-//                .waitSeconds(0.5f)
-//
-//                //picks up balls from the top
-//                .setReversed(false)
-//                .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0))
-//                .waitSeconds(0.25f)
-//
-//                //get in position to shoot
-//                .setReversed(true)
-//                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
-//                .waitSeconds(0.5f)
-//
-//                //pick up balls from the bottom
-//                .setReversed(false)
-//                .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0))
-//                .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0))
-//                .waitSeconds(0.5f)
-//
-//                //get in position to shoot
-//                .setReversed(true)
-//                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
-//                .waitSeconds(0.5f)
-//
-//                //park
-//                .setReversed(false)
-//                .splineTo(new Vector2d(45,6), Math.toRadians(0))
-//                .waitSeconds(2f);
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(30,-12), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0))
+                .waitSeconds(0.25f)
+
+                //get in position to shoot
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
+                .waitSeconds(0.5f)
+
+                //get balls from gate
+                .setReversed(false)
+                .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0))
+                .waitSeconds(0.5f)
+
+                //get in position to shoot
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
+                .waitSeconds(0.5f)
+
+                //picks up balls from the top
+                .setReversed(false)
+                .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0))
+                .waitSeconds(0.25f)
+
+                //get in position to shoot
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
+                .waitSeconds(0.5f)
+
+                //pick up balls from the bottom
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0))
+                .waitSeconds(0.5f)
+
+                //get in position to shoot
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
+                .waitSeconds(0.5f)
+
+                //park
+                .setReversed(false)
+                .splineTo(new Vector2d(45,6), Math.toRadians(0))
+                .waitSeconds(2f);
 
         Actions.runBlocking(
                 new SequentialAction(
-
-                        park.build()
-
+                    park.build()
                 )
         );
     }
-
 }
 

@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -72,7 +73,7 @@ public class BlueFar extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
+        //aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
 
         int visionOutputPosition = 0;
 
@@ -84,7 +85,7 @@ public class BlueFar extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                initialMoveToPosition(drive, drive.localizer.getPose()),
+                                initialMoveToPosition(drive, startPose),
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 new InstantAction(() -> intakeController.update()),
                                 new InstantAction(() -> flywheelController.rampUp()),
@@ -113,14 +114,22 @@ public class BlueFar extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajectoryActionChosen,
+                        trajectoryActionChosen
+                )
+        );
 
+        Actions.runBlocking(
+                new SequentialAction(
                         new ParallelAction(
                                 new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
                         ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound()),
+                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                )
+        );
 
+        Actions.runBlocking(
+                new SequentialAction(
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())

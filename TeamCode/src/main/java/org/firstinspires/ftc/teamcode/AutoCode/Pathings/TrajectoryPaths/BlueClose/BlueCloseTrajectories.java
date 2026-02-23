@@ -45,48 +45,35 @@ public class BlueCloseTrajectories {
                 .build();
     }
 
-    public static Action collectPattern(MecanumDrive drive, Pose2d currentPose, String Pattern) {
+    public static Action collectPatternPPG(MecanumDrive drive, Pose2d currentPose) {
 
-        switch (Pattern) {
+        return drive.actionBuilder(currentPose)
 
-            case "PPG":
+                .setReversed(false)
+                .splineToSplineHeading(new Pose2d(-50,12, Math.toRadians(180)), Math.toRadians(180), patternCollectionConstraint)
 
-                return drive.actionBuilder(currentPose)
+                .build();
+    }
 
-                        .setReversed(false)
-                        .splineToSplineHeading(new Pose2d(-50,12, Math.toRadians(180)), Math.toRadians(180), patternCollectionConstraint)
+    public static Action collectPatternPGP(MecanumDrive drive, Pose2d currentPose) {
+        return drive.actionBuilder(currentPose)
 
-                        .build();
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(-30,-12), Math.toRadians(180), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-50, -12), Math.toRadians(180), patternCollectionConstraint)
 
-            case "PGP":
+                .build();
+    }
 
-                return drive.actionBuilder(currentPose)
+    public static Action collectPatternGPP(MecanumDrive drive, Pose2d currentPose) {
+        return drive.actionBuilder(currentPose)
 
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(-30,-12), Math.toRadians(180), defaultSpeedConstraint)
-                        .splineToConstantHeading(new Vector2d(-50, -12), Math.toRadians(180), patternCollectionConstraint)
+                .setReversed(false)
+                .splineToConstantHeading(new Vector2d(-37, -35), Math.toRadians(180), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-50, -35), Math.toRadians(180), patternCollectionConstraint)
 
-                        .build();
+                .build();
 
-            case "GPP":
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineToConstantHeading(new Vector2d(-37, -35), Math.toRadians(180), defaultSpeedConstraint)
-                        .splineToConstantHeading(new Vector2d(-50, -35), Math.toRadians(180), patternCollectionConstraint)
-
-                        .build();
-
-            default:
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineTo(new Vector2d(-45,6), Math.toRadians(180))
-
-                        .build();
-        }
     }
 
     public static Action firingPosition(MecanumDrive drive, Pose2d currentPose) {

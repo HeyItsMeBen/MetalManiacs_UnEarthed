@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class RedFar {
+public class RedCloseSim {
     public static void main(String[] args) {
 
         MeepMeep meepMeep = new MeepMeep(800);
@@ -21,33 +21,57 @@ public class RedFar {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 .setConstraints(60, 30, Math.toRadians(180), Math.toRadians(180), 18)
 
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -60, Math.toRadians(0)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(52, 52, Math.toRadians(40)))
 
-                        .strafeTo(new Vector2d(12, -45))
-                        .waitSeconds(0.5f)
-
-                        //collect artifacts
-                        .splineTo(new Vector2d(60, -60), Math.toRadians(0))
-                        .waitSeconds(0.5f)
-
-                        //move to firing position
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
+                        .splineToSplineHeading(new Pose2d(15, 10, Math.toRadians(0)), Math.toRadians(270))
                         .waitSeconds(0.5f)
 
-                        //collect artifacts
+                        //picks up from middle row of balls
                         .setReversed(false)
-                        .splineTo(new Vector2d(60, -55), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(30,-12), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(50, -12), Math.toRadians(0))
+                        .waitSeconds(0.25f)
+
+                        //get in position to shoot
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
-                        //move to firing position
+                        //get balls from gate
+                        .setReversed(false)
+                        .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0))
+                        .waitSeconds(0.5f)
+
+                        //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
+                        .waitSeconds(0.5f)
+
+                        //picks up balls from the top
+                        .setReversed(false)
+                        .splineToSplineHeading(new Pose2d(50,12, Math.toRadians(0)), Math.toRadians(0))
+                        .waitSeconds(0.25f)
+
+                        //get in position to shoot
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
+                        .waitSeconds(0.5f)
+
+                        //pick up balls from the bottom
+                        .setReversed(false)
+                        .splineToConstantHeading(new Vector2d(37, -35), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(50, -35), Math.toRadians(0))
+                        .waitSeconds(0.5f)
+
+                        //get in position to shoot
+                        .setReversed(true)
+                        .splineToConstantHeading(new Vector2d(15, 10), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //park
                         .setReversed(false)
-                        .splineTo(new Vector2d(35,-55), Math.toRadians(0))
+                        .splineTo(new Vector2d(45,6), Math.toRadians(0))
                         .waitSeconds(2f)
 
                         .build());

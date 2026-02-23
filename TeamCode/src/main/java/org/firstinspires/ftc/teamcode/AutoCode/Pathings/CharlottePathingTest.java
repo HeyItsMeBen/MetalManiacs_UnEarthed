@@ -32,7 +32,6 @@ public class CharlottePathingTest extends LinearOpMode {
     LightsController lightsController;
     public String ballSequence = "XXX";
 
-
     @Override
     public void runOpMode() {
 
@@ -55,8 +54,6 @@ public class CharlottePathingTest extends LinearOpMode {
                 .strafeTo(new Vector2d((drive.localizer.getPose().position.x + 25 ), drive.localizer.getPose().position.y + 25))
                 .strafeTo(new Vector2d((drive.localizer.getPose().position.x ), drive.localizer.getPose().position.y + 25))
                 .strafeTo(new Vector2d((drive.localizer.getPose().position.x ), drive.localizer.getPose().position.y));
-
-
 
         Actions.runBlocking(
                 new SequentialAction(
