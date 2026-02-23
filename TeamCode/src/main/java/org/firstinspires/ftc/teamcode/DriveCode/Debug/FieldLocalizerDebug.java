@@ -49,6 +49,8 @@ public class FieldLocalizerDebug extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            driver.readButtons();
+
             double x = gamepad1.left_stick_x;
             double y = -gamepad1.left_stick_y;
             double turn = gamepad1.right_stick_x;
@@ -101,7 +103,7 @@ public class FieldLocalizerDebug extends LinearOpMode {
             telemetry.update();
 
             if (driver.isDown(GamepadKeys.Button.A)) {
-                pose = resetPose;
+                drive.localizer.setPose(resetPose);
                 telemetry.addData("Reset Pose ", "");
                 telemetry.update();
             }
@@ -110,8 +112,6 @@ public class FieldLocalizerDebug extends LinearOpMode {
             packet.fieldOverlay().setStroke("#3F51B5");
             Drawing.drawRobot(packet.fieldOverlay(), pose);
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
-
-            driver.readButtons();
 
             idle();
 
