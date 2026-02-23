@@ -138,20 +138,12 @@ public class TurretPinpointGoalTrackingFile extends LinearOpMode {
             }
 
             if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                if (showRobotInfo == false) {
-                    showRobotInfo = true;
-                } else {
-                    showRobotInfo = false;
-                }
+                showRobotInfo = !showRobotInfo;
 
             }
 
             if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                if (showGoalInfo == false) {
-                    showGoalInfo = true;
-                } else {
-                    showGoalInfo = false;
-                }
+                showGoalInfo = !showGoalInfo;
             }
 
             TelemetryPacket packet = new TelemetryPacket();
