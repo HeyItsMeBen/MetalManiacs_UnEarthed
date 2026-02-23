@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.Drawing;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 @Config
-@TeleOp(name = "Turret Pinpoint Goal Tracking File", group = "Localizer")
+@TeleOp(name = "Pinpoint Goal Distance Tracking File", group = "Localizer")
 public class TurretPinpointGoalTrackingFile extends LinearOpMode {
 
     public GamepadEx driver;
@@ -43,7 +43,7 @@ public class TurretPinpointGoalTrackingFile extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        Pose2d resetPose = new Pose2d(0, 0, Math.toRadians(0)); // x, y, heading in radians
+        Pose2d resetPose = new Pose2d(0, 0, Math.toRadians(90)); // x, y, heading in radians
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, resetPose);
 
