@@ -11,11 +11,11 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 public class BlueCloseTrajectories {
 
-    static double defaultVelocity = 20.0;
+    static double defaultVelocity = 80.0;
 
     static double defaultAngVelocity = Math.PI;
 
-    static double patternCollectionVelocity = 10.0;
+    static double patternCollectionVelocity = 20.0;
 
     static double patternCollectionAngVelocity = Math.PI;
 
@@ -50,7 +50,7 @@ public class BlueCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(-50,12, Math.toRadians(180)), Math.toRadians(180), patternCollectionConstraint)
+                .splineToSplineHeading(new Pose2d(-50,10, Math.toRadians(180)), Math.toRadians(180), patternCollectionConstraint)
 
                 .build();
     }
@@ -59,8 +59,8 @@ public class BlueCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(-30,-12), Math.toRadians(180), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(-50, -12), Math.toRadians(180), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(-30,-10), Math.toRadians(180), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-50, -10), Math.toRadians(180), patternCollectionConstraint)
 
                 .build();
     }
@@ -69,8 +69,8 @@ public class BlueCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(-37, -35), Math.toRadians(180), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(-50, -35), Math.toRadians(180), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(-37, -38), Math.toRadians(180), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-50, -38), Math.toRadians(180), patternCollectionConstraint)
 
                 .build();
 
