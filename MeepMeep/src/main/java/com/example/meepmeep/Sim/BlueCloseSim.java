@@ -35,7 +35,7 @@ public class BlueCloseSim {
 
                         //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(-15, 10), Math.toRadians(90))
+                        .splineToSplineHeading(new Pose2d(-15, 10, Math.toRadians(180)), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //get balls from gate
@@ -45,7 +45,7 @@ public class BlueCloseSim {
 
                         //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(-15, 10), Math.toRadians(90))
+                        .splineToSplineHeading(new Pose2d(-15, 10, Math.toRadians(180)), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //picks up balls from the top
@@ -55,7 +55,7 @@ public class BlueCloseSim {
 
                         //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(-15, 10), Math.toRadians(90))
+                        .splineToSplineHeading(new Pose2d(-15, 10, Math.toRadians(180)), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //pick up balls from the bottom
@@ -66,7 +66,7 @@ public class BlueCloseSim {
 
                         //get in position to shoot
                         .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(-15, 10), Math.toRadians(90))
+                        .splineToSplineHeading(new Pose2d(-15, 10, Math.toRadians(180)), Math.toRadians(90))
                         .waitSeconds(0.5f)
 
                         //park

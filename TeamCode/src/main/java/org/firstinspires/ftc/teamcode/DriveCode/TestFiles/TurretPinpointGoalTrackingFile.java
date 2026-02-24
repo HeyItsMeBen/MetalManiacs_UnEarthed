@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.Drawing;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 @Config
-@TeleOp(name = "Pinpoint Goal Distance Tracking File", group = "Localizer")
+@TeleOp(name = "Pinpoint Goal Distance Tracking File", group = "TestFiles")
 public class TurretPinpointGoalTrackingFile extends LinearOpMode {
 
     public GamepadEx driver;
@@ -124,8 +124,10 @@ public class TurretPinpointGoalTrackingFile extends LinearOpMode {
                 telemetry.addData("x", goalPosition.x);
                 telemetry.addData("y", goalPosition.y);
                 telemetry.addData(" ", "");
-                // Math.sqrt ((goalPosition.x - RobotPose.position.x)^2 + (goalPosition.y - RobotPose.position.y)^2)
-                telemetry.addData("Robot Distance From Goal: ", Math.sqrt((goalPosition.x - RobotPose.position.x)*(goalPosition.x - RobotPose.position.x) + (goalPosition.y - RobotPose.position.y)*(goalPosition.y - RobotPose.position.y)));
+                double distance = Math.sqrt(
+                        (goalPosition.x - RobotPose.position.x)*(goalPosition.x - RobotPose.position.x)
+                                + (goalPosition.y - RobotPose.position.y)*(goalPosition.y - RobotPose.position.y));
+                telemetry.addData("Robot Distance From Goal: ", distance);
             } else {
                 telemetry.addData("Show Goal Info Disabled", "");
             }
