@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar;
 
 // Paths
 
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.AutoAimAction;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.FlywheelSequenceAction;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AutoAimAction;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifacts;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.initialMoveToPosition;

@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClo
 
 // Paths
 
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.AutoAimAction;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.FlywheelSequenceAction;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPatternPPG;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPatternPGP;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.collectPatternGPP;
@@ -13,7 +11,6 @@ import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.B
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueClose.BlueCloseTrajectories.park;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -21,7 +18,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;

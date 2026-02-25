@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
+@Disabled
 @Autonomous(name = "RedCloseBasic 2", group = "Autonomous - Any")
 public class RedCloseBasic extends LinearOpMode {
 

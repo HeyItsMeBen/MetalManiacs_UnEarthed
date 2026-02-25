@@ -50,7 +50,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(50,10, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint)
+                .splineToSplineHeading(new Pose2d(50,8, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint)
 
                 .build();
     }
@@ -59,8 +59,8 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(30,-10), Math.toRadians(0), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(50, -10), Math.toRadians(0), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(30,-14), Math.toRadians(0), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(50, -14), Math.toRadians(0), patternCollectionConstraint)
 
                 .build();
     }
@@ -69,8 +69,8 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(37, -38), Math.toRadians(0), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(50, -38), Math.toRadians(0), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(37, -40), Math.toRadians(0), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(50, -40), Math.toRadians(0), patternCollectionConstraint)
 
                 .build();
 
@@ -92,7 +92,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0), patternCollectionConstraint)
+                .splineToSplineHeading(new Pose2d(59,-10, Math.toRadians(40)), Math.toRadians(0), patternCollectionConstraint)
 
                 .build();
     }

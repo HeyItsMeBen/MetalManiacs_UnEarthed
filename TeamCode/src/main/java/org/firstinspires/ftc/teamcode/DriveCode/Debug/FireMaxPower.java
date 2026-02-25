@@ -40,7 +40,7 @@ public class FireMaxPower extends LinearOpMode {
         // Hardware init
         gamepad = new GamepadEx(gamepad1);
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        flywheel.setDirection(DcMotorEx.Direction.REVERSE);
+        flywheel.setDirection(DcMotorEx.Direction.FORWARD);
         flywheel.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 

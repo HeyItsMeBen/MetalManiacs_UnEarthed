@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
 
 import static java.lang.Thread.sleep;
 

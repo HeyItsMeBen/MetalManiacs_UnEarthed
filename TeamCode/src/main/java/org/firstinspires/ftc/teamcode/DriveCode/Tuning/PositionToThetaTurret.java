@@ -23,7 +23,7 @@ public class PositionToThetaTurret extends LinearOpMode {
 
         turret = hardwareMap.get(DcMotor.class, "turret");
         turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        turret.setDirection(DcMotor.Direction.FORWARD);
+        turret.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
         //executing
@@ -32,11 +32,11 @@ public class PositionToThetaTurret extends LinearOpMode {
             gamepad.readButtons();
 
             if (gamepad.getRightX() > 0){
-                turret.setPower(0.25);
+                turret.setPower(0.2);
                 telemetry.addData("Current Position: ", turret.getCurrentPosition());
 
             } else if (gamepad.getRightX() < 0) {
-                turret.setPower(-0.25);
+                turret.setPower(-0.2);
                 telemetry.addData("Current Position: ", turret.getCurrentPosition());
 
             } else {
@@ -52,6 +52,7 @@ public class PositionToThetaTurret extends LinearOpMode {
             if (gamepad.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
                 turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 turret.setTargetPosition(0);
+                turret.setPower(0.3);         // must set power or it won’t move
                 telemetry.addData("Run To Position 0: ", turret.getCurrentPosition());
             } else {
                 turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -43,7 +43,7 @@ public class TurretPinpointGoalTrackingFile extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
-        Pose2d resetPose = new Pose2d(0, 0, Math.toRadians(90)); // x, y, heading in radians
+        Pose2d resetPose = new Pose2d(0, 0, Math.toRadians(180)); // x, y, heading in radians
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, resetPose);
 

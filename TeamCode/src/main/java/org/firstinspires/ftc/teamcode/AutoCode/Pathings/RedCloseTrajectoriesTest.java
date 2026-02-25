@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;

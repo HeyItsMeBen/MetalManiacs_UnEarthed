@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
+@Disabled
 @Autonomous(name = "Red Close Working", group = "Autonomous - Any")
 public class RedCloseWorking extends LinearOpMode {
 

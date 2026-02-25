@@ -108,4 +108,9 @@ public class IntakeController {
         transferDrum.runTransferDrum(0);
     }
 
+    public void runPower() {
+        intake.setIntakePower(0.5);
+        transferDrum.runTransferDrum(0.5);
+    }
+
 }

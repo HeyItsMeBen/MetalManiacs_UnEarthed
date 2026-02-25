@@ -50,7 +50,7 @@ public class BlueCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(-50,10, Math.toRadians(180)), Math.toRadians(180), patternCollectionConstraint)
+                .splineToSplineHeading(new Pose2d(-50,8, Math.toRadians(180)), Math.toRadians(180), patternCollectionConstraint)
 
                 .build();
     }
@@ -59,8 +59,8 @@ public class BlueCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(-30,-10), Math.toRadians(180), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(-50, -10), Math.toRadians(180), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(-30,-14), Math.toRadians(180), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-50, -14), Math.toRadians(180), patternCollectionConstraint)
 
                 .build();
     }
@@ -69,8 +69,8 @@ public class BlueCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToConstantHeading(new Vector2d(-37, -38), Math.toRadians(180), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(-50, -38), Math.toRadians(180), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(-37, -40), Math.toRadians(180), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(-50, -40), Math.toRadians(180), patternCollectionConstraint)
 
                 .build();
 

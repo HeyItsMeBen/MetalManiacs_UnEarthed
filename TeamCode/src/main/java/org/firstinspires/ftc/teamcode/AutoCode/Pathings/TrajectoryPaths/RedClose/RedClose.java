@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClos
 
 // Paths
 
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.AutoAimAction;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.PathingActions.FlywheelSequenceAction;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.collectPatternPPG;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.collectPatternPGP;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.collectPatternGPP;
@@ -83,9 +81,8 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
-                                //new InstantAction(() -> intakeController.toggleIntake()),
-                                //new InstantAction(() -> intakeController.update()),
                                 //new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, startPose)
                         )
@@ -98,6 +95,7 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        new InstantAction(() -> intakeController.update()),
                         collectPatternPGP(drive, drive.localizer.getPose())
                 )
         );
@@ -160,7 +158,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                //new InstantAction(() -> intakeController.toggleIntake()),
+                                new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())
                         )
                 )
