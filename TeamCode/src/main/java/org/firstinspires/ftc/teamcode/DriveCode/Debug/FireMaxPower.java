@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
+import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 
 @Config
 @TeleOp(name = "Fire Artifact, Max Power", group = "Debug")
@@ -27,12 +28,14 @@ public class FireMaxPower extends LinearOpMode {
 
     public DcMotor intake;
     public DcMotor transferWheels;
+    OuttakeHood hood;
 
     ElapsedTime flywheelTimer;
 
     double targetPower = 1;
     double rampSeconds = 5;
     boolean reversed;
+    double degrees=50;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,6 +52,7 @@ public class FireMaxPower extends LinearOpMode {
 
         transferWheels = hardwareMap.get(DcMotor.class, "transferDrum");
         transferWheels.setDirection(DcMotorSimple.Direction.FORWARD);
+        hood=new OuttakeHood(hardwareMap);
 
         telemetry.addLine("Init complete");
         telemetry.update();
@@ -56,8 +60,9 @@ public class FireMaxPower extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
 
         waitForStart();
-
         while (opModeIsActive()) {
+
+            gamepad.readButtons();
 
             double rampTime = rampSeconds;        // 5 seconds
             double maxPower = targetPower;  // 2000 ticks per second
@@ -65,7 +70,11 @@ public class FireMaxPower extends LinearOpMode {
             double progress = Math.min(elapsed / rampTime, 1.0);
             double newPower = maxPower * progress;
 
-            flywheel.setPower(newPower);
+            if (gamepad.isDown(GamepadKeys.Button.X)) {
+                flywheel.setPower(newPower);
+            } else {
+                flywheel.setPower(0);
+            }
 
             intake.setPower(0.3);
             transferWheels.setPower(1);
@@ -77,11 +86,21 @@ public class FireMaxPower extends LinearOpMode {
                                 : DcMotorSimple.Direction.FORWARD
                 );
             }
+            if (gamepad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                degrees-=5;
+            } else if (gamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                degrees+=5;
+            }
+
+            hood.setAngle(Math.toRadians(50));
 
             // --- Driver Station telemetry ---
             telemetry.addData("Current Power", flywheel.getPower());
             telemetry.addData("Current Velocity", flywheel.getVelocity());
             telemetry.addData("Press Y to reverse direction", "");
+
+            telemetry.addData("Left Bumper: ", gamepad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER));
+            telemetry.addData("Right Bumper: ", gamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             telemetry.update();
         }
