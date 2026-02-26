@@ -4,7 +4,9 @@ package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar;
 
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AutoAimAction;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifacts;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifactsLeft;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifactsMiddle;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifactsRight;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.initialMoveToPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.park;
@@ -102,13 +104,13 @@ public class RedFar extends LinearOpMode {
 
         Action trajectoryActionChosen;
         if (visionOutputPosition == 1) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Left");
+            trajectoryActionChosen = collectArtifactsLeft(drive, drive.localizer.getPose());
         } else if (visionOutputPosition == 2) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
+            trajectoryActionChosen = collectArtifactsMiddle(drive, drive.localizer.getPose());
         } else if (visionOutputPosition == 3) {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Right");
+            trajectoryActionChosen = collectArtifactsRight(drive, drive.localizer.getPose());
         } else {
-            trajectoryActionChosen = collectArtifacts(drive, drive.localizer.getPose(), "Middle");
+            trajectoryActionChosen = collectArtifactsMiddle(drive, drive.localizer.getPose());
         }
 
         Actions.runBlocking(

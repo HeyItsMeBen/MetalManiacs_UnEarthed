@@ -51,46 +51,31 @@ public class BlueFarTrajectories {
                 .build();
     }
 
-    public static Action collectArtifacts(MecanumDrive drive, Pose2d currentPose, String side) {
+    public static Action collectArtifactsLeft(MecanumDrive drive, Pose2d currentPose) {
 
-        switch (side){
+        return drive.actionBuilder(currentPose)
 
-            case "Left":
+                .setReversed(false)
+                .splineTo(new Vector2d(-60, -50), Math.toRadians(180), patternCollectionConstraint)
+                .build();
+    }
 
-                return drive.actionBuilder(currentPose)
+    public static Action collectArtifactsMiddle(MecanumDrive drive, Pose2d currentPose) {
 
-                        .setReversed(false)
-                        .splineTo(new Vector2d(-60, -50), Math.toRadians(180), defaultSpeedConstraint)
+        return drive.actionBuilder(currentPose)
 
-                        .build();
+                .setReversed(false)
+                .splineTo(new Vector2d(-60, -55), Math.toRadians(180), patternCollectionConstraint)
+                .build();
+    }
 
-            case "Middle":
+    public static Action collectArtifactsRight(MecanumDrive drive, Pose2d currentPose) {
 
-                return drive.actionBuilder(currentPose)
+        return drive.actionBuilder(currentPose)
 
-                        .setReversed(false)
-                        .splineTo(new Vector2d(-60, -55), Math.toRadians(180), defaultSpeedConstraint)
-
-                        .build();
-
-            case "Right":
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineTo(new Vector2d(-60, -60), Math.toRadians(180), defaultSpeedConstraint)
-
-                        .build();
-
-            default:
-
-                return drive.actionBuilder(currentPose)
-
-                        .setReversed(false)
-                        .splineTo(new Vector2d(-60, -55), Math.toRadians(180), defaultSpeedConstraint)
-
-                        .build();
-        }
+                .setReversed(false)
+                .splineTo(new Vector2d(-60, -60), Math.toRadians(180), patternCollectionConstraint)
+                .build();
     }
 
     public static Action park(MecanumDrive drive, Pose2d currentPose) {

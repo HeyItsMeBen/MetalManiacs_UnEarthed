@@ -153,7 +153,7 @@ public class RedClose extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                new InstantAction(() -> intakeController.toggleIntake()),
+                                //new InstantAction(() -> intakeController.toggleIntake()),
                                 firingPosition(drive, drive.localizer.getPose())
                         )
                 )
@@ -163,7 +163,7 @@ public class RedClose extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 //new InstantAction(() -> turret.resetInitial()),
-                                new InstantAction(() -> intakeController.update()),
+                                //new InstantAction(() -> intakeController.update()),
                                 park(drive, drive.localizer.getPose())
                         )
                 )

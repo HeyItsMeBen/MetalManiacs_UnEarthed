@@ -9,7 +9,7 @@ public class PassOnFromAutoValues {
     }
     public static Pose2d currentPose = new Pose2d(0, 0, 0);
 
-    public static TeamColor teamColor = TeamColor.RED;
+    public static TeamColor teamColor = TeamColor.BLUE;
 
     public static void reset() {
         currentPose = new Pose2d(0, 0, 0);
