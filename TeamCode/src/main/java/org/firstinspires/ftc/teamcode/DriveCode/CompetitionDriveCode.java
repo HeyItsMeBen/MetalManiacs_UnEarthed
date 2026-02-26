@@ -165,7 +165,7 @@ public class CompetitionDriveCode extends OpMode {
         if (driver.wasJustPressed(GamepadKeys.Button.X)) {
             autoAimController.resetTurret();
         }
-        autoAimController.relocalize(
+        autoAimController.update2(
                 driver.getButton(GamepadKeys.Button.DPAD_LEFT),
                 driver.getButton(GamepadKeys.Button.DPAD_RIGHT)
         );
