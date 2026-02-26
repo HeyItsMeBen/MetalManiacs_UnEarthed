@@ -10,8 +10,11 @@ public class Flywheels {
     private DcMotorEx flywheel = null;
     final double tickPerRevolution = 28;
 
+    public double p = 10.0;
+    public double i = 1.0;
+    public double d = 5.0;
+
     public double f = 14.12;
-    public double p = 10;
     //rpm = m * distance + b
     double m = 6.68363;
     double b = 922.48777+115;
@@ -24,7 +27,7 @@ public class Flywheels {
         flywheel.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, 0, 0, f);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(p, i, d, f);
         flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
     }
