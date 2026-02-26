@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -35,6 +36,7 @@ public class AngleToDistance_Regression extends LinearOpMode {
     OuttakeHood hood;
     Transfer belt;
     AutoAim autoAim;
+    Intake intake;
 
     public static float targetVelocity=500;
     public static double hoodAngle=50;
@@ -66,6 +68,7 @@ public class AngleToDistance_Regression extends LinearOpMode {
         flywheel = new Flywheels(hardwareMap);
         hood = new OuttakeHood(hardwareMap);
         belt = new Transfer(hardwareMap);
+        intake = new Intake(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
 
         //April tag stuff
@@ -79,8 +82,9 @@ public class AngleToDistance_Regression extends LinearOpMode {
                 autoAim.calculateEverything(desiredTag);
                 hood.setAngle(hoodAngle);
                 flywheel.setFlywheelVelocity(targetVelocity);
-                sleep(3000);
-                belt.runTransferDrum(1);
+                sleep(2000);
+                belt.runTransferDrum(0.6);
+                intake.setIntakePower(0.8);
                 telemetry.addData("Distance to GoalCenter (inches)", autoAim.launchPointToGoalCenterX_Distance_Inches);
                 telemetry.addData("", "");
                 telemetry.addData("Target Velocity (ticks per second)", targetVelocity);

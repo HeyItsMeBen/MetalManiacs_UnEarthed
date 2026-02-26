@@ -92,7 +92,7 @@ public class BlueCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(-58,-10, Math.toRadians(160)), Math.toRadians(180), defaultSpeedConstraint)
+                .splineToSplineHeading(new Pose2d(-60,-10, Math.toRadians(140)), Math.toRadians(180), defaultSpeedConstraint)
 
                 .build();
     }

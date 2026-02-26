@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Disabled
-@TeleOp (name="Position To Theta Turret", group="Tuning")
+@TeleOp (name="Reset Turret Position", group="Tuning")
 public class ResetTurretPosition extends LinearOpMode {
 
     public GamepadEx gamepad;
@@ -33,33 +33,23 @@ public class ResetTurretPosition extends LinearOpMode {
 
             gamepad.readButtons();
 
-            if (gamepad.getRightX() > 0){
-                turret.setPower(0.2);
-                telemetry.addData("Current Position: ", turret.getCurrentPosition());
-
-            } else if (gamepad.getRightX() < 0) {
-                turret.setPower(-0.2);
-                telemetry.addData("Current Position: ", turret.getCurrentPosition());
-
-            } else {
-                turret.setPower(0);
-
-            }
-
             if (gamepad.wasJustPressed(GamepadKeys.Button.A)) {
                 turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 telemetry.addData("Reset Position: ","");
             }
 
-            if (gamepad.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+            if (gamepad.wasJustPressed(GamepadKeys.Button.X)) {
                 turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 turret.setTargetPosition(0);
-                turret.setPower(0.3);         // must set power or it won’t move
+                turret.setPower(0.3);
                 telemetry.addData("Run To Position 0: ", turret.getCurrentPosition());
             } else {
                 turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
+
+            telemetry.addData("Press A to reset turret", "");
+            telemetry.addData("To check if it returns to the 0 position, ", "press X");
             telemetry.update();
 
             idle();

@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Leave / Park", group = "Autonomous - Any")
+@Autonomous(name = "Leave / Park", group = "z-Autonomous - Any")
 public class Leave extends LinearOpMode {
 
     Lights lights;

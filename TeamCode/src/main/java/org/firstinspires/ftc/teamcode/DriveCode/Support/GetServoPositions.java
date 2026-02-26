@@ -22,7 +22,6 @@ public class GetServoPositions extends LinearOpMode {
 
         double interval = 0.01;
 
-        telemetry.addData("Starting Position: ", "0");
         telemetry.addData("Intervals: ", interval);
         telemetry.addData("To increase, ", "press dpad_up");
         telemetry.addData("To decrease, ", "press dpad_down");

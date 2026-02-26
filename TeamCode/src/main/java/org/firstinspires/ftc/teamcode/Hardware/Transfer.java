@@ -11,8 +11,8 @@ public class Transfer {
     private Servo transferKick = null;
     private DcMotor transferDrum = null;
 
-    public float kickServoUp = 0.41f; //0.24
-    public float kickServoDown = 0.2f; // Get New Values
+    public float kickServoUp = 0.48f; // New values 2/25
+    public float kickServoDown = 0.85f; // New values 2/25
 
     public Transfer(HardwareMap hMap) {
         transferKick = hMap.get(Servo.class, "transferKick");
