@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
-import static android.os.SystemClock.sleep;
-
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -22,15 +18,23 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AutoAimTurretController {
-    private boolean cameraAvailable = false;
-    private Turret turret;
-    private AutoAim autoAim;
+
+    public Turret turret;
+    public AutoAim autoAim;
 
     private VisionPortal visionPortal;
     private AprilTagProcessor aprilTag;
 
     private AprilTagDetection desiredTag = null;
-    private GoBildaPinpointDriver odo;
+    //private GoBildaPinpointDriver odo;
+
+    public Pose2d resetPose;
+    private MecanumDrive drive;
+    private Pose2d initialEstimatedCurrentPose;
+    private Vector2d goalPosition;
+    private HardwareMap hMap;
+
+    public Pose2d robPos;
 
     private boolean targetFound = false;
     private boolean shouldAutoAim = true;
@@ -50,7 +54,7 @@ public class AutoAimTurretController {
 
     float turretPower = 0;
     // Ramp up code
-    private float rampUpSpeed = 0.1f; // how fast turret should ramp up to target speed (in seconds)
+    private float rampUpSpeed = 0.5f; // how fast turret should ramp up to target speed (in seconds)
     double turretStartTime=0;
     double turretStartPower=0;
     double currentTime = 0;
@@ -65,45 +69,40 @@ public class AutoAimTurretController {
 
         initAprilTag(hardwareMap);
 
-        odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+//        odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+//
+//        odo.setOffsets(82.55, 0, DistanceUnit.INCH);
+//        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+//        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+//
+//        odo.resetPosAndIMU();
+//        Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
+//        odo.setPosition(startingPosition);
+        hMap = hardwareMap;
+        resetPose = new Pose2d(0, 0, Math.toRadians(90)); // x, y, heading in radians
 
-        odo.setOffsets(82.55, 0, DistanceUnit.INCH);
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        drive = new MecanumDrive(hMap, resetPose);
 
-        odo.resetPosAndIMU();
-        Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
-        odo.setPosition(startingPosition);
+        initialEstimatedCurrentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
+
+        goalPosition = new Vector2d(52, 52); // x, y, heading in radians
 
         //April tag stuff
         if (USE_WEBCAM) {
             //NOTE: gain is 50 for comp field, but 200 for practice field
-            setManualExposure(6, 200);  // Use low exposure time to reduce motion blur
+            setManualExposure(6, 50);  // Use low exposure time to reduce motion blur
         }
     }
 
     private void initAprilTag(HardwareMap hardwareMap) {
-        try {
-            WebcamName webcam = hardwareMap.tryGet(WebcamName.class, "Webcam 1");
-            if (webcam == null) {
-                cameraAvailable = false;
-                return;
-            }
 
-            aprilTag = new AprilTagProcessor.Builder().build();
-            aprilTag.setDecimation(2);
+        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(2);
 
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(webcam)
-                    .addProcessor(aprilTag)
-                    .setCameraResolution(new android.util.Size(320, 240))
-                    .build();
-
-            cameraAvailable = true;
-
-        } catch (Exception e) {
-            cameraAvailable = false;
-        }
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .build();
     }
 
 //    public void init() {
@@ -131,6 +130,16 @@ public class AutoAimTurretController {
     }
 
     public float getNeededPower(){
+        //convert to milliseconds (variable named poorly but too lazy to change)
+        double targetSeconds= rampUpSpeed * 1000; //should take 0.5 seconds to speed up
+        currentTime=System.currentTimeMillis()-turretStartTime;
+//        currentTime=System.currentTimeMillis();
+        if (currentTime < targetSeconds){
+            turret.setMotorPower(turretStartPower*((targetSeconds-currentTime)/targetSeconds)+turretPower*(currentTime/targetSeconds));
+        }else{
+            turret.setMotorPower(turretPower);
+        }
+
         return turretPower;
     }
 
@@ -228,17 +237,7 @@ public class AutoAimTurretController {
             }
         }
     }
-    public void relocalize(boolean manualLeft, boolean manualRight) {
-
-        //convert to milliseconds (variable named poorly but too lazy to change)
-        double targetSeconds= rampUpSpeed * 1000; //should take 0.5 seconds to speed up
-        currentTime=System.currentTimeMillis()-turretStartTime;
-//        currentTime=System.currentTimeMillis();
-        if (currentTime < targetSeconds){
-            turret.setMotorPower(turretStartPower*((targetSeconds-currentTime)/targetSeconds)+turretPower*(currentTime/targetSeconds));
-        }else{
-            turret.setMotorPower(turretPower);
-        }
+    public void update2(boolean manualLeft, boolean manualRight) {
 
         //turret control
         if (!shouldAutoAim) {
@@ -247,91 +246,71 @@ public class AutoAimTurretController {
             return;
         }
 
-        //scans every 0.5 seconds or so
-        if (!localized){
-            scanForTags();
-            if (targetFound) {
-                autoAim.calculateEverything(desiredTag);
-                odo.setPosition(new Pose2D(DistanceUnit.INCH, 75-autoAim.xpos, 78-autoAim.ypos, AngleUnit.RADIANS,autoAim.botAngleThing+Math.toRadians(desiredTag.ftcPose.bearing)));
+//        Pose2D pos = odo.getPosition();
+//        double heading = pos.getHeading(AngleUnit.RADIANS);
 
-                wasTargetFoundLastFrame = true;
 
-            }
-            localized=true;
-            lastLocalized =System.currentTimeMillis();
-        } else if (System.currentTimeMillis()- lastLocalized >500) {
-            localized=false;
+        //scans and calculates
+        scanForTags();
+        if (targetFound) {
+            autoAim.calculateEverything(desiredTag);
+            turret.setMotorPower(-autoAim.turn);
+        } else {
+            drive.updatePoseEstimate();
+            Pose2d RobotPose = drive.localizer.getPose();
+            robPos=RobotPose;
+
+            autoAim.calculateEverythingWithoutCamera(RobotPose);
+            turretAngleTelemetry=autoAim.turretAngle;
+            turret.runTowardsTargetAngle(autoAim.turretAngle);  //doesn't move yet cuz PID terms are 0
         }
-        Pose2D pos = odo.getPosition();
-        double heading = pos.getHeading(AngleUnit.RADIANS);
-        double newX = Math.sqrt(Math.pow((75 - autoAim.xpos), 2) + Math.pow((78 - autoAim.ypos), 2));
-        double turretAngle = Math.atan((78 - autoAim.ypos) / (75 - autoAim.xpos)) - heading;
-        turretAngleTelemetry=turretAngle;
-
-        turret.runTowardsTargetAngle(turretAngle);
-        //turret.setMotorPower(0.5);
     }
 
     private void scanForTags() {
-        if (!cameraAvailable || aprilTag == null) {
-            targetFound = false;
-            desiredTag = null;
+
+        targetFound = false;
+        desiredTag = null;
+
+        List<AprilTagDetection> detections = aprilTag.getDetections();
+
+        for (AprilTagDetection detection : detections) {
+
+            if (detection.metadata != null) {
+
+                if (detection.id == DESIRED_TAG_ID ||
+                        detection.id == DESIRED_TAG_ID2) {
+
+                    targetFound = true;
+                    desiredTag = detection;
+                    break;
+                }
+            }
+        }
+    }
+    private void setManualExposure(int exposureMS, int gain) {   //not exactly sure what this does. It sets up the camera's setting or something
+        // Wait for the camera to be open, then use the controls
+
+        if (visionPortal == null) {
             return;
         }
 
-        try {
-            targetFound = false;
-            desiredTag = null;
-
-            List<AprilTagDetection> detections = aprilTag.getDetections();
-            for (AprilTagDetection detection : detections) {
-                if (detection.metadata != null) {
-                    if (detection.id == DESIRED_TAG_ID || detection.id == DESIRED_TAG_ID2) {
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            cameraAvailable = false;
-            targetFound = false;
-            desiredTag = null;
-        }
-    }
-
-    public boolean isCameraAvailable() {
-        return cameraAvailable;
-    }
-    private void setManualExposure(int exposureMS, int gain) {
-        if (!cameraAvailable || visionPortal == null) return;
-
+        // Make sure camera is streaming before we try to set the exposure controls
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            ElapsedTime cameraTimer = new ElapsedTime();
-            while (opModeIsActive &&
-                    visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING &&
-                    cameraTimer.seconds() < 5.0) {
-                sleep(20);
-            }
-            // If still not streaming after timeout, mark camera as unavailable
-            if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-                cameraAvailable = false;
-                return;
+            while (opModeIsActive && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                //sleep(20);
             }
         }
 
-        if (opModeIsActive) {
-            try {
-                ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-                if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                    exposureControl.setMode(ExposureControl.Mode.Manual);
-                }
-                exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
-                GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-                gainControl.setGain(gain);
-            } catch (Exception e) {
-                cameraAvailable = false;
+        // Set camera controls unless we are stopping.
+        if (opModeIsActive)
+        {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
             }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
         }
     }
 
@@ -342,12 +321,7 @@ public class AutoAimTurretController {
         turretStartPower=turret.getTurretPower();
 //        turret.setMotorPower(0);
     }
-
-    public void shutdown() {
-        opModeIsActive = false;
-        stopTurret();
-        if (visionPortal != null) {
-            visionPortal.close();  // This is the critical line
-        }
+    private double toInches(double meters){
+        return meters*39.3700787;
     }
 }

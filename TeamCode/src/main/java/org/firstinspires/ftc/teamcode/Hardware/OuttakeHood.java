@@ -6,7 +6,7 @@ public class OuttakeHood {
     private Servo hoodServo;
     private static double zeroPosition=0;
     double rangeOfMotion=0.75;  //0.75 means that the servo can travel 3/4 of a whole circle. 0.75 is a temporary theoretical value.
-    double minimumHoodAngle=Math.toRadians(40);
+    double minimumHoodAngle=Math.toRadians(25);
 
     public OuttakeHood(HardwareMap hMap) {
         hoodServo = hMap.get(Servo.class, "hoodServo"); //added 7/24/24
@@ -14,7 +14,7 @@ public class OuttakeHood {
 
     public void setAngle(double radians){
         double hoodServoPosition=((Math.PI-(radians+Math.PI/2))-minimumHoodAngle)/(Math.PI*2)/rangeOfMotion+zeroPosition;    //translates radian into a number between 0 and 1. Then it translates that into a servo position using the rangeOfMotion and zeroPosition.
-        if (hoodServoPosition>=0 && hoodServoPosition<=1){
+        if (hoodServoPosition>=0 && hoodServoPosition<=1 && radians>=Math.PI/6){
             hoodServo.setPosition(hoodServoPosition);
         }
     }

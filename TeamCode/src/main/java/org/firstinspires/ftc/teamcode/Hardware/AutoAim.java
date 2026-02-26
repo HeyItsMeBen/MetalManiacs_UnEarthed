@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAimCameraSupport.RotationMatrices;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -9,7 +13,7 @@ public class AutoAim {
     RotationMatrices rotationMatrices;
     //PID Gains for turning
     final private double TURN_GAIN   =  0.025 ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-    final private double MAX_AUTO_TURN  = 1;   //  Clip the turn speed to this max value (adjust for your robot)
+    final private double MAX_AUTO_TURN  = 0.7;   //  Clip the turn speed to this max value (adjust for your robot)
 
     //distances (pre-set inputs)
     private double tagToGoalCenter_Distance=toMeters(10);
@@ -29,7 +33,11 @@ public class AutoAim {
 
     public double xpos;
     public double ypos;
+    public double posX;
+    public double posY;
     public double botAngleThing;
+    public double turretAngle;
+
     public AutoAim(double cameraAngleOfElevation){  //input the camera's angle when creating the autoAim object. So if it's tilted up by 15 degrees, input Math.toRadians(15).
         cameraPitch=cameraAngleOfElevation;
         rotationMatrices = new RotationMatrices();
@@ -50,6 +58,24 @@ public class AutoAim {
         xpos=distanceToTagTelemetry*Math.cos(botAngleThing);
         ypos=distanceToTagTelemetry*Math.sin(botAngleThing);
     }
+
+    @Deprecated
+    public void relocalize(AprilTagDetection desiredTag){
+        launchPointToGoalCenterX_Distance_Meters = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
+        launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
+        botAngleThing=Math.toRadians(35)-(yawTelemetry-Math.toRadians(desiredTag.ftcPose.bearing));
+        xpos=distanceToTagTelemetry*Math.cos(botAngleThing);
+        ypos=distanceToTagTelemetry*Math.sin(botAngleThing);
+    }
+    public void calculateEverythingWithoutCamera(Pose2d pos){
+        double heading=pos.heading.toDouble();
+        posX=toMeters(55-pos.position.x);
+        posY=toMeters(59-pos.position.y);
+        launchPointToGoalCenterX_Distance_Meters = Math.sqrt(Math.pow((posX), 2) + Math.pow((posY), 2))+robotCenterToArmBase_Distance;
+        launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
+        turretAngle = Math.atan2(posY, posX)-heading;
+    }
+
     public double getCorrectDistance2(double givenX, double tagYaw, double tagPitch, double tagElevation){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
         //REMINDER: Use rotation matrices for yaw translation
         double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;   //robotBaseX is horizontal distance from the center of the robot to the tag.

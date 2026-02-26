@@ -15,17 +15,23 @@ public class Turret {
     private boolean isInPositionMode = false;
     private int manualTargetPosition = CENTER_POSITION; // Track target for manual positioning
 
-    double ticksPerTurretRevolution=6320;
-    public static double p=0, i=0, d=0, f=0;
+    double ticksPerTurretRevolution=800.551724;
+    //public static double p=0.01, i=0, d=0.0005, f=0;  //fast values
+    public static double p=0.002, i=0, d=0.0001, f=0;   //safe values
     private PIDController controller;
-    double halfRange=183;
+    double halfRange=175;
     double middlePosition=0;
+
+    public double turretAngleTelemetry=0;
+    public double turretTargetTelemetry=0;
+    public double turretPositionTelemetry=0;
 
     public Turret(HardwareMap hMap) {
         controller = new PIDController(p, i, d);
 
         turretMotor = hMap.get(DcMotorEx.class, "turret");
         turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -138,8 +144,13 @@ public class Turret {
         return isInPositionMode;
     }
     public void runTowardsTargetAngle(double turretAngle){
-        double turretPos=ticksPerTurretRevolution*turretAngle/(2*Math.PI);
-        if (turretMotor.getCurrentPosition()>middlePosition-halfRange || turretMotor.getCurrentPosition()<middlePosition+halfRange) {
+        double turretPos=-ticksPerTurretRevolution*turretAngle/(2*Math.PI);
+        turretAngleTelemetry = turretAngle;
+        turretTargetTelemetry=turretPos;
+        turretPositionTelemetry=turretMotor.getCurrentPosition();
+        double parameter1 =middlePosition-halfRange;
+        double parameter2 =middlePosition+halfRange;
+        if (turretPos>Math.min(parameter1, parameter2) && turretPos<Math.max(parameter1, parameter2)) {
             runTowardTargetDistance(turretPos);
         } else {
             runTowardTargetDistance(middlePosition);
