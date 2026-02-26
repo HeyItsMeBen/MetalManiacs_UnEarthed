@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
 
+@Disabled
 @Config
 @Autonomous(name = "[OLD ROBOT] Limelight Auto Attempt Two")
 //@Disabled

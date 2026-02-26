@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.DriveCode.TestFiles;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @TeleOp (name="Flywheel Ramp-Up Test 4", group="Debug")
 public class RampFlywheelVelocity extends LinearOpMode {
 

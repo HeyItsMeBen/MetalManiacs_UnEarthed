@@ -27,7 +27,7 @@ public class FlywheelController {
     private double targetSpeed = 0;
     private double outtakeSpeedBeforeDrop = 0;
 
-    private float rampUpSpeed = 2;
+    private float rampUpSpeed = 3;
     double currentTime = 0;
     double flywheelStartTime=0;
     double flywheelStartPower=0;

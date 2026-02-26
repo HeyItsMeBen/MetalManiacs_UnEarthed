@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.AutoAimSupport;
+package org.firstinspires.ftc.teamcode.Hardware.AutoAimCameraSupport;
 
 //Note: This file has been moved from autocode ---> testing to prevent accidental deletion or confusion
 

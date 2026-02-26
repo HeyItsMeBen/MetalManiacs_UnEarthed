@@ -1,12 +1,9 @@
-package org.firstinspires.ftc.teamcode.DriveCode.Debug;
+package org.firstinspires.ftc.teamcode.DriveCode.Support;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp (name="Motor Debugger", group="Debug")
 public class RunMotorPower extends LinearOpMode {
@@ -20,7 +17,7 @@ public class RunMotorPower extends LinearOpMode {
 
         gamepad = new GamepadEx(gamepad1);
 
-        Motor = hardwareMap.get(DcMotor.class, "transferDrum");
+        Motor = hardwareMap.get(DcMotor.class, "flywheel");
         Motor.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();

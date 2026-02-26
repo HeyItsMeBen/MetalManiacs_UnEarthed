@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.LightsController;
+import org.firstinspires.ftc.teamcode.DriveCode.PassOnFromAutoValues;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
@@ -50,8 +51,6 @@ public class RedClose extends LinearOpMode {
     LightsController lightsController;
     AutoAimTurretController aprilTagTurretAim;
     public String ballSequence = "XXX";
-
-
 
     @Override
     public void runOpMode() {
@@ -164,6 +163,8 @@ public class RedClose extends LinearOpMode {
                         )
                 )
         );
+
+        PassOnFromAutoValues.currentPose = drive.localizer.getPose();   // or drive.getPoseEstimate()
 
     }
 

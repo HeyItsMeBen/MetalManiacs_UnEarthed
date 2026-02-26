@@ -12,22 +12,23 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 @Config
 @TeleOp(name = "Flywheel PID Dashboard Tuner", group = "Tuning")
 public class FlywheelPIDDashboardTuner extends LinearOpMode {
 
     // PIDF coefficients editable on Dashboard
-    public static double P = 100.0;
-    public static double I = 0.0;
-    public static double D = 0.0;
-    public static double F = 14.12;
+    public static double P = 10.0;
+    public static double I = 1.0;
+    public static double D = 5.0;
+    public static double F = 15;
 
     // Target velocity (RPM), editable live
-    public static double targetVelocity = 3000;
+    public static double targetVelocity = 1500;
 
     ElapsedTime flywheelTimer;
-    double rampSeconds = 5;
+    double rampSeconds = 3;
 
     // Maximum velocity change per loop for smooth ramping
     public static double MINIMUM_SPEED = 50.0; // RPM per loop
@@ -35,7 +36,6 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
     // Motor
     private DcMotorEx flywheel;
     private FtcDashboard dashboard;
-
     public DcMotor intake;
     public DcMotor transferWheels;
 
@@ -44,14 +44,15 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
 
         // Hardware init
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        flywheel.setDirection(DcMotorEx.Direction.REVERSE);
+        flywheel.setDirection(DcMotorEx.Direction.FORWARD);
         flywheel.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorEx.Direction.FORWARD);
-        transferWheels = hardwareMap.get(DcMotorEx.class, "kickWheel");
-        transferWheels.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        transferWheels = hardwareMap.get(DcMotor.class, "transferDrum");
+        transferWheels.setDirection(DcMotorSimple.Direction.FORWARD);
 
         dashboard = FtcDashboard.getInstance();
 
@@ -67,6 +68,9 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            intake.setPower(0.3);
+            transferWheels.setPower(1);
+
             // Update PIDF live from Dashboard
             PIDFCoefficients updatedCoeffs = new PIDFCoefficients(P, I, D, F);
             flywheel.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, updatedCoeffs);
@@ -77,10 +81,7 @@ public class FlywheelPIDDashboardTuner extends LinearOpMode {
             double elapsed = timer.seconds();
             double progress = Math.min(elapsed / rampTime, 1.0);
             double newVelocity = maxVelocity * progress;
-            flywheel.setVelocity(newVelocity);
-
-            //intake.setPower(0.3);
-            //transferWheels.setPower(0.3);
+            flywheel.setVelocity(targetVelocity);
 
             // --- Dashboard telemetry ---
             TelemetryPacket packet = new TelemetryPacket();

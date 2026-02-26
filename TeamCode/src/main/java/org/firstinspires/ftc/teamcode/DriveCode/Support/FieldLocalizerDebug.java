@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.DriveCode.Debug;
+package org.firstinspires.ftc.teamcode.DriveCode.Support;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
