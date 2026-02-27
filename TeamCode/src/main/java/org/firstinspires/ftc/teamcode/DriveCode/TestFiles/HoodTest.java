@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 @TeleOp (name="HoodTest", group="Debug")
 public class HoodTest extends LinearOpMode {
     OuttakeHood hood;
-    public static double servoAngle=60;
+    public static double servoAngle=0;
 
     @Override
     public void runOpMode() {
@@ -26,8 +26,8 @@ public class HoodTest extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
         while (opModeIsActive()) {
-            hood.setAngle(Math.toRadians(servoAngle));
-            //hood.setServoPosition(servoAngle);
+            //hood.setAngle(Math.toRadians(servoAngle));
+            hood.setServoPosition(servoAngle);
             telemetry.addData("hoodAngle", servoAngle);
             telemetry.update();
         }
