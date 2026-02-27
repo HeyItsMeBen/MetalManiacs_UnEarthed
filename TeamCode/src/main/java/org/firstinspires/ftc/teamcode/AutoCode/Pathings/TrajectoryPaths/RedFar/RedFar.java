@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.LightsController;
+import org.firstinspires.ftc.teamcode.DriveCode.PassOnFromAutoValues;
 import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
@@ -54,7 +55,6 @@ public class RedFar extends LinearOpMode {
     LightsController lightsController;
     AutoAimTurretController aprilTagTurretAim;
     public String ballSequence = "XXX";
-
 
 
     @Override
@@ -97,28 +97,10 @@ public class RedFar extends LinearOpMode {
                 )
         );
 
-        // Run limelight Recognition Code
-
-        // Limelight returns some position value:
-        visionOutputPosition = 1;
-
-        Action trajectoryActionChosen;
-        if (visionOutputPosition == 1) {
-            trajectoryActionChosen = collectArtifactsLeft(drive, drive.localizer.getPose());
-        } else if (visionOutputPosition == 2) {
-            trajectoryActionChosen = collectArtifactsMiddle(drive, drive.localizer.getPose());
-        } else if (visionOutputPosition == 3) {
-            trajectoryActionChosen = collectArtifactsRight(drive, drive.localizer.getPose());
-        } else {
-            trajectoryActionChosen = collectArtifactsMiddle(drive, drive.localizer.getPose());
-        }
-
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                new InstantAction(() -> intakeController.update()),
-                                trajectoryActionChosen
-                        )
+                        new LimelightScanAction(drive, true),
+                        new InstantAction(() -> intakeController.update())
                 )
         );
 
@@ -129,7 +111,7 @@ public class RedFar extends LinearOpMode {
                                 firingPosition(drive, drive.localizer.getPose())
                         )
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
-                        )
+                )
         );
 
         Actions.runBlocking(
@@ -140,7 +122,9 @@ public class RedFar extends LinearOpMode {
                         )
                 )
         );
+
+        PassOnFromAutoValues.currentPose = drive.localizer.getPose();
+        PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.RED;
+
     }
-
 }
-

@@ -351,7 +351,6 @@ public class AutoAimTurretController {
     };
 
     public void stopTurret() {
-
         turretPower = 0;
         turretStartTime=System.currentTimeMillis();
         turretStartPower=turret.getTurretPower();

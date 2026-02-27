@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
 
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories.collectArtifactsMiddle;
 import static java.lang.Thread.sleep;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import com.acmerobotics.roadrunner.Actions;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -51,18 +54,17 @@ public class PathingActions {
         public boolean run(@NonNull TelemetryPacket packet) {
 
             if (!initialized) {
-                startTime = Actions.now();  // Road Runner time in seconds
+                startTime = Actions.now();
                 initialized = true;
             }
 
             double elapsed = Actions.now() - startTime;
 
-            if (!aprilTagTurretAim.isTargetFound() || elapsed < 2) {
+            if (!aprilTagTurretAim.isTargetFound() || elapsed < 4) {
                 aprilTagTurretAim.update2(false, false);
                 return false;
             }
 
-            // Time finished — execute once
             aprilTagTurretAim.stopTurret();
 
             lightsController.update(
@@ -72,7 +74,7 @@ public class PathingActions {
                     ballSequence
             );
 
-            return true; // action complete
+            return true;
         }
     }
 
@@ -112,17 +114,68 @@ public class PathingActions {
 
     public static class LimelightScanAction implements Action {
 
+        private final MecanumDrive drive;
+        private Action selectedTrajectory;
 
-        public LimelightScanAction(FlywheelController flywheel,
-                                      DoubleSupplier distanceSupplier,
-                                      BooleanSupplier targetFoundSupplier) {
+        private boolean initialized = false;
+        private double startTime;
 
+        boolean isTeamColorRed = false;
+
+        public LimelightScanAction(MecanumDrive drive, boolean isTeamColorRed) {
+            this.drive = drive;
+            this.isTeamColorRed = isTeamColorRed;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
 
-            return true;
+            if (!initialized) {
+                startTime = Actions.now();
+                initialized = true;
+            }
+
+            double elapsed = Actions.now() - startTime;
+
+            if (elapsed < 2.0) {
+                drive.updatePoseEstimate();
+                // Run limelight scan code here
+                return false;
+            }
+
+            if (selectedTrajectory == null) {
+
+                int visionOutputPosition = getVisionResult();
+
+                if (isTeamColorRed) {
+                    if (visionOutputPosition == 1) {
+                        selectedTrajectory = RedFarTrajectories.collectArtifactsLeft(drive, drive.localizer.getPose());
+                    } else if (visionOutputPosition == 2) {
+                        selectedTrajectory = RedFarTrajectories.collectArtifactsMiddle(drive, drive.localizer.getPose());
+                    } else if (visionOutputPosition == 3) {
+                        selectedTrajectory = RedFarTrajectories.collectArtifactsRight(drive, drive.localizer.getPose());
+                    } else {
+                        selectedTrajectory = RedFarTrajectories.collectArtifactsMiddle(drive, drive.localizer.getPose());
+                    }
+                } else {
+                    if (visionOutputPosition == 1) {
+                        selectedTrajectory = BlueFarTrajectories.collectArtifactsLeft(drive, drive.localizer.getPose());
+                    } else if (visionOutputPosition == 2) {
+                        selectedTrajectory = BlueFarTrajectories.collectArtifactsMiddle(drive, drive.localizer.getPose());
+                    } else if (visionOutputPosition == 3) {
+                        selectedTrajectory = BlueFarTrajectories.collectArtifactsRight(drive, drive.localizer.getPose());
+                    } else {
+                        selectedTrajectory = BlueFarTrajectories.collectArtifactsMiddle(drive, drive.localizer.getPose());
+                    }
+                }
+            }
+
+            return selectedTrajectory.run(packet);
+        }
+
+        private int getVisionResult() {
+            // Replace with your actual Limelight return
+            return 1;
         }
     }
 
