@@ -11,7 +11,7 @@ public class Transfer {
     private Servo transferKick = null;
     private DcMotor transferDrum = null;
 
-    public float kickServoUp = 0.48f; // New values 2/25
+    public float kickServoUp = 0.42f; // New values 2/26
     public float kickServoDown = 0.85f; // New values 2/25
 
     public Transfer(HardwareMap hMap) {
