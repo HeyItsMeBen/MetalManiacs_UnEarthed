@@ -106,10 +106,8 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
+                        firingPosition(drive, drive.localizer.getPose())
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -121,10 +119,8 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
+                        firingPosition(drive, drive.localizer.getPose())
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -136,13 +132,10 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
+                        firingPosition(drive, drive.localizer.getPose())
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
-
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -153,10 +146,10 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                //new InstantAction(() -> intakeController.toggleIntake()),
+                                new InstantAction(() -> intakeController.toggleIntake()),
                                 firingPosition(drive, drive.localizer.getPose())
                         )
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 

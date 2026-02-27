@@ -88,11 +88,10 @@ public class BlueClose extends LinearOpMode {
                 new SequentialAction(
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
+                                new AimTurretAction(autoAimController, lightsController, intakeController, "Red"),
                                 //new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, startPose)
-                        ),
-
-                        new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
+                        )
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
 
                 )
@@ -107,10 +106,8 @@ public class BlueClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
+                        firingPosition(drive, drive.localizer.getPose())
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -122,10 +119,8 @@ public class BlueClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
+                        firingPosition(drive, drive.localizer.getPose())
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -137,10 +132,8 @@ public class BlueClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
+                        firingPosition(drive, drive.localizer.getPose())
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -154,17 +147,17 @@ public class BlueClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 //new InstantAction(() -> intakeController.toggleIntake()),
                                 firingPosition(drive, drive.localizer.getPose())
                         )
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                //new InstantAction(() -> turret.resetInitial()),
+                                new InstantAction(() -> autoAimController.turnToCenter()),
                                 //new InstantAction(() -> intakeController.update()),
                                 park(drive, drive.localizer.getPose())
                         )

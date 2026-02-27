@@ -41,7 +41,7 @@ public class BlueFarTrajectories {
                 .build();
     }
 
-    public static Action MoveToScanPosition(MecanumDrive drive, Pose2d currentPose) {
+    public static Action moveToScanPosition(MecanumDrive drive, Pose2d currentPose) {
 
         return drive.actionBuilder(currentPose)
                 .splineTo(new Vector2d(52, -55), Math.toRadians(180), defaultSpeedConstraint)

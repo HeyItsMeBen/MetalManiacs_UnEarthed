@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar
 
 // Paths
 
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsLeft;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsMiddle;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsRight;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.moveToScanPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.initialMoveToPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.park;
@@ -97,22 +95,31 @@ public class BlueFar extends LinearOpMode {
                 )
         );
 
+        // Repeat as many times as necessary
+
         Actions.runBlocking(
                 new SequentialAction(
-                        new LimelightScanAction(drive, false),
-                        new InstantAction(() -> intakeController.update())
+                        new ParallelAction(
+                                new InstantAction(() -> intakeController.update()),
+                                moveToScanPosition(drive, drive.localizer.getPose())
+                        )
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AimTurretAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
+                        new LimelightScanAction(drive, false)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        firingPosition(drive, drive.localizer.getPose())
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
+
+        // Repeat as many times as necessary
 
         Actions.runBlocking(
                 new SequentialAction(
