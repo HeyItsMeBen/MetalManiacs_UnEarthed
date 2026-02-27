@@ -80,7 +80,7 @@ public class IntakeController {
         // Jam detection / auto slow-down
         if (intakePower >= targetSpeed &&
             intakeTimer.milliseconds() > 5000 &&
-            intake.getIntakeMotorRPM() < 0) {
+            intake.getIntakeMotorRPM() < 750) {
 
             intakePower = 0.25f;
             intakeStartTime=System.currentTimeMillis();

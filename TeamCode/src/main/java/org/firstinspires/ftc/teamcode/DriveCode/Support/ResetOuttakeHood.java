@@ -29,7 +29,7 @@ public class ResetOuttakeHood extends LinearOpMode {
 
             gamepad.readButtons();
 
-            if (gamepad.wasJustPressed(GamepadKeys.Button.A)) {
+            if (gamepad.isDown(GamepadKeys.Button.A)) {
                 outtakeHood.setCurrentPositionAsZeroPosition();
                 telemetry.addData("Reset Position: ","");
             }

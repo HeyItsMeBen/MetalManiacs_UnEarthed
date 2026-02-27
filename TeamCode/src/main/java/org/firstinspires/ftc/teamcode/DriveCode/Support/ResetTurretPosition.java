@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Disabled
 @TeleOp (name="Reset Turret Position", group="Tuning")
 public class ResetTurretPosition extends LinearOpMode {
 
@@ -33,17 +32,18 @@ public class ResetTurretPosition extends LinearOpMode {
 
             gamepad.readButtons();
 
-            if (gamepad.wasJustPressed(GamepadKeys.Button.A)) {
+            if (gamepad.isDown(GamepadKeys.Button.A)) {
                 turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 telemetry.addData("Reset Position: ","");
             }
 
-            if (gamepad.wasJustPressed(GamepadKeys.Button.X)) {
+            if (gamepad.isDown(GamepadKeys.Button.X)) {
                 turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 turret.setTargetPosition(0);
                 turret.setPower(0.3);
                 telemetry.addData("Run To Position 0: ", turret.getCurrentPosition());
             } else {
+                turret.setPower(0);
                 turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
