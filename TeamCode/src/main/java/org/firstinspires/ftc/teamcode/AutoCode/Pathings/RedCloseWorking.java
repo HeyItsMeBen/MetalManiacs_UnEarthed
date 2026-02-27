@@ -63,7 +63,7 @@ public class RedCloseWorking extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 //
-        aprilTagTurretAim = new AutoAimTurretController(hardwareMap, "Red");
+        aprilTagTurretAim = new AutoAimTurretController(hardwareMap, startPose,"Red");
 
         waitForStart();
         if (isStopRequested()) return;
