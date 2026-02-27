@@ -27,7 +27,6 @@ public class ResetOuttakeHood extends LinearOpMode {
         //executing
         while (opModeIsActive()) {
 
-
             gamepad.readButtons();
 
             if (gamepad.wasJustPressed(GamepadKeys.Button.A)) {
