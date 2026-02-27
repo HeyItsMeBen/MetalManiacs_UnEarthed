@@ -20,7 +20,7 @@ public class Turret {
     public static double p=0.002, i=0, d=0.0001, f=0;   //safe values
     private PIDController controller;
     double halfRange=175;
-    double middlePosition=0;
+    public double middlePosition=0;
 
     public double turretAngleTelemetry=0;
     public double turretTargetTelemetry=0;

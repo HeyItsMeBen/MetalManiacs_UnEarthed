@@ -13,7 +13,7 @@ public class AutoAim {
     RotationMatrices rotationMatrices;
     //PID Gains for turning
     final private double TURN_GAIN   =  0.01 ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-    final private double MAX_AUTO_TURN  = 0.7;   //  Clip the turn speed to this max value (adjust for your robot)
+    final private double MAX_AUTO_TURN  = 0.9;   //  Clip the turn speed to this max value (adjust for your robot)
 
     //distances (pre-set inputs)
     private double tagToGoalCenter_Distance=toMeters(10);

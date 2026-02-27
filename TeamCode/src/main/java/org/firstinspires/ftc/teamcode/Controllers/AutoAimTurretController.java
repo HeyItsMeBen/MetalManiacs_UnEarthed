@@ -346,6 +346,10 @@ public class AutoAimTurretController {
         }
     }
 
+    public void turnToCenter() {
+        turret.runTowardTargetDistance(turret.middlePosition);
+    };
+
     public void stopTurret() {
 
         turretPower = 0;
