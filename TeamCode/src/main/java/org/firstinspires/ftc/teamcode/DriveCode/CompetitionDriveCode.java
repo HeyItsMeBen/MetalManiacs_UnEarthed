@@ -94,7 +94,7 @@ public class CompetitionDriveCode extends OpMode {
         lights = new Lights(hardwareMap);
 
         driveController = new DriveChassisController(hardwareMap);
-        autoAimController = new AutoAimTurretController(hardwareMap);
+        autoAimController = new AutoAimTurretController(hardwareMap, "Blue");
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         intakeController = new IntakeController(intake, transferDrum, transferKick);
         lightsController = new LightsController(lights);

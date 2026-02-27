@@ -49,8 +49,7 @@ public class AutoAimTurretController {
 
     private static final long TARGET_LOST_DELAY_MS = 1000;
 
-    private static final int DESIRED_TAG_ID = 24;
-    private static final int DESIRED_TAG_ID2 = 20;
+    private int DESIRED_TAG_ID = 24;
 
     boolean localized=false;
     double lastLocalized =0;
@@ -66,8 +65,17 @@ public class AutoAimTurretController {
 
     public boolean opModeIsActive=true;
     private static final boolean USE_WEBCAM =true;
+    boolean isRed=true;
 
-    public AutoAimTurretController(HardwareMap hardwareMap) {
+    public AutoAimTurretController(HardwareMap hardwareMap, String givenTeamColor) {
+
+        if (givenTeamColor.equals("Blue") || givenTeamColor.equals("blue")){
+            isRed=false;
+            DESIRED_TAG_ID=20;
+        } else {
+            isRed=true;
+            DESIRED_TAG_ID=24;
+        }
 
         turret = new Turret(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(0));
@@ -280,7 +288,11 @@ public class AutoAimTurretController {
 
             autoAim.calculateEverythingWithoutCamera(RobotPose);
             turretAngleTelemetry=autoAim.turretAngle;
-            turret.runTowardsTargetAngle(autoAim.turretAngle);  //doesn't move yet cuz PID terms are 0
+            if (isRed){
+                turret.runTowardsTargetAngle(autoAim.turretAngle);
+            } else {
+                turret.runTowardsTargetAngle(-autoAim.turretAngle);
+            }
         }
     }
 
@@ -298,7 +310,7 @@ public class AutoAimTurretController {
             List<AprilTagDetection> detections = aprilTag.getDetections();
             for (AprilTagDetection detection : detections) {
                 if (detection.metadata != null) {
-                    if (detection.id == DESIRED_TAG_ID || detection.id == DESIRED_TAG_ID2) {
+                    if (detection.id == DESIRED_TAG_ID) {
                         targetFound = true;
                         desiredTag = detection;
                         break;
