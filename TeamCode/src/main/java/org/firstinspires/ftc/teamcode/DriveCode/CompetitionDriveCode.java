@@ -73,10 +73,11 @@ public class CompetitionDriveCode extends OpMode {
     LightsController lightsController;
     RumbleController rumbleController;
 
-    public String teamColor = "Red";
     public String ballSequence = "XXX";
 
     double oldTime;
+
+    String teamColor= "Red";
 
     @Override
     public void init() {
@@ -93,8 +94,13 @@ public class CompetitionDriveCode extends OpMode {
         hood = new OuttakeHood(hardwareMap);
         lights = new Lights(hardwareMap);
 
+        if (PassOnFromAutoValues.teamColor == PassOnFromAutoValues.TeamColor.RED) {
+            teamColor="Red";
+        } else {
+            teamColor="Blue";
+        }
         driveController = new DriveChassisController(hardwareMap);
-        autoAimController = new AutoAimTurretController(hardwareMap, "Blue");
+        autoAimController = new AutoAimTurretController(hardwareMap, PassOnFromAutoValues.currentPose, teamColor);
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         intakeController = new IntakeController(intake, transferDrum, transferKick);
         lightsController = new LightsController(lights);
