@@ -40,12 +40,19 @@ public class RedFarTrajectories {
                 .build();
     }
 
+    public static Action MoveToScanPosition(MecanumDrive drive, Pose2d currentPose) {
+
+        return drive.actionBuilder(currentPose)
+                .splineTo(new Vector2d(52, -55), Math.toRadians(0), defaultSpeedConstraint)
+                .build();
+    }
+
     public static Action firingPosition(MecanumDrive drive, Pose2d currentPose) {
 
         return drive.actionBuilder(currentPose)
 
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(12, -45), Math.toRadians(180), defaultSpeedConstraint)
 
                 .build();
     }
@@ -55,7 +62,7 @@ public class RedFarTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineTo(new Vector2d(60, -50), Math.toRadians(0), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(60, -50), Math.toRadians(0), patternCollectionConstraint)
                 .build();
     }
 
@@ -64,7 +71,7 @@ public class RedFarTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineTo(new Vector2d(60, -55), Math.toRadians(0), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(60, -55), Math.toRadians(0), patternCollectionConstraint)
                 .build();
     }
 
@@ -73,7 +80,7 @@ public class RedFarTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineTo(new Vector2d(60, -60), Math.toRadians(0), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(60, -60), Math.toRadians(0), patternCollectionConstraint)
                 .build();
     }
 
@@ -82,7 +89,7 @@ public class RedFarTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineTo(new Vector2d(35,-55), Math.toRadians(0), defaultSpeedConstraint)
+                .splineToConstantHeading(new Vector2d(35,-55), Math.toRadians(0), defaultSpeedConstraint)
 
                 .build();
     }

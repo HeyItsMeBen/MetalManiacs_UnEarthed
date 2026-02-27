@@ -26,23 +26,39 @@ public class BlueFarSim {
                         .strafeTo(new Vector2d(-12, -45))
                         .waitSeconds(0.5f)
 
-                        .splineTo(new Vector2d(-60, -60), Math.toRadians(180))
+                        //move to scan position
+                        .setReversed(false)
+                        .splineTo(new Vector2d(-52, -50), Math.toRadians(180))
                         .waitSeconds(0.5f)
 
+                        //collect artifacts
+                        .setReversed(false)
+                        .splineToConstantHeading(new Vector2d(-60, -60), Math.toRadians(180))
+                        .waitSeconds(0.5f)
+
+                        //move to firing position
                         .setReversed(true)
                         .splineToConstantHeading(new Vector2d(-12, -45), Math.toRadians(0))
                         .waitSeconds(0.5f)
 
+                        //move to scan position
                         .setReversed(false)
-                        .splineTo(new Vector2d(-60, -55), Math.toRadians(180))
+                        .splineTo(new Vector2d(-52, -55), Math.toRadians(180))
                         .waitSeconds(0.5f)
 
+                        //collect artifacts
+                        .setReversed(false)
+                        .splineToConstantHeading(new Vector2d(-60, -50), Math.toRadians(180))
+                        .waitSeconds(0.5f)
+
+                        //move to firing position
                         .setReversed(true)
                         .splineToConstantHeading(new Vector2d(-12, -45), Math.toRadians(0))
                         .waitSeconds(0.5f)
 
+                        //park
                         .setReversed(false)
-                        .splineTo(new Vector2d(-35,-55), Math.toRadians(180))
+                        .splineToConstantHeading(new Vector2d(-35,-55), Math.toRadians(180))
                         .waitSeconds(2f)
 
                         .build());
