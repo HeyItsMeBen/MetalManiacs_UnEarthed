@@ -2,14 +2,16 @@ package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar
 
 // Paths
 
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AutoAimAction;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsLeft;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsMiddle;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsRight;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.initialMoveToPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.park;
+
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AimTurretAction;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.LimelightScanAction;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
@@ -88,9 +90,8 @@ public class BlueFar extends LinearOpMode {
                         new ParallelAction(
                                 initialMoveToPosition(drive, startPose),
                                 new InstantAction(() -> intakeController.toggleIntake()),
-                                new InstantAction(() -> intakeController.update()),
                                 new InstantAction(() -> flywheelController.rampUp()),
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red")
+                                new AimTurretAction(aprilTagTurretAim, lightsController, intakeController, "Red")
                         ),
 
                         new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
@@ -115,14 +116,17 @@ public class BlueFar extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajectoryActionChosen
+                        new ParallelAction(
+                                new InstantAction(() -> intakeController.update()),
+                                trajectoryActionChosen
+                        )
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                new AimTurretAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
                         ),
                         new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
@@ -134,7 +138,8 @@ public class BlueFar extends LinearOpMode {
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())
-                        )
+                        ),
+                    new InstantAction(() -> intakeController.update())
                 )
         );
     }

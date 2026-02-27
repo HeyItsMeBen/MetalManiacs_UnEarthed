@@ -10,8 +10,8 @@ import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.R
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.openChannel;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedClose.RedCloseTrajectories.park;
 
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AutoAimAction;
-import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AimTurretAction;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -53,8 +53,11 @@ public class RedClose extends LinearOpMode {
     IntakeController intakeController;
     FlywheelController flywheelController;
     LightsController lightsController;
-    AutoAimTurretController aprilTagTurretAim;
+    AutoAimTurretController autoAimController;
     public String ballSequence = "XXX";
+
+    double turretAngleForShooting = -45;
+    double distanceFromGoal;
 
     @Override
     public void runOpMode() {
@@ -75,22 +78,22 @@ public class RedClose extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        aprilTagTurretAim = new AutoAimTurretController(hardwareMap); //Note: This line may cause issues
+        autoAimController = new AutoAimTurretController(hardwareMap); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;
 
-        lightsController.update(false, false, "Red", ballSequence);
+        //lightsController.update(false, false, "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
-                                new InstantAction(() -> flywheelController.rampUp()),
+                                //new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, startPose)
-                        ) //,
+                        ),
 
-                        //new AutoAimAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                        new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
 
                 )
@@ -114,7 +117,7 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        openChannel(drive, drive.localizer.getPose())
+                        collectPatternPPG(drive, drive.localizer.getPose())
                 )
         );
 
@@ -129,7 +132,7 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        collectPatternPPG(drive, drive.localizer.getPose())
+                        openChannel(drive, drive.localizer.getPose())
                 )
         );
 
@@ -170,6 +173,7 @@ public class RedClose extends LinearOpMode {
         );
 
         PassOnFromAutoValues.currentPose = drive.localizer.getPose();
+        PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.RED;
 
     }
 

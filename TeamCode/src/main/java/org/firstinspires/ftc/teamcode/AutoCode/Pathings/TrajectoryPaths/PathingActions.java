@@ -23,7 +23,7 @@ import java.util.function.DoubleSupplier;
 
 public class PathingActions {
 
-    public static class AutoAimAction implements Action {
+    public static class AimTurretAction implements Action {
 
         private final AutoAimTurretController aprilTagTurretAim;
         private final LightsController lightsController;
@@ -35,13 +35,13 @@ public class PathingActions {
         public String ballSequence = "XXX";
 
 
-        public AutoAimAction(
-                AutoAimTurretController aprilTagTurretAim,
+        public AimTurretAction(
+                AutoAimTurretController autoAimTurretController,
                 LightsController lightsController,
                 IntakeController intakeController,
                 String teamColor
         ) {
-            this.aprilTagTurretAim = aprilTagTurretAim;
+            this.aprilTagTurretAim = autoAimTurretController;
             this.lightsController = lightsController;
             this.intakeController = intakeController;
             this.teamColor = teamColor;
@@ -57,8 +57,8 @@ public class PathingActions {
 
             double elapsed = Actions.now() - startTime;
 
-            if (!aprilTagTurretAim.isTargetFound() || elapsed < 3.0) {
-                aprilTagTurretAim.update(false, false);
+            if (!aprilTagTurretAim.isTargetFound() || elapsed < 2) {
+                aprilTagTurretAim.update2(false, false);
                 return false;
             }
 
@@ -83,6 +83,7 @@ public class PathingActions {
         private final BooleanSupplier targetFoundSupplier;
 
         private boolean initialized = false;
+        private double LoggedDistance = 36;
 
         public FlywheelSequenceAction(FlywheelController flywheel,
                                       DoubleSupplier distanceSupplier,
@@ -99,12 +100,29 @@ public class PathingActions {
 
             if (!initialized) {
                 flywheel.update(true, distance, tagVisible); // trigger once
+                LoggedDistance = distance;
                 initialized = true;
             } else {
-                flywheel.update(true, distance, tagVisible); // continue running
+                flywheel.update(true, LoggedDistance, true); // continue running
             }
 
             return (flywheel.getState() == FlywheelController.LaunchState.IDLE);
+        }
+    }
+
+    public static class LimelightScanAction implements Action {
+
+
+        public LimelightScanAction(FlywheelController flywheel,
+                                      DoubleSupplier distanceSupplier,
+                                      BooleanSupplier targetFoundSupplier) {
+
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+
+            return true;
         }
     }
 
