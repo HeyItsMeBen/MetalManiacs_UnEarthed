@@ -366,6 +366,13 @@ public class AutoAimTurretController {
         turretStartPower=turret.getTurretPower();
 //        turret.setMotorPower(0);
     }
+
+    public void closeWebcam() {
+        if (visionPortal != null) {
+            visionPortal.close();
+        }
+    }
+    
     public void shutdown() {
         opModeIsActive = false;
         stopTurret();

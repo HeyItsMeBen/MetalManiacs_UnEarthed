@@ -75,7 +75,7 @@ public class RedFar extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        autoAimController = new AutoAimTurretController(hardwareMap, "Red"); // May crop out, takes too long to initialize
+        autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;

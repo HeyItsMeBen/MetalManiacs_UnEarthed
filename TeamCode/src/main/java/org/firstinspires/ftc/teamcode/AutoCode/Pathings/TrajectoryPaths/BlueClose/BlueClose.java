@@ -77,7 +77,7 @@ public class BlueClose extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        autoAimController = new AutoAimTurretController(hardwareMap, "Blue"); // May crop out, takes too long to initialize
+        autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Blue"); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;

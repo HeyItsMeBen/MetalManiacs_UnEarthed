@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths;
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.LeaveVarients;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -7,29 +7,21 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
-import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
-import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.LightsController;
-import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
-import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.DriveCode.PassOnFromAutoValues;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
-import org.firstinspires.ftc.teamcode.Hardware.Transfer;
-import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Leave / Park", group = "z-Autonomous - Any")
-public class Leave extends LinearOpMode {
+@Autonomous(name = "Leave / Park Red", group = "z-Autonomous - Any")
+public class LeaveRed extends LinearOpMode {
 
     Lights lights;
 
     LightsController lightsController;
+
     public String ballSequence = "XXX";
 
 
@@ -49,7 +41,6 @@ public class Leave extends LinearOpMode {
 
         TrajectoryActionBuilder park = drive.actionBuilder(startPose)
 
-                .setReversed(true)
                 .strafeTo(new Vector2d((drive.localizer.getPose().position.x + 30), drive.localizer.getPose().position.y));
 
         Actions.runBlocking(
@@ -59,6 +50,10 @@ public class Leave extends LinearOpMode {
 
                 )
         );
+
+        PassOnFromAutoValues.currentPose = drive.localizer.getPose();
+        PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.RED;
+
     }
 
 }
