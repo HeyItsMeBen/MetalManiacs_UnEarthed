@@ -108,7 +108,7 @@ public class FlywheelController {
 
                 case SPINNING_UP:
 
-                    rampUp();
+//                    rampUp();
                     if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9
                             || powerUpTimer.seconds() >= rampUpSpeed + 1.5) {
 
