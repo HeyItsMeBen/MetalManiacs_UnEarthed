@@ -157,7 +157,7 @@ public class RedClose extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 new InstantAction(() -> autoAimController.turnToCenter()),
-                                //new InstantAction(() -> intakeController.update()),
+                                new InstantAction(() -> intakeController.update()),
                                 park(drive, drive.localizer.getPose())
                         )
                 )

@@ -101,6 +101,7 @@ public class BlueFar extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.update()),
+                                new InstantAction(() -> autoAimController.closeWebcam()),
                                 moveToScanPosition(drive, drive.localizer.getPose())
                         )
                 )
@@ -124,6 +125,7 @@ public class BlueFar extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
+                                new InstantAction(() -> autoAimController.turnToCenter()),
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())
                         )
