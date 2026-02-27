@@ -59,7 +59,6 @@ public class BlueFar extends LinearOpMode {
     public String ballSequence = "XXX";
 
 
-
     @Override
     public void runOpMode() {
 

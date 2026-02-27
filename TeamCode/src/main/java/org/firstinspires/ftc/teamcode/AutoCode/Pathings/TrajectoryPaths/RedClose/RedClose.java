@@ -54,10 +54,9 @@ public class RedClose extends LinearOpMode {
     FlywheelController flywheelController;
     LightsController lightsController;
     AutoAimTurretController autoAimController;
-    public String ballSequence = "XXX";
 
-    double turretAngleForShooting = -45;
-    double distanceFromGoal;
+    public String ballSequence = "XXX";
+    
 
     @Override
     public void runOpMode() {
