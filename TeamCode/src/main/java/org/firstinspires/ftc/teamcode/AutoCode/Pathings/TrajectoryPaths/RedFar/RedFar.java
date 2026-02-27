@@ -53,7 +53,8 @@ public class RedFar extends LinearOpMode {
     IntakeController intakeController;
     FlywheelController flywheelController;
     LightsController lightsController;
-    AutoAimTurretController aprilTagTurretAim;
+    AutoAimTurretController autoAimController;
+
     public String ballSequence = "XXX";
 
 
@@ -76,9 +77,7 @@ public class RedFar extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        //aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
-
-        int visionOutputPosition = 0;
+        autoAimController = new AutoAimTurretController(hardwareMap); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;
@@ -92,7 +91,7 @@ public class RedFar extends LinearOpMode {
                                 new InstantAction(() -> intakeController.toggleIntake())
                                 //new InstantAction(() -> flywheelController.rampUp()),
                         ),
-                        new AimTurretAction(aprilTagTurretAim, lightsController, intakeController, "Red")
+                        new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );

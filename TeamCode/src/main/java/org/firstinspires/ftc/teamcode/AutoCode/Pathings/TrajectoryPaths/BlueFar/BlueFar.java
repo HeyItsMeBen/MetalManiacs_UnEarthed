@@ -23,6 +23,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -53,7 +54,8 @@ public class BlueFar extends LinearOpMode {
     IntakeController intakeController;
     FlywheelController flywheelController;
     LightsController lightsController;
-    AutoAimTurretController aprilTagTurretAim;
+    AutoAimTurretController autoAimController;
+
     public String ballSequence = "XXX";
 
 
@@ -77,60 +79,39 @@ public class BlueFar extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        //aprilTagTurretAim = new AutoAimTurretController(hardwareMap);
-
-        int visionOutputPosition = 0;
+        autoAimController = new AutoAimTurretController(hardwareMap); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;
 
-        lightsController.update(false, false, "Red", ballSequence);
+        lightsController.update(false, false, "Blue", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
                                 initialMoveToPosition(drive, startPose),
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                new InstantAction(() -> flywheelController.rampUp()),
-                                new AimTurretAction(aprilTagTurretAim, lightsController, intakeController, "Red")
+                                new InstantAction(() -> intakeController.toggleIntake())
+                                //new InstantAction(() -> flywheelController.rampUp()),
                         ),
-
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
-                        )
+                        new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                )
         );
-
-        // Run limelight Recognition Code
-
-        // Limelight returns some position value:
-        visionOutputPosition = 1;
-
-        Action trajectoryActionChosen;
-        if (visionOutputPosition == 1) {
-            trajectoryActionChosen = collectArtifactsLeft(drive, drive.localizer.getPose());
-        } else if (visionOutputPosition == 2) {
-            trajectoryActionChosen = collectArtifactsMiddle(drive, drive.localizer.getPose());
-        } else if (visionOutputPosition == 3) {
-            trajectoryActionChosen = collectArtifactsRight(drive, drive.localizer.getPose());
-        } else {
-            trajectoryActionChosen = collectArtifactsMiddle(drive, drive.localizer.getPose());
-        }
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                new InstantAction(() -> intakeController.update()),
-                                trajectoryActionChosen
-                        )
+                        new LimelightScanAction(drive, false),
+                        new InstantAction(() -> intakeController.update())
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new AimTurretAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
+                                //new AimTurretAction(aprilTagTurretAim, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
-                        ),
-                        new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                        )
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -139,8 +120,7 @@ public class BlueFar extends LinearOpMode {
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())
-                        ),
-                    new InstantAction(() -> intakeController.update())
+                        )
                 )
         );
 
