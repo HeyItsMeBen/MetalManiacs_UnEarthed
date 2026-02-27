@@ -33,7 +33,6 @@ public class AutoAimTurretController {
     private AprilTagDetection desiredTag = null;
     //private GoBildaPinpointDriver odo;
 
-    public Pose2d resetPose;
     private MecanumDrive drive;
     private Pose2d initialEstimatedCurrentPose;
     private Vector2d goalPosition;
@@ -67,7 +66,7 @@ public class AutoAimTurretController {
     private static final boolean USE_WEBCAM =true;
     boolean isRed=true;
 
-    public AutoAimTurretController(HardwareMap hardwareMap, String givenTeamColor) {
+    public AutoAimTurretController(HardwareMap hardwareMap, Pose2d givenRobotPosition, String givenTeamColor) {
 
         if (givenTeamColor.equals("Blue") || givenTeamColor.equals("blue")){
             isRed=false;
@@ -92,9 +91,8 @@ public class AutoAimTurretController {
 //        Pose2D startingPosition = new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.RADIANS, 0);
 //        odo.setPosition(startingPosition);
         hMap = hardwareMap;
-        resetPose = new Pose2d(0, 0, Math.toRadians(90)); // x, y, heading in radians
 
-        drive = new MecanumDrive(hMap, resetPose);
+        drive = new MecanumDrive(hMap, givenRobotPosition);
 
         initialEstimatedCurrentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
 
