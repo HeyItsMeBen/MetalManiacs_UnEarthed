@@ -62,6 +62,8 @@ public class RedFar extends LinearOpMode {
         Pose2d startPose = new Pose2d(12, -60, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
+        Pose2d shootingPose =  new Pose2d(12, -45, Math.toRadians(0));
+
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         turret = new Turret(hardwareMap);
@@ -86,12 +88,13 @@ public class RedFar extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 initialMoveToPosition(drive, startPose),
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                new InstantAction(() -> turret.rotateTowardsTarget(-150))
+                                new InstantAction(() -> intakeController.toggleIntake())
+                                //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
                                 //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                                 //new InstantAction(() -> flywheelController.rampUp()),
                         ),
-                        new InstantAction(drive::updatePoseEstimate)
+                        new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
+                        //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
@@ -100,9 +103,9 @@ public class RedFar extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        new InstantAction(() -> autoAimController.closeWebcam()),
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.update()),
-                                new InstantAction(() -> autoAimController.closeWebcam()),
                                 moveToScanPosition(drive, drive.localizer.getPose())
                         )
                 )

@@ -94,8 +94,8 @@ public class AutoAimTurretController {
 //        odo.setPosition(startingPosition);
         hMap = hardwareMap;
 
-        //drive = new MecanumDrive(hMap, givenRobotPosition);
-        drive = new MecanumDrive(hMap, new Pose2d(0,0,Math.toRadians(90)));
+        drive = new MecanumDrive(hMap, givenRobotPosition);
+        //drive = new MecanumDrive(hMap, new Pose2d(0,0,Math.toRadians(90)));
 
         initialEstimatedCurrentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
 
@@ -299,6 +299,7 @@ public class AutoAimTurretController {
         if (targetFound) {
             autoAim.calculateEverything(desiredTag);
             turret.setMotorPower(-autoAim.turn);
+
         } else {
 
             Pose2d RobotPose = providedPose;
@@ -306,11 +307,7 @@ public class AutoAimTurretController {
 
             autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
             turretAngleTelemetry=autoAim.turretAngle;
-            if (isRed){
-                turret.runTowardsTargetAngle(autoAim.turretAngle);
-            } else {
-                turret.runTowardsTargetAngle(-autoAim.turretAngle);
-            }
+            turret.runTowardsTargetAngle(autoAim.turretAngle);
         }
     }
 

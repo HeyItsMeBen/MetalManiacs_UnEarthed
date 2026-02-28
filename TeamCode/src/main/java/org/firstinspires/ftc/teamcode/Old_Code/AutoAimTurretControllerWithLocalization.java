@@ -271,7 +271,7 @@ public class AutoAimTurretControllerWithLocalization {
         } else if (System.currentTimeMillis()- lastLocalized >500) {
             localized=false;
         }
-        autoAim.calculateEverythingWithoutCamera(RobotPose);
+        autoAim.calculateEverythingWithoutCamera(RobotPose, true);
 
         turretAngleTelemetry=autoAim.turretAngle;
         turret.runTowardsTargetAngle(autoAim.turretAngle);  //doesn't move yet cuz PID terms are 0
@@ -358,7 +358,7 @@ public class AutoAimTurretControllerWithLocalization {
             autoAim.calculateEverything(desiredTag);
             //turret.setMotorPower(autoAim.turn);
         } else {
-            autoAim.calculateEverythingWithoutCamera(RobotPose);
+            autoAim.calculateEverythingWithoutCamera(RobotPose, true);
             turretAngleTelemetry=autoAim.turretAngle;
             turret.runTowardsTargetAngle(autoAim.turretAngle);  //doesn't move yet cuz PID terms are 0
         }

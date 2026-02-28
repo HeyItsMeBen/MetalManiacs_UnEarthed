@@ -74,6 +74,12 @@ public class PathingActions {
                     ballSequence
             );
 
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
             return true;
         }
     }
