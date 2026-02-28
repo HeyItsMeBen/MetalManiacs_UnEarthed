@@ -120,7 +120,7 @@ public class AutoAimTurretController {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(webcam)
                     .addProcessor(aprilTag)
-                    .setCameraResolution(new android.util.Size(320, 240))
+//                    .setCameraResolution(new android.util.Size(320, 240))
                     .build();
 
             cameraAvailable = true;
