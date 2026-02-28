@@ -143,9 +143,9 @@ public class Turret {
     public boolean isInPositionMode() {
         return isInPositionMode;
     }
-    public void runTowardsTargetAngle(double turretAngle){
-        double turretPos=-ticksPerTurretRevolution*turretAngle/(2*Math.PI);
-        turretAngleTelemetry = turretAngle;
+    public void runTowardsTargetAngle(double turretAngleRadians){
+        double turretPos=-ticksPerTurretRevolution*turretAngleRadians/(2*Math.PI);
+        turretAngleTelemetry = turretAngleRadians;
         turretTargetTelemetry=turretPos;
         turretPositionTelemetry=turretMotor.getCurrentPosition();
         double parameter1 =middlePosition-halfRange;
@@ -162,5 +162,8 @@ public class Turret {
         double power = controller.calculate(armPos, ticks);
 
         turretMotor.setPower(power);
+    }
+    public double getTurretAngle(){
+        return turretMotor.getCurrentPosition()*(2*Math.PI)/-ticksPerTurretRevolution;
     }
 }

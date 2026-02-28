@@ -65,7 +65,8 @@ public class AutoAimTurretController {
     public boolean opModeIsActive=true;
     private static final boolean USE_WEBCAM =true;
     boolean isRed=true;
-    double lostTagStartTime;
+    double lostTagStartTime=0;
+    double lastTurretAngle=0;
 
     public AutoAimTurretController(HardwareMap hardwareMap, Pose2d givenRobotPosition, String givenTeamColor) {
 
@@ -294,7 +295,7 @@ public class AutoAimTurretController {
             turret.runTowardsTargetAngle(autoAim.turretAngle);
         }
     }
-    public void update3(boolean manualLeft, boolean manualRight) {  //untested method that only uses pinpoint to aim if the tag has been lost for over (x) seconds
+    public void updateWithTimeout(boolean manualLeft, boolean manualRight) {  //untested method that only uses pinpoint to aim if the tag has been lost for over (x) seconds
 
         //turret control
         if (!shouldAutoAim) {
@@ -313,6 +314,8 @@ public class AutoAimTurretController {
             autoAim.calculateEverything(desiredTag);
             turret.setMotorPower(-autoAim.turn);
             targetLostStartTime=System.currentTimeMillis();
+            wasTargetFoundLastFrame = true;
+            lastTurretAngle=turret.getTurretAngle();
         }
         long timeSinceLost =
             System.currentTimeMillis() - targetLostStartTime;
@@ -325,7 +328,35 @@ public class AutoAimTurretController {
             autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
             turretAngleTelemetry=autoAim.turretAngle;
             turret.runTowardsTargetAngle(autoAim.turretAngle);
+        } else if (!targetFound) {
+            turret.runTowardsTargetAngle(lastTurretAngle+Math.toRadians(autoAim.headingError));
         }
+    }
+    public void updateWithLocalization(boolean manualLeft, boolean manualRight) {  //untested method
+
+        //turret control
+        if (!shouldAutoAim) {
+            manualControl(manualLeft, manualRight);
+            //wasTargetFoundLastFrame = false;
+            return;
+        }
+
+//        Pose2D pos = odo.getPosition();
+//        double heading = pos.getHeading(AngleUnit.RADIANS);
+
+
+        //scans and calculates
+        scanForTags();
+        if (targetFound) {
+            drive = new MecanumDrive(hMap, autoAim.getRelocalizedPose(desiredTag));
+        }
+        drive.updatePoseEstimate();
+        Pose2d RobotPose = drive.localizer.getPose();
+        robPos=RobotPose;
+
+        autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
+        turretAngleTelemetry=autoAim.turretAngle;
+        turret.runTowardsTargetAngle(autoAim.turretAngle);
     }
 
 //    else {
@@ -474,5 +505,12 @@ public class AutoAimTurretController {
     }
     private double toInches(double meters){
         return meters*39.3700787;
+    }
+    public void changeColorTo(String teamColor){
+        if (teamColor.equals("Blue") || teamColor.equals("blue")){
+            isRed=false;
+        } else {
+            isRed=true;
+        }
     }
 }

@@ -122,6 +122,7 @@ public class CompetitionDriveCode extends OpMode {
         // Team color toggle
         if (driver.wasJustPressed(GamepadKeys.Button.START)){
             teamColor = teamColor.equals("Red") ? "Blue" : "Red";
+            autoAimController.changeColorTo(teamColor);
         }
 
 

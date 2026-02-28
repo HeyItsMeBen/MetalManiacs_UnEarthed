@@ -31,12 +31,13 @@ public class AutoAim {
     public double distanceToTagTelemetry=0;
     public double yawTelemetry=0;
 
-    public double xpos;
-    public double ypos;
-    public double posX;
-    public double posY;
-    public double botAngleThing;
-    public double turretAngle;
+    public double xpos=0;
+    public double ypos=0;
+    public double posX=0;
+    public double posY=0;
+    public double botAngleThing=0;
+    public double turretAngle=0;
+    public double headingError=0;
 
     public AutoAim(double cameraAngleOfElevation){  //input the camera's angle when creating the autoAim object. So if it's tilted up by 15 degrees, input Math.toRadians(15).
         cameraPitch=cameraAngleOfElevation;
@@ -45,11 +46,14 @@ public class AutoAim {
     private double toMeters(double inches){
         return inches/39.3700787;
     }
+    private double toInches(double meters){
+        return meters*39.3700787;
+    }
 
     public void calculateEverything(AprilTagDetection desiredTag){
         launchPointToGoalCenterX_Distance_Meters = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
         launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
-        double  headingError    = (desiredTag.ftcPose.bearing+Math.toDegrees(angleDeviation));
+        headingError    = (desiredTag.ftcPose.bearing+Math.toDegrees(angleDeviation));
         turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
         //botAngleThing=Math.PI/2-(Math.toRadians(90-35)+(Math.PI-((Math.PI-yawTelemetry)+angleDeviation)));
         //xpos=launchPointToGoalCenterX_Distance*Math.cos(botAngleThing);
@@ -59,6 +63,7 @@ public class AutoAim {
         ypos=distanceToTagTelemetry*Math.sin(botAngleThing);
     }
 
+
     @Deprecated
     public void relocalize(AprilTagDetection desiredTag){
         launchPointToGoalCenterX_Distance_Meters = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
@@ -66,6 +71,12 @@ public class AutoAim {
         botAngleThing=Math.toRadians(35)-(yawTelemetry-Math.toRadians(desiredTag.ftcPose.bearing));
         xpos=distanceToTagTelemetry*Math.cos(botAngleThing);
         ypos=distanceToTagTelemetry*Math.sin(botAngleThing);
+    }
+    public Pose2d getRelocalizedPose(AprilTagDetection desiredTag){
+        launchPointToGoalCenterX_Distance_Meters = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
+        launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
+        double botTheta=yawTelemetry-Math.toRadians(35);
+        return new Pose2d(55-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta);
     }
     public void calculateEverythingWithoutCamera(Pose2d pos, boolean isRed){
         double heading=pos.heading.toDouble();
