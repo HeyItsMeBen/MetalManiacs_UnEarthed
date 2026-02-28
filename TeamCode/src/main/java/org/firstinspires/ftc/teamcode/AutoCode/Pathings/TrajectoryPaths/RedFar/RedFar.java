@@ -20,6 +20,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
@@ -100,7 +101,10 @@ public class RedFar extends LinearOpMode {
                 )
         );
 
-        autoAimController.update2(false, false);
+        double autoAimStartTime=System.currentTimeMillis();
+        while (System.currentTimeMillis()<autoAimStartTime+3000){
+            autoAimController.update2(false, false);
+        }
 
         sleep(5000);
 
