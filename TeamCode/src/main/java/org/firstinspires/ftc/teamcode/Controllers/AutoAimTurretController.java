@@ -304,7 +304,7 @@ public class AutoAimTurretController {
             Pose2d RobotPose = providedPose;
             robPos = providedPose;
 
-            autoAim.calculateEverythingWithoutCamera(RobotPose);
+            autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
             turretAngleTelemetry=autoAim.turretAngle;
             if (isRed){
                 turret.runTowardsTargetAngle(autoAim.turretAngle);
