@@ -83,6 +83,7 @@ public class FlywheelController {
     public void update(boolean triggerPressed,
                        double distanceToTag,
                        boolean tagVisible) {
+
         flywheels.setFlywheelVelocity(targetSpeed);
 
         if (triggerPressed) {
@@ -154,6 +155,128 @@ public class FlywheelController {
 
                         ballsFed++;
                         shouldRumble = true;
+                        launchTimer.reset();
+
+                        if (ballsFed < 3) {
+                            launchState =
+                                    LaunchState.WAITING_BETWEEN_BALLS;
+                        } else {
+                            launchState = LaunchState.IDLE;
+                        }
+
+                    } else if (launchTimer.milliseconds() > 1800) {
+
+                        transferDrum.runTransferDrum(0);
+                        intake.setIntakePower(0);
+                        launchState = LaunchState.IDLE;
+                    }
+                    break;
+
+                case WAITING_BETWEEN_BALLS:
+                    transferKick.setTransferKickDown();
+                    if (launchTimer.milliseconds() > 1000) {
+                        outtakeSpeedBeforeDrop =
+                                flywheels.getFlywheelVelocity();
+
+                        maintainOuttakeSpeed =
+                                flywheels.getFlywheelVelocity();
+
+                        launchState =
+                                LaunchState.FEEDING_BALL;
+
+                        launchTimer.reset();
+                    }
+                    break;
+            }
+
+        } else {
+            targetSpeed = maintainOuttakeSpeed;
+
+            if (launchState != LaunchState.IDLE) {
+
+                transferDrum.runTransferDrum(0);
+                intake.setIntakePower(0);
+
+                launchState = LaunchState.IDLE;
+            }
+
+        }
+    }
+
+    public void updateWithServoKickForAuto(boolean triggerPressed,
+                       double distanceToTag,
+                       boolean tagVisible) {
+
+        if (triggerPressed) {
+
+            switch (launchState) {
+
+                case IDLE:
+
+                    if (tagVisible) {
+                        targetSpeed = flywheels.getVelocityFromDistance(distanceToTag);
+                        flywheelStartTime = System.currentTimeMillis();
+                        flywheelStartPower = flywheels.getFlywheelVelocity();
+                    } else {
+                        targetSpeed = maintainOuttakeSpeed;
+                        flywheelStartTime = System.currentTimeMillis();
+                        flywheelStartPower = flywheels.getFlywheelVelocity();
+                    }
+
+                    powerUpTimer.reset();
+                    launchTimer.reset();
+                    launchState = LaunchState.SPINNING_UP;
+                    ballsFed = 0;
+                    break;
+
+                case SPINNING_UP:
+
+                    rampUp();
+                    if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9
+                            || powerUpTimer.seconds() >= rampUpSpeed + 1.5) {
+
+                        launchTimer.reset();
+                        launchState = LaunchState.WAITING_AFTER_SPINUP;
+                    }
+                    break;
+
+                case WAITING_AFTER_SPINUP:
+
+                    if (launchTimer.milliseconds() > 500) {
+
+                        outtakeSpeedBeforeDrop =
+                                flywheels.getFlywheelVelocity();
+
+                        maintainOuttakeSpeed =
+                                flywheels.getFlywheelVelocity();
+
+                        launchTimer.reset();
+                        launchState =
+                                LaunchState.FEEDING_BALL;
+                    }
+                    break;
+
+                case FEEDING_BALL:
+
+                    if (ballsFed > 0) {
+                        intake.setIntakePower(1);
+                    }
+
+                    //Use servo kick for last artifact
+                    if (ballsFed >= 2) {
+                        transferKick.setTransferKickUp();
+                        intake.setIntakePower(0);
+                    }
+
+                    //transferDrum.runTransferDrum(1);
+
+                    if (flywheels.getFlywheelVelocity()
+                            < outtakeSpeedBeforeDrop - 100) {
+
+                        transferDrum.runTransferDrum(0);
+                        intake.setIntakePower(0);
+
+                        ballsFed++;
                         launchTimer.reset();
 
                         if (ballsFed < 3) {

@@ -101,11 +101,11 @@ public class PathingActions {
             boolean tagVisible = targetFoundSupplier.getAsBoolean();
 
             if (!initialized) {
-                flywheel.update(true, distance, tagVisible); // trigger once
+                flywheel.updateWithServoKickForAuto(true, distance, tagVisible); // trigger once
                 LoggedDistance = distance;
                 initialized = true;
             } else {
-                flywheel.update(true, LoggedDistance, true); // continue running
+                flywheel.updateWithServoKickForAuto(true, LoggedDistance, true); // continue running
             }
 
             return (flywheel.getState() == FlywheelController.LaunchState.IDLE);
