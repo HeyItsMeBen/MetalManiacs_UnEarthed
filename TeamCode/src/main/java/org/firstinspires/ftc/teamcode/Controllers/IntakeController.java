@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 public class IntakeController {
 
-    private float targetSpeed = 0.6f; // determines how fast the intake should run
+    private float targetSpeed = 0.9f; // determines how fast the intake should run
     private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
     private Intake intake;
     private Transfer transferDrum;
@@ -80,7 +80,7 @@ public class IntakeController {
         // Jam detection / auto slow-down
         if (intakePower >= targetSpeed &&
             intakeTimer.milliseconds() > 5000 &&
-            intake.getIntakeMotorRPM() < 500) {
+            intake.getIntakeMotorRPM() < 750) {
 
             intakePower = 0.25f;
             intakeStartTime=System.currentTimeMillis();

@@ -47,7 +47,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 import java.util.List;
 
-@TeleOp(name = "[Use Me!] Competition DriveCode v4.0.0", group = "TeleOP")
+@TeleOp(name = "[Competition] DriveCode v4.0.0", group = "TeleOP")
 public class CompetitionDriveCode extends OpMode {
 
     public GamepadEx driver;
