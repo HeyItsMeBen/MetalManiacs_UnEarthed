@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -37,6 +38,7 @@ public class AngleToDistance_Regression extends LinearOpMode {
     Transfer belt;
     AutoAim autoAim;
     Intake intake;
+    Turret turret;
 
     public static float targetVelocity=500;
     public static double hoodAngle=50;
@@ -70,6 +72,7 @@ public class AngleToDistance_Regression extends LinearOpMode {
         belt = new Transfer(hardwareMap);
         intake = new Intake(hardwareMap);
         autoAim = new AutoAim(Math.toRadians(15));
+        turret=new Turret(hardwareMap);
 
         //April tag stuff
         if (USE_WEBCAM) {
@@ -92,6 +95,7 @@ public class AngleToDistance_Regression extends LinearOpMode {
                 telemetry.addData("", "");
                 telemetry.addData("Current Hood Position", hood.getServoPosition());
                 telemetry.addData("Current Hood Angle", hood.getAngle());
+                telemetry.addData("Auto Aim.turn", autoAim.turn);
                 telemetry.update();
             }
 
