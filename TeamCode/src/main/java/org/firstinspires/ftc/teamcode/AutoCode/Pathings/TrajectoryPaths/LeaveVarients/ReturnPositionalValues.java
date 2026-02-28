@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.DriveCode.PassOnFromAutoValues;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
 
 @Config
-@Autonomous(name = "Return Current Positional Values", group = "z-Autonomous - Any")
+@Autonomous(name = "Reset Pose to Center", group = "z-Autonomous - Any")
 public class ReturnPositionalValues extends LinearOpMode {
 
     Lights lights;
@@ -28,7 +28,7 @@ public class ReturnPositionalValues extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(12, -60, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         lights = new Lights(hardwareMap);

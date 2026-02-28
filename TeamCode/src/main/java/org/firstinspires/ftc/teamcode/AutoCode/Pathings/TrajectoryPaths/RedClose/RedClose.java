@@ -168,7 +168,7 @@ public class RedClose extends LinearOpMode {
         while (System.currentTimeMillis()<autoAimFinishTime+1000){
             autoAimController.update2(false, false);
         }
-        
+
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
