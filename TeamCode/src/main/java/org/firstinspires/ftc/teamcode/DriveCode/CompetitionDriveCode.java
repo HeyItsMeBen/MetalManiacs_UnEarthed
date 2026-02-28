@@ -224,6 +224,9 @@ public class CompetitionDriveCode extends OpMode {
 
         telemetry.addData("Goal distance (inches)",
                 autoAimController.getDistanceToGoalInches());
+        telemetry.addLine("(robot position) X: "+
+                autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
+
 
 //        telemetry.addData("Target turret angle (degrees)",
 //                Math.toDegrees(autoAimController.turretAngleTelemetry));
