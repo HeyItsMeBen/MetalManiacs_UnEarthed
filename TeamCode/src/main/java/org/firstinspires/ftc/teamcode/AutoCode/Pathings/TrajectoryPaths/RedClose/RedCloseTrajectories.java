@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 public class RedCloseTrajectories {
@@ -15,7 +16,7 @@ public class RedCloseTrajectories {
 
     static double defaultAngVelocity = Math.PI;
 
-    static double patternCollectionVelocity = 20.0;
+    static double patternCollectionVelocity = 30.0;
 
     static double patternCollectionAngVelocity = Math.PI;
 
@@ -92,8 +93,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(62,-9, Math.toRadians(40)), Math.toRadians(0), patternCollectionConstraint)
-
+                .splineToSplineHeading(new Pose2d(64,-8, Math.toRadians(40)), Math.toRadians(0), patternCollectionConstraint)
                 .build();
     }
 

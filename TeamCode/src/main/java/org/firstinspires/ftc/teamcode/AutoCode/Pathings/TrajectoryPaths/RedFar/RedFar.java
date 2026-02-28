@@ -90,23 +90,18 @@ public class RedFar extends LinearOpMode {
                         new ParallelAction(
                                 initialMoveToPosition(drive, startPose),
                                 new InstantAction(() -> intakeController.toggleIntake())
-                                //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
-                                //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
-                                //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                                 //new InstantAction(() -> flywheelController.rampUp()),
                         )
-                        //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
-                        //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
         double autoAimStartTime=System.currentTimeMillis();
-        while (System.currentTimeMillis()<autoAimStartTime+3000){
+        while (System.currentTimeMillis()<autoAimStartTime+1000){
             autoAimController.update2(false, false);
         }
-
-        sleep(5000);
+        autoAimController.setTurretPower(0);
+        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
 
         // Repeat as many times as necessary
 
@@ -114,7 +109,7 @@ public class RedFar extends LinearOpMode {
                 new SequentialAction(
                         new InstantAction(() -> autoAimController.closeWebcam()),
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.update()),
+                                //new InstantAction(() -> intakeController.update()),
                                 moveToScanPosition(drive, drive.localizer.getPose())
                         )
                 )
@@ -138,7 +133,6 @@ public class RedFar extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.update()),
                                 new InstantAction(() -> autoAimController.closeWebcam()),
                                 moveToScanPosition(drive, drive.localizer.getPose())
                         )
@@ -160,10 +154,17 @@ public class RedFar extends LinearOpMode {
 
         // Repeat as many times as necessary
 
+        //Issues
+        while (!turret.isAtTargetPosition(0)){
+            turret.rotateTowardsTarget(0);
+        }
+        //Issues
+
+        //autoAimController.turnToCenter();
+
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> autoAimController.turnToCenter()),
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())
                         )

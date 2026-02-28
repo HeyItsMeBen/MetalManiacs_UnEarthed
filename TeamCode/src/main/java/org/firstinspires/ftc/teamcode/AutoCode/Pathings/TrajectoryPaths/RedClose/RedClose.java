@@ -54,7 +54,7 @@ public class RedClose extends LinearOpMode {
     IntakeController intakeController;
     FlywheelController flywheelController;
     LightsController lightsController;
-    AutoAimTurretController autoAimControllerAuto;
+    AutoAimTurretController autoAimController;
 
     public String ballSequence = "XXX";
 
@@ -62,7 +62,7 @@ public class RedClose extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(50, 50, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(0));
         //Pose2d startPose = new Pose2d(52, 52, Math.toRadians(40));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
@@ -79,7 +79,7 @@ public class RedClose extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        autoAimControllerAuto = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
+        autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;
@@ -91,13 +91,18 @@ public class RedClose extends LinearOpMode {
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
                                 //new InstantAction(() -> flywheelController.rampUp()),
-                                //new AimTurretAction(drive.localizer.getPose(), autoAimControllerAuto, lightsController, intakeController, "Red"),
                                 initialMoveToPosition(drive, startPose)
                         )
-                        //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
+
+        double autoAimStartTime=System.currentTimeMillis();
+        while (System.currentTimeMillis()<autoAimStartTime+1000){
+            autoAimController.update2(false, false);
+        }
+        autoAimController.setTurretPower(0);
+        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -131,7 +136,8 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        openChannel(drive, drive.localizer.getPose())
+                        openChannel(drive, drive.localizer.getPose()),
+                        new PathingActions.WaitAction(1000)
                 )
         );
 
@@ -161,7 +167,6 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> autoAimControllerAuto.turnToCenter()),
                                 new InstantAction(() -> intakeController.update()),
                                 park(drive, drive.localizer.getPose())
                         )

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
+@Disabled
 @TeleOp (name="Turn To Turret Position", group="a")
 public class TurnToTurretPosition extends LinearOpMode {
 

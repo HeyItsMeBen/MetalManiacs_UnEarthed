@@ -38,7 +38,7 @@ public class PathingActions {
         public String ballSequence = "XXX";
 
 
-        public AimTurretAction( Pose2d pose,
+        public AimTurretAction(
                 AutoAimTurretController autoAimTurretController,
                 LightsController lightsController,
                 IntakeController intakeController,
@@ -53,20 +53,13 @@ public class PathingActions {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
 
-            if (!initialized) {
-                startTime = Actions.now();
-                initialized = true;
+            if (startTime < 0) {
+                startTime = System.currentTimeMillis();
             }
 
-            double elapsed = Actions.now() - startTime;
+            aprilTagTurretAim.update2(false, false);
 
-            if (!aprilTagTurretAim.isTargetFound() || elapsed < 4) {
-                aprilTagTurretAim.update2(false, false);
-                return false;
-
-            } else {
-
-                //aprilTagTurretAim.stopTurret();
+            if (System.currentTimeMillis() > startTime + 2000) {
 
                 aprilTagTurretAim.setTurretPower(0);
 
@@ -76,8 +69,12 @@ public class PathingActions {
                         teamColor,
                         ballSequence
                 );
-                return true;
+
+                return true;  // finished
             }
+
+            return false;  // keep running
+
         }
     }
 
@@ -178,7 +175,25 @@ public class PathingActions {
 
         private int getVisionResult() {
             // Replace with your actual Limelight return
-            return 2;
+            return 3;
+        }
+    }
+
+    public static class WaitAction implements Action {
+
+        private final long durationMs;
+        private long startTime = -1;
+
+        public WaitAction(long durationMs) {
+            this.durationMs = durationMs;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (startTime < 0) {
+                startTime = System.currentTimeMillis();
+            }
+            return System.currentTimeMillis() - startTime >= durationMs;
         }
     }
 
