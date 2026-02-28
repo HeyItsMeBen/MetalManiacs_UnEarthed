@@ -155,12 +155,11 @@ public class RedFar extends LinearOpMode {
         // Repeat as many times as necessary
 
         //Issues
-        while (!turret.isAtTargetPosition(0)){
-            turret.rotateTowardsTarget(0);
+        double autoAimFinishTime=System.currentTimeMillis();
+        while (System.currentTimeMillis()<autoAimFinishTime+1000){
+            autoAimController.update2(false, false);
         }
         //Issues
-
-        //autoAimController.turnToCenter();
 
         Actions.runBlocking(
                 new SequentialAction(
