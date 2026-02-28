@@ -76,7 +76,7 @@ public class FireMaxPower extends LinearOpMode {
                 flywheel.setPower(0);
             }
 
-            intake.setPower(0.3);
+            intake.setPower(1);
             transferWheels.setPower(1);
 
             if (gamepad.wasJustPressed(GamepadKeys.Button.Y)) {
@@ -92,7 +92,7 @@ public class FireMaxPower extends LinearOpMode {
                 degrees+=5;
             }
 
-            hood.setAngle(Math.toRadians(50));
+            hood.setAngle(Math.toRadians(degrees));
 
             // --- Driver Station telemetry ---
             telemetry.addData("Current Power", flywheel.getPower());
