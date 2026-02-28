@@ -176,6 +176,12 @@ public class CompetitionDriveCode extends OpMode {
                 driver.getButton(GamepadKeys.Button.DPAD_RIGHT)
         );
 
+        if (driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1) {
+            intakeController.transferKickUp();
+        }else{
+            intakeController.transferKickDown();
+        }
+
 
         // Intake
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -224,9 +230,9 @@ public class CompetitionDriveCode extends OpMode {
 
         telemetry.addData("Goal distance (inches)",
                 autoAimController.getDistanceToGoalInches());
-        telemetry.addLine("(robot position) X: "+
-                autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
+        //telemetry.addLine("(robot position) X: "+autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
 
+        telemetry.addData("Target speed", flywheelController.getTargetSpeed());
 
 //        telemetry.addData("Target turret angle (degrees)",
 //                Math.toDegrees(autoAimController.turretAngleTelemetry));

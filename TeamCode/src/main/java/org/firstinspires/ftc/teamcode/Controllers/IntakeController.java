@@ -16,28 +16,17 @@ public class IntakeController {
     private float intakePower = 0;
     private float transferPower = 0;
 
-    private boolean transferJamDetected = false;
-    private boolean intakeJamDetected = false;
-
     private double drumRPM = 0; // stores current transfer drum rotation speed (RPM)
-    private double drumJamRPMThreshold = 100; // RPM below which the drum is considered jammed
-
-    private double intakeRPM = 0; // stores current intake rotation speed (RPM)
-    private double intakeJamRPMThreshold = 625; // RPM below which the intake is considered jammed
-
-    private ElapsedTime intakeTimer = new ElapsedTime();
-    private ElapsedTime drumJamTimer = new ElapsedTime();
-    private ElapsedTime transferStartTimer = new ElapsedTime();
-    private ElapsedTime intakeStartTimer = new ElapsedTime();
-    private ElapsedTime ballsFedDebounceTimer = new ElapsedTime();
-    private ElapsedTime ballsFedStopTimer = new ElapsedTime();
-    private boolean ballsFedStopping = false;
-    private static final double JAM_WARMUP_MS = 1500; // ms to wait after start before checking for jams
-    private static final double BALLS_FED_DEBOUNCE_MS = 500; // min ms between ballsFed increments
-    private static final double BALLS_FED_STOP_DELAY_MS = 1000; // ms to run after 3 balls fed before stopping
-    double intakeStartTime=0;
-    double intakeStartPower=0;
     double currentTime = 0;
+    public double intakeRPM;
+
+    // Jam detection
+    private static final double INTAKE_JAM_RPM_THRESHOLD = 200; // RPM below which intake is considered jammed
+    private static final double JAM_WARMUP_MS = 1000;           // wait 1s after start before checking for jams
+    private static final double JAM_SHUTOFF_MS = 1000;          // hold jam for 1s before shutting off
+    private boolean intakeJamDetected = false;
+    private final ElapsedTime intakeStartTimer = new ElapsedTime();
+    private final ElapsedTime intakeJamTimer = new ElapsedTime();
 
     int ballsFed = 0;
 
@@ -66,12 +55,8 @@ public class IntakeController {
             transferPower = 0;
         } else {
             intakePower = targetSpeed;
-            transferPower = targetSpeed*0.75f;
-            transferStartTimer.reset();
-            intakeStartTimer.reset();
-            transferJamDetected = false;
             intakeJamDetected = false;
-            ballsFedStopping = false;
+            intakeStartTimer.reset();
         }
     }
 
@@ -96,51 +81,24 @@ public class IntakeController {
         drumRPM = transferDrum.getTransferDrumRPM();
         intakeRPM = intake.getIntakeMotorRPM();
 
-        // Transfer drum jam detection (independent)
-        // Only check after warmup period to allow motor to spin up
-//        if (transferPower > 0 && transferStartTimer.milliseconds() > JAM_WARMUP_MS && drumRPM < drumJamRPMThreshold) {
-//            if (!transferJamDetected) {
-//                transferJamDetected = true;
-//                drumJamTimer.reset(); // start 1-second countdown
-//            } else if (drumJamTimer.milliseconds() >= 1500) {
-//                transferPower = 0;
-//            }
-//        } else if (transferPower > 0) {
-//            transferJamDetected = false; // clear flag if jam resolves
-//        }
-
-        // Intake jam detection (independent)
-        // Only check after warmup period to allow motor to spin up
-        if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS && intakeRPM < intakeJamRPMThreshold) {
-            if (!intakeJamDetected) {
-                intakeJamDetected = true;
-                if (ballsFedDebounceTimer.milliseconds() >= BALLS_FED_DEBOUNCE_MS) {
-                    ballsFed += 1;
-                    ballsFedDebounceTimer.reset();
+        // Intake jam detection
+        // Only check after warmup period to allow the motor to spin up
+        if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS) {
+            if (intakeRPM < INTAKE_JAM_RPM_THRESHOLD) {
+                if (!intakeJamDetected) {
+                    // Jam just started — begin the shutoff countdown
+                    intakeJamDetected = true;
+                    intakeJamTimer.reset();
+                } else if (intakeJamTimer.milliseconds() >= JAM_SHUTOFF_MS) {
+                    // Jam has persisted for 1 second — shut off the intake
+                    intakePower = 0;
+                    transferPower = 0;
                 }
-                intakeTimer.reset(); // start 1-second countdown
-            } else if (intakeTimer.milliseconds() >= 1000) {
-                intakePower = 0;
+            } else {
+                // RPM recovered — clear the jam flag
+                intakeJamDetected = false;
             }
-        } else if (intakePower > 0) {
-            intakeJamDetected = false; // clear flag if jam resolves
         }
-
-        if (ballsFed == 1){
-            transferPower = 0;
-        }
-
-        if (ballsFed >= 3 && !ballsFedStopping) {
-            ballsFedStopping = true;
-            ballsFedStopTimer.reset(); // start 1-second delay before stopping
-        }
-        if (ballsFedStopping && ballsFedStopTimer.milliseconds() >= BALLS_FED_STOP_DELAY_MS) {
-            intakePower = 0;
-            transferPower = 0;
-            ballsFed = 0;
-            ballsFedStopping = false;
-        }
-
 
         intake.setIntakePower(intakePower);
         transferDrum.runTransferDrum(transferPower);

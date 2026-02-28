@@ -13,7 +13,7 @@ public class Transfer {
 
     final double tickPerRevolution = 28 * 5.2; // ticks per revolution of the transfer drum motor
 
-    public float kickServoUp = 0.42f; // New values 2/26
+    public float kickServoUp = 0.38f; // New values 2/26
     public float kickServoDown = 0.85f; // New values 2/25
 
     public Transfer(HardwareMap hMap) {
