@@ -46,7 +46,7 @@ public class AutoAimTurretController {
     private long targetLostStartTime = 0;
     private boolean wasTargetFoundLastFrame = false;
 
-    private static final long TARGET_LOST_DELAY_MS = 1000;
+    private static final long TARGET_LOST_DELAY_MS = 3000;
 
     private int DESIRED_TAG_ID = 24;
 
@@ -65,6 +65,7 @@ public class AutoAimTurretController {
     public boolean opModeIsActive=true;
     private static final boolean USE_WEBCAM =true;
     boolean isRed=true;
+    double lostTagStartTime;
 
     public AutoAimTurretController(HardwareMap hardwareMap, Pose2d givenRobotPosition, String givenTeamColor) {
 
@@ -212,6 +213,7 @@ public class AutoAimTurretController {
         }
     }
 
+    @Deprecated
     public void update(boolean manualLeft, boolean manualRight) {
 
         scanForTags();
@@ -262,12 +264,12 @@ public class AutoAimTurretController {
             }
         }
     }
-    public void update2(boolean manualLeft, boolean manualRight) {
+    public void update2(boolean manualLeft, boolean manualRight) {  //the actual update method that we currently use (Regionals)
 
         //turret control
         if (!shouldAutoAim) {
             manualControl(manualLeft, manualRight);
-            wasTargetFoundLastFrame = false;
+            //wasTargetFoundLastFrame = false;
             return;
         }
 
@@ -292,6 +294,75 @@ public class AutoAimTurretController {
             turret.runTowardsTargetAngle(autoAim.turretAngle);
         }
     }
+    public void update3(boolean manualLeft, boolean manualRight) {  //untested method that only uses pinpoint to aim if the tag has been lost for over (x) seconds
+
+        //turret control
+        if (!shouldAutoAim) {
+            manualControl(manualLeft, manualRight);
+            //wasTargetFoundLastFrame = false;
+            return;
+        }
+
+//        Pose2D pos = odo.getPosition();
+//        double heading = pos.getHeading(AngleUnit.RADIANS);
+
+
+        //scans and calculates
+        scanForTags();
+        if (targetFound) {
+            autoAim.calculateEverything(desiredTag);
+            turret.setMotorPower(-autoAim.turn);
+            targetLostStartTime=System.currentTimeMillis();
+        }
+        long timeSinceLost =
+            System.currentTimeMillis() - targetLostStartTime;
+        if (timeSinceLost > TARGET_LOST_DELAY_MS) {
+            drive.updatePoseEstimate();
+            Pose2d RobotPose = drive.localizer.getPose();
+            //Pose2d RobotPose = new Pose2d(new Vector2d(12, -45), Math.toRadians(0));
+            robPos=RobotPose;
+
+            autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
+            turretAngleTelemetry=autoAim.turretAngle;
+            turret.runTowardsTargetAngle(autoAim.turretAngle);
+        }
+    }
+
+//    else {
+//        if (wasTargetFoundLastFrame) {
+//            targetLostStartTime = System.currentTimeMillis();
+//            wasTargetFoundLastFrame = false;
+//        }
+//
+//        long timeSinceLost =
+//                System.currentTimeMillis() - targetLostStartTime;
+//
+//        if (timeSinceLost >= TARGET_LOST_DELAY_MS) {
+//
+//            if (!turret.isAtTargetPosition(0)) {
+//                turret.rotateTowardsTarget(0);
+//            } else {
+//                drive.updatePoseEstimate();
+//                Pose2d RobotPose = drive.localizer.getPose();
+//                //Pose2d RobotPose = new Pose2d(new Vector2d(12, -45), Math.toRadians(0));
+//                robPos=RobotPose;
+//
+//                autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
+//                turretAngleTelemetry=autoAim.turretAngle;
+//                turret.runTowardsTargetAngle(autoAim.turretAngle);
+////                    turretPower = 0;
+//////                    turret.setMotorPower(0);
+////                    turretStartTime=System.currentTimeMillis();
+////                    turretStartPower=turret.getTurretPower();
+//            }
+//
+//        } else {
+//            turretPower = 0;
+////                turret.setMotorPower(0);
+//            turretStartTime=System.currentTimeMillis();
+//            turretStartPower=turret.getTurretPower();
+//        }
+//    }
 
     public void updateTurnGivenPosition(Pose2d providedPose) {
 
