@@ -26,6 +26,9 @@ public class Limelight3Way extends LinearOpMode {
     public int LeftDetections = -1;
     public int RightDetections = -1;
     public int MidDetections = -1;
+    public int LimelightZone = 0;
+
+    public String GreatestDetection = "left";
 
 
     @Override
@@ -97,12 +100,16 @@ public class Limelight3Way extends LinearOpMode {
             telemetry.addData("Right", " "+RightDetections);
 
             if(RightDetections > MidDetections && RightDetections > LeftDetections){
-                telemetry.addData("Greatest", "Right");
-            } else if (MidDetections > LeftDetections) {
-                telemetry.addData("Greatest:", "Center");
-            }else{
-                telemetry.addData("Greatest", "Left");
+                GreatestDetection = "right";
+                LimelightZone = 2;
+            } else if (MidDetections > LeftDetections && MidDetections > RightDetections) {
+                GreatestDetection = "center";
+                LimelightZone = 1;
+            }else if(LeftDetections > RightDetections && LeftDetections > MidDetections){
+                GreatestDetection = "left";
+                LimelightZone = 0;
             }
+            telemetry.addData("Greatest", GreatestDetection);
             telemetry.update();
         }
         limelight.stop();
