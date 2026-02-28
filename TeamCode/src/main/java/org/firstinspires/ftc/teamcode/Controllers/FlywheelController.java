@@ -139,6 +139,10 @@ public class FlywheelController {
                         intake.setIntakePower(1);
                     }
 
+                    if (ballsFed >= 2){
+                        transferKick.setTransferKickUp();
+                    }
+
                     transferDrum.runTransferDrum(1);
 
                     if (flywheels.getFlywheelVelocity()
@@ -167,7 +171,7 @@ public class FlywheelController {
                     break;
 
                 case WAITING_BETWEEN_BALLS:
-
+                    transferKick.setTransferKickDown();
                     if (launchTimer.milliseconds() > 1000) {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
