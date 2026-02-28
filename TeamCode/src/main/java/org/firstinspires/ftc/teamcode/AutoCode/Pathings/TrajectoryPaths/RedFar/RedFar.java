@@ -86,10 +86,37 @@ public class RedFar extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 initialMoveToPosition(drive, startPose),
-                                new InstantAction(() -> intakeController.toggleIntake())
+                                new InstantAction(() -> intakeController.toggleIntake()),
+                                new InstantAction(() -> turret.rotateTowardsTarget(-150))
+                                //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                                 //new InstantAction(() -> flywheelController.rampUp()),
                         ),
-                        new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
+                        new InstantAction(drive::updatePoseEstimate)
+                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                )
+        );
+
+        // Repeat as many times as necessary
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        new ParallelAction(
+                                new InstantAction(() -> intakeController.update()),
+                                new InstantAction(() -> autoAimController.closeWebcam()),
+                                moveToScanPosition(drive, drive.localizer.getPose())
+                        )
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        new LimelightScanAction(drive, true)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        firingPosition(drive, drive.localizer.getPose())
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );

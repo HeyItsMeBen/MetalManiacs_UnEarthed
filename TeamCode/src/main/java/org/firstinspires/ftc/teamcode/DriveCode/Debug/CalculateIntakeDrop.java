@@ -26,8 +26,6 @@ public class CalculateIntakeDrop extends LinearOpMode {
         // Hardware init
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         intake.setDirection(DcMotorEx.Direction.FORWARD);
-        intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         transferWheels = hardwareMap.get(DcMotor.class, "transferDrum");
         transferWheels.setDirection(DcMotorSimple.Direction.FORWARD);

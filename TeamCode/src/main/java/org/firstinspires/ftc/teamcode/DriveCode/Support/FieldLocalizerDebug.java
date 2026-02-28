@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.Drawing;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.DriveCode.PassOnFromAutoValues;
 
 @Config
 @TeleOp(name = "Field Localizer Debug", group = "Localizer")
@@ -42,8 +43,8 @@ public class FieldLocalizerDebug extends LinearOpMode {
         Pose2d resetPose = new Pose2d(0, 0, Math.toRadians(0)); // x, y, heading in radians
         
         MecanumDrive drive = new MecanumDrive(hardwareMap, resetPose);
-        
-        Pose2d initialEstimatedCurrentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
+
+        Pose2d initialEstimatedCurrentPose = PassOnFromAutoValues.currentPose;
         
         waitForStart();
 

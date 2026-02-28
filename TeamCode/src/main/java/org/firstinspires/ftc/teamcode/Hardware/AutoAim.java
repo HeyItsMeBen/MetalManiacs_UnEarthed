@@ -67,10 +67,14 @@ public class AutoAim {
         xpos=distanceToTagTelemetry*Math.cos(botAngleThing);
         ypos=distanceToTagTelemetry*Math.sin(botAngleThing);
     }
-    public void calculateEverythingWithoutCamera(Pose2d pos){
+    public void calculateEverythingWithoutCamera(Pose2d pos, boolean isRed){
         double heading=pos.heading.toDouble();
-        posX=toMeters(55-pos.position.x);
-        posY=toMeters(59-pos.position.y);
+        if (isRed) {
+            posX = toMeters(55 - pos.position.x);
+        } else {
+            posX = toMeters(-55 - pos.position.x);
+        }
+        posY = toMeters(59 - pos.position.y);
         launchPointToGoalCenterX_Distance_Meters = Math.sqrt(Math.pow((posX), 2) + Math.pow((posY), 2))+robotCenterToArmBase_Distance;
         launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
         turretAngle = Math.atan2(posY, posX)-heading;

@@ -62,7 +62,8 @@ public class RedClose extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(40));
+        Pose2d startPose = new Pose2d(50, 50, Math.toRadians(0));
+        //Pose2d startPose = new Pose2d(52, 52, Math.toRadians(40));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -90,6 +91,7 @@ public class RedClose extends LinearOpMode {
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
                                 //new InstantAction(() -> flywheelController.rampUp()),
+                                new AimTurretAction(autoAimController, lightsController, intakeController, "Red"),
                                 initialMoveToPosition(drive, startPose)
                         )
                         //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")

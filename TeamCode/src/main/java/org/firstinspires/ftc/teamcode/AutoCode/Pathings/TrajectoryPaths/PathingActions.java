@@ -175,7 +175,7 @@ public class PathingActions {
 
         private int getVisionResult() {
             // Replace with your actual Limelight return
-            return 1;
+            return 2;
         }
     }
 

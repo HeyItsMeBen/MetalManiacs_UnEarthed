@@ -71,9 +71,11 @@ public class AutoAimTurretController {
         if (givenTeamColor.equals("Blue") || givenTeamColor.equals("blue")){
             isRed=false;
             DESIRED_TAG_ID=20;
+            goalPosition = new Vector2d(-52, 52); // x, y, heading in radians
         } else {
             isRed=true;
             DESIRED_TAG_ID=24;
+            goalPosition = new Vector2d(52, 52); // x, y, heading in radians
         }
 
         turret = new Turret(hardwareMap);
@@ -96,8 +98,6 @@ public class AutoAimTurretController {
         drive = new MecanumDrive(hMap, new Pose2d(0,0,Math.toRadians(90)));
 
         initialEstimatedCurrentPose = new Pose2d(drive.localizer.getPose().position.x, drive.localizer.getPose().position.y, drive.localizer.getPose().heading.toDouble()); // x, y, heading in double radians
-
-        goalPosition = new Vector2d(52, 52); // x, y, heading in radians
 
         //April tag stuff
         if (USE_WEBCAM) {
@@ -281,9 +281,28 @@ public class AutoAimTurretController {
             autoAim.calculateEverything(desiredTag);
             turret.setMotorPower(-autoAim.turn);
         } else {
+
             drive.updatePoseEstimate();
             Pose2d RobotPose = drive.localizer.getPose();
+            //Pose2d RobotPose = new Pose2d(new Vector2d(12, -45), Math.toRadians(0));
             robPos=RobotPose;
+
+            autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
+            turretAngleTelemetry=autoAim.turretAngle;
+            turret.runTowardsTargetAngle(autoAim.turretAngle);
+        }
+    }
+
+    public void updateTurnGivenPosition(Pose2d providedPose) {
+
+        scanForTags();
+        if (targetFound) {
+            autoAim.calculateEverything(desiredTag);
+            turret.setMotorPower(-autoAim.turn);
+        } else {
+
+            Pose2d RobotPose = providedPose;
+            robPos = providedPose;
 
             autoAim.calculateEverythingWithoutCamera(RobotPose);
             turretAngleTelemetry=autoAim.turretAngle;
