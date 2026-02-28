@@ -140,9 +140,9 @@ public class FlywheelController {
                         intake.setIntakePower(1);
                     }
 
-                    if (ballsFed >= 2){
-                        transferKick.setTransferKickUp();
-                    }
+//                    if (ballsFed >= 2){
+//                        transferKick.setTransferKickUp();
+//                    }
 
                     transferDrum.runTransferDrum(1);
 

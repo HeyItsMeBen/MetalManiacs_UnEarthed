@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 public class IntakeController {
 
-    private float targetSpeed = 0.9f; // determines how fast the intake should run
+    private float targetSpeed = .7f; // determines how fast the intake should run
     private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
     private Intake intake;
     private Transfer transferDrum;
@@ -16,10 +16,30 @@ public class IntakeController {
     private float intakePower = 0;
     private float transferPower = 0;
 
+    private boolean transferJamDetected = false;
+    private boolean intakeJamDetected = false;
+
+    private double drumRPM = 0; // stores current transfer drum rotation speed (RPM)
+    private double drumJamRPMThreshold = 100; // RPM below which the drum is considered jammed
+
+    private double intakeRPM = 0; // stores current intake rotation speed (RPM)
+    private double intakeJamRPMThreshold = 625; // RPM below which the intake is considered jammed
+
     private ElapsedTime intakeTimer = new ElapsedTime();
+    private ElapsedTime drumJamTimer = new ElapsedTime();
+    private ElapsedTime transferStartTimer = new ElapsedTime();
+    private ElapsedTime intakeStartTimer = new ElapsedTime();
+    private ElapsedTime ballsFedDebounceTimer = new ElapsedTime();
+    private ElapsedTime ballsFedStopTimer = new ElapsedTime();
+    private boolean ballsFedStopping = false;
+    private static final double JAM_WARMUP_MS = 1500; // ms to wait after start before checking for jams
+    private static final double BALLS_FED_DEBOUNCE_MS = 500; // min ms between ballsFed increments
+    private static final double BALLS_FED_STOP_DELAY_MS = 1000; // ms to run after 3 balls fed before stopping
     double intakeStartTime=0;
     double intakeStartPower=0;
     double currentTime = 0;
+
+    int ballsFed = 0;
 
     public IntakeController(Intake intake, Transfer transferDrum, Transfer transferKick) {
         this.intake = intake;
@@ -35,21 +55,23 @@ public class IntakeController {
         return intake.getIntakePower();
     }
 
+    public double getDrumRPM() {
+        return drumRPM;
+    }
+
     public void toggleIntake() {
 
-        if (Math.abs(intakePower) >= targetSpeed) {
+        if (Math.abs(intakePower) >= 0.5) {
             intakePower = 0;
             transferPower = 0;
-            intakeStartTime=System.currentTimeMillis();
-            intakeStartPower=intake.getIntakePower();
-//            transferDrum.runTransferDrum(0);
         } else {
             intakePower = targetSpeed;
-            transferPower = targetSpeed;
-
-            intakeTimer.reset();
-            intakeStartTime=System.currentTimeMillis();
-            intakeStartPower=intake.getIntakePower();
+            transferPower = targetSpeed*0.75f;
+            transferStartTimer.reset();
+            intakeStartTimer.reset();
+            transferJamDetected = false;
+            intakeJamDetected = false;
+            ballsFedStopping = false;
         }
     }
 
@@ -58,16 +80,10 @@ public class IntakeController {
         if (Math.abs(intakePower) >= targetSpeed) {
             intakePower = 0;
             transferPower = 0;
-            intakeStartTime=System.currentTimeMillis();
-            intakeStartPower=intake.getIntakePower();
-//            transferDrum.runTransferDrum(0);
 
         } else {
             intakePower = -targetSpeed;
             transferPower = -targetSpeed;
-            //transferDrum.runTransferDrum(-1);
-            intakeStartTime=System.currentTimeMillis();
-            intakeStartPower=intake.getIntakePower();
         }
     }
 
@@ -76,34 +92,68 @@ public class IntakeController {
     }
 
     public void update() {
+        // Update RPM readings
+        drumRPM = transferDrum.getTransferDrumRPM();
+        intakeRPM = intake.getIntakeMotorRPM();
 
-        // Jam detection / auto slow-down
-        if (intakePower >= targetSpeed &&
-            intakeTimer.milliseconds() > 5000 &&
-            intake.getIntakeMotorRPM() < 750) {
+        // Transfer drum jam detection (independent)
+        // Only check after warmup period to allow motor to spin up
+//        if (transferPower > 0 && transferStartTimer.milliseconds() > JAM_WARMUP_MS && drumRPM < drumJamRPMThreshold) {
+//            if (!transferJamDetected) {
+//                transferJamDetected = true;
+//                drumJamTimer.reset(); // start 1-second countdown
+//            } else if (drumJamTimer.milliseconds() >= 1500) {
+//                transferPower = 0;
+//            }
+//        } else if (transferPower > 0) {
+//            transferJamDetected = false; // clear flag if jam resolves
+//        }
 
-            intakePower = 0.25f;
-            intakeStartTime=System.currentTimeMillis();
-            intakeStartPower=intake.getIntakePower();
+        // Intake jam detection (independent)
+        // Only check after warmup period to allow motor to spin up
+        if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS && intakeRPM < intakeJamRPMThreshold) {
+            if (!intakeJamDetected) {
+                intakeJamDetected = true;
+                if (ballsFedDebounceTimer.milliseconds() >= BALLS_FED_DEBOUNCE_MS) {
+                    ballsFed += 1;
+                    ballsFedDebounceTimer.reset();
+                }
+                intakeTimer.reset(); // start 1-second countdown
+            } else if (intakeTimer.milliseconds() >= 1000) {
+                intakePower = 0;
+            }
+        } else if (intakePower > 0) {
+            intakeJamDetected = false; // clear flag if jam resolves
         }
 
-        //intake.setIntakePower(intakePower*(System.currentTimeMillis()/0.5));    //should take 0.5 seconds to speed up.
-//        double targetSeconds=rampUpSpeed-rampUpSpeed*(intakeStartPower/intakePower); //should take 0.5 seconds to speed up
-
-        //   V poorly named but too lazy to change (is in milliseconds)
-        double targetSeconds = rampUpSpeed *1000; // convert rampUpSpeed to milliseconds
-        currentTime=System.currentTimeMillis()-intakeStartTime;
-        if (currentTime<targetSeconds){
-            intake.setIntakePower(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
-            transferDrum.runTransferDrum(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds)*0.25);
-        } else {
-            intake.setIntakePower(intakePower);
-            transferDrum.runTransferDrum(intakePower*0.25);
+        if (ballsFed == 1){
+            transferPower = 0;
         }
+
+        if (ballsFed >= 3 && !ballsFedStopping) {
+            ballsFedStopping = true;
+            ballsFedStopTimer.reset(); // start 1-second delay before stopping
+        }
+        if (ballsFedStopping && ballsFedStopTimer.milliseconds() >= BALLS_FED_STOP_DELAY_MS) {
+            intakePower = 0;
+            transferPower = 0;
+            ballsFed = 0;
+            ballsFedStopping = false;
+        }
+
+
+        intake.setIntakePower(intakePower);
+        transferDrum.runTransferDrum(transferPower);
+    }
+
+    public int getBallsFed() {
+        return ballsFed;
+    }
+    public float getTransferPower(){
+        return transferPower;
     }
 
     public void stopAll() {
-        intakePower = 0;
         intake.setIntakePower(0);
         transferDrum.runTransferDrum(0);
     }
@@ -111,6 +161,14 @@ public class IntakeController {
     public void runPower() {
         intake.setIntakePower(0.5);
         transferDrum.runTransferDrum(0.5);
+    }
+
+    public void transferKickUp() {
+        transferKick.setTransferKickUp();
+    }
+
+    public void transferKickDown(){
+        transferKick.setTransferKickDown();
     }
 
 }

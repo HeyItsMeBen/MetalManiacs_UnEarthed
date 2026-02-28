@@ -186,7 +186,7 @@ public class CompetitionDriveCode extends OpMode {
             intakeController.toggleReverse();
         }
 
-        if (intakeController.getIntakePower() >= 0.1) {
+        if (intakeController.getIntakePower() >= 0.5) {
             rumbleController.continuousRumble();
         } else {
             rumbleController.stopContinuosRumbling();

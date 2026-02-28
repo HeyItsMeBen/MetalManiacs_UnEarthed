@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.DriveCode.TestFiles;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -9,23 +11,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
-@Disabled
-@TeleOp (name="New Flywheel Tester", group="test")
+@TeleOp (name="Intake Tester", group="test")
 public class IntakeTester extends LinearOpMode {
 
-    public GamepadEx gamepad;
+    public GamepadEx driver;
 
     Intake intake;
+    IntakeController intakeController;
 
-    public DcMotorEx transfer = null;
-    public Servo trapdoor = null;
     public int rpm = 3000;
     public double speed = 0.5;
 
     Flywheels flywheel;
+    Transfer transferDrum;
+    Transfer transferKick;
 
 
 
@@ -34,58 +38,38 @@ public class IntakeTester extends LinearOpMode {
 
 //        DcMotor Motor = hardwareMap.get(DcMotor.class, "Intake");
 
-        transfer = hardwareMap.get(DcMotorEx.class, "flywheel");
-//        trapdoor = hardwareMap.get(Servo.class, "trapdoor");
-        transfer.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        transferDrum = new Transfer(hardwareMap);
+        transferKick= new Transfer(hardwareMap);
 
         intake = new Intake(hardwareMap);
 
-        gamepad = new GamepadEx(gamepad1);
+        driver = new GamepadEx(gamepad1);
 
         flywheel = new Flywheels(hardwareMap);
+        intakeController = new IntakeController(intake, transferDrum, transferKick);
 
 
             waitForStart();
 
         //executing
         while (opModeIsActive()) {
-            transfer.setVelocity(50);
+            driver.readButtons();
 
-//
-//            if(gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
-//                flywheel.setFlywheelVelocity(rpm);
-//            }else{
-//                flywheel.setFlywheelVelocity(0);
-//            }
-            if (gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
-//                flywheel.setFlywheelPower(speed);
-            }else{
-                flywheel.stopFlywheel();
+            if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                intakeController.toggleIntake();
             }
 
-//            if (gamepad.getButton(GamepadKeys.Button.A)){
-//                trapdoor.setPosition(0.3);
-//            }else{
-//                trapdoor.setPosition(.1);
-//            }
-
-
-//            rpm += (int) (gamepad.getRightY()*10);
-//            if (rpm > 6000){
-//                rpm = 6000;
-//            }else if (rpm < 1000){
-//                rpm = 1000;
-//            }
-
-            speed += gamepad.getRightY()*0.001;
-            if (speed <0.1){
-                speed = 0.1;
-            }else if (speed > 1){
-                speed = 1;
+            if (driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                intakeController.toggleReverse();
             }
-            telemetry.addData("velocity",flywheel.getFlywheelVelocity());
-            telemetry.addData("rpm",rpm);
-            telemetry.addData("speed", speed);
+            telemetry.addData("Intake RPM", intake.getIntakeMotorRPM());
+            telemetry.addData("Drum RPM", transferDrum.getTransferDrumRPM());
+            telemetry.addData("Drum Target Speed", intakeController.getTransferPower());
+            telemetry.addData("Balls Fed", intakeController.getBallsFed());
+
+
+            intakeController.update();
+
             telemetry.update();
 
             idle();
