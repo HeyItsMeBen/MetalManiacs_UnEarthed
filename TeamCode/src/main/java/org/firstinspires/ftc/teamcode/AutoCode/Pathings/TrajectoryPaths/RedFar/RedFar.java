@@ -57,7 +57,7 @@ public class RedFar extends LinearOpMode {
 
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         Pose2d startPose = new Pose2d(12, -60, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
@@ -90,14 +90,19 @@ public class RedFar extends LinearOpMode {
                                 initialMoveToPosition(drive, startPose),
                                 new InstantAction(() -> intakeController.toggleIntake())
                                 //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
+                                //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
                                 //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                                 //new InstantAction(() -> flywheelController.rampUp()),
-                        ),
-                        new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
+                        )
+                        //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
                         //new InstantAction(() -> autoAimController.updateTurnGivenPosition(shootingPose))
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
+
+        autoAimController.update2(false, false);
+
+        sleep(5000);
 
         // Repeat as many times as necessary
 

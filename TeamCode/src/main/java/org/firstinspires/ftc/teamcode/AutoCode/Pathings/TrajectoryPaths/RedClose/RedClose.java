@@ -54,7 +54,7 @@ public class RedClose extends LinearOpMode {
     IntakeController intakeController;
     FlywheelController flywheelController;
     LightsController lightsController;
-    AutoAimTurretController autoAimController;
+    AutoAimTurretController autoAimControllerAuto;
 
     public String ballSequence = "XXX";
 
@@ -79,7 +79,7 @@ public class RedClose extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
+        autoAimControllerAuto = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;
@@ -91,7 +91,7 @@ public class RedClose extends LinearOpMode {
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
                                 //new InstantAction(() -> flywheelController.rampUp()),
-                                new AimTurretAction(autoAimController, lightsController, intakeController, "Red"),
+                                //new AimTurretAction(drive.localizer.getPose(), autoAimControllerAuto, lightsController, intakeController, "Red"),
                                 initialMoveToPosition(drive, startPose)
                         )
                         //new AimTurretAction(autoAimController, lightsController, intakeController, "Red")
@@ -109,7 +109,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new AimTurretAction(autoAimController, lightsController, intakeController, "Red"),
+                                //new AimTurretAction(drive.localizer.getPose(), autoAimControllerAuto, lightsController, intakeController, "Red"),
                                 firingPosition(drive, drive.localizer.getPose())
                         )
                         //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
@@ -161,7 +161,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> autoAimController.turnToCenter()),
+                                new InstantAction(() -> autoAimControllerAuto.turnToCenter()),
                                 new InstantAction(() -> intakeController.update()),
                                 park(drive, drive.localizer.getPose())
                         )

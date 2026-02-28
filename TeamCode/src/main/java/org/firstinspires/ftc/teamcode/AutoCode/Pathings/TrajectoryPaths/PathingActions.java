@@ -38,7 +38,7 @@ public class PathingActions {
         public String ballSequence = "XXX";
 
 
-        public AimTurretAction(
+        public AimTurretAction( Pose2d pose,
                 AutoAimTurretController autoAimTurretController,
                 LightsController lightsController,
                 IntakeController intakeController,
@@ -63,24 +63,21 @@ public class PathingActions {
             if (!aprilTagTurretAim.isTargetFound() || elapsed < 4) {
                 aprilTagTurretAim.update2(false, false);
                 return false;
+
+            } else {
+
+                //aprilTagTurretAim.stopTurret();
+
+                aprilTagTurretAim.setTurretPower(0);
+
+                lightsController.update(
+                        aprilTagTurretAim.isTargetFound(),
+                        intakeController.isIntakeRunning(),
+                        teamColor,
+                        ballSequence
+                );
+                return true;
             }
-
-            aprilTagTurretAim.stopTurret();
-
-            lightsController.update(
-                    aprilTagTurretAim.isTargetFound(),
-                    intakeController.isIntakeRunning(),
-                    teamColor,
-                    ballSequence
-            );
-
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            return true;
         }
     }
 

@@ -384,6 +384,10 @@ public class AutoAimTurretController {
 //        turret.setMotorPower(0);
     }
 
+    public void setTurretPower(double Power) {
+        turret.setMotorPower(Power);
+    }
+
     public void closeWebcam() {
         if (visionPortal != null) {
             visionPortal.close();

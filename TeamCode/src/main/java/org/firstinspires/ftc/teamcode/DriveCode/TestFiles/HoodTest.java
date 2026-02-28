@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
 
-@Disabled
 @Config
 @TeleOp (name="HoodTest", group="Debug")
 public class HoodTest extends LinearOpMode {

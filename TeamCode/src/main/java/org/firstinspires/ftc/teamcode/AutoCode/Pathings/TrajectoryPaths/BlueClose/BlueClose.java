@@ -89,7 +89,7 @@ public class BlueClose extends LinearOpMode {
                 new SequentialAction(
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
-                                new AimTurretAction(autoAimController, lightsController, intakeController, "Red"),
+                                //new AimTurretAction(drive.localizer.getPose(), autoAimController, lightsController, intakeController, "Blue"),
                                 //new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, startPose)
                         )

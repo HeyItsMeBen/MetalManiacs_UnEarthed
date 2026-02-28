@@ -38,8 +38,8 @@ public class AngleToDistance_Regression extends LinearOpMode {
     AutoAim autoAim;
     Intake intake;
 
-    public static float targetVelocity=500;
-    public static double hoodAngle=50;
+    public static float targetVelocity=1200;
+    public static double hoodAngle=0;
 
     //setting PID variables for later calculations
     double integralSum=0;
@@ -69,7 +69,7 @@ public class AngleToDistance_Regression extends LinearOpMode {
         hood = new OuttakeHood(hardwareMap);
         belt = new Transfer(hardwareMap);
         intake = new Intake(hardwareMap);
-        autoAim = new AutoAim(Math.toRadians(15));
+        autoAim = new AutoAim(Math.toRadians(0));
 
         //April tag stuff
         if (USE_WEBCAM) {
@@ -78,22 +78,23 @@ public class AngleToDistance_Regression extends LinearOpMode {
         waitForStart(); //waits until you start the program from the driver station
         while (opModeIsActive()){   //infinite loop
             scanForTags();
+            hood.setServoPosition(hoodAngle);
+            flywheel.setFlywheelVelocity(targetVelocity);
+            belt.runTransferDrum(0.6);
+            intake.setIntakePower(0.8);
+
             if (targetFound) {
                 autoAim.calculateEverything(desiredTag);
-                hood.setAngle(hoodAngle);
-                flywheel.setFlywheelVelocity(targetVelocity);
                 sleep(2000);
-                belt.runTransferDrum(0.6);
-                intake.setIntakePower(0.8);
-                telemetry.addData("Distance to GoalCenter (inches)", autoAim.launchPointToGoalCenterX_Distance_Inches);
-                telemetry.addData("", "");
-                telemetry.addData("Target Velocity (ticks per second)", targetVelocity);
-                telemetry.addData("Current Velocity", flywheel.getFlywheelVelocity());
-                telemetry.addData("", "");
-                telemetry.addData("Current Hood Position", hood.getServoPosition());
-                telemetry.addData("Current Hood Angle", hood.getAngle());
-                telemetry.update();
             }
+            telemetry.addData("Distance to GoalCenter (inches)", autoAim.launchPointToGoalCenterX_Distance_Inches);
+            telemetry.addData("", "");
+            telemetry.addData("Target Velocity (ticks per second)", targetVelocity);
+            telemetry.addData("Current Velocity", flywheel.getFlywheelVelocity());
+            telemetry.addData("", "");
+            telemetry.addData("Current Hood Position", hood.getServoPosition());
+            telemetry.addData("Current Hood Angle", hood.getAngle());
+            telemetry.update();
 
         }
     }
