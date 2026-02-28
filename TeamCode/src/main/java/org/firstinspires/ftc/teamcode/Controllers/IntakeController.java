@@ -95,10 +95,10 @@ public class IntakeController {
         currentTime=System.currentTimeMillis()-intakeStartTime;
         if (currentTime<targetSeconds){
             intake.setIntakePower(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
-            transferDrum.runTransferDrum(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds));
+            transferDrum.runTransferDrum(intakeStartPower*((targetSeconds-currentTime)/targetSeconds)+intakePower*(currentTime/targetSeconds)*0.25);
         } else {
             intake.setIntakePower(intakePower);
-            transferDrum.runTransferDrum(intakePower);
+            transferDrum.runTransferDrum(intakePower*0.25);
         }
     }
 

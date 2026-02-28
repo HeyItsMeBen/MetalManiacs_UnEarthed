@@ -14,10 +14,10 @@ public class Flywheels {
     public double i = 1.0;
     public double d = 5.0;
 
-    public double f = 14.12;
+    public double f = 15;
     //rpm = m * distance + b
-    double m = 6.68363; //4.9141
-    double b = 922.48777+115; //818.997
+    double m = 4.9141;
+    double b = 819.9908;
 
     //Outtake subsystem
     public Flywheels(HardwareMap hMap) {

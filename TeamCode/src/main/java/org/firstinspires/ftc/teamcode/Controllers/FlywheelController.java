@@ -19,7 +19,7 @@ public class FlywheelController {
 
     private ElapsedTime powerUpTimer = new ElapsedTime();
 
-    private double maintainOuttakeSpeed = 1386;
+    private double maintainOuttakeSpeed = 500;
     private double extraOuttakeSpeed = 0;
 
     private int ballsFed = 0;
@@ -83,6 +83,7 @@ public class FlywheelController {
     public void update(boolean triggerPressed,
                        double distanceToTag,
                        boolean tagVisible) {
+        flywheels.setFlywheelVelocity(targetSpeed);
 
         if (triggerPressed) {
 
@@ -109,7 +110,6 @@ public class FlywheelController {
                 case SPINNING_UP:
 
 //                    rampUp();
-                    flywheels.setFlywheelVelocity(targetSpeed);
                     if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9
                             || powerUpTimer.seconds() >= rampUpSpeed + 1.5) {
 
@@ -189,6 +189,7 @@ public class FlywheelController {
             }
 
         } else {
+            targetSpeed = maintainOuttakeSpeed;
 
             if (launchState != LaunchState.IDLE) {
 

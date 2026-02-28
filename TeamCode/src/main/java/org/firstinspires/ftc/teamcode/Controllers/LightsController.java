@@ -10,7 +10,7 @@ public class LightsController {
 
     private ElapsedTime lightTimer = new ElapsedTime();
 
-    private static final long UPDATE_INTERVAL_MS = 500;
+    private static final long UPDATE_INTERVAL_MS = 300;
 
     public LightsController(Lights lights) {
 
@@ -23,11 +23,11 @@ public class LightsController {
                        String sequence
     ) {
 
-//        if (lightTimer.milliseconds() < UPDATE_INTERVAL_MS) {
-//            return;
-//        }
+        if (lightTimer.milliseconds() < UPDATE_INTERVAL_MS) {
+            return;
+        }
 
-//        lightTimer.reset();
+        lightTimer.reset();
         lights.updateLights(teamColor, intakeRunning, sequence, targetVisible);
 //        lights.updateStatus(
 //                targetVisible,
