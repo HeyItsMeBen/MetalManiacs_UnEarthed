@@ -90,10 +90,9 @@ public class RedClose extends LinearOpMode {
                 new SequentialAction(
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
-                                //new InstantAction(() -> flywheelController.rampUp()),
+                                new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, startPose)
                         )
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -106,6 +105,7 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
                         new InstantAction(() -> intakeController.update()),
                         collectPatternPGP(drive, drive.localizer.getPose())
                 )
@@ -113,26 +113,23 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new ParallelAction(
-                                //new AimTurretAction(drive.localizer.getPose(), autoAimControllerAuto, lightsController, intakeController, "Red"),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                        firingPosition(drive, drive.localizer.getPose()),
+                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        collectPatternPPG(drive, drive.localizer.getPose())
-                )
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        firingPosition(drive, drive.localizer.getPose())
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
-                )
-        );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        collectPatternPPG(drive, drive.localizer.getPose())
+//                )
+//        );
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        firingPosition(drive, drive.localizer.getPose()),
+//                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+//                )
+//        );
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -143,31 +140,34 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        firingPosition(drive, drive.localizer.getPose())
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                        firingPosition(drive, drive.localizer.getPose()),
+                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        collectPatternGPP(drive, drive.localizer.getPose())
-                )
-        );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        collectPatternGPP(drive, drive.localizer.getPose())
+//                )
+//        );
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        new ParallelAction(
+//                                new InstantAction(() -> intakeController.toggleIntake()),
+//                                firingPosition(drive, drive.localizer.getPose())
+//                        )
+//                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+//                )
+//        );
 
-        Actions.runBlocking(
-                new SequentialAction(
-                        new ParallelAction(
-                                new InstantAction(() -> intakeController.toggleIntake()),
-                                firingPosition(drive, drive.localizer.getPose())
-                        )
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
-                )
-        );
+//        double autoAimFinishTime=System.currentTimeMillis();
+//        while (System.currentTimeMillis()<autoAimFinishTime+1000){
+//            autoAimController.turnToCenter();
+//        }
 
-        double autoAimFinishTime=System.currentTimeMillis();
-        while (System.currentTimeMillis()<autoAimFinishTime+1000){
-            autoAimController.update2(false, false);
-        }
+        PassOnFromAutoValues.currentPose = drive.localizer.getPose();
+        PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.RED;
 
         Actions.runBlocking(
                 new SequentialAction(
