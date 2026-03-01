@@ -152,7 +152,7 @@ public class RedFar extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         firingPosition(drive, drive.localizer.getPose()),
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 

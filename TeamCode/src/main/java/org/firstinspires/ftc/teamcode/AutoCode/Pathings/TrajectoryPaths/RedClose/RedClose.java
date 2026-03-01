@@ -79,33 +79,33 @@ public class RedClose extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        //autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
+        autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;
 
-        //lightsController.update(false, false, "Red", ballSequence);
+        lightsController.update(false, false, "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
-                                //new InstantAction(() -> flywheelController.rampUp()),
+                                new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, startPose)
                         )
                 )
         );
 
-//        double autoAimStartTime=System.currentTimeMillis();
-//        while (System.currentTimeMillis()<autoAimStartTime+1000){
-//            autoAimController.updateWithTimeout(false, false);
-//        }
-//        autoAimController.setTurretPower(0);
-//        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
+        double autoAimStartTime=System.currentTimeMillis();
+        while (System.currentTimeMillis()<autoAimStartTime+1000){
+            autoAimController.updateWithTimeout(false, false);
+        }
+        autoAimController.setTurretPower(0);
+        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
                         new InstantAction(() -> intakeController.update()),
                         collectPatternPGP(drive, drive.localizer.getPose())
                 )
@@ -114,7 +114,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         firingPosition(drive, drive.localizer.getPose()),
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
@@ -141,7 +141,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         firingPosition(drive, drive.localizer.getPose()),
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
