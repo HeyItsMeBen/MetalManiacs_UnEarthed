@@ -72,11 +72,16 @@ public class AutoAim {
         xpos=distanceToTagTelemetry*Math.cos(botAngleThing);
         ypos=distanceToTagTelemetry*Math.sin(botAngleThing);
     }
-    public Pose2d getRelocalizedPose(AprilTagDetection desiredTag){
+    public Pose2d getRelocalizedPose(AprilTagDetection desiredTag, boolean isRed){
         launchPointToGoalCenterX_Distance_Meters = getCorrectDistance2(toMeters(desiredTag.ftcPose.range), Math.toRadians(desiredTag.ftcPose.yaw)-Math.toRadians(desiredTag.ftcPose.bearing), Math.toRadians(desiredTag.ftcPose.pitch), Math.toRadians(desiredTag.ftcPose.elevation)); //Basically the horizontal distance to the tag
         launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
         double botTheta=yawTelemetry-Math.toRadians(35);
-        return new Pose2d(55-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta);
+        if (!isRed){
+            return new Pose2d(-55-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta+Math.toRadians(desiredTag.ftcPose.bearing));
+        } else {
+            return new Pose2d(55-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta+Math.toRadians(desiredTag.ftcPose.bearing));
+        }
+        //36-(13.5+1/8)
     }
     public void calculateEverythingWithoutCamera(Pose2d pos, boolean isRed){
         double heading=pos.heading.toDouble();

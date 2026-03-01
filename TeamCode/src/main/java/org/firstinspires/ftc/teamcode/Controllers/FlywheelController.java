@@ -94,7 +94,7 @@ public class FlywheelController {
 
                 case IDLE:
 
-                    if (tagVisible) {
+                    if (distanceToTag!=0) {
                         targetSpeed = flywheels.getVelocityFromDistance(distanceToTag);
                         flywheelStartTime=System.currentTimeMillis();
                         flywheelStartPower= flywheels.getFlywheelVelocity();

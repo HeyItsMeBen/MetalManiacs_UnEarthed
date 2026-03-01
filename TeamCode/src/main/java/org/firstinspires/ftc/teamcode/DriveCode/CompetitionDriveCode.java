@@ -220,23 +220,23 @@ public class CompetitionDriveCode extends OpMode {
         }
 
         if (!autoAimController.isCameraAvailable()) {
-            telemetry.addData("WARNING", "Camera disconnected - auto aim disabled");
+            //telemetry.addData("WARNING", "Camera disconnected - auto aim disabled");
         }
 
-        telemetry.addData("Auto aiming",
-                autoAimController.isAutoAiming());
-
-        telemetry.addData("Sees april tag",
-                autoAimController.isTargetFound());
-
-        telemetry.addData("Goal distance (inches)",
-                autoAimController.getDistanceToGoalInches());
-        telemetry.addLine("(robot position) X: "+autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
-
-        telemetry.addData("Target Turret Position", autoAimController.autoAim.turretAngle);
-        telemetry.addData("posX", autoAimController.autoAim.posX);
-        telemetry.addData("posY", autoAimController.autoAim.posY);
-        telemetry.addData("Target speed", flywheelController.getTargetSpeed());
+//        telemetry.addData("Auto aiming",
+//                autoAimController.isAutoAiming());
+//
+//        telemetry.addData("Sees april tag",
+//                autoAimController.isTargetFound());
+//
+//        telemetry.addData("Goal distance (inches)",
+//                autoAimController.getDistanceToGoalInches());
+//        telemetry.addLine("(robot position) X: "+autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
+//
+//        telemetry.addData("Target Turret Position", Math.toRadians(autoAimController.autoAim.turretAngle));
+//        telemetry.addData("posX", autoAimController.autoAim.posX*39.3700787);
+//        telemetry.addData("posY", autoAimController.autoAim.posY*39.3700787);
+//        telemetry.addData("Target speed", flywheelController.getTargetSpeed());
 
 //        telemetry.addData("Target turret angle (degrees)",
 //                Math.toDegrees(autoAimController.turretAngleTelemetry));
@@ -273,9 +273,9 @@ public class CompetitionDriveCode extends OpMode {
         double loopTime = newTime - oldTime;
         double frequency = 1 / loopTime;
         oldTime = newTime;
-        telemetry.addData("LoopTime (Hz):", frequency);
-        telemetry.addData("Loop Time (ms): ", loopTime * 1000);
-        telemetry.update();
+//        telemetry.addData("LoopTime (Hz):", frequency);
+//        telemetry.addData("Loop Time (ms): ", loopTime * 1000);
+//        telemetry.update();
 
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();

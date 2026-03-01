@@ -122,7 +122,7 @@ public class AutoAimTurretController {
             visionPortal = new VisionPortal.Builder()
                     .setCamera(webcam)
                     .addProcessor(aprilTag)
-//                    .setCameraResolution(new android.util.Size(320, 240))
+                    //.setCameraResolution(new android.util.Size(1280, 720))
                     .build();
 
             cameraAvailable = true;
@@ -330,7 +330,6 @@ public class AutoAimTurretController {
             turret.runTowardsTargetAngle(lastTurretAngle+Math.toRadians(autoAim.headingError));
         }
     }
-    @Deprecated
     public void updateWithLocalization(boolean manualLeft, boolean manualRight) {  //untested method
 
         //turret control
@@ -347,7 +346,7 @@ public class AutoAimTurretController {
         //scans and calculates
         scanForTags();
         if (targetFound) {
-            drive = new MecanumDrive(hMap, autoAim.getRelocalizedPose(desiredTag));
+            drive = new MecanumDrive(hMap, autoAim.getRelocalizedPose(desiredTag, isRed));
         }
         drive.updatePoseEstimate();
         Pose2d RobotPose = drive.localizer.getPose();
