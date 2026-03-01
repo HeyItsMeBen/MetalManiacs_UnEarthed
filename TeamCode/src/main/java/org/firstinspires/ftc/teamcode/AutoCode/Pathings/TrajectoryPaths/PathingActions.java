@@ -196,7 +196,7 @@ public class PathingActions {
                     if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9 ||
                             System.currentTimeMillis() - spinUpStartTime > 1000) {
 
-                        velocityDropThreshold = flywheels.getFlywheelVelocity() - 150;
+                        velocityDropThreshold = flywheels.getFlywheelVelocity() - 100;
                         state = State.SHOOTING;
                         shotStartTime = System.currentTimeMillis();
                     }
