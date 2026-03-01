@@ -30,26 +30,9 @@ public class ResetTurretPosition extends LinearOpMode {
         //executing
         while (opModeIsActive()) {
 
-            gamepad.readButtons();
+            turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            if (gamepad.isDown(GamepadKeys.Button.A)) {
-                turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                telemetry.addData("Reset Position: ","");
-            }
-
-            if (gamepad.isDown(GamepadKeys.Button.X)) {
-                turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                turret.setTargetPosition(0);
-                turret.setPower(0.3);
-                telemetry.addData("Run To Position 0: ", turret.getCurrentPosition());
-            } else {
-                turret.setPower(0);
-                turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-
-
-            telemetry.addData("Press A to reset turret", "");
-            telemetry.addData("To check if it returns to the 0 position, ", "press X");
+            telemetry.addData("Reset Turret Position", "");
             telemetry.update();
 
             idle();

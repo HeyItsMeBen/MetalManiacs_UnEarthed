@@ -94,7 +94,7 @@ public class AutoAim {
     public double getCorrectDistance2(double givenX, double tagYaw, double tagPitch, double tagElevation){ //this function changes the goalLocation from the AprilTag to the goalCenter. It also translates camera-->robotCenter-->armBase distances so the rest of this file can calculate properly.
         //REMINDER: Use rotation matrices for yaw translation
         double robotBaseX=givenX*Math.cos(tagElevation+cameraPitch)+cameraToRobotCenter_Distance;   //robotBaseX is horizontal distance from the center of the robot to the tag.
-        distanceToTagTelemetry=robotBaseX*12;
+        distanceToTagTelemetry=robotBaseX;
         double [] actualTagYaw=rotationMatrices.getActualYaw(tagYaw, tagPitch, 0, cameraPitch); //uses rotation matrices to find the tag's actual yaw rotation.
         yawTelemetry=actualTagYaw[0];
         double newX=Math.sqrt(Math.pow(robotBaseX, 2)+Math.pow(tagToGoalCenter_Distance, 2)-2*robotBaseX*tagToGoalCenter_Distance*Math.cos(Math.PI-actualTagYaw[0]));   //law of cosines. New X is equal to the distance from the robotBase to the goalCenter
