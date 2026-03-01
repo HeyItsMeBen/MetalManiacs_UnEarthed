@@ -43,7 +43,7 @@ public class RedFarTrajectories {
     public static Action moveToScanPosition(MecanumDrive drive, Pose2d currentPose) {
 
         return drive.actionBuilder(currentPose)
-                .splineTo(new Vector2d(55, -55), Math.toRadians(0), defaultSpeedConstraint)
+                .splineTo(new Vector2d(48, -55), Math.toRadians(0), defaultSpeedConstraint)
                 .build();
     }
 

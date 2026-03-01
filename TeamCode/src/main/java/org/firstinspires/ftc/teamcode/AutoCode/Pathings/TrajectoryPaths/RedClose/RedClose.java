@@ -79,7 +79,7 @@ public class RedClose extends LinearOpMode {
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         lightsController = new LightsController(lights);
 
-        autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
+        //autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize
 
         waitForStart();
         if (isStopRequested()) return;
@@ -90,18 +90,18 @@ public class RedClose extends LinearOpMode {
                 new SequentialAction(
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
-                                new InstantAction(() -> flywheelController.rampUp()),
+                                //new InstantAction(() -> flywheelController.rampUp()),
                                 initialMoveToPosition(drive, startPose)
                         )
                 )
         );
 
-        double autoAimStartTime=System.currentTimeMillis();
-        while (System.currentTimeMillis()<autoAimStartTime+1000){
-            autoAimController.update2(false, false);
-        }
-        autoAimController.setTurretPower(0);
-        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
+//        double autoAimStartTime=System.currentTimeMillis();
+//        while (System.currentTimeMillis()<autoAimStartTime+1000){
+//            autoAimController.updateWithTimeout(false, false);
+//        }
+//        autoAimController.setTurretPower(0);
+//        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(

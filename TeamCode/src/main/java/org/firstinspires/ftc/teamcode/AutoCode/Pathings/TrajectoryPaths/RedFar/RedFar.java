@@ -95,7 +95,6 @@ public class RedFar extends LinearOpMode {
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 new InstantAction(() -> flywheelController.rampUp())
                         )
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
                 )
         );
 
@@ -110,7 +109,7 @@ public class RedFar extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
                         new InstantAction(() -> autoAimController.closeWebcam()),
                         new ParallelAction(
                                 new InstantAction(() -> intakeController.update()),
@@ -129,33 +128,11 @@ public class RedFar extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         firingPosition(drive, drive.localizer.getPose()),
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
         // Repeat as many times as necessary
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        new ParallelAction(
-                                new InstantAction(() -> autoAimController.closeWebcam()),
-                                moveToScanPosition(drive, drive.localizer.getPose())
-                        )
-                )
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        collectArtifactsLeft(drive, drive.localizer.getPose())
-                )
-        );
-
-        Actions.runBlocking(
-                new SequentialAction(
-                        firingPosition(drive, drive.localizer.getPose()),
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
-                )
-        );
 
         Actions.runBlocking(
                 new SequentialAction(

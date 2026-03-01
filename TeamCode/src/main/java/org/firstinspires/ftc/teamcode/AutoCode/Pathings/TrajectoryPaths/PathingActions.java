@@ -242,7 +242,7 @@ public class PathingActions {
 
                     transferServo.setTransferKickDown();
                     transferDrum.stopTransferDrum();
-                    intake.setIntakePower(0);
+                    //intake.setIntakePower(0);
 
                     return false;
             }

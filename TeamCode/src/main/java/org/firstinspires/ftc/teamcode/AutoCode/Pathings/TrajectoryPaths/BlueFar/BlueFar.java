@@ -6,7 +6,10 @@ import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.B
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.firingPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.initialMoveToPosition;
 import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.park;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsLeft;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsRight;
 
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AimTurretAction;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
 import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.LimelightScanAction;
@@ -21,7 +24,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.RedFar.RedFarTrajectories;
 import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
 import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
@@ -37,7 +39,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Blue Far", group = "Autonomous - Red")
+@Autonomous(name = "Blue Far", group = "Autonomous - Blue")
 public class BlueFar extends LinearOpMode {
 
     Intake intake;
@@ -87,11 +89,43 @@ public class BlueFar extends LinearOpMode {
                 new SequentialAction(
                         new ParallelAction(
                                 initialMoveToPosition(drive, startPose),
-                                new InstantAction(() -> intakeController.toggleIntake())
-                                //new InstantAction(() -> flywheelController.rampUp()),
+                                new InstantAction(() -> intakeController.toggleIntake()),
+                                new InstantAction(() -> flywheelController.rampUp())
                         )
-                        //new AimTurretAction(drive.localizer.getPose(), autoAimController, lightsController, intakeController, "Blue")
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                )
+        );
+
+        double autoAimStartTime=System.currentTimeMillis();
+        while (System.currentTimeMillis()<autoAimStartTime+1000){
+            autoAimController.updateWithTimeout(false, false);
+        }
+        autoAimController.setTurretPower(0);
+        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Blue", ballSequence);
+
+        // Repeat as many times as necessary
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
+                        new InstantAction(() -> autoAimController.closeWebcam()),
+                        new ParallelAction(
+                                new InstantAction(() -> intakeController.update()),
+                                moveToScanPosition(drive, drive.localizer.getPose())
+                        )
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        collectArtifactsRight(drive, drive.localizer.getPose())
+                        //new LimelightScanAction(drive, true)
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        firingPosition(drive, drive.localizer.getPose()),
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
@@ -100,7 +134,6 @@ public class BlueFar extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.update()),
                                 new InstantAction(() -> autoAimController.closeWebcam()),
                                 moveToScanPosition(drive, drive.localizer.getPose())
                         )
@@ -109,23 +142,29 @@ public class BlueFar extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new LimelightScanAction(drive, false)
+                        collectArtifactsLeft(drive, drive.localizer.getPose())
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
-                        firingPosition(drive, drive.localizer.getPose())
-                        //new FlywheelSequenceAction(flywheelController, () -> aprilTagTurretAim.getDistanceToGoalInches(), () -> aprilTagTurretAim.isTargetFound())
+                        firingPosition(drive, drive.localizer.getPose()),
+                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
         // Repeat as many times as necessary
 
+        //Issues
+//        double autoAimFinishTime=System.currentTimeMillis();
+//        while (System.currentTimeMillis()<autoAimFinishTime+250){
+//            autoAimController.turnToCenter();
+//        }
+        //Issues
+
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> autoAimController.turnToCenter()),
                                 new InstantAction(() -> intakeController.toggleIntake()),
                                 park(drive, drive.localizer.getPose())
                         )
