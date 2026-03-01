@@ -118,32 +118,33 @@ public class RedClose extends LinearOpMode {
                 )
         );
 
-//        Actions.runBlocking(
-//                new SequentialAction(
-//                        collectPatternPPG(drive, drive.localizer.getPose())
-//                )
-//        );
-//
-//        Actions.runBlocking(
-//                new SequentialAction(
-//                        firingPosition(drive, drive.localizer.getPose()),
-//                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
-//                )
-//        );
-
         Actions.runBlocking(
                 new SequentialAction(
-                        openChannel(drive, drive.localizer.getPose()),
-                        new PathingActions.WaitAction(1000)
+                        collectPatternPPG(drive, drive.localizer.getPose())
                 )
         );
 
         Actions.runBlocking(
                 new SequentialAction(
                         firingPosition(drive, drive.localizer.getPose()),
-                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        openChannel(drive, drive.localizer.getPose()),
+                        new PathingActions.WaitAction(5000)
+                )
+        );
+        
+//
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        firingPosition(drive, drive.localizer.getPose()),
+//                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+//                )
+//        );
 
 //        Actions.runBlocking(
 //                new SequentialAction(
@@ -165,9 +166,6 @@ public class RedClose extends LinearOpMode {
 //        while (System.currentTimeMillis()<autoAimFinishTime+1000){
 //            autoAimController.turnToCenter();
 //        }
-
-        PassOnFromAutoValues.currentPose = drive.localizer.getPose();
-        PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.RED;
 
         Actions.runBlocking(
                 new SequentialAction(

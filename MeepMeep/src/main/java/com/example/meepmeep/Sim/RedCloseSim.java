@@ -40,7 +40,7 @@ public class RedCloseSim {
 
                         //get balls from gate
                         .setReversed(false)
-                        .splineToSplineHeading(new Pose2d(58,-10, Math.toRadians(20)), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(58,5, Math.toRadians(90)), Math.toRadians(0))
                         .waitSeconds(0.5f)
 
                         //get in position to shoot

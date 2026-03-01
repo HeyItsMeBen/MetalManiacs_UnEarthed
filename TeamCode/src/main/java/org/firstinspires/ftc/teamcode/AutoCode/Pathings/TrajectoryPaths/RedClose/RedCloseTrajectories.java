@@ -93,7 +93,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(64,-8, Math.toRadians(40)), Math.toRadians(0), patternCollectionConstraint)
+                .splineToSplineHeading(new Pose2d(62,5, Math.toRadians(90)), Math.toRadians(0), patternCollectionConstraint)
                 .build();
     }
 
