@@ -19,7 +19,7 @@ public class FlywheelController {
 
     private ElapsedTime powerUpTimer = new ElapsedTime();
 
-    private double maintainOuttakeSpeed = 1200;
+    private double maintainOuttakeSpeed = 500;
     private double extraOuttakeSpeed = 0;
 
     private int ballsFed = 0;
