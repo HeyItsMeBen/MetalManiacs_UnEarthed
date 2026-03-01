@@ -157,6 +157,28 @@ public class RedFar extends LinearOpMode {
                 )
         );
 
+        Actions.runBlocking(
+                new SequentialAction(
+                        new ParallelAction(
+                                new InstantAction(() -> autoAimController.closeWebcam()),
+                                moveToScanPosition(drive, drive.localizer.getPose())
+                        )
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        collectArtifactsLeft(drive, drive.localizer.getPose())
+                )
+        );
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        firingPosition(drive, drive.localizer.getPose()),
+                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                )
+        );
+
         // Repeat as many times as necessary
 
         //Issues
