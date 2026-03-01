@@ -173,6 +173,7 @@ public class FlywheelController {
                     break;
 
                 case WAITING_BETWEEN_BALLS:
+//                    transferDrum.runTransferDrum(0);
                     transferKick.setTransferKickDown();
                     if (launchTimer.milliseconds() > 1000) {
                         outtakeSpeedBeforeDrop =

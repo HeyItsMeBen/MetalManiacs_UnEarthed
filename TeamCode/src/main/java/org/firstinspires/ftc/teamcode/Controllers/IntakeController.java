@@ -23,7 +23,7 @@ public class IntakeController {
     // Jam detection
     private static final double INTAKE_JAM_RPM_THRESHOLD = 200; // RPM below which intake is considered jammed
     private static final double JAM_WARMUP_MS = 1000;           // wait 1s after start before checking for jams
-    private static final double JAM_SHUTOFF_MS = 1000;          // hold jam for 1s before shutting off
+    private static final double JAM_SHUTOFF_MS = 0;          // hold jam for 1s before shutting off
     private boolean intakeJamDetected = false;
     private final ElapsedTime intakeStartTimer = new ElapsedTime();
     private final ElapsedTime intakeJamTimer = new ElapsedTime();
