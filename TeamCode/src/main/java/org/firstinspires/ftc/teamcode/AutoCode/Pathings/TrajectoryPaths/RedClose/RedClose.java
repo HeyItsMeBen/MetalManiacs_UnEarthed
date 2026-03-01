@@ -120,6 +120,7 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        new InstantAction(() -> intakeController.update()),
                         collectPatternPPG(drive, drive.localizer.getPose())
                 )
         );
@@ -137,7 +138,7 @@ public class RedClose extends LinearOpMode {
                         new PathingActions.WaitAction(5000)
                 )
         );
-        
+
 //
 //        Actions.runBlocking(
 //                new SequentialAction(
