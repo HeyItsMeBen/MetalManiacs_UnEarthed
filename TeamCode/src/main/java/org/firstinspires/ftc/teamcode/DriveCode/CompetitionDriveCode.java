@@ -172,7 +172,7 @@ public class CompetitionDriveCode extends OpMode {
         if (driver.wasJustPressed(GamepadKeys.Button.X)) {
             autoAimController.resetTurret();
         }
-        autoAimController.update2(
+        autoAimController.updateWithTimeout(
                 driver.getButton(GamepadKeys.Button.DPAD_LEFT),
                 driver.getButton(GamepadKeys.Button.DPAD_RIGHT)
         );
@@ -231,7 +231,7 @@ public class CompetitionDriveCode extends OpMode {
 
         telemetry.addData("Goal distance (inches)",
                 autoAimController.getDistanceToGoalInches());
-        //telemetry.addLine("(robot position) X: "+autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
+        telemetry.addLine("(robot position) X: "+autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
 
         telemetry.addData("Target speed", flywheelController.getTargetSpeed());
 

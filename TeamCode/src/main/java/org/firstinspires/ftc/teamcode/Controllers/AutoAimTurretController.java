@@ -46,7 +46,7 @@ public class AutoAimTurretController {
     private long targetLostStartTime = 0;
     private boolean wasTargetFoundLastFrame = false;
 
-    private static final long TARGET_LOST_DELAY_MS = 3000;
+    private static final long TARGET_LOST_DELAY_MS = 4000;
 
     private int DESIRED_TAG_ID = 24;
 
@@ -104,7 +104,7 @@ public class AutoAimTurretController {
         //April tag stuff
         if (USE_WEBCAM) {
             //NOTE: gain is 50 for comp field, but 200 for practice field
-            setManualExposure(6, 200);  // Use low exposure time to reduce motion blur
+            setManualExposure(6, 350);  // Use low exposure time to reduce motion blur
         }
     }
 
@@ -265,6 +265,7 @@ public class AutoAimTurretController {
             }
         }
     }
+    @Deprecated
     public void update2(boolean manualLeft, boolean manualRight) {  //the actual update method that we currently use (Regionals)
 
         //turret control
@@ -300,12 +301,9 @@ public class AutoAimTurretController {
         //turret control
         if (!shouldAutoAim) {
             manualControl(manualLeft, manualRight);
-            //wasTargetFoundLastFrame = false;
             return;
         }
 
-//        Pose2D pos = odo.getPosition();
-//        double heading = pos.getHeading(AngleUnit.RADIANS);
 
 
         //scans and calculates
@@ -332,6 +330,7 @@ public class AutoAimTurretController {
             turret.runTowardsTargetAngle(lastTurretAngle+Math.toRadians(autoAim.headingError));
         }
     }
+    @Deprecated
     public void updateWithLocalization(boolean manualLeft, boolean manualRight) {  //untested method
 
         //turret control
