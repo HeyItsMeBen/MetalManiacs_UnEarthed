@@ -145,12 +145,10 @@ public class CompetitionDriveCode extends OpMode {
             driveController.toggleFieldCentric();
         }
 
-        if (driver.getButton(GamepadKeys.Button.DPAD_UP)) {
-            driveController.changeSpeedMultiplier(0.5);
-        }
-
-        if (driver.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            driveController.changeSpeedMultiplier(-0.5);
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            flywheelController.extraOuttakeSpeed+=25;
+        } else if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            flywheelController.extraOuttakeSpeed-=25;
         }
 
         if (driveController.isSnapRotation()) {
@@ -220,8 +218,11 @@ public class CompetitionDriveCode extends OpMode {
         }
 
         if (!autoAimController.isCameraAvailable()) {
-            //telemetry.addData("WARNING", "Camera disconnected - auto aim disabled");
+            telemetry.addData("WARNING", "Camera disconnected - auto aim disabled");
         }
+        //12.25 10 (23.5+1/8)
+        telemetry.addData("extraOuttakeSpeed: ", flywheelController.extraOuttakeSpeed);
+        telemetry.addData("IsRed?: ", autoAimController.isRed);
 
 //        telemetry.addData("Auto aiming",
 //                autoAimController.isAutoAiming());
@@ -269,13 +270,13 @@ public class CompetitionDriveCode extends OpMode {
         );
 
         // Frequency check
-        double newTime = getRuntime();
-        double loopTime = newTime - oldTime;
-        double frequency = 1 / loopTime;
-        oldTime = newTime;
+//        double newTime = getRuntime();
+//        double loopTime = newTime - oldTime;
+//        double frequency = 1 / loopTime;
+//        oldTime = newTime;
 //        telemetry.addData("LoopTime (Hz):", frequency);
 //        telemetry.addData("Loop Time (ms): ", loopTime * 1000);
-//        telemetry.update();
+        telemetry.update();
 
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();

@@ -77,20 +77,20 @@ public class AutoAim {
         launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
         double botTheta=yawTelemetry-Math.toRadians(35);
         if (!isRed){
-            return new Pose2d(-55-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta+Math.toRadians(desiredTag.ftcPose.bearing));
+            return new Pose2d(-57.25-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta+Math.toRadians(desiredTag.ftcPose.bearing));
         } else {
-            return new Pose2d(55-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta+Math.toRadians(desiredTag.ftcPose.bearing));
+            return new Pose2d(57.25-toInches(distanceToTagTelemetry*Math.cos(botTheta)), 59.5-toInches(distanceToTagTelemetry*Math.sin(botTheta)), botTheta+Math.toRadians(desiredTag.ftcPose.bearing));  //55-->57.25  //59-->59.5
         }
         //36-(13.5+1/8)
     }
     public void calculateEverythingWithoutCamera(Pose2d pos, boolean isRed){
         double heading=pos.heading.toDouble();
         if (isRed) {
-            posX = toMeters(55 - pos.position.x);
+            posX = toMeters(57.25 - pos.position.x);
         } else {
-            posX = toMeters(-55 - pos.position.x);
+            posX = toMeters(-57.25 - pos.position.x);
         }
-        posY = toMeters(59 - pos.position.y);
+        posY = toMeters(59.5 - pos.position.y);
         launchPointToGoalCenterX_Distance_Meters = Math.sqrt(Math.pow((posX), 2) + Math.pow((posY), 2))+robotCenterToArmBase_Distance;
         launchPointToGoalCenterX_Distance_Inches = launchPointToGoalCenterX_Distance_Meters * 39.3700787;
         turretAngle = Math.atan2(posY, posX)-heading;

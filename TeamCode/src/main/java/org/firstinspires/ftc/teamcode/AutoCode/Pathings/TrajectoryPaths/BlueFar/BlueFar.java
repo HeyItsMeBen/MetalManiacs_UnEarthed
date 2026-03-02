@@ -62,7 +62,7 @@ public class BlueFar extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(12, -60, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(-12, -60, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);

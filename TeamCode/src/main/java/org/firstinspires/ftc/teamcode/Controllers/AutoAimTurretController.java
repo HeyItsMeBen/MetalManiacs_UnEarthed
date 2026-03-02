@@ -64,7 +64,7 @@ public class AutoAimTurretController {
 
     public boolean opModeIsActive=true;
     private static final boolean USE_WEBCAM =true;
-    boolean isRed=true;
+    public boolean isRed=true;
     double lostTagStartTime=0;
     double lastTurretAngle=0;
 
@@ -353,6 +353,7 @@ public class AutoAimTurretController {
         robPos=RobotPose;
 
         autoAim.calculateEverythingWithoutCamera(RobotPose, isRed);
+
         turretAngleTelemetry=autoAim.turretAngle;
         turret.runTowardsTargetAngle(autoAim.turretAngle);
     }
@@ -507,8 +508,10 @@ public class AutoAimTurretController {
     public void changeColorTo(String teamColor){
         if (teamColor.equals("Blue") || teamColor.equals("blue")){
             isRed=false;
+            DESIRED_TAG_ID=20;
         } else {
             isRed=true;
+            DESIRED_TAG_ID=24;
         }
     }
 }

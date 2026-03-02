@@ -20,7 +20,7 @@ public class FlywheelController {
     private ElapsedTime powerUpTimer = new ElapsedTime();
 
     private double maintainOuttakeSpeed = 500;
-    private double extraOuttakeSpeed = 0;
+    public double extraOuttakeSpeed = 0;
 
     private int ballsFed = 0;
 
@@ -86,7 +86,7 @@ public class FlywheelController {
                        double distanceToTag,
                        boolean tagVisible) {
 
-        flywheels.setFlywheelVelocity(targetSpeed);
+        flywheels.setFlywheelVelocity(targetSpeed+extraOuttakeSpeed);
 
         if (triggerPressed) {
 
