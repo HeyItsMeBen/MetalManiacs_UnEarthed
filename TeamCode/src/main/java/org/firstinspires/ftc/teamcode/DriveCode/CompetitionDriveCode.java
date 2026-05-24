@@ -200,7 +200,7 @@ public class CompetitionDriveCode extends OpMode {
         //When ball is collected call this rumble method
         //rumbleController.ballCollected();
 
-        intakeController.update();
+        intakeController.update(gamepad1.touchpad, gamepad1.ps);
 
         // Flywheels
         boolean triggerPressed =

@@ -76,11 +76,14 @@ public class IntakeController {
         return currentTime;
     }
 
-    public void update() {
+    public void update(boolean intakeForward, boolean intakeReverse) {
         // Update RPM readings
         drumRPM = transferDrum.getTransferDrumRPM();
         intakeRPM = intake.getIntakeMotorRPM();
 
+        if (intakeForward){
+
+        }
         // Intake jam detection
         // Only check after warmup period to allow the motor to spin up
         if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS) {
@@ -100,8 +103,15 @@ public class IntakeController {
             }
         }
 
+
         intake.setIntakePower(intakePower);
-        transferDrum.runTransferDrum(transferPower);
+        if (intakeForward) {
+            transferDrum.runTransferDrum(0.5);
+        } else if (intakeReverse){
+            transferDrum.runTransferDrum(-0.5);
+        } else {
+            transferDrum.runTransferDrum(transferPower);
+        }
     }
 
     public int getBallsFed() {

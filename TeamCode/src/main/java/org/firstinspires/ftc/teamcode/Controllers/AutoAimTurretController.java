@@ -229,7 +229,7 @@ public class AutoAimTurretController {
 
             autoAim.calculateEverything(desiredTag);
 
-//            turret.setMotorPower(autoAim.turn);
+            turret.setMotorPower(autoAim.turn);
             turretPower = (float) autoAim.turn;
             turretStartTime=System.currentTimeMillis();
             turretStartPower=turret.getTurretPower();
@@ -252,7 +252,7 @@ public class AutoAimTurretController {
                     turret.rotateTowardsTarget(0);
                 } else {
                     turretPower = 0;
-//                    turret.setMotorPower(0);
+                    turret.setMotorPower(0);
                     turretStartTime=System.currentTimeMillis();
                     turretStartPower=turret.getTurretPower();
                 }
