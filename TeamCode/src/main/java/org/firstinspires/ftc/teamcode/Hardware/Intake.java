@@ -3,6 +3,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 public class Intake {
     private DcMotorEx intakeWheels;
     final double tickPerRevolution=28*5.2;
@@ -19,6 +21,10 @@ public class Intake {
     }
     public double getIntakePower(){
         return intakeWheels.getPower();
+    }
+
+    public double getIntakeMotorAmps() {
+        return intakeWheels.getCurrent(CurrentUnit.AMPS);
     }
 
     public void runIntakeFullPower(){

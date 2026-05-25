@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 public class Transfer {
 
-    private Servo transferKick = null;
-    private DcMotorEx transferDrum = null;
+    private Servo transferKick;
+    private DcMotorEx transferDrum;
 
     final double tickPerRevolution = 28 * 5.2; // ticks per revolution of the transfer drum motor
 
@@ -31,6 +31,10 @@ public class Transfer {
 
     public double getTransferDrumRPM() {
         return transferDrum.getVelocity() * 60 / tickPerRevolution;
+    }
+
+    public double getTransferDrumAmps() {
+        return transferDrum.getCurrent(CurrentUnit.AMPS);
     }
 
     public void setTransferKickUp() {

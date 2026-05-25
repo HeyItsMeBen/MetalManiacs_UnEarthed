@@ -224,6 +224,10 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("extraOuttakeSpeed: ", flywheelController.extraOuttakeSpeed);
         telemetry.addData("IsRed?: ", autoAimController.isRed);
 
+        // Debug telemetry for intake and transfer amps
+        telemetry.addData("Intake Amps", "%.2f", intakeController.getIntakeAmps());
+        telemetry.addData("Transfer Amps", "%.2f", intakeController.getTransferAmps());
+
 //        telemetry.addData("Auto aiming",
 //                autoAimController.isAutoAiming());
 //
