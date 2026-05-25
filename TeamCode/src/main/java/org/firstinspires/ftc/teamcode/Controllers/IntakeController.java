@@ -15,15 +15,6 @@ public class IntakeController {
 
     private float intakePower = 0;
     private float transferPower = 0;
-    // Transfer (drum) jam detection
-    private static final double TRANSFER_JAM_RPM_THRESHOLD = 50; // RPM below which transfer is considered jammed
-    private static final double TRANSFER_JAM_WARMUP_MS = 300;   // allow some spin-up time before checking
-    private static final double TRANSFER_JAM_SHUTOFF_MS = 500;  // if jam persists this long, stop the drum
-    private boolean transferJamDetected = false;
-    private final ElapsedTime transferStartTimer = new ElapsedTime();
-    private final ElapsedTime transferJamTimer = new ElapsedTime();
-    // Track whether the transfer was commanded in the previous loop to detect rising edge
-    private boolean transferCommandedLast = false;
 
     private double drumRPM = 0; // stores current transfer drum rotation speed (RPM)
     double currentTime = 0;
@@ -57,8 +48,6 @@ public class IntakeController {
         return drumRPM;
     }
 
-    public boolean isTransferJamDetected() { return transferJamDetected; }
-
     public void toggleIntake() {
 
         if (Math.abs(intakePower) >= 0.5) {
@@ -66,13 +55,8 @@ public class IntakeController {
             transferPower = 0;
         } else {
             intakePower = targetSpeed;
-            transferPower = targetSpeed/4; // transfer runs slower to prevent jams
             intakeJamDetected = false;
             intakeStartTimer.reset();
-            // Starting the transfer: clear transfer jam state and reset its timer
-            transferJamDetected = false;
-            transferStartTimer.reset();
-            transferCommandedLast = true; // consider transfer commanded after toggling on
         }
     }
 
@@ -85,10 +69,6 @@ public class IntakeController {
         } else {
             intakePower = -targetSpeed;
             transferPower = -targetSpeed;
-            // Clearing transfer jam state when we explicitly reverse/start transfer
-            transferJamDetected = false;
-            transferStartTimer.reset();
-            transferCommandedLast = true;
         }
     }
 
@@ -101,6 +81,9 @@ public class IntakeController {
         drumRPM = transferDrum.getTransferDrumRPM();
         intakeRPM = intake.getIntakeMotorRPM();
 
+        if (intakeForward){
+
+        }
         // Intake jam detection
         // Only check after warmup period to allow the motor to spin up
         if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS) {
@@ -120,59 +103,9 @@ public class IntakeController {
             }
         }
 
-        // Transfer drum jam detection
-        // Determine the commanded transfer power this loop (what we intend to run)
-        float commandedTransferPower;
-        if (intakeForward) {
-            commandedTransferPower = 0.5f;
-        } else if (intakeReverse) {
-            commandedTransferPower = -0.5f;
-        } else {
-            commandedTransferPower = transferPower;
-        }
-
-        // Detect rising edge so warmup timer starts when we begin commanding the drum
-        if (Math.abs(commandedTransferPower) > 0.1f && !transferCommandedLast) {
-            transferStartTimer.reset();
-            transferCommandedLast = true;
-        }
-
-        // If we stop commanding the drum, clear the timer and state
-        if (Math.abs(commandedTransferPower) <= 0.1f) {
-            transferStartTimer.reset();
-            transferCommandedLast = false;
-            transferJamDetected = false;
-        }
-
-        // Only check for transfer jams when the drum is being commanded to spin
-        if (Math.abs(commandedTransferPower) > 0.1f) {
-            // If we've passed the warmup window, begin monitoring RPM
-            if (transferStartTimer.milliseconds() > TRANSFER_JAM_WARMUP_MS) {
-                if (Math.abs(drumRPM) < TRANSFER_JAM_RPM_THRESHOLD) {
-                    if (!transferJamDetected) {
-                        // first observation of a low RPM — start timer
-                        transferJamDetected = true;
-                        transferJamTimer.reset();
-                    } else if (transferJamTimer.milliseconds() >= TRANSFER_JAM_SHUTOFF_MS) {
-                        // jam persisted — stop the drum
-                        transferPower = 0;
-                    }
-                } else {
-                    // RPM recovered — clear jam detection
-                    transferJamDetected = false;
-                }
-            } // else still warming up — don't check yet
-        } else {
-            // Not commanding the drum — clear the start timer so next start will warm up
-            // (already handled above)
-        }
-
 
         intake.setIntakePower(intakePower);
-        if (transferJamDetected) {
-            // If transfer is jammed, always keep it stopped
-            transferDrum.runTransferDrum(0);
-        } else if (intakeForward) {
+        if (intakeForward) {
             transferDrum.runTransferDrum(0.5);
         } else if (intakeReverse){
             transferDrum.runTransferDrum(-0.5);
