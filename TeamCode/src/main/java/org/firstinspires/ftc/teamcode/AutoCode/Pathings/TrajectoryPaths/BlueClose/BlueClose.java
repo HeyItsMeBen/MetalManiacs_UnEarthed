@@ -105,7 +105,7 @@ public class BlueClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
-                        new InstantAction(() -> intakeController.update()),
+                        new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
                         collectPatternPGP(drive, drive.localizer.getPose())
                 )
         );
@@ -171,7 +171,7 @@ public class BlueClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.update()),
+                                new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
                                 park(drive, drive.localizer.getPose())
                         )
                 )

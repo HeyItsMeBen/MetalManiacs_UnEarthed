@@ -68,7 +68,7 @@ public class IntakeTester extends LinearOpMode {
             telemetry.addData("Balls Fed", intakeController.getBallsFed());
 
 
-            intakeController.update();
+            intakeController.update(gamepad1.touchpad, gamepad1.ps);
 
             telemetry.update();
 

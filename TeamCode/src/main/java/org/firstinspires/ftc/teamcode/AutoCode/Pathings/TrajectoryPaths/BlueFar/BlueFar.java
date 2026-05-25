@@ -109,7 +109,7 @@ public class BlueFar extends LinearOpMode {
                         new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
                         new InstantAction(() -> autoAimController.closeWebcam()),
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.update()),
+                                new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
                                 moveToScanPosition(drive, drive.localizer.getPose())
                         )
                 )
