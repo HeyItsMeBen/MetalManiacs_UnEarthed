@@ -128,8 +128,9 @@ public class FlywheelController {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 
-                        maintainOuttakeSpeed =
-                                flywheels.getFlywheelVelocity();
+                        // Do not overwrite the configured maintainOuttakeSpeed here.
+                        // maintainOuttakeSpeed should remain the baseline speed the
+                        // flywheels return to after trigger release.
 
                         launchTimer.reset();
                         launchState =
@@ -181,8 +182,7 @@ public class FlywheelController {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 
-                        maintainOuttakeSpeed =
-                                flywheels.getFlywheelVelocity();
+                        // Keep maintainOuttakeSpeed unchanged here as well.
 
                         launchState =
                                 LaunchState.FEEDING_BALL;
@@ -252,8 +252,7 @@ public class FlywheelController {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 
-                        maintainOuttakeSpeed =
-                                flywheels.getFlywheelVelocity();
+                        // Do not change maintainOuttakeSpeed here.
 
                         launchTimer.reset();
                         launchState =
@@ -305,8 +304,7 @@ public class FlywheelController {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 
-                        maintainOuttakeSpeed =
-                                flywheels.getFlywheelVelocity();
+                        // Maintain baseline speed; do not overwrite here.
 
                         launchState =
                                 LaunchState.FEEDING_BALL;
@@ -374,7 +372,7 @@ public class FlywheelController {
                 if (launchTimer.milliseconds() > 500) {
 
                     outtakeSpeedBeforeDrop = flywheels.getFlywheelVelocity();
-                    maintainOuttakeSpeed = flywheels.getFlywheelVelocity();
+                    // Do not change maintainOuttakeSpeed here; keep the baseline value.
 
                     launchTimer.reset();
                     launchState = LaunchState.FEEDING_BALL;
@@ -422,7 +420,7 @@ public class FlywheelController {
                 if (launchTimer.milliseconds() > 1000) {
 
                     outtakeSpeedBeforeDrop = flywheels.getFlywheelVelocity();
-                    maintainOuttakeSpeed = flywheels.getFlywheelVelocity();
+                    // Keep maintainOuttakeSpeed as the configured baseline.
 
                     launchState = LaunchState.FEEDING_BALL;
                     launchTimer.reset();
