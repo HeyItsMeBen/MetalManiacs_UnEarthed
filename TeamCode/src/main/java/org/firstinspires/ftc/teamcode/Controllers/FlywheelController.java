@@ -86,9 +86,9 @@ public class FlywheelController {
                        double distanceToTag,
                        boolean tagVisible) {
 
-        flywheels.setFlywheelVelocity(targetSpeed+extraOuttakeSpeed);
-
         if (triggerPressed) {
+
+            intake.setIntakePower(.7);
 
             switch (launchState) {
 
@@ -204,6 +204,8 @@ public class FlywheelController {
             }
 
         }
+        flywheels.setFlywheelVelocity(targetSpeed+extraOuttakeSpeed);
+
     }
 
     public void updateWithServoKickForAuto(boolean triggerPressed,
