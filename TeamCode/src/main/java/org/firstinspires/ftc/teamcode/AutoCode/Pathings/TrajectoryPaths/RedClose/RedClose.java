@@ -62,8 +62,8 @@ public class RedClose extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(0));
-        //Pose2d startPose = new Pose2d(52, 52, Math.toRadians(40));
+        //Pose2d startPose = new Pose2d(52, 52, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(52, 52, Math.toRadians(40));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -95,6 +95,7 @@ public class RedClose extends LinearOpMode {
                         )
                 )
         );
+
 
         double autoAimStartTime=System.currentTimeMillis();
         while (System.currentTimeMillis()<autoAimStartTime+1000){
@@ -176,6 +177,7 @@ public class RedClose extends LinearOpMode {
                         )
                 )
         );
+
 
         PassOnFromAutoValues.currentPose = drive.localizer.getPose();
         PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.RED;
