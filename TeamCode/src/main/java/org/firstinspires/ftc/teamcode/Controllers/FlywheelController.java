@@ -9,29 +9,33 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 public class FlywheelController {
 
+    //Mechanisms
     private Flywheels flywheels;
     private Transfer transferDrum;
     private Transfer transferKick;
     private Intake intake;
     private OuttakeHood hood;
-    public boolean shouldRumble = false;
-    private ElapsedTime launchTimer = new ElapsedTime();
 
-    private ElapsedTime powerUpTimer = new ElapsedTime();
-
-    private double maintainOuttakeSpeed = 500;
-    public double extraOuttakeSpeed = 0;
-
+    //data
     private int ballsFed = 0;
-
-    private double targetSpeed = 1200;
     private double outtakeSpeedBeforeDrop = 0;
 
+    //speed control
+    private double maintainOuttakeSpeed = 500;  //Only used in the very beginning. Before tag has ever been seen.
+    public double extraOuttakeSpeed = 0;        //extra outtake speed for manual controls
+    private double targetSpeed = 1200;
     private float rampUpSpeed = 3;
+
+    //timers
+    private ElapsedTime launchTimer = new ElapsedTime();
+    private ElapsedTime powerUpTimer = new ElapsedTime();
     double currentTime = 0;
     double flywheelStartTime=0;
     double flywheelStartPower=0;
-    public enum LaunchState {
+
+    //other
+    public boolean shouldRumble = false;
+    public enum LaunchState {   //List of all launch states
         IDLE,
         SPINNING_UP,
         WAITING_AFTER_SPINUP,
@@ -41,6 +45,7 @@ public class FlywheelController {
 
     private LaunchState launchState = LaunchState.IDLE;
 
+    //constructor
     public FlywheelController(Flywheels flywheels,
                               Transfer transferDrum, Transfer transferKick,
                               Intake intake, OuttakeHood hood) {
@@ -52,6 +57,7 @@ public class FlywheelController {
         this.hood = hood;
     }
 
+    //Retrieve information
     public LaunchState getState() {
         return launchState;
     }
@@ -63,7 +69,15 @@ public class FlywheelController {
     public double getMaintainSpeed() {
         return maintainOuttakeSpeed;
     }
+    public boolean isBusy() {
+        return launchState != LaunchState.IDLE;
+    }
 
+    public boolean isIdle() {
+        return launchState == LaunchState.IDLE;
+    }
+
+    //controls
     public void setExtraSpeed(double extra) {
         extraOuttakeSpeed = extra;
     }
@@ -82,6 +96,7 @@ public class FlywheelController {
 
     }
 
+    //update method
     public void update(boolean triggerPressed,
                        double distanceToTag,
                        boolean tagVisible) {
@@ -94,11 +109,11 @@ public class FlywheelController {
 
                 case IDLE:
 
-                    if (distanceToTag!=0) {
+                    if (distanceToTag!=0) { //If the tag has been seen and distance is calculated, set the target speed.
                         targetSpeed = flywheels.getVelocityFromDistance(distanceToTag);
                         flywheelStartTime=System.currentTimeMillis();
                         flywheelStartPower= flywheels.getFlywheelVelocity();
-                    } else {
+                    } else {    //otherwise, stay at the slow default speed
                         targetSpeed = maintainOuttakeSpeed;
                         flywheelStartTime=System.currentTimeMillis();
                         flywheelStartPower= flywheels.getFlywheelVelocity();
@@ -150,9 +165,9 @@ public class FlywheelController {
                     transferDrum.runTransferDrum(1);
 
                     if (flywheels.getFlywheelVelocity()
-                            < outtakeSpeedBeforeDrop - 100) {
+                            < outtakeSpeedBeforeDrop - 100) {   //waits for an artifact to launch
 
-                        transferDrum.runTransferDrum(0);
+                        transferDrum.runTransferDrum(0);    //shut off wheels to prevent more launches, until the flywheel has gotten back up to speed.
                         intake.setIntakePower(0);
 
                         ballsFed++;
@@ -161,12 +176,12 @@ public class FlywheelController {
 
                         if (ballsFed < 3) {
                             launchState =
-                                    LaunchState.WAITING_BETWEEN_BALLS;
+                                    LaunchState.WAITING_BETWEEN_BALLS;  //allows the flywheel to get back up to speed
                         } else {
                             launchState = LaunchState.IDLE;
                         }
 
-                    } else if (launchTimer.milliseconds() > 1800) {
+                    } else if (launchTimer.milliseconds() > 1800) { //go to idle mode if no balls were launched for 1.8 seconds. Idk why we have this, but keep it anyways for now.
 
                         transferDrum.runTransferDrum(0);
                         intake.setIntakePower(0);
@@ -192,7 +207,7 @@ public class FlywheelController {
                     break;
             }
 
-        } else {
+        } else {    //do this if trigger is not pressed
             targetSpeed = maintainOuttakeSpeed;
 
             if (launchState != LaunchState.IDLE) {
@@ -204,7 +219,7 @@ public class FlywheelController {
             }
 
         }
-        flywheels.setFlywheelVelocity(targetSpeed+extraOuttakeSpeed);
+        flywheels.setFlywheelVelocity(targetSpeed+extraOuttakeSpeed);   //send the calculated power to flywheels
 
     }
 
@@ -330,6 +345,7 @@ public class FlywheelController {
         }
     }
 
+    //Methods for autonomous
     public void startAutoLaunch(double distanceToTag, boolean tagVisible) {
 
         if (launchState != LaunchState.IDLE) return;
@@ -430,15 +446,4 @@ public class FlywheelController {
                 break;
         }
     }
-
-    public boolean isBusy() {
-        return launchState != LaunchState.IDLE;
-    }
-
-    public boolean isIdle() {
-        return launchState == LaunchState.IDLE;
-    }
-
-
-
 }

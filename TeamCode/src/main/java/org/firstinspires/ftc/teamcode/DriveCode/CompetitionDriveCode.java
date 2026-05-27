@@ -51,15 +51,11 @@ import java.util.List;
 public class CompetitionDriveCode extends OpMode {
 
     public GamepadEx driver;
-    public RumbleController controller_rumble;
-
     List<LynxModule> allHubs;
 
     // Mechanisms
     Intake intake;
     Flywheels flywheels;
-    Turret turret;
-    AutoAim autoAim;
     Transfer transferKick;
     Transfer transferDrum;
     Lights lights;
@@ -75,30 +71,29 @@ public class CompetitionDriveCode extends OpMode {
 
     public String ballSequence = "XXX";
 
-    double oldTime;
-
     String teamColor= "Red";
 
     @Override
     public void init() {
-
+        //object creation
         driver = new GamepadEx(gamepad1);
         rumbleController = new RumbleController(gamepad1);
 
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        //turret = new Turret(hardwareMap);
-        //autoAim = new AutoAim(Math.toRadians(15));
         transferKick = new Transfer(hardwareMap);
         transferDrum = new Transfer(hardwareMap);
         hood = new OuttakeHood(hardwareMap);
         lights = new Lights(hardwareMap);
 
+        //Set the appropriate team color based on the last auto that was run.
         if (PassOnFromAutoValues.teamColor == PassOnFromAutoValues.TeamColor.RED) {
             teamColor="Red";
         } else {
             teamColor="Blue";
         }
+
+        //create controllers
         driveController = new DriveChassisController(hardwareMap);
         autoAimController = new AutoAimTurretController(hardwareMap, PassOnFromAutoValues.currentPose, teamColor);
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
@@ -133,6 +128,7 @@ public class CompetitionDriveCode extends OpMode {
         double rightStickY = driver.getRightY();
         double rotate;
 
+        //read buttons
         if (driver.getButton(GamepadKeys.Button.Y)) {
             driveController.resetYaw();
         }
@@ -143,12 +139,6 @@ public class CompetitionDriveCode extends OpMode {
 
         if (driver.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
             driveController.toggleFieldCentric();
-        }
-
-        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-            flywheelController.extraOuttakeSpeed+=25;
-        } else if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-            flywheelController.extraOuttakeSpeed-=25;
         }
 
         if (driveController.isSnapRotation()) {
@@ -197,21 +187,22 @@ public class CompetitionDriveCode extends OpMode {
             rumbleController.stopContinuosRumbling();
         }
 
-        //When ball is collected call this rumble method
-        //rumbleController.ballCollected();
-
         intakeController.update(gamepad1.touchpad, gamepad1.ps);
 
         // Flywheels
         boolean triggerPressed =
                 driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1;
 
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            flywheelController.extraOuttakeSpeed+=25;
+        } else if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            flywheelController.extraOuttakeSpeed-=25;
+        }
         flywheelController.update(
                 triggerPressed,
                 autoAimController.getDistanceToGoalInches(),
                 autoAimController.isTargetFound()
         );
-
         if (flywheelController.shouldRumble){
             flywheelController.shouldRumble = false;
             rumbleController.ballLaunched();
@@ -220,50 +211,14 @@ public class CompetitionDriveCode extends OpMode {
         if (!autoAimController.isCameraAvailable()) {
             telemetry.addData("WARNING", "Camera disconnected - auto aim disabled");
         }
-        //12.25 10 (23.5+1/8)
+
+        //Displays important information for driver
         telemetry.addData("extraOuttakeSpeed: ", flywheelController.extraOuttakeSpeed);
         telemetry.addData("IsRed?: ", autoAimController.isRed);
 
         // Debug telemetry for intake and transfer amps
-        telemetry.addData("Intake Amps", "%.2f", intakeController.getIntakeAmps());
-        telemetry.addData("Transfer Amps", "%.2f", intakeController.getTransferAmps());
-
-//        telemetry.addData("Auto aiming",
-//                autoAimController.isAutoAiming());
-//
-//        telemetry.addData("Sees april tag",
-//                autoAimController.isTargetFound());
-//
-//        telemetry.addData("Goal distance (inches)",
-//                autoAimController.getDistanceToGoalInches());
-//        telemetry.addLine("(robot position) X: "+autoAimController.robPos.position.x+", Y: "+ autoAimController.robPos.position.y+", Heading: " + Math.toDegrees(autoAimController.robPos.heading.toDouble()));
-//
-//        telemetry.addData("Target Turret Position", Math.toRadians(autoAimController.autoAim.turretAngle));
-//        telemetry.addData("posX", autoAimController.autoAim.posX*39.3700787);
-//        telemetry.addData("posY", autoAimController.autoAim.posY*39.3700787);
-//        telemetry.addData("Target speed", flywheelController.getTargetSpeed());
-
-//        telemetry.addData("Target turret angle (degrees)",
-//                Math.toDegrees(autoAimController.turretAngleTelemetry));
-//
-//        telemetry.addData("Launcher State",
-//                flywheelController.getState());
-//
-//        telemetry.addData("Target RPM",
-//                flywheelController.getTargetSpeed());
-//
-//        telemetry.addData("Current RPM",
-//                flywheels.getFlywheelVelocity());
-//
-//        telemetry.addData("Current Turret Timer",
-//                autoAimController.getCurrentTime());
-//
-//        telemetry.addData("Turret Power",
-//                autoAimController.getTurretPower());
-//
-//        telemetry.addData("Turret Needed Power",
-//                autoAimController.getNeededPower());
-
+        telemetry.addData("Intake RPM", "%.2f", intakeController.getIntakeRPM());
+        telemetry.addData("Transfer RPM", "%.2f", intakeController.getTransferRPM());
 
         // LED
         lightsController.update(

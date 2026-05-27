@@ -7,14 +7,17 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 public class IntakeController {
 
-    private float targetSpeed = .7f; // determines how fast the intake should run
-    private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
+    //Mechanisms
     private Intake intake;
     private Transfer transferDrum;
     private Transfer transferKick;
 
+    //intake and transfer setup
+    private float targetSpeed = .7f; // determines how fast the intake should run
+    private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
     private float intakePower = 0;
     private float transferPower = 0;
+
     // Transfer (drum) jam detection
     private static final double TRANSFER_JAM_RPM_THRESHOLD = 200; // rpm above which transfer is considered jammed
     private static final double TRANSFER_JAM_WARMUP_MS = 300;   // allow some spin-up time before checking
@@ -29,7 +32,7 @@ public class IntakeController {
     double currentTime = 0;
     public double intakeRPM;
 
-    // Jam detection
+    //Intake Jam detection
     private static final double INTAKE_JAM_RPM_THRESHOLD = 200; //RPM below which intake is considered jammed
     private static final double JAM_WARMUP_MS = 1000;           // wait 1s after start before checking for jams
     private static final double JAM_SHUTOFF_MS = 0;          // hold jam for 1s before shutting off
@@ -39,26 +42,14 @@ public class IntakeController {
 
     int ballsFed = 0;
 
+    //constructor
     public IntakeController(Intake intake, Transfer transferDrum, Transfer transferKick) {
         this.intake = intake;
         this.transferDrum = transferDrum;
         this.transferKick = transferKick;
     }
 
-    public boolean isIntakeRunning() {
-        return Math.abs(intakePower) > 0.1;
-    }
-
-    public double getIntakePower() {
-        return intake.getIntakePower();
-    }
-
-    public double getDrumRPM() {
-        return drumRPM;
-    }
-
-    public boolean isTransferJamDetected() { return transferJamDetected; }
-
+    //Intake Control
     public void toggleIntake() {
 
         if (Math.abs(intakePower) >= 0.5) {
@@ -92,16 +83,12 @@ public class IntakeController {
         }
     }
 
-    public double getCurrentTime(){
-        return currentTime;
-    }
-
+    //primary update method
     public void update(boolean intakeForward, boolean intakeReverse) {
         // Update RPM readings
         drumRPM = transferDrum.getTransferDrumRPM();
         intakeRPM = intake.getIntakeMotorRPM();
 
-        // Intake jam detection
         // Intake jam detection
         // Only check after warmup period to allow the motor to spin up
         if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS) {
@@ -179,13 +166,40 @@ public class IntakeController {
         }
     }
 
-    public int getBallsFed() {
-        return ballsFed;
+    //Return data about transfer and intake
+    public double getIntakePower() {
+        return intake.getIntakePower();
     }
     public float getTransferPower(){
         return transferPower;
     }
+    public double getIntakeRPM(){
+        return intakeRPM;
+    }
+    public double getTransferRPM(){
+        return drumRPM;
+    }
+    public int getBallsFed() {
+        return ballsFed;
+    }
+    public boolean isIntakeRunning() {
+        return Math.abs(intakePower) > 0.1;
+    }
+    public boolean isTransferJamDetected() { return transferJamDetected; }
+    public double getCurrentTime(){
+        return currentTime;
+    }
 
+    //Transfer kick controls
+    public void transferKickUp() {
+        transferKick.setTransferKickUp();
+    }
+
+    public void transferKickDown(){
+        transferKick.setTransferKickDown();
+    }
+
+    //other methods
     public void stopAll() {
         intake.setIntakePower(0);
         transferDrum.runTransferDrum(0);
@@ -195,13 +209,4 @@ public class IntakeController {
         intake.setIntakePower(0.5);
         transferDrum.runTransferDrum(0.5);
     }
-
-    public void transferKickUp() {
-        transferKick.setTransferKickUp();
-    }
-
-    public void transferKickDown(){
-        transferKick.setTransferKickDown();
-    }
-
 }
