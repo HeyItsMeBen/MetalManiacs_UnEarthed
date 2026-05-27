@@ -16,7 +16,7 @@ public class IntakeController {
     private float intakePower = 0;
     private float transferPower = 0;
     // Transfer (drum) jam detection
-    private static final double TRANSFER_JAM_AMP_THRESHOLD = 4.5; // amps above which transfer is considered jammed
+    private static final double TRANSFER_JAM_RPM_THRESHOLD = 200; // rpm above which transfer is considered jammed
     private static final double TRANSFER_JAM_WARMUP_MS = 300;   // allow some spin-up time before checking
     private static final double TRANSFER_JAM_SHUTOFF_MS = 500;  // if jam persists this long, stop the drum
     private boolean transferJamDetected = false;
@@ -28,11 +28,9 @@ public class IntakeController {
     private double drumRPM = 0; // stores current transfer drum rotation speed (RPM)
     double currentTime = 0;
     public double intakeRPM;
-    public double intakeAmps;
-    public double transferAmps;
 
     // Jam detection
-    private static final double INTAKE_JAM_AMP_THRESHOLD = 7.0; // amps above which intake is considered jammed
+    private static final double INTAKE_JAM_RPM_THRESHOLD = 200; //RPM below which intake is considered jammed
     private static final double JAM_WARMUP_MS = 1000;           // wait 1s after start before checking for jams
     private static final double JAM_SHUTOFF_MS = 0;          // hold jam for 1s before shutting off
     private boolean intakeJamDetected = false;
@@ -102,14 +100,12 @@ public class IntakeController {
         // Update RPM readings
         drumRPM = transferDrum.getTransferDrumRPM();
         intakeRPM = intake.getIntakeMotorRPM();
-        intakeAmps = intake.getIntakeMotorAmps();
-        transferAmps = transferDrum.getTransferDrumAmps();
 
         // Intake jam detection
         // Intake jam detection
         // Only check after warmup period to allow the motor to spin up
         if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS) {
-            if (intakeAmps >= INTAKE_JAM_AMP_THRESHOLD) {
+            if (intakeRPM < INTAKE_JAM_RPM_THRESHOLD) {
                 if (!intakeJamDetected) {
                     // Jam just started — begin the shutoff countdown
                     intakeJamDetected = true;
@@ -120,7 +116,7 @@ public class IntakeController {
                     transferPower = 0;
                 }
             } else {
-                // Current recovered — clear the jam flag
+                // RPM recovered — clear the jam flag
                 intakeJamDetected = false;
             }
         }
@@ -151,11 +147,11 @@ public class IntakeController {
 
         // Only check for transfer jams when the drum is being commanded to spin
         if (Math.abs(commandedTransferPower) > 0.1f) {
-            // If we've passed the warmup window, begin monitoring current
+            // If we've passed the warmup window, begin monitoring RPM
             if (transferStartTimer.milliseconds() > TRANSFER_JAM_WARMUP_MS) {
-                if (transferAmps >= TRANSFER_JAM_AMP_THRESHOLD) {
+                if (drumRPM < TRANSFER_JAM_RPM_THRESHOLD) {
                     if (!transferJamDetected) {
-                        // first observation of a high current draw — start timer
+                        // first observation of a low RPM — start timer
                         transferJamDetected = true;
                         transferJamTimer.reset();
                     } else if (transferJamTimer.milliseconds() >= TRANSFER_JAM_SHUTOFF_MS) {
@@ -163,7 +159,7 @@ public class IntakeController {
                         transferPower = 0;
                     }
                 } else {
-                    // Current recovered — clear jam detection
+                    //RPM recovered — clear jam detection
                     transferJamDetected = false;
                 }
             } // else still warming up — don't check yet
@@ -188,14 +184,6 @@ public class IntakeController {
     }
     public float getTransferPower(){
         return transferPower;
-    }
-
-    public double getIntakeAmps() {
-        return intakeAmps;
-    }
-
-    public double getTransferAmps() {
-        return transferAmps;
     }
 
     public void stopAll() {

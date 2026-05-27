@@ -103,8 +103,8 @@ public class AutoAimTurretController {
 
         //April tag stuff
         if (USE_WEBCAM) {
-            //NOTE: gain is 50 for comp field, but 200 for practice field
-            setManualExposure(6, 350);  // Use low exposure time to reduce motion blur
+            //DO NOT SET GAIN TO ANYTHING HIGHER THAN 255 (it'll go dark)
+            setManualExposure(6, 100);  // Use low exposure time to reduce motion blur
         }
     }
 
