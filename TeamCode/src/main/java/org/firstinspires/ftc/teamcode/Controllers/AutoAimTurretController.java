@@ -162,17 +162,17 @@ public class AutoAimTurretController {
             turretPower = -0.5f;
             turretStartTime=System.currentTimeMillis();
             turretStartPower=turret.getTurretPower();
-//            turret.setMotorPower(-0.5);
+            turret.setMotorPower(-0.5);
         } else if (right) {
             turretPower = 0.5f;
             turretStartTime=System.currentTimeMillis();
             turretStartPower=turret.getTurretPower();
-//            turret.setMotorPower(0.5);
+            turret.setMotorPower(0.5);
         } else {
             turretPower = 0;
             turretStartTime=System.currentTimeMillis();
             turretStartPower=turret.getTurretPower();
-//            turret.setMotorPower(0);
+            turret.setMotorPower(0);
         }
     }
     public void turnToCenter() {
