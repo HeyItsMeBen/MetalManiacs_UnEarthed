@@ -152,10 +152,15 @@ public class DriveChassisController {
 
         double scale = 0.75 * speedMultiplier;
 
-        setSafePower(frontLeft,  scale * fl / max);
-        setSafePower(frontRight, scale * fr / max);
-        setSafePower(backRight,  scale * br / max);
-        setSafePower(backLeft,   scale * bl / max);
+//        setSafePower(frontLeft,  scale * fl / max);
+//        setSafePower(frontRight, scale * fr / max);
+//        setSafePower(backRight,  scale * br / max);
+//        setSafePower(backLeft,   scale * bl / max);
+
+        frontLeft.setPower(scale * fl / max);
+        frontRight.setPower(scale * fr / max);
+        backRight.setPower(scale * br / max);
+        backLeft.setPower(scale * bl / max);
     }
 
     private void setSafePower(DcMotor motor, double targetPower) {
