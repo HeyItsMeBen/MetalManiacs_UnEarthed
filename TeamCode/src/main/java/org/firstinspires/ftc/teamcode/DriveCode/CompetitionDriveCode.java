@@ -72,6 +72,8 @@ public class CompetitionDriveCode extends OpMode {
     public String ballSequence = "XXX";
 
     String teamColor= "Red";
+    double oldTime = 0;
+
 
     @Override
     public void init() {
@@ -187,6 +189,7 @@ public class CompetitionDriveCode extends OpMode {
             rumbleController.stopContinuosRumbling();
         }
 
+//        telemetry.addData("Jam rpm", intakeController.getTransferJamRpmThreshold());
         intakeController.update(gamepad1.touchpad, gamepad1.ps);
 
         // Flywheels
@@ -217,11 +220,8 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("IsRed?: ", autoAimController.isRed);
 
         // Debug telemetry for intake and transfer amps
-        telemetry.addData("Intake RPM", "%.2f", intakeController.getIntakeRPM());
-        telemetry.addData("Transfer RPM", "%.2f", intakeController.getTransferRPM());
-
-        telemetry.addData("Transfer Jam", intakeController.isJammed);
-
+//        telemetry.addData("Intake RPM", "%.2f", intakeController.getIntakeRPM());
+//        telemetry.addData("Transfer RPM", "%.2f", intakeController.getTransferRPM());
 
         // LED
         lightsController.update(
@@ -238,6 +238,8 @@ public class CompetitionDriveCode extends OpMode {
 //        oldTime = newTime;
 //        telemetry.addData("LoopTime (Hz):", frequency);
 //        telemetry.addData("Loop Time (ms): ", loopTime * 1000);
+
+
         telemetry.update();
 
         for (LynxModule hub : allHubs) {
