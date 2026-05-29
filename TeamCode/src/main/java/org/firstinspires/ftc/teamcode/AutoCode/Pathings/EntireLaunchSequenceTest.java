@@ -50,7 +50,7 @@ public class EntireLaunchSequenceTest extends LinearOpMode {
         Lights lights = new Lights(hardwareMap);
 
         IntakeController intakeController = new IntakeController(intake, transferDrum, transferServo);
-        flywheelController = new FlywheelController(flywheels, transferDrum, transferServo, intake, hood);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferServo, intake, hood, intakeController);
         LightsController lightsController = new LightsController(lights);
 
         AutoAimTurretController autoAimController = new AutoAimTurretController(hardwareMap, startPose, "Red"); // May crop out, takes too long to initialize

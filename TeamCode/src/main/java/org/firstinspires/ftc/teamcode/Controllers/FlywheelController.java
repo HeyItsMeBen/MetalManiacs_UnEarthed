@@ -15,6 +15,7 @@ public class FlywheelController {
     private Transfer transferKick;
     private Intake intake;
     private OuttakeHood hood;
+    private IntakeController intakeController;
 
     //data
     private int ballsFed = 0;
@@ -48,13 +49,14 @@ public class FlywheelController {
     //constructor
     public FlywheelController(Flywheels flywheels,
                               Transfer transferDrum, Transfer transferKick,
-                              Intake intake, OuttakeHood hood) {
+                              Intake intake, OuttakeHood hood, IntakeController intakeController) {
 
         this.flywheels = flywheels;
         this.transferDrum = transferDrum;
         this.transferKick = transferKick;
         this.intake = intake;
         this.hood = hood;
+        this.intakeController = intakeController;
     }
 
     //Retrieve information
@@ -104,6 +106,7 @@ public class FlywheelController {
         if (triggerPressed) {
 
             intake.setIntakePower(.7);
+            intakeController.isJammed = false;
 
             switch (launchState) {
 

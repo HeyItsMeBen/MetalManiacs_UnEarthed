@@ -76,7 +76,7 @@ public class RedClose extends LinearOpMode {
         lights = new Lights(hardwareMap);
 
         intakeController = new IntakeController(intake, transferDrum, transferKick);
-        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood, intakeController);
         lightsController = new LightsController(lights);
 
         autoAimController = new AutoAimTurretController(hardwareMap, startPose,"Red"); // May crop out, takes too long to initialize

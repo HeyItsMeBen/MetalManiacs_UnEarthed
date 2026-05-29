@@ -75,7 +75,7 @@ public class CompetitionDriveCode extends OpMode {
 
     @Override
     public void init() {
-        //object creation
+
         driver = new GamepadEx(gamepad1);
         rumbleController = new RumbleController(gamepad1);
 
@@ -96,8 +96,8 @@ public class CompetitionDriveCode extends OpMode {
         //create controllers
         driveController = new DriveChassisController(hardwareMap);
         autoAimController = new AutoAimTurretController(hardwareMap, PassOnFromAutoValues.currentPose, teamColor);
-        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood);
         intakeController = new IntakeController(intake, transferDrum, transferKick);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood, intakeController);
         lightsController = new LightsController(lights);
 
         telemetry.addData("Status", "Initialized");
@@ -220,6 +220,9 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("Intake RPM", "%.2f", intakeController.getIntakeRPM());
         telemetry.addData("Transfer RPM", "%.2f", intakeController.getTransferRPM());
 
+        telemetry.addData("Transfer Jam", intakeController.isJammed);
+
+
         // LED
         lightsController.update(
                 autoAimController.isTargetFound(),
@@ -244,7 +247,11 @@ public class CompetitionDriveCode extends OpMode {
 
     @Override
     public void stop() {
-        autoAimController.shutdown();
-        lightsController.turnOff();
+        if (autoAimController != null) {
+            autoAimController.shutdown();
+        }
+        if (lightsController != null) {
+            lightsController.turnOff();
+        }
     }
 }
