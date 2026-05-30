@@ -53,9 +53,8 @@ import java.util.List;
 public final class TuningOpModes {
     // TODO: change this to TankDrive.class if you're using tank
     public static final Class<?> DRIVE_CLASS = MecanumDrive.class;
-
     public static final String GROUP = "quickstart";
-    public static final boolean HIDDEN = false; // This hides the tuners from popping up on the TeleOP. Switch back to false if you want to tune.
+    public static final boolean HIDDEN = true; // This hides the tuners from popping up on the TeleOP. Switch back to false if you want to tune.
 
     private TuningOpModes() {}
 
