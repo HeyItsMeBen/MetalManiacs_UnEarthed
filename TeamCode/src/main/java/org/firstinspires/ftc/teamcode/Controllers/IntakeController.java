@@ -17,6 +17,7 @@ public class IntakeController {
     private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
     private float intakePower = 0;
     private float transferPower = 0;
+    private float transferMultiplier = .5f;
 
     // Transfer (drum) jam detection
     private static final double TRANSFER_JAM_RPM_OFFSET = 75; // jam if transfer falls below average by this amount
@@ -82,7 +83,7 @@ public class IntakeController {
         } else {
             intakePower = targetSpeed;
             if (!isJammed){
-                transferPower = targetSpeed; // transfer runs slower to prevent jams
+                transferPower = targetSpeed* transferMultiplier; // transfer runs slower to prevent jams
             }
             intakeJamDetected = false;
             intakeStartTimer.reset();
@@ -197,9 +198,9 @@ public class IntakeController {
             // If transfer is jammed, always keep it stopped
             transferDrum.runTransferDrum(0);
         } else if (intakeForward) {
-            transferDrum.runTransferDrum(0.5);
+            transferDrum.runTransferDrum(0.5 );
         } else if (intakeReverse){
-            transferDrum.runTransferDrum(-0.5);
+            transferDrum.runTransferDrum(-0.5 );
         } else {
             transferDrum.runTransferDrum(transferPower);
         }

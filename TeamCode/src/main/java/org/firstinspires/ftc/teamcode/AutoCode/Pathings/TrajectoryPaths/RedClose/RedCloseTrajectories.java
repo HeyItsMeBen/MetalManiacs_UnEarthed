@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
 
 public class RedCloseTrajectories {
 
-    static double defaultVelocity = 80.0;
+    static double defaultVelocity = 100.0;
 
     static double defaultAngVelocity = Math.PI;
 
-    static double patternCollectionVelocity = 30.0;
+    static double patternCollectionVelocity = 40.0;
 
     static double patternCollectionAngVelocity = Math.PI;
 
@@ -51,7 +51,7 @@ public class RedCloseTrajectories {
         return drive.actionBuilder(currentPose)
 
                 .setReversed(false)
-                .splineToSplineHeading(new Pose2d(50,8, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint)
+                .splineToSplineHeading(new Pose2d(55,8, Math.toRadians(0)), Math.toRadians(0), patternCollectionConstraint)
 
                 .build();
     }
@@ -61,7 +61,7 @@ public class RedCloseTrajectories {
 
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(30,-14), Math.toRadians(0), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(50, -14), Math.toRadians(0), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(55, -14), Math.toRadians(0), patternCollectionConstraint)
 
                 .build();
     }
@@ -71,7 +71,7 @@ public class RedCloseTrajectories {
 
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(37, -40), Math.toRadians(0), defaultSpeedConstraint)
-                .splineToConstantHeading(new Vector2d(50, -40), Math.toRadians(0), patternCollectionConstraint)
+                .splineToConstantHeading(new Vector2d(55, -40), Math.toRadians(0), patternCollectionConstraint)
 
                 .build();
 
