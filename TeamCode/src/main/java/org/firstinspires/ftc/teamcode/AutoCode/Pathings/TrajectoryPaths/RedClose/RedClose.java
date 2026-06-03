@@ -56,6 +56,10 @@ public class RedClose extends LinearOpMode {
     LightsController lightsController;
     AutoAimTurretController autoAimController;
 
+    // Background intake updater
+    private Thread intakeUpdaterThread;
+    private volatile boolean intakeUpdaterRunning = false;
+
     public String ballSequence = "XXX";
 
 
@@ -84,10 +88,26 @@ public class RedClose extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
+        // Start background updater thread for intake
+        intakeUpdaterRunning = true;
+        intakeUpdaterThread = new Thread(() -> {
+            try {
+                while (opModeIsActive() && intakeUpdaterRunning && !isStopRequested()) {
+                    intakeController.update(gamepad1.touchpad, gamepad1.ps);
+                    Thread.sleep(20);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }, "Intake-Updater-Thread");
+        intakeUpdaterThread.setDaemon(true);
+        intakeUpdaterThread.start();
+
         lightsController.update(false, false, "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(
+                        new InstantAction(() -> intakeController.isJammed = true),
                         new InstantAction(() -> intakeController.toggleIntake()),
                         new ParallelAction(
                                 new InstantAction(() -> flywheelController.rampUp()),
@@ -97,11 +117,11 @@ public class RedClose extends LinearOpMode {
         );
 
         double autoAimStartTime=System.currentTimeMillis();
-       while (System.currentTimeMillis()<autoAimStartTime+1000){
+        while (opModeIsActive() && System.currentTimeMillis()<autoAimStartTime+1000){
             autoAimController.updateWithTimeout(false, false);
-       }
-       autoAimController.setTurretPower(0);
-       lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
+        }
+        autoAimController.setTurretPower(0);
+        lightsController.update(autoAimController.isTargetFound(), intakeController.isIntakeRunning(), "Red", ballSequence);
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -120,7 +140,7 @@ public class RedClose extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
+//                        new InstantAction(() -> intakeController.toggleIntake()),
                         collectPatternPPG(drive, drive.localizer.getPose())
                 )
         );
@@ -148,6 +168,7 @@ public class RedClose extends LinearOpMode {
 
        Actions.runBlocking(
                new SequentialAction(
+//                       new InstantAction(() -> intakeController.toggleIntake()),
                        collectPatternGPP(drive, drive.localizer.getPose())
                 )
        );
@@ -155,7 +176,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                               new InstantAction(() -> intakeController.toggleIntake()),
+//                               new InstantAction(() -> intakeController.toggleIntake()),
                                 firingPosition(drive, drive.localizer.getPose())
                         ),
                         new FlywheelSequenceAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
@@ -163,7 +184,7 @@ public class RedClose extends LinearOpMode {
         );
 
         double autoAimFinishTime=System.currentTimeMillis();
-        while (System.currentTimeMillis()<autoAimFinishTime+1000){
+        while (opModeIsActive() && System.currentTimeMillis()<autoAimFinishTime+1000){
            autoAimController.turnToCenter();
         }
 
@@ -176,6 +197,16 @@ public class RedClose extends LinearOpMode {
                 )
         );
 
+        // Stop the intake updater thread cleanly before exiting
+        intakeUpdaterRunning = false;
+        if (intakeUpdaterThread != null && intakeUpdaterThread.isAlive()) {
+            try {
+                intakeUpdaterThread.interrupt();
+                intakeUpdaterThread.join(250);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
 
         PassOnFromAutoValues.currentPose = drive.localizer.getPose();
         PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.RED;
@@ -183,4 +214,3 @@ public class RedClose extends LinearOpMode {
     }
 
 }
-

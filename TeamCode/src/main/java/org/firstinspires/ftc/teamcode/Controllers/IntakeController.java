@@ -148,7 +148,8 @@ public class IntakeController {
         // Determine the commanded transfer power this loop (what we intend to run)
         float commandedTransferPower;
         if (intakeForward) {
-            commandedTransferPower = 0.5f;
+            // If jammed, do not command the transfer drum even if intake forward is requested
+            commandedTransferPower = isJammed ? 0.0f : 0.5f;
         } else if (intakeReverse) {
             commandedTransferPower = -0.5f;
         } else {
@@ -197,12 +198,9 @@ public class IntakeController {
         if (transferJamDetected) {
             // If transfer is jammed, always keep it stopped
             transferDrum.runTransferDrum(0);
-        } else if (intakeForward) {
-            transferDrum.runTransferDrum(0.5 );
-        } else if (intakeReverse){
-            transferDrum.runTransferDrum(-0.5 );
         } else {
-            transferDrum.runTransferDrum(transferPower);
+            // Use the computed commandedTransferPower which already incorporates isJammed and direct commands
+            transferDrum.runTransferDrum(commandedTransferPower);
         }
     }
 
