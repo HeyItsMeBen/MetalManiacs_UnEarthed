@@ -67,10 +67,10 @@ public class Turret {
         int currentPos = turretMotor.getCurrentPosition();
 //
 //        // Check if we're at target
-//        if (Math.abs(currentPos - target) < POSITION_TOLERANCE) {
-//            turretMotor.setPower(0);
-//            return;
-//        }
+        if (Math.abs(currentPos - target) < POSITION_TOLERANCE) {
+            turretMotor.setPower(0);
+            return;
+        }
 
         // Move towards target
         if(currentPos < target){

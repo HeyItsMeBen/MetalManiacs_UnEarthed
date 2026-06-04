@@ -127,22 +127,25 @@ public class IntakeController {
 
         // Intake jam detection
         // Only check after warmup period to allow the motor to spin up
-        if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS) {
-            if (intakeRPM < INTAKE_JAM_RPM_THRESHOLD) {
-                if (!intakeJamDetected) {
-                    // Jam just started — begin the shutoff countdown
-                    intakeJamDetected = true;
-                    intakeJamTimer.reset();
-                } else if (intakeJamTimer.milliseconds() >= JAM_SHUTOFF_MS) {
-                    // Jam has persisted long enough — shut off the intake
-                    intakePower = 0;
-                    transferPower = 0;
-                }
-            } else {
-                // RPM recovered — clear the jam flag
-                intakeJamDetected = false;
-            }
-        }
+//        if (intakePower > 0 && intakeStartTimer.milliseconds() > JAM_WARMUP_MS) {
+//            if (intakeRPM < INTAKE_JAM_RPM_THRESHOLD) {
+//                if (!intakeJamDetected) {
+//                    // Jam just started — begin the shutoff countdown
+//                    intakeJamDetected = true;
+//                    intakeJamTimer.reset();
+//                } else if (intakeJamTimer.milliseconds() >= JAM_SHUTOFF_MS) {
+//                    // Jam has persisted long enough — shut off the intake
+//                    intakePower = 0;
+//                    transferPower = 0;
+//                }
+//            } else {
+//                // RPM recovered — clear the jam flag
+//                intakeJamDetected = false;
+//            }
+//        }
+        //INTAKE JAM DISABLED BECAUSE WE WANT IT PERMA ON!!!
+        intakeJamDetected = false;
+
 
         // Transfer drum jam detection
         // Determine the commanded transfer power this loop (what we intend to run)

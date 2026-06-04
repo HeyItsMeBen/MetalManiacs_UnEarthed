@@ -175,6 +175,4 @@ public class BlueFar extends LinearOpMode {
         PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.BLUE;
 
     }
-
 }
-

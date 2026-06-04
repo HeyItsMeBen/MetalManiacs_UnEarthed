@@ -126,7 +126,7 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()),
-                        new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
+//                        new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
                         collectPatternPGP(drive, drive.localizer.getPose())
                 )
         );
@@ -183,15 +183,27 @@ public class RedClose extends LinearOpMode {
                )
         );
 
-        double autoAimFinishTime=System.currentTimeMillis();
-        while (opModeIsActive() && System.currentTimeMillis()<autoAimFinishTime+1000){
-           autoAimController.turnToCenter();
+//        double autoAimFinishTime=System.currentTimeMillis();
+//        while (opModeIsActive() && System.currentTimeMillis()<autoAimFinishTime+1000){
+//           autoAimController.turnToCenter();
+//        }
+        autoAimController.turnToCenter();
+
+        long centerStart = System.currentTimeMillis();
+
+        while (
+                opModeIsActive()
+                        && !turret.isAtTargetPosition(750)
+                        && System.currentTimeMillis() - centerStart < 3000
+        ) {
+            idle();
         }
+        turret.stop();
 
         Actions.runBlocking(
                 new SequentialAction(
                         new ParallelAction(
-                                new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
+//                                new InstantAction(() -> intakeController.update(gamepad1.touchpad, gamepad1.ps)),
                                 park(drive, drive.localizer.getPose())
                         )
                 )

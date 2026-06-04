@@ -105,6 +105,8 @@ public class CompetitionDriveCode extends OpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        intakeController.toggleIntake();
+
         // Bulk read optimization
         allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {

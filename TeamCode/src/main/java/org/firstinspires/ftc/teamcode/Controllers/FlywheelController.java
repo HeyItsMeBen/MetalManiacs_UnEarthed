@@ -33,7 +33,7 @@ public class FlywheelController {
     double currentTime = 0;
     double flywheelStartTime=0;
     double flywheelStartPower=0;
-
+    private double transferCycleDelayMs = 1000; // time between balls being cycled
     //other
     public boolean shouldRumble = false;
     public enum LaunchState {   //List of all launch states
@@ -195,7 +195,7 @@ public class FlywheelController {
                 case WAITING_BETWEEN_BALLS:
 //                    transferDrum.runTransferDrum(0);
                     transferKick.setTransferKickDown();
-                    if (launchTimer.milliseconds() > 1000) {
+                    if (launchTimer.milliseconds() > transferCycleDelayMs) {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 
@@ -211,7 +211,11 @@ public class FlywheelController {
             }
 
         } else {    //do this if trigger is not pressed
-            targetSpeed = maintainOuttakeSpeed;
+            if (tagVisible && distanceToTag != 0) {
+                targetSpeed = flywheels.getVelocityFromDistance(distanceToTag);
+            } else {
+                targetSpeed = maintainOuttakeSpeed;
+            }
 
             if (launchState != LaunchState.IDLE) {
 
@@ -319,7 +323,7 @@ public class FlywheelController {
 
                 case WAITING_BETWEEN_BALLS:
                     transferKick.setTransferKickDown();
-                    if (launchTimer.milliseconds() > 1000) {
+                    if (launchTimer.milliseconds() > transferCycleDelayMs) {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 

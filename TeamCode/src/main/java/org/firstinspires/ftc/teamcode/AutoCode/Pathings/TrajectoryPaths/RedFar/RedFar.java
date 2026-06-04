@@ -66,8 +66,6 @@ public class RedFar extends LinearOpMode {
         Pose2d startPose = new Pose2d(12, -60, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
-        Pose2d shootingPose =  new Pose2d(12, -45, Math.toRadians(0));
-
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         turret = new Turret(hardwareMap);
