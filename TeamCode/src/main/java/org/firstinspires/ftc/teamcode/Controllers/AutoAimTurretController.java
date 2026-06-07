@@ -85,7 +85,7 @@ public class AutoAimTurretController {
         }
 
         turret = new Turret(hardwareMap);
-        autoAim = new AutoAim(Math.toRadians(0));
+        autoAim = new AutoAim(Math.toRadians(15));
         drive = new MecanumDrive(hardwareMap, givenRobotPosition);
 
         initAprilTag(hardwareMap);
@@ -298,7 +298,7 @@ public class AutoAimTurretController {
         scanForTags();
         if (targetFound) {
             autoAim.calculateEverything(desiredTag);
-            turret.setMotorPower(-autoAim.turn);
+            turret.setPowerIfInRange(-autoAim.turn);
             targetLostStartTime=System.currentTimeMillis();
             wasTargetFoundLastFrame = true;
             lastTurretAngle=turret.getTurretAngle();

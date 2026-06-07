@@ -213,8 +213,6 @@ public class FlywheelController {
         } else {    //do this if trigger is not pressed
             if (tagVisible && distanceToTag != 0) {
                 targetSpeed = flywheels.getVelocityFromDistance(distanceToTag);
-            } else {
-                targetSpeed = maintainOuttakeSpeed;
             }
 
             if (launchState != LaunchState.IDLE) {

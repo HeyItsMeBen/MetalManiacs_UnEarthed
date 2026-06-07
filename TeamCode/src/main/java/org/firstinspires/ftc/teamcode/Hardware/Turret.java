@@ -156,6 +156,30 @@ public class Turret {
             runTowardTargetDistance(middlePosition);
         }
     }
+    public void setPowerIfInRange(double turretPower){
+        double turretPos=turretMotor.getCurrentPosition();
+        turretTargetTelemetry=turretPos;
+        turretPositionTelemetry=turretMotor.getCurrentPosition();
+        double parameter1 =middlePosition-halfRange;
+        double parameter2 =middlePosition+halfRange;
+        if (turretPos>Math.min(parameter1, parameter2) && turretPos<Math.max(parameter1, parameter2)) {
+            turretMotor.setPower(turretPower);
+        } else {
+            turretMotor.setPower(0);
+        }
+    }
+    public boolean positionIsInRange(){
+        double turretPos=turretMotor.getCurrentPosition();
+        turretTargetTelemetry=turretPos;
+        turretPositionTelemetry=turretMotor.getCurrentPosition();
+        double parameter1 =middlePosition-halfRange;
+        double parameter2 =middlePosition+halfRange;
+        if (turretPos>Math.min(parameter1, parameter2) && turretPos<Math.max(parameter1, parameter2)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public void runTowardTargetDistance(double ticks) {
         controller.setPID(p, i, d);
         int armPos = turretMotor.getCurrentPosition();
