@@ -182,7 +182,7 @@ public class PathingActions {
 
             if (!initialized) {
                 spinUpStartTime = System.currentTimeMillis();
-                targetSpeed = flywheels.getVelocityFromDistance(distance);
+                targetSpeed = flywheels.getVelocityFromDistance(distance + 200);
                 state = State.WAITING_FOR_READY;
                 initialized = true;
             }
@@ -196,7 +196,7 @@ public class PathingActions {
                     if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9 /*||
                             System.currentTimeMillis() - spinUpStartTime > 1000*/) {
 
-                        velocityDropThreshold = flywheels.getFlywheelVelocity() - 100;
+                        velocityDropThreshold = flywheels.getFlywheelVelocity() - 125;
                         state = State.SHOOTING;
                         shotStartTime = System.currentTimeMillis();
                     }
@@ -216,7 +216,7 @@ public class PathingActions {
                         transferDrum.runTransferDrum(1);
 
                         if (flywheels.getFlywheelVelocity() < velocityDropThreshold ||
-                                System.currentTimeMillis() - shotStartTime > 1500) {
+                                System.currentTimeMillis() - shotStartTime > 1000) {
 
                             transferDrum.runTransferDrum(0.2);
                             shotStartTime = System.currentTimeMillis();

@@ -148,7 +148,9 @@ public class RedClose extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         firingPosition(drive, drive.localizer.getPose()),
-                        new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+
+                        //new PathingActions.FlywheelAutoAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                 )
         );
 
@@ -179,7 +181,8 @@ public class RedClose extends LinearOpMode {
 //                               new InstantAction(() -> intakeController.toggleIntake()),
                                 firingPosition(drive, drive.localizer.getPose())
                         ),
-                        new FlywheelSequenceAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
+                        //new FlywheelSequenceAction(flywheelController, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound())
                )
         );
 

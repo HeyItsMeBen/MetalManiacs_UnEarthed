@@ -86,7 +86,7 @@ public class FlywheelController {
 
     public void rampUp() {
 
-        targetSpeed = 800;
+        targetSpeed = 1000;
 
         double targetSeconds = rampUpSpeed *1000; // convert rampUpSpeed to milliseconds
         currentTime=System.currentTimeMillis()-flywheelStartTime;

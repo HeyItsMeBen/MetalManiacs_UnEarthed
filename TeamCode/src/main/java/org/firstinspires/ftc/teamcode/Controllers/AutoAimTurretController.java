@@ -292,8 +292,6 @@ public class AutoAimTurretController {
             return;
         }
 
-
-
         //scans and calculates
         scanForTags();
         if (targetFound) {
