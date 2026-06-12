@@ -13,8 +13,8 @@ public class DriveChassisController {
     private IMU imu;
 
     private double targetHeading = 0;
-    private boolean useSnapRotation = true;
-    private boolean useFieldCentricDrive = true;
+    private boolean useSnapRotation = false;
+    private boolean useFieldCentricDrive = false;
 
     private double rotationKp = 4.0;
     private double rotationMaxSpeed = 1.0;
@@ -55,11 +55,11 @@ public class DriveChassisController {
     }
 
     public void toggleSnapRotation() {
-        useSnapRotation = !useSnapRotation;
+        /*useSnapRotation = !useSnapRotation;*/
     }
 
     public void toggleFieldCentric() {
-        useFieldCentricDrive = !useFieldCentricDrive;
+        /*useFieldCentricDrive = !useFieldCentricDrive;*/
     }
 
     public boolean isSnapRotation() {

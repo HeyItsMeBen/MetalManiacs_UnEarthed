@@ -193,10 +193,11 @@ public class PathingActions {
 
                     flywheels.setFlywheelVelocity(targetSpeed);
 
-                    if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9 /*||
-                            System.currentTimeMillis() - spinUpStartTime > 1000*/) {
+                    if (flywheels.getFlywheelVelocity() >= targetSpeed * 0.9 ||
+                            System.currentTimeMillis() - spinUpStartTime > 1000) {
 
-                        velocityDropThreshold = flywheels.getFlywheelVelocity() - 125;
+                        //velocityDropThreshold determines frequency of the launch
+                        velocityDropThreshold = flywheels.getFlywheelVelocity() - 110; //range from 125 to 150, greater = more frequent but less speed up time
                         state = State.SHOOTING;
                         shotStartTime = System.currentTimeMillis();
                     }
@@ -215,8 +216,8 @@ public class PathingActions {
 
                         transferDrum.runTransferDrum(1);
 
-                        if (flywheels.getFlywheelVelocity() < velocityDropThreshold ||
-                                System.currentTimeMillis() - shotStartTime > 1000) {
+                        if (flywheels.getFlywheelVelocity() < velocityDropThreshold /*||
+                                System.currentTimeMillis() - shotStartTime > 1000*/) { //comment this out for now to avoid shooting to early
 
                             transferDrum.runTransferDrum(0.2);
                             shotStartTime = System.currentTimeMillis();

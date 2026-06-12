@@ -39,8 +39,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 import org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 @Config
-@Autonomous(name = "Blue Close", group = "Autonomous - Blue")
-public class BlueClose extends LinearOpMode {
+@Autonomous(name = "Blue Close Gate Cycle", group = "Autonomous - Blue")
+public class BlueCloseGateCycle extends LinearOpMode {
 
     Intake intake;
     Flywheels flywheels;
@@ -65,7 +65,7 @@ public class BlueClose extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Pose2d startPose = new Pose2d(-52, 52, Math.toRadians(-40)); //was 40
+        Pose2d startPose = new Pose2d(-52, 52, Math.toRadians(140)); //was 40
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         intake = new Intake(hardwareMap);
@@ -169,7 +169,7 @@ public class BlueClose extends LinearOpMode {
                 )
         );
 
-        Actions.runBlocking(
+       /* Actions.runBlocking(
                 new SequentialAction(
                         openChannel(drive, drive.localizer.getPose()),
                         new PathingActions.WaitAction(5000)
@@ -204,7 +204,7 @@ public class BlueClose extends LinearOpMode {
                         new PathingActions.FlywheelSequenceActionDirect(flywheels, intake, transferDrum, transferKick, () -> autoAimController.getDistanceToGoalInches(), () -> autoAimController.isTargetFound()
                         )
                 )
-        );
+        );*/
 
         autoAimController.turnToCenter();
 

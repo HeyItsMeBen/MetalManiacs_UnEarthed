@@ -1,0 +1,112 @@
+package org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar;
+
+// Paths
+
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.moveToScanPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.firingPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.initialMoveToPosition;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.park;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsLeft;
+import static org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.BlueFar.BlueFarTrajectories.collectArtifactsRight;
+
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.AimTurretAction;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.FlywheelSequenceAction;
+import org.firstinspires.ftc.teamcode.AutoCode.Pathings.TrajectoryPaths.PathingActions.LimelightScanAction;
+
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.AutoCode.Roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Controllers.AutoAimTurretController;
+import org.firstinspires.ftc.teamcode.Controllers.FlywheelController;
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
+import org.firstinspires.ftc.teamcode.Controllers.LightsController;
+import org.firstinspires.ftc.teamcode.DriveCode.PassOnFromAutoValues;
+import org.firstinspires.ftc.teamcode.Hardware.AutoAim;
+import org.firstinspires.ftc.teamcode.Hardware.Flywheels;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Lights;
+import org.firstinspires.ftc.teamcode.Hardware.OuttakeHood;
+import org.firstinspires.ftc.teamcode.Hardware.Transfer;
+import org.firstinspires.ftc.teamcode.Hardware.Turret;
+
+@Config
+@Autonomous(name = "Leave Blue Far", group = "Autonomous - Blue")
+public class LeaveBlueFar extends LinearOpMode {
+
+    Intake intake;
+    Flywheels flywheels;
+    Transfer transferDrum;
+    Transfer transferKick;
+    Turret turret;
+    AutoAim autoAim;
+    OuttakeHood hood;
+    Lights lights;
+
+    IntakeController intakeController;
+    FlywheelController flywheelController;
+    LightsController lightsController;
+    AutoAimTurretController autoAimController;
+
+    public String ballSequence = "XXX";
+
+
+    @Override
+    public void runOpMode() {
+
+        Pose2d startPose = new Pose2d(-12, -60, Math.toRadians(180));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+
+        intake = new Intake(hardwareMap);
+        flywheels = new Flywheels(hardwareMap);
+        turret = new Turret(hardwareMap);
+        autoAim = new AutoAim(Math.toRadians(15));
+        transferDrum = new Transfer(hardwareMap);
+        transferKick = new Transfer(hardwareMap);
+        hood = new OuttakeHood(hardwareMap);
+        lights = new Lights(hardwareMap);
+
+        intakeController = new IntakeController(intake, transferDrum, transferKick);
+        flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood, intakeController);
+        lightsController = new LightsController(lights);
+
+        autoAimController = new AutoAimTurretController(hardwareMap, startPose, "Blue"); // May crop out, takes too long to initialize
+
+        waitForStart();
+        if (isStopRequested()) return;
+
+        lightsController.update(false, false, "Blue", ballSequence);
+
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        new ParallelAction(
+                                //new InstantAction(() -> intakeController.toggleIntake()),
+                                initialMoveToPosition(drive, startPose)
+                        )
+                )
+        );
+
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        new ParallelAction(
+                                //new InstantAction(() -> intakeController.toggleIntake()),
+                                park(drive, drive.localizer.getPose())
+                        )
+                )
+        );
+
+        PassOnFromAutoValues.currentPose = drive.localizer.getPose();
+        PassOnFromAutoValues.teamColor = PassOnFromAutoValues.TeamColor.BLUE;
+
+    }
+}

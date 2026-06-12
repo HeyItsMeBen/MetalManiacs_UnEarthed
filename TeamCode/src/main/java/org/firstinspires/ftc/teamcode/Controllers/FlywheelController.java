@@ -23,7 +23,7 @@ public class FlywheelController {
 
     //speed control
     private double maintainOuttakeSpeed = 500;  //Only used in the very beginning. Before tag has ever been seen.
-    public double extraOuttakeSpeed = 0;        //extra outtake speed for manual controls
+    public double extraOuttakeSpeed = 50;        //extra outtake speed for manual controls
     private double targetSpeed = 1200;
     private float rampUpSpeed = 3;
 
