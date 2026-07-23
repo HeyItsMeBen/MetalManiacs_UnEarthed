@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
 
 @Config
-@TeleOp(name = "[Old] Drive Code", group = "Linear OpMode")
+@TeleOp(name = "Drive Code", group = "Linear OpMode")
 
 public class Old_DriveCode extends LinearOpMode {
 
@@ -124,9 +124,6 @@ public class Old_DriveCode extends LinearOpMode {
                 oldIntake.armServoClose();
             }
             //Makes intake pivot go out 0.15 so variable is now 0.65
-            if (driver.getButton(GamepadKeys.Button.X)) {
-                oldIntake.setArmPivotServoOut();
-            }
             //Brings pivot back to 0.5
             if (driver.getButton(GamepadKeys.Button.B)){
                 oldIntake.setArmPivotServoBack();
