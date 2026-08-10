@@ -13,7 +13,7 @@ public class IntakeController {
     private Transfer transferKick;
 
     //intake and transfer setup
-    private float targetSpeed = .7f; // determines how fast the intake should run
+    public float targetSpeed = .7f; // determines how fast the intake should run
     private float rampUpSpeed = 1; // how fast intake should ramp up to target speed (in seconds)
     private float intakePower = 0;
     private float transferPower = 0;
