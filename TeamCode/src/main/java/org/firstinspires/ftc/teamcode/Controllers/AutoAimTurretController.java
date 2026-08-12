@@ -42,7 +42,7 @@ public class AutoAimTurretController {
 
     //Vision
     private int DESIRED_TAG_ID = 24;
-    private boolean shouldAutoAim = true;
+    public boolean shouldAutoAim = true;
 
     //target lost or found variables
     private boolean targetFound = false;

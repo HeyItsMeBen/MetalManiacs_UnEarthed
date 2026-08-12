@@ -101,6 +101,7 @@ public class OfficialDriveCode_DEMO extends OpMode {
         lightsController = new LightsController(lights);
         driveController.speedMultiplier = 0.5;
         lightsController.turnOff();
+        autoAimController.shouldAutoAim = false;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
