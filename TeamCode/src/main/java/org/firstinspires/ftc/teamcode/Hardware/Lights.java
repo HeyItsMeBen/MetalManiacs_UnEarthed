@@ -95,7 +95,21 @@ public class Lights {
                     new PrismAnimations.Solid(Color.TRANSPARENT, 0, 59));
         }
     }
+    public void Light_Red() {
+        lastSequence = ""; // Reset so next updateLights() call forces a fresh update
+        for (int i = 0; i < 7; i++) {
+            prism.insertAndUpdateAnimation(getLayer(i),
+                    new PrismAnimations.Solid(Color.RED, 0, 59));
+        }
+    }
 
+    public void Light_Green() {
+        lastSequence = ""; // Reset so next updateLights() call forces a fresh update
+        for (int i = 0; i < 7; i++) {
+            prism.insertAndUpdateAnimation(getLayer(i),
+                    new PrismAnimations.Solid(Color.GREEN, 0, 59));
+        }
+    }
     private GoBildaPrismDriver.LayerHeight getLayer(int index) {
         switch (index) {
             case 0: return GoBildaPrismDriver.LayerHeight.LAYER_0;

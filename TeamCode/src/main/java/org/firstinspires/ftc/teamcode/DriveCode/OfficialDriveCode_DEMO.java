@@ -99,6 +99,8 @@ public class OfficialDriveCode_DEMO extends OpMode {
         intakeController = new IntakeController(intake, transferDrum, transferKick);
         flywheelController = new FlywheelController(flywheels, transferDrum, transferKick, intake, hood, intakeController);
         lightsController = new LightsController(lights);
+        driveController.speedMultiplier = 0.5;
+        lightsController.turnOff();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -106,7 +108,7 @@ public class OfficialDriveCode_DEMO extends OpMode {
         intakeController.toggleIntake();
         driveController.toggleFieldCentric();   //resets to robot-centric
         driveController.toggleSnapRotation();   //resets to robot-centric
-        intakeController.targetSpeed=0.5f;      //slows intake
+        intakeController.targetSpeed=0.2f;      //slows intake
 
         // Bulk read optimization
         allHubs = hardwareMap.getAll(LynxModule.class);
@@ -142,13 +144,21 @@ public class OfficialDriveCode_DEMO extends OpMode {
             autoAimController.toggleAutoAim();
         }
 
-//        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-//            autoAimController.resetTurret();
-//        }
-        autoAimController.updateWithTimeout(
-                driver.getButton(GamepadKeys.Button.DPAD_LEFT),
-                driver.getButton(GamepadKeys.Button.DPAD_RIGHT)
-        );
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            lightsController.setLightsToGreen();
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            lightsController.setLightsToRed();
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            rumbleController.demoRumble();
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+            rumbleController.demoRumble2();
+        }
 
         // Intake
         if (driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -159,7 +169,7 @@ public class OfficialDriveCode_DEMO extends OpMode {
             intakeController.toggleReverse();
         }
 
-        if (intakeController.getIntakePower() >= 0.5) {
+        if (intakeController.getIntakePower() >= 0.25) {
             rumbleController.continuousRumble();
         } else {
             rumbleController.stopContinuosRumbling();
@@ -171,11 +181,6 @@ public class OfficialDriveCode_DEMO extends OpMode {
         // Flywheels
         boolean triggerPressed = driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1;
 
-        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-            flywheelController.extraOuttakeSpeed+=25;
-        } else if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-            flywheelController.extraOuttakeSpeed-=25;
-        }
         flywheelController.update(
                 triggerPressed,
                 autoAimController.getDistanceToGoalInches(),
@@ -199,12 +204,7 @@ public class OfficialDriveCode_DEMO extends OpMode {
 //        telemetry.addData("Transfer RPM", "%.2f", intakeController.getTransferRPM());
 
         // LED
-        lightsController.update(
-                autoAimController.isTargetFound(),
-                intakeController.isIntakeRunning(),
-                teamColor,
-                ballSequence
-        );
+
 
         // Frequency check
 //        double newTime = getRuntime();

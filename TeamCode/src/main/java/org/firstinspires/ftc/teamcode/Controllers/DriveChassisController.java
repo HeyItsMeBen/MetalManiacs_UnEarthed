@@ -18,7 +18,7 @@ public class DriveChassisController {
 
     private double rotationKp = 4.0;
     private double rotationMaxSpeed = 1.0;
-    private double speedMultiplier = 1.0;
+    public double speedMultiplier = 1.0;
 
     public DriveChassisController(HardwareMap hardwareMap) {
 

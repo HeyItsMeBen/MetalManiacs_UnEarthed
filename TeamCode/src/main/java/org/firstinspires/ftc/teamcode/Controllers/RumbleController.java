@@ -63,5 +63,20 @@ public class RumbleController {
         gamepad.rumble(1.0, 1.0, 150);
     }
 
+    public void demoRumble() {
+        gamepad.rumble(1.0, 1.0, 5000);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+        }
+
+        gamepad.rumble(1.0, 1.0, 5000);
+    }
+
+    public void demoRumble2() {
+        gamepad.rumble(1.0,1.0, 6000);
+    }
+
 
 }

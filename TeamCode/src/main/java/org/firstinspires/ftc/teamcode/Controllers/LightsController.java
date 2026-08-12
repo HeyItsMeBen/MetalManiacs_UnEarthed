@@ -39,4 +39,12 @@ public class LightsController {
     public void turnOff() {
         lights.Light_Off();
     }
+
+    public void setLightsToRed() {
+        lights.Light_Red();
+    }
+
+    public void setLightsToGreen() {
+        lights.Light_Green();
+    }
 }
