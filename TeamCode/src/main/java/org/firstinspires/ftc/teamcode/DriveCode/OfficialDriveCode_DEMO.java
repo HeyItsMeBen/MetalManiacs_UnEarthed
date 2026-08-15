@@ -170,6 +170,19 @@ public class OfficialDriveCode_DEMO extends OpMode {
             intakeController.toggleReverse();
         }
 
+        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+            flywheelController.maintainOuttakeSpeed=1100;
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+            flywheelController.maintainOuttakeSpeed=900;
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
+            flywheelController.maintainOuttakeSpeed=775;
+        }
+
+
         if (intakeController.getIntakePower() >= 0.25) {
             rumbleController.continuousRumble();
         } else {

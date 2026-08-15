@@ -22,7 +22,7 @@ public class FlywheelController {
     private double outtakeSpeedBeforeDrop = 0;
 
     //speed control
-    private double maintainOuttakeSpeed = 500;  //Only used in the very beginning. Before tag has ever been seen.
+    public double maintainOuttakeSpeed = 1000;  //Only used in the very beginning. Before tag has ever been seen.
     public double extraOuttakeSpeed = 50;        //extra outtake speed for manual controls
     private double targetSpeed = 1200;
     private float rampUpSpeed = 3;
@@ -71,6 +71,7 @@ public class FlywheelController {
     public double getMaintainSpeed() {
         return maintainOuttakeSpeed;
     }
+    public double getFlywheelSpeed() {return flywheels.getFlywheelVelocity();}
     public boolean isBusy() {
         return launchState != LaunchState.IDLE;
     }
@@ -146,8 +147,8 @@ public class FlywheelController {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 
-                        maintainOuttakeSpeed =
-                                flywheels.getFlywheelVelocity();
+                        //maintainOuttakeSpeed =
+                        //        flywheels.getFlywheelVelocity();
 
                         launchTimer.reset();
                         launchState =
@@ -199,8 +200,8 @@ public class FlywheelController {
                         outtakeSpeedBeforeDrop =
                                 flywheels.getFlywheelVelocity();
 
-                        maintainOuttakeSpeed =
-                                flywheels.getFlywheelVelocity();
+                        //maintainOuttakeSpeed =
+                        //        flywheels.getFlywheelVelocity();
 
                         launchState =
                                 LaunchState.FEEDING_BALL;
