@@ -45,7 +45,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Transfer;
 
 import java.util.List;
 
-@TeleOp(name = "OfficialDriveCode_DEMO", group = "A - TeleOP")
+@TeleOp(name = "[Competition] DriveCode v4.0.0", group = "A - TeleOP")
 public class OfficialDriveCode_DEMO extends OpMode {
 
     public GamepadEx driver;
@@ -203,8 +203,6 @@ public class OfficialDriveCode_DEMO extends OpMode {
         // Debug telemetry for intake and transfer amps
 //        telemetry.addData("Intake RPM", "%.2f", intakeController.getIntakeRPM());
 //        telemetry.addData("Transfer RPM", "%.2f", intakeController.getTransferRPM());
-        telemetry.addData("Flywheel RPM", "%.2f", flywheelController.getFlywheelSpeed());
-        telemetry.addData("Target Flywheel RPM", "%.2f", flywheelController.getMaintainSpeed());
 
         // LED
 
