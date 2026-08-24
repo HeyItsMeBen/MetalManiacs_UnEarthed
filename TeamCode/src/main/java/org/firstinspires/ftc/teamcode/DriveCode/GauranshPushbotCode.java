@@ -5,17 +5,14 @@
  *
  *  [MOVEMENT]
  *  LEFT STICK Y = forward / backward
- *  RIGHT STICK X = turn
- *  DPAD UP       = drive speed up
- *  DPAD DOWN     = drive speed down
- *
- *  [ARM]
- *  RIGHT BUMPER (hold) = raise arm
- *  LEFT BUMPER (hold)  = lower arm
+ *  LEFT STICK X = turn
  *
  *  [HAND / GRIPPER]
- *  A = open gripper
- *  B = close gripper
+ *  RIGHT TRIGGER (hold) = claw outwards
+ *  LEFT TRIGGET (hold)  = claw inwards
+ *
+ *  [ARM]
+ *  RIGHT STICK Y = arm up/down
  */
 package org.firstinspires.ftc.teamcode.DriveCode;
 
@@ -33,7 +30,7 @@ import java.util.List;
 
 @TeleOp(name = "PushBot v4a DriveCode", group = "A - TeleOP")
 public class GauranshPushbotCode extends OpMode {
-
+//variables
     public DcMotor frontLeft;
     public DcMotor frontRight;
     public DcMotor armMotor;
@@ -53,17 +50,52 @@ public class GauranshPushbotCode extends OpMode {
 
     @Override
     public void loop() {
-        if (driver.getLeftX() < 0){
+        //turning left
+        if (driver.getLeftX() < 0) {
             frontLeft.setPower(-1);
             frontRight.setPower(1);
         }
-        if (driver.getLeftX() > 0){
+        //turning right
+        if (driver.getLeftX() > 0) {
             frontLeft.setPower(1);
             frontRight.setPower(-1);
+        }
+        //going backwards
+        if (driver.getLeftY() < 0) {
+            frontLeft.setPower(-1);
+            frontRight.setPower(-1);
+        }
+        //going forwards
+        if (driver.getLeftY() > 0) {
+            frontLeft.setPower(1);
+            frontRight.setPower(1);
+        }
+        //move arm up
+        if (driver.getRightY() > 0) {
+            armMotor.setPower(1);
+        }
+        //move arm down
+        if (driver.getRightY() < 0) {
+            armMotor.setPower(-1);
+        }
+        //claw movement inwards
+        if (driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.2) {
+            claw1.setPosition(0.2);
+        claw2.setPosition(0.2);
+        }
+        //claw movement outwards
+        if (driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2) {
+            claw1.setPosition(0);
+            claw2.setPosition(0);
         }
     }
 
     @Override
     public void stop() {
+        armMotor.setPower(0);
+        claw1.setPosition(0);
+        claw2.setPosition(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
     }
 }
