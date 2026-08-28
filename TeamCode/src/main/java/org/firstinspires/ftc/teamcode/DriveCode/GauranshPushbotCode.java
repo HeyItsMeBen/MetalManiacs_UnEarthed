@@ -28,14 +28,14 @@ import com.qualcomm.robotcore.util.Range;
 
 import java.util.List;
 
-@TeleOp(name = "PushBot v4a DriveCode", group = "A - TeleOP")
+@TeleOp(name = "PushBot v4a DriveCode-Gauransh", group = "A - TeleOP")
 public class GauranshPushbotCode extends OpMode {
 //variables
     public DcMotor frontLeft;
     public DcMotor frontRight;
     public DcMotor armMotor;
-    public Servo claw1;
-    public Servo claw2;
+    public Servo leftClaw;
+    public Servo rightClaw;
     public GamepadEx driver;
 
     @Override
@@ -43,8 +43,8 @@ public class GauranshPushbotCode extends OpMode {
         frontLeft = hardwareMap.get(DcMotor.class,"frontLeft");
         frontRight = hardwareMap.get(DcMotor.class,"frontRight");
         armMotor = hardwareMap.get(DcMotor.class,"armMotor");
-        claw1 = hardwareMap.get(Servo.class,"claw1");
-        claw2 = hardwareMap.get(Servo.class,"claw2");
+        leftClaw = hardwareMap.get(Servo.class,"leftClaw");
+        rightClaw = hardwareMap.get(Servo.class,"rightClaw");
         driver = new GamepadEx(gamepad1);
     }
 
@@ -80,21 +80,21 @@ public class GauranshPushbotCode extends OpMode {
         }
         //claw movement inwards
         if (driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.2) {
-            claw1.setPosition(0.2);
-        claw2.setPosition(0.2);
+            leftClaw.setPosition(0.2);
+            rightClaw.setPosition(0.2);
         }
         //claw movement outwards
         if (driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2) {
-            claw1.setPosition(0);
-            claw2.setPosition(0);
+            leftClaw.setPosition(0);
+            rightClaw.setPosition(0);
         }
     }
 
     @Override
     public void stop() {
         armMotor.setPower(0);
-        claw1.setPosition(0);
-        claw2.setPosition(0);
+        leftClaw.setPosition(0);
+        rightClaw.setPosition(0);
         frontLeft.setPower(0);
         frontRight.setPower(0);
     }
