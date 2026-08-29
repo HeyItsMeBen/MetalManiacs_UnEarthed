@@ -31,8 +31,8 @@ import java.util.List;
 @TeleOp(name = "PushBot v4a DriveCode-Gauransh", group = "A - TeleOP")
 public class GauranshPushbotCode extends OpMode {
 //variables
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
+    public DcMotor leftDrive
+    public DcMotor rightDrive;
     public DcMotor armMotor;
     public Servo leftClaw;
     public Servo rightClaw;
@@ -40,8 +40,8 @@ public class GauranshPushbotCode extends OpMode {
 
     @Override
     public void init() {
-        frontLeft = hardwareMap.get(DcMotor.class,"frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class,"frontRight");
+        leftDrive = hardwareMap.get(DcMotor.class,"frontLeft");
+        rightDrive = hardwareMap.get(DcMotor.class,"frontRight");
         armMotor = hardwareMap.get(DcMotor.class,"armMotor");
         leftClaw = hardwareMap.get(Servo.class,"leftClaw");
         rightClaw = hardwareMap.get(Servo.class,"rightClaw");
@@ -52,23 +52,23 @@ public class GauranshPushbotCode extends OpMode {
     public void loop() {
         //turning left
         if (driver.getLeftX() < 0) {
-            frontLeft.setPower(-1);
-            frontRight.setPower(1);
+            leftDrive.setPower(-1);
+            rightDrive.setPower(1);
         }
         //turning right
         if (driver.getLeftX() > 0) {
-            frontLeft.setPower(1);
-            frontRight.setPower(-1);
+            leftDrive.setPower(1);
+            rightDrive.setPower(-1);
         }
         //going backwards
         if (driver.getLeftY() < 0) {
-            frontLeft.setPower(-1);
-            frontRight.setPower(-1);
+            leftDrive.setPower(-1);
+            rightDrive.setPower(-1);
         }
         //going forwards
         if (driver.getLeftY() > 0) {
-            frontLeft.setPower(1);
-            frontRight.setPower(1);
+            leftDrive.setPower(1);
+            rightDrive.setPower(1);
         }
         //move arm up
         if (driver.getRightY() > 0) {
@@ -95,7 +95,7 @@ public class GauranshPushbotCode extends OpMode {
         armMotor.setPower(0);
         leftClaw.setPosition(0);
         rightClaw.setPosition(0);
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
     }
 }
