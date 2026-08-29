@@ -41,8 +41,8 @@ public class PushbotCode extends OpMode {
     DcMotor leftDrive;
     DcMotor rightDrive;
     DcMotor armMotor;
-    Servo leftHand;
-    Servo rightHand;
+    Servo leftClaw;
+    Servo rightClaw;
 
     double driveSpeed = 1.0;
 
@@ -54,16 +54,16 @@ public class PushbotCode extends OpMode {
 
         driver = new GamepadEx(gamepad1);
 
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        leftHand = hardwareMap.get(Servo.class, "left_hand");
-        rightHand = hardwareMap.get(Servo.class, "right_hand");
+        leftDrive = hardwareMap.get(DcMotor.class, "leftDrive");
+        rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
+        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        leftClaw = hardwareMap.get(Servo.class, "leftClaw");
+        rightClaw = hardwareMap.get(Servo.class, "rightClaw");
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftHand.setPosition(HAND_CLOSED);
-        rightHand.setPosition(HAND_CLOSED);
+        leftClaw.setPosition(HAND_CLOSED);
+        rightClaw.setPosition(HAND_CLOSED);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -106,11 +106,11 @@ public class PushbotCode extends OpMode {
 
         // Hand / Gripper
         if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-            leftHand.setPosition(HAND_OPEN);
-            rightHand.setPosition(HAND_OPEN);
+            leftClaw.setPosition(HAND_OPEN);
+            rightClaw.setPosition(HAND_OPEN);
         } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-            leftHand.setPosition(HAND_CLOSED);
-            rightHand.setPosition(HAND_CLOSED);
+            leftClaw.setPosition(HAND_CLOSED);
+            rightClaw.setPosition(HAND_CLOSED);
         }
 
         // Displays important information for driver
