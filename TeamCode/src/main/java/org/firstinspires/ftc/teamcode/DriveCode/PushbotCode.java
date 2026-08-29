@@ -46,8 +46,16 @@ public class PushbotCode extends OpMode {
 
     double driveSpeed = 1.0;
 
-    public static final double HAND_OPEN = 1.0;
+    public static final double HAND_OPEN = -1.0;
     public static final double HAND_CLOSED = 0.2;
+
+    // Left claw servo is mounted opposite the right one, so its
+    // open/closed positions are mirrored around the 0.5 midpoint.
+    public static final double LEFT_HAND_OPEN = -1.0 - HAND_OPEN;     // 0.0
+    public static final double LEFT_HAND_CLOSED = 1.0 - HAND_CLOSED; // 0.8
+
+    public static final double ARM_MANUAL_POWER = 0.7;
+    public static final double ARM_GRAVITY_POWER = 0.1;
 
     @Override
     public void init() {
@@ -60,9 +68,9 @@ public class PushbotCode extends OpMode {
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
         rightClaw = hardwareMap.get(Servo.class, "rightClaw");
 
-        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftClaw.setPosition(HAND_CLOSED);
+        leftClaw.setPosition(LEFT_HAND_CLOSED);
         rightClaw.setPosition(HAND_CLOSED);
 
         telemetry.addData("Status", "Initialized");
@@ -89,27 +97,27 @@ public class PushbotCode extends OpMode {
         double forward = -driver.getLeftY();
         double turn = driver.getRightX();
 
-        double leftPower = Range.clip(forward + turn, -1.0, 1.0) * driveSpeed;
-        double rightPower = Range.clip(forward - turn, -1.0, 1.0) * driveSpeed;
+        double leftPower = Range.clip(forward - turn, -1.0, 1.0) * driveSpeed;
+        double rightPower = Range.clip(forward + turn, -1.0, 1.0) * driveSpeed;
 
         leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+        rightDrive.setPower(rightPower * 0.4);
 
         // Arm
         if (driver.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-            armMotor.setPower(1.0);
+            armMotor.setPower(ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
         } else if (driver.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            armMotor.setPower(-1.0);
+            armMotor.setPower(-ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
         } else {
-            armMotor.setPower(0.0);
+            armMotor.setPower(ARM_GRAVITY_POWER);
         }
 
         // Hand / Gripper
         if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-            leftClaw.setPosition(HAND_OPEN);
+            leftClaw.setPosition(LEFT_HAND_OPEN);
             rightClaw.setPosition(HAND_OPEN);
         } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-            leftClaw.setPosition(HAND_CLOSED);
+            leftClaw.setPosition(LEFT_HAND_CLOSED);
             rightClaw.setPosition(HAND_CLOSED);
         }
 
