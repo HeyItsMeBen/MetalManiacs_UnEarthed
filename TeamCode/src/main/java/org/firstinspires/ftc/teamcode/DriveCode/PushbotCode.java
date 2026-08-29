@@ -46,13 +46,11 @@ public class PushbotCode extends OpMode {
 
     double driveSpeed = 1.0;
 
-    public static final double HAND_OPEN = -1.0;
-    public static final double HAND_CLOSED = 0.2;
+    public static final double HAND_OPEN = 0.45;
+    public static final double HAND_CLOSED = 0.45;
 
-    // Left claw servo is mounted opposite the right one, so its
-    // open/closed positions are mirrored around the 0.5 midpoint.
-    public static final double LEFT_HAND_OPEN = -1.0 - HAND_OPEN;     // 0.0
-    public static final double LEFT_HAND_CLOSED = 1.0 - HAND_CLOSED; // 0.8
+    public static final double LEFT_HAND_OPEN = -0.45;
+    public static final double LEFT_HAND_CLOSED = 0.45;
 
     public static final double ARM_MANUAL_POWER = 0.7;
     public static final double ARM_GRAVITY_POWER = 0.1;
@@ -89,6 +87,7 @@ public class PushbotCode extends OpMode {
         // Drive speed adjust
         if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
             driveSpeed = Math.min(1.0, driveSpeed + 0.1);
+
         } else if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
             driveSpeed = Math.max(0.1, driveSpeed - 0.1);
         }
@@ -101,7 +100,7 @@ public class PushbotCode extends OpMode {
         double rightPower = Range.clip(forward + turn, -1.0, 1.0) * driveSpeed;
 
         leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower * 0.4);
+        rightDrive.setPower(rightPower);
 
         // Arm
         if (driver.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
