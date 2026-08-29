@@ -31,7 +31,7 @@ import java.util.List;
 @TeleOp(name = "PushBot v4a DriveCode-Gauransh", group = "A - TeleOP")
 public class GauranshPushbotCode extends OpMode {
 //variables
-    public DcMotor leftDrive
+    public DcMotor leftDrive;
     public DcMotor rightDrive;
     public DcMotor armMotor;
     public Servo leftClaw;
