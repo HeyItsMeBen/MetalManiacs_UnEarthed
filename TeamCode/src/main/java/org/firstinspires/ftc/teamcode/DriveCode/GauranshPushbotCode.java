@@ -40,8 +40,8 @@ public class GauranshPushbotCode extends OpMode {
 
     @Override
     public void init() {
-        leftDrive = hardwareMap.get(DcMotor.class,"frontLeft");
-        rightDrive = hardwareMap.get(DcMotor.class,"frontRight");
+        leftDrive = hardwareMap.get(DcMotor.class,"leftDrive");
+        rightDrive = hardwareMap.get(DcMotor.class,"rightDrive");
         armMotor = hardwareMap.get(DcMotor.class,"armMotor");
         leftClaw = hardwareMap.get(Servo.class,"leftClaw");
         rightClaw = hardwareMap.get(Servo.class,"rightClaw");
@@ -51,31 +51,31 @@ public class GauranshPushbotCode extends OpMode {
     @Override
     public void loop() {
         //turning left
-        if (driver.getLeftX() < 0) {
+        if (driver.getLeftX() < -0.25) {
             leftDrive.setPower(-1);
             rightDrive.setPower(1);
         }
         //turning right
-        if (driver.getLeftX() > 0) {
+        if (driver.getLeftX() > 0.25) {
             leftDrive.setPower(1);
             rightDrive.setPower(-1);
         }
         //going backwards
-        if (driver.getLeftY() < 0) {
+        if (driver.getLeftY() < -0.25) {
             leftDrive.setPower(-1);
             rightDrive.setPower(-1);
         }
         //going forwards
-        if (driver.getLeftY() > 0) {
+        if (driver.getLeftY() > 0.25) {
             leftDrive.setPower(1);
             rightDrive.setPower(1);
         }
         //move arm up
-        if (driver.getRightY() > 0) {
+        if (driver.getRightY() > 0.25) {
             armMotor.setPower(1);
         }
         //move arm down
-        if (driver.getRightY() < 0) {
+        if (driver.getRightY() < -0.25) {
             armMotor.setPower(-1);
         }
         //claw movement inwards
@@ -87,6 +87,18 @@ public class GauranshPushbotCode extends OpMode {
         if (driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2) {
             leftClaw.setPosition(0);
             rightClaw.setPosition(0);
+        }
+        //stopping the movements
+        if (driver.getLeftY() == 0) {
+            leftDrive.setPower(0);
+            rightDrive.setPower(0);
+        }
+        if (driver.getLeftX() == 0) {
+            leftDrive.setPower(0);
+            rightDrive.setPower(0);
+        }
+        if (driver.getRightY() == 0) {
+            armMotor.setPower(0);
         }
     }
 
