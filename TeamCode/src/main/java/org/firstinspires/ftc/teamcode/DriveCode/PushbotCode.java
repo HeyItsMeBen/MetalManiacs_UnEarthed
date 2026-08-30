@@ -46,13 +46,13 @@ public class PushbotCode extends OpMode {
 
     double driveSpeed = 1.0;
 
-    public static final double HAND_OPEN = 0.45;
-    public static final double HAND_CLOSED = 0.45;
+    public static final double HAND_OPEN = 0;
+    public static final double HAND_CLOSED = 0.2;
 
-    public static final double LEFT_HAND_OPEN = -0.45;
-    public static final double LEFT_HAND_CLOSED = 0.45;
+    public static final double LEFT_HAND_OPEN = 0.2;
+    public static final double LEFT_HAND_CLOSED = 0;
 
-    public static final double ARM_MANUAL_POWER = 0.7;
+    public static final double ARM_MANUAL_POWER = 1;
     public static final double ARM_GRAVITY_POWER = 0.1;
 
     @Override
