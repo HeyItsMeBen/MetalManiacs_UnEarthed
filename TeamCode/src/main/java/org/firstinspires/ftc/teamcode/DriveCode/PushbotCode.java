@@ -52,11 +52,11 @@ public class PushbotCode extends OpMode {
     public static final double LEFT_HAND_OPEN = 0.2;
     public static final double LEFT_HAND_CLOSED = 0;
 
-    public static final double ARM_MANUAL_POWER = 0.7;
+    public static final double ARM_MANUAL_POWER = 0.8;
     public static final double ARM_GRAVITY_POWER = 0.1;
 
-    public static final int ARM_MIN_POS = 60;
-    public static final int ARM_MAX_POS = 367; 
+    public static final int ARM_MIN_POS = 100;
+    public static final int ARM_MAX_POS = 300;
 
     @Override
     public void init() {
