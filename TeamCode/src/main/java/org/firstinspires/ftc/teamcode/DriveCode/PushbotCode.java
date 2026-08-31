@@ -52,8 +52,11 @@ public class PushbotCode extends OpMode {
     public static final double LEFT_HAND_OPEN = 0.2;
     public static final double LEFT_HAND_CLOSED = 0;
 
-    public static final double ARM_MANUAL_POWER = 1;
+    public static final double ARM_MANUAL_POWER = 0.7;
     public static final double ARM_GRAVITY_POWER = 0.1;
+
+    public static final int ARM_MIN_POS = 60;
+    public static final int ARM_MAX_POS = 367; 
 
     @Override
     public void init() {
@@ -65,6 +68,9 @@ public class PushbotCode extends OpMode {
         armMotor = hardwareMap.get(DcMotor.class, "armMotor");
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
         rightClaw = hardwareMap.get(Servo.class, "rightClaw");
+
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -103,9 +109,10 @@ public class PushbotCode extends OpMode {
         rightDrive.setPower(rightPower);
 
         // Arm
-        if (driver.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+        int currentArmPos = armMotor.getCurrentPosition();
+        if (driver.getButton(GamepadKeys.Button.RIGHT_BUMPER) && currentArmPos < ARM_MAX_POS) {
             armMotor.setPower(ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
-        } else if (driver.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+        } else if (driver.getButton(GamepadKeys.Button.LEFT_BUMPER) && currentArmPos > ARM_MIN_POS) {
             armMotor.setPower(-ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
         } else {
             armMotor.setPower(ARM_GRAVITY_POWER);
@@ -124,6 +131,7 @@ public class PushbotCode extends OpMode {
         telemetry.addData("Drive Speed", driveSpeed);
         telemetry.addData("Left Power", leftPower);
         telemetry.addData("Right Power", rightPower);
+        telemetry.addData("Arm Position", currentArmPos);
         telemetry.update();
 
         for (LynxModule hub : allHubs) {
