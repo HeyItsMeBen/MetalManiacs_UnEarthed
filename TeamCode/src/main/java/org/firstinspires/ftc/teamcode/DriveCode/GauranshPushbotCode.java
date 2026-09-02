@@ -5,143 +5,141 @@
  *
  *  [MOVEMENT]
  *  LEFT STICK Y = forward / backward
- *  LEFT STICK X = turn
- *
- *  [HAND / GRIPPER]
- *  RIGHT TRIGGER (hold) = claw outwards
- *  LEFT TRIGGER (hold)  = claw inwards
+ *  RIGHT STICK X = turn
+ *  DPAD UP       = drive speed up
+ *  DPAD DOWN     = drive speed down
  *
  *  [ARM]
- *  RIGHT STICK Y = arm up/down
+ *  RIGHT BUMPER (hold) = raise arm
+ *  LEFT BUMPER (hold)  = lower arm
+ *
+ *  [HAND / GRIPPER]
+ *  A = open gripper
+ *  B = close gripper
  */
-
-        package org.firstinspires.ftc.teamcode.DriveCode;
+package org.firstinspires.ftc.teamcode.DriveCode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "PushBot v4b DriveCode-Gauransh", group = "A - TeleOP")
-public class GauranshPushbotCode extends OpMode {
+import java.util.List;
 
-    //variables
+@TeleOp(name = "PushBot v4a DriveCode", group = "A - TeleOP")
+public class PushbotCode extends OpMode {
 
-    public static final double ARM_MANUAL_POWER = 0.7;
-    public static final double ARM_GRAVITY_POWER = 0.1;
-
-    public static final double DEADZONE = 0.25;
-
-    public DcMotor leftDrive;
-    public DcMotor rightDrive;
-    public DcMotor armMotor;
-    public Servo leftClaw;
-    public Servo rightClaw;
     public GamepadEx driver;
+    List<LynxModule> allHubs;
 
+    // Hardware - expansion hub motor port 0/1/2, servo port 0/1
+    DcMotor leftDrive;
+    DcMotor rightDrive;
+    DcMotor armMotor;
+    Servo leftClaw;
+    Servo rightClaw;
 
+    double driveSpeed = 1.0;
+
+    public static final double HAND_OPEN = 0;
+    public static final double HAND_CLOSED = 0.2;
+
+    public static final double LEFT_HAND_OPEN = 0.2;
+    public static final double LEFT_HAND_CLOSED = 0;
+
+    public static final double ARM_MANUAL_POWER = 0.4;
+    public static final double ARM_GRAVITY_POWER = 0.01;
 
     @Override
     public void init() {
 
+        driver = new GamepadEx(gamepad1);
+
         leftDrive = hardwareMap.get(DcMotor.class, "leftDrive");
         rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
-
         armMotor = hardwareMap.get(DcMotor.class, "armMotor");
-
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
         rightClaw = hardwareMap.get(Servo.class, "rightClaw");
 
-        driver = new GamepadEx(gamepad1);
-        // Start with the motors stopped
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        armMotor.setPower(0);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftClaw.setPosition(LEFT_HAND_CLOSED);
+        rightClaw.setPosition(HAND_CLOSED);
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
     }
 
     @Override
     public void loop() {
+        driver.readButtons();
 
-        double drive = -driver.getLeftY();
-        double turn = driver.getLeftX();
+        // Drive speed adjust
+        if (driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            driveSpeed = Math.min(1.0, driveSpeed + 0.1);
 
-        // Deadzone
-        if (Math.abs(drive) < DEADZONE) {
-            drive = 0;
+        } else if (driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            driveSpeed = Math.max(0.1, driveSpeed - 0.1);
         }
 
-        if (Math.abs(turn) < DEADZONE) {
-            turn = 0;
-        }
+        // Drive
+        double forward = -driver.getLeftY();
+        double turn = driver.getRightX();
 
-        // drive
-        double leftPower = drive + turn;
-        double rightPower = drive - turn;
-
-        // Keep motor power between -1 and 1
-        leftPower = Range.clip(leftPower, -1, 1);
-        rightPower = Range.clip(rightPower, -1, 1);
+        double leftPower = Range.clip(forward - turn, -1.0, 1.0) * driveSpeed;
+        double rightPower = Range.clip(forward + turn, -1.0, 1.0) * driveSpeed;
 
         leftDrive.setPower(leftPower);
         rightDrive.setPower(rightPower);
 
-        // arm
-        double armInput = -driver.getRightY();
-
-        if (Math.abs(armInput) > DEADZONE) {
-
-            if (armInput > 0) {
-                armMotor.setPower(ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
-            } else {
-                armMotor.setPower(-ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
-            }
-
+        // Arm
+        int currentArmPos = armMotor.getCurrentPosition();
+        if (driver.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+            armMotor.setPower(ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
+        } else if (driver.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+            armMotor.setPower(-ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
         } else {
-
-            // Hold arm against gravity
             armMotor.setPower(ARM_GRAVITY_POWER);
         }
 
-        double leftTrigger =
-                driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
-
-        double rightTrigger =
-                driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
-
-        // Left trigger = claw inward
-        if (leftTrigger > 0.2) {
-
-            leftClaw.setPosition(0.2);
-            rightClaw.setPosition(0.2);
+        // Hand / Gripper
+        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+            leftClaw.setPosition(LEFT_HAND_OPEN);
+            rightClaw.setPosition(HAND_OPEN);
+        } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+            leftClaw.setPosition(LEFT_HAND_CLOSED);
+            rightClaw.setPosition(HAND_CLOSED);
         }
 
-        // Right trigger = claw outward
-        else if (rightTrigger > 0.2) {
-
-            leftClaw.setPosition(0);
-            rightClaw.setPosition(0);
-        }
-
-        telemetry.addData("Left Drive", leftPower);
-        telemetry.addData("Right Drive", rightPower);
-        telemetry.addData("Arm", armMotor.getPower());
-        telemetry.addData("Left Claw", leftTrigger);
-        telemetry.addData("Right Claw", rightTrigger);
+        // Displays important information for driver
+        telemetry.addData("Drive Speed", driveSpeed);
+        telemetry.addData("Left Power", leftPower);
+        telemetry.addData("Right Power", rightPower);
+        telemetry.addData("Arm Position", currentArmPos);
         telemetry.update();
+
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
     }
 
     @Override
     public void stop() {
-
-        armMotor.setPower(0);
-
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-
-        leftClaw.setPosition(0);
-        rightClaw.setPosition(0);
+        armMotor.setPower(0);
     }
 }
