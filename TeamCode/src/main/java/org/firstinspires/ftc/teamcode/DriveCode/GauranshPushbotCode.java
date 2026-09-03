@@ -29,11 +29,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.Hardware.PushbotArm;
+
 import java.util.List;
 
-@TeleOp(name = "PushBot v4a DriveCode", group = "A - TeleOP")
-public class PushbotCode extends OpMode {
+@TeleOp(name = "GauranshPushbotCode", group = "A - TeleOP")
+public class GauranshPushbotCode extends OpMode {
 
+    public PushbotArm armTuning;
     public GamepadEx driver;
     List<LynxModule> allHubs;
 
@@ -52,8 +55,8 @@ public class PushbotCode extends OpMode {
     public static final double LEFT_HAND_OPEN = 0.2;
     public static final double LEFT_HAND_CLOSED = 0;
 
-    public static final double ARM_MANUAL_POWER = 0.4;
-    public static final double ARM_GRAVITY_POWER = 0.01;
+    public static final double ARM_MANUAL_POWER = 0.8;
+    public static final double ARM_GRAVITY_POWER = 0.001;
 
     @Override
     public void init() {
@@ -66,13 +69,12 @@ public class PushbotCode extends OpMode {
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
         rightClaw = hardwareMap.get(Servo.class, "rightClaw");
 
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armTuning = new PushbotArm(hardwareMap);
 
         leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftClaw.setPosition(LEFT_HAND_CLOSED);
-        rightClaw.setPosition(HAND_CLOSED);
+        //leftClaw.setPosition(LEFT_HAND_CLOSED);
+        //rightClaw.setPosition(HAND_CLOSED);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -108,27 +110,29 @@ public class PushbotCode extends OpMode {
         // Arm
         int currentArmPos = armMotor.getCurrentPosition();
         if (driver.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-            armMotor.setPower(ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
+            armTuning.targetPosition = Math.min(400,armTuning.targetPosition + 1);
         } else if (driver.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            armMotor.setPower(-ARM_MANUAL_POWER + ARM_GRAVITY_POWER);
-        } else {
-            armMotor.setPower(ARM_GRAVITY_POWER);
+            armTuning.targetPosition = Math.max(0,armTuning.targetPosition -1);
         }
 
         // Hand / Gripper
-        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-            leftClaw.setPosition(LEFT_HAND_OPEN);
-            rightClaw.setPosition(HAND_OPEN);
-        } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-            leftClaw.setPosition(LEFT_HAND_CLOSED);
-            rightClaw.setPosition(HAND_CLOSED);
-        }
+//        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+//            leftClaw.setPosition(LEFT_HAND_OPEN);
+//            rightClaw.setPosition(HAND_OPEN);
+//        } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+//            leftClaw.setPosition(LEFT_HAND_CLOSED);
+//            rightCrlaw.setPosition(HAND_CLOSED);
+//        }
+
+        armTuning.update();
 
         // Displays important information for driver
         telemetry.addData("Drive Speed", driveSpeed);
         telemetry.addData("Left Power", leftPower);
         telemetry.addData("Right Power", rightPower);
         telemetry.addData("Arm Position", currentArmPos);
+        telemetry.addData("Current Position", armTuning.getArmPosition());
+        telemetry.addData("Target Position",armTuning.targetPosition);
         telemetry.update();
 
         for (LynxModule hub : allHubs) {
