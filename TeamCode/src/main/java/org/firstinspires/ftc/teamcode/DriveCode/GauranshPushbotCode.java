@@ -55,9 +55,6 @@ public class GauranshPushbotCode extends OpMode {
     public static final double LEFT_HAND_OPEN = 0.2;
     public static final double LEFT_HAND_CLOSED = 0;
 
-    public static final double ARM_MANUAL_POWER = 0.8;
-    public static final double ARM_GRAVITY_POWER = 0.001;
-
     @Override
     public void init() {
 
@@ -73,8 +70,8 @@ public class GauranshPushbotCode extends OpMode {
 
         leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //leftClaw.setPosition(LEFT_HAND_CLOSED);
-        //rightClaw.setPosition(HAND_CLOSED);
+        leftClaw.setPosition(LEFT_HAND_CLOSED);
+        rightClaw.setPosition(HAND_CLOSED);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -116,13 +113,13 @@ public class GauranshPushbotCode extends OpMode {
         }
 
         // Hand / Gripper
-//        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-//            leftClaw.setPosition(LEFT_HAND_OPEN);
-//            rightClaw.setPosition(HAND_OPEN);
-//        } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-//            leftClaw.setPosition(LEFT_HAND_CLOSED);
-//            rightCrlaw.setPosition(HAND_CLOSED);
-//        }
+          if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+              leftClaw.setPosition(LEFT_HAND_OPEN);
+              rightClaw.setPosition(HAND_OPEN);
+          } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+              leftClaw.setPosition(LEFT_HAND_CLOSED);
+              rightClaw.setPosition(HAND_CLOSED);
+          }
 
         armTuning.update();
 
@@ -133,6 +130,8 @@ public class GauranshPushbotCode extends OpMode {
         telemetry.addData("Arm Position", currentArmPos);
         telemetry.addData("Current Position", armTuning.getArmPosition());
         telemetry.addData("Target Position",armTuning.targetPosition);
+        telemetry.addData("Left Claw",leftClaw.getPosition());
+        telemetry.addData("Right Claw",rightClaw.getPosition());
         telemetry.update();
 
         for (LynxModule hub : allHubs) {
