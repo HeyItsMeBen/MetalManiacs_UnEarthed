@@ -15,7 +15,7 @@
  LEFT TRIGGER = transfer kick manual control
  */
 
-package org.firstinspires.ftc.teamcode.DriveCode;
+package org.firstinspires.ftc.teamcode.DriveCode.Tuning;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -27,13 +27,14 @@ import org.firstinspires.ftc.teamcode.Controllers.DriveChassisController;
 import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.LightsController;
 import org.firstinspires.ftc.teamcode.Controllers.RumbleController;
+import org.firstinspires.ftc.teamcode.DriveCode.PassOnFromAutoValues;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Lights;
 
 import java.util.List;
 
 @TeleOp(name = "AhmedDriveCode", group = "A - TeleOP")
-public class AhmedDriveCode extends OpMode {
+public class AhmedCameraCode extends OpMode {
 
     public GamepadEx driver;
     List<LynxModule> allHubs;

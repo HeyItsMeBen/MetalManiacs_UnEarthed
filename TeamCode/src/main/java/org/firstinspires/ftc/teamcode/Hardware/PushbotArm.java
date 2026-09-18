@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PushbotArm {
         // PID
-        public static double P = 0.09;
+        public static double P = 0.003;
         public static double I = 0;
         public static double D = 0.0;
 
