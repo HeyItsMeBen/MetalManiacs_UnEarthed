@@ -80,10 +80,10 @@ public class PushbotCode extends OpMode {
     public static final double LEFT_HAND_OPEN = 0.2;
     public static final double LEFT_HAND_CLOSED = 0;
 
-    public static int ARM_MIN = 0;
-    public static int ARM_MAX = 375;
-    public static int ARM_RAISED_PRESET = 375;
-    public static int ARM_LOWERED_PRESET = 0;
+    public static int ARM_MIN = -500;
+    public static int ARM_MAX = 500;
+    public static int ARM_RAISED_PRESET = 500;
+    public static int ARM_LOWERED_PRESET = -500;
 
     public static final int ARM_ANTI_TIP_THRESHOLD = 250;
     public static final double ANTI_TIP_SPEED_CAP = 0.4;
