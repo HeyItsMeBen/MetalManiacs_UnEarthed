@@ -15,12 +15,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PushbotArm {
         // PID
-        public static double P = 0.1;
+        public static double P = 0.09;
         public static double I = 0;
         public static double D = 0.0;
 
         // Gravity feedforward
-        public static double F = 0.39;
+        public static double F = 0.4;
 
         // Target arm position in encoder ticks
         public static int targetPosition = 0;

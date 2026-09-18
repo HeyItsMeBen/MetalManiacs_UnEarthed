@@ -24,9 +24,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Hardware.PushbotArm;
@@ -46,8 +48,12 @@ public class GauranshPushbotCode extends OpMode {
     DcMotor armMotor;
     Servo leftClaw;
     Servo rightClaw;
-
+    CRServo tail;
+    public boolean tailval;
     double driveSpeed = 1.0;
+
+    ElapsedTime tailTimer = new ElapsedTime();
+    boolean tailOn = false;
 
     public static final double HAND_OPEN = 0;
     public static final double HAND_CLOSED = 0.2;
@@ -65,7 +71,7 @@ public class GauranshPushbotCode extends OpMode {
         armMotor = hardwareMap.get(DcMotor.class, "armMotor");
         leftClaw = hardwareMap.get(Servo.class, "leftClaw");
         rightClaw = hardwareMap.get(Servo.class, "rightClaw");
-
+        tail = hardwareMap.get(CRServo.class,"tail");
         armTuning = new PushbotArm(hardwareMap);
 
         leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -113,13 +119,31 @@ public class GauranshPushbotCode extends OpMode {
         }
 
         // Hand / Gripper
-          if (driver.wasJustPressed(GamepadKeys.Button.A)) {
-              leftClaw.setPosition(LEFT_HAND_OPEN);
-              rightClaw.setPosition(HAND_OPEN);
-          } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
-              leftClaw.setPosition(LEFT_HAND_CLOSED);
-              rightClaw.setPosition(HAND_CLOSED);
-          }
+        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+            leftClaw.setPosition(LEFT_HAND_OPEN);
+            rightClaw.setPosition(HAND_OPEN);
+        } else if (driver.wasJustPressed(GamepadKeys.Button.B)) {
+            leftClaw.setPosition(LEFT_HAND_CLOSED);
+            rightClaw.setPosition(HAND_CLOSED);
+        }
+
+        if (driver.wasJustPressed(GamepadKeys.Button.Y)) {
+            tailval = true;
+            tailTimer.reset();
+            tailOn = true;
+            tail.setPower(1);
+        }
+
+        if (driver.wasJustReleased(GamepadKeys.Button.Y)) {
+            tailval = false;
+            tail.setPower(0);
+        }
+
+        if (tailval && tailTimer.milliseconds() >= 300) {
+            tailOn = !tailOn;
+            tail.setPower(tailOn ? 1 : 0);
+            tailTimer.reset();
+        }
 
         armTuning.update();
 
